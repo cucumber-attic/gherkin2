@@ -9,7 +9,9 @@ module Gherkin
     
     tables.each do |text, expected|
       it "should parse #{text}" do
-        Table.new.parse(text)
+        listener = mock('listener')
+        listener.should_receive(:table).with(expected)
+        Table.new.scan(text, listener)
       end
     end
   end
