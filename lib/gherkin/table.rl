@@ -3,15 +3,15 @@ module Gherkin
     %%{
       machine table;
       
-      action InsertCell {
+      action insert_cell {
         current_row << data[p].chr
       }
       
-      action StartRow {
+      action start_row {
         current_row = []
       }
       
-      action EndRow {
+      action end_row {
         @rows << current_row
       }
       
@@ -29,7 +29,7 @@ module Gherkin
       BAR = '|';
       
       cell = ( alnum @cell_char )+ %term_cell;
-      table_row = space* BAR @StartRow (cell BAR)+ %EndRow space* EOL;
+      table_row = space* BAR @start_row (cell BAR)+ %end_row space* EOL;
       table = table_row+;
       
       main := table;
