@@ -3,7 +3,7 @@
 module Gherkin
   class Table
     
-# line 14 "lib/gherkin/table.rl"
+# line 26 "lib/gherkin/table.rl"
 
 
     def initialize
@@ -14,7 +14,7 @@ class << self
 	private :_table_actions, :_table_actions=
 end
 self._table_actions = [
-	0, 1, 0, 1, 1
+	0, 1, 0, 1, 1, 1, 2
 ]
 
 class << self
@@ -84,7 +84,7 @@ class << self
 	private :_table_trans_actions, :_table_trans_actions=
 end
 self._table_trans_actions = [
-	0, 0, 0, 1, 0, 0, 3, 0
+	0, 0, 3, 1, 0, 0, 5, 0
 ]
 
 class << self
@@ -106,22 +106,23 @@ end
 self.table_en_main = 1;
 
 
-# line 18 "lib/gherkin/table.rl"
+# line 30 "lib/gherkin/table.rl"
     end
 
     def parse(data)
+      @rows = current_row = []
       data = data.unpack("c*") if data.is_a?(String)
       
-# line 116 "lib/gherkin/table.rb"
+# line 117 "lib/gherkin/table.rb"
 begin
 	p ||= 0
 	pe ||= data.length
 	cs = table_start
 end
 
-# line 23 "lib/gherkin/table.rl"
+# line 36 "lib/gherkin/table.rl"
       
-# line 125 "lib/gherkin/table.rb"
+# line 126 "lib/gherkin/table.rb"
 begin
 	_klen, _trans, _keys, _acts, _nacts = nil
 	_goto_level = 0
@@ -203,16 +204,27 @@ begin
 			_acts += 1
 			case _table_actions[_acts - 1]
 when 0 then
-# line 9 "lib/gherkin/table.rl"
+# line 6 "lib/gherkin/table.rl"
 		begin
- puts data[p, p].pack("c*") 		end
-# line 9 "lib/gherkin/table.rl"
+
+        current_row << data[p].chr
+      		end
+# line 6 "lib/gherkin/table.rl"
 when 1 then
-# line 13 "lib/gherkin/table.rl"
+# line 10 "lib/gherkin/table.rl"
 		begin
- puts "TABLE DONE" 		end
-# line 13 "lib/gherkin/table.rl"
-# line 216 "lib/gherkin/table.rb"
+
+        current_row = []
+      		end
+# line 10 "lib/gherkin/table.rl"
+when 2 then
+# line 14 "lib/gherkin/table.rl"
+		begin
+
+        @rows << current_row
+      		end
+# line 14 "lib/gherkin/table.rl"
+# line 228 "lib/gherkin/table.rb"
 			end # action switch
 		end
 	end
@@ -239,7 +251,8 @@ when 1 then
 	end
 	end
 
-# line 24 "lib/gherkin/table.rl"
+# line 37 "lib/gherkin/table.rl"
+      @rows
     end
   end
 end
