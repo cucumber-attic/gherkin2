@@ -26,9 +26,11 @@ module Gherkin
   
       EOL = '\r'? '\n';
       BAR = '|';
-      
-      cell = ( alnum @start_cell ) alnum* %term_cell;
-      table_row = space* BAR @start_row (space* cell space* BAR)+ space* (zlen %/end_row)? :>> EOL @end_row;
+     
+      non_empty_cell = ( alnum @start_cell ) alnum* %term_cell;
+      empty_cell = space* %nil_cell;
+      cell_contents = (space* non_empty_cell space* BAR)? (space* empty_cell? BAR)?;
+      table_row = space* BAR @start_row (cell_contents)+ space* (zlen %/end_row)? :>> EOL @end_row;
       table = table_row+;
       
       main := table;

@@ -43,7 +43,6 @@ module Gherkin
     end
 
     it "should parse a 2x2 table with empty cells" do
-      pending
       parse("| 1 |  |\n|| 4 |\n").should == [['1', nil], [nil, '4']]
     end
 
