@@ -23,7 +23,6 @@ module Gherkin
     end
     
     it "should parse a 1x2 table with newline" do
-      pending
       parse(" | 1 | 2 | \n").should == [%w{1 2}]
     end
 
@@ -38,12 +37,10 @@ module Gherkin
     end
 
     it "should parse a 2x2 table" do
-      pending
       parse("| 1 | 2 |\n| 3 | 4 |\n").should == [%w{1 2}, %w{3 4}]
     end
 
     it "should parse a 2x2 table with several newlines" do
-      pending
       parse("| 1 | 2 |\n| 3 | 4 |\n\n\n").should == [%w{1 2}, %w{3 4}]
     end
 

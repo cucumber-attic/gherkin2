@@ -24,7 +24,7 @@ module Gherkin
       BAR = '|';
       
       cell = ( alnum @start_cell ) alnum* %term_cell;
-      table_row = space* BAR @start_row (cell BAR)+ %end_row space* EOL;
+      table_row = space* BAR @start_row (space* cell space* BAR)+ space* :>> EOL $end_row;
       table = table_row+;
       
       main := table;
