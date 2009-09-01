@@ -15,10 +15,20 @@ module Gherkin
         @rows << current_row
       }
       
+      action cell_char {
+        @_cbuf ||= [] 
+        @_cbuf << data[p]; 
+      }
+      
+      action term_cell {
+        current_row << @_cbuf.pack('c*')
+        @_cbuf = []
+      }
+      
       EOL = '\r'? '\n';
       BAR = '|';
       
-      cell = alnum @InsertCell;
+      cell = ( alnum @cell_char )+ %term_cell;
       table_row = space* BAR @StartRow (cell BAR)+ %EndRow space* EOL;
       table = table_row+;
       
