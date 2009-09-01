@@ -1,6 +1,13 @@
 = gherkin
 
-Description goes here.
+Fast multi-language Gherkin parser. The goal of this project is to define a grammar for the
+Gherkin language, which has evolved out of the Cucumber project. 
+
+Using Ragel, this project can evolve into a general Gherkin parser for all of the programming
+languages supported by Ragel (as of this writing C, C++, Objective-C, D, Java, Ruby and C#).
+
+This means a lightning fast parser for Cucumber, but it could also be used in a different BDD
+tool.
 
 == Note on Patches/Pull Requests
  
