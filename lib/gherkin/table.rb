@@ -1,7 +1,7 @@
 # line 1 "lib/gherkin/table.rl"
 module Gherkin
   class Table
-    # line 31 "lib/gherkin/table.rl"
+    # line 35 "lib/gherkin/table.rl"
 
 
     def initialize
@@ -21,7 +21,7 @@ class << self
 	private :_table_key_offsets, :_table_key_offsets=
 end
 self._table_key_offsets = [
-	0, 0, 4, 13, 23, 27, 38
+	0, 0, 4, 13, 23, 27, 37
 ]
 
 class << self
@@ -32,9 +32,9 @@ self._table_trans_keys = [
 	32, 124, 9, 13, 32, 9, 13, 48, 
 	57, 65, 90, 97, 122, 32, 124, 9, 
 	13, 48, 57, 65, 90, 97, 122, 32, 
-	124, 9, 13, 10, 13, 32, 9, 12, 
-	48, 57, 65, 90, 97, 122, 32, 124, 
-	9, 13, 0
+	124, 9, 13, 10, 32, 9, 13, 48, 
+	57, 65, 90, 97, 122, 32, 124, 9, 
+	13, 0
 ]
 
 class << self
@@ -42,7 +42,7 @@ class << self
 	private :_table_single_lengths, :_table_single_lengths=
 end
 self._table_single_lengths = [
-	0, 2, 1, 2, 2, 3, 2
+	0, 2, 1, 2, 2, 2, 2
 ]
 
 class << self
@@ -58,7 +58,7 @@ class << self
 	private :_table_index_offsets, :_table_index_offsets=
 end
 self._table_index_offsets = [
-	0, 0, 4, 10, 17, 21, 29
+	0, 0, 4, 10, 17, 21, 28
 ]
 
 class << self
@@ -68,9 +68,9 @@ end
 self._table_indicies = [
 	0, 2, 0, 1, 3, 3, 4, 4, 
 	4, 1, 5, 7, 5, 6, 6, 6, 
-	1, 8, 9, 8, 1, 10, 11, 9, 
-	9, 4, 4, 4, 1, 0, 2, 0, 
-	1, 0
+	1, 8, 9, 8, 1, 10, 9, 9, 
+	4, 4, 4, 1, 0, 2, 0, 1, 
+	0
 ]
 
 class << self
@@ -79,7 +79,7 @@ class << self
 end
 self._table_trans_targs = [
 	1, 0, 2, 2, 3, 4, 3, 5, 
-	4, 5, 6, 5
+	4, 5, 6
 ]
 
 class << self
@@ -88,7 +88,15 @@ class << self
 end
 self._table_trans_actions = [
 	0, 0, 1, 0, 7, 5, 0, 5, 
-	0, 0, 3, 3
+	0, 0, 3
+]
+
+class << self
+	attr_accessor :_table_eof_actions
+	private :_table_eof_actions, :_table_eof_actions=
+end
+self._table_eof_actions = [
+	0, 0, 0, 0, 0, 3, 0
 ]
 
 class << self
@@ -109,22 +117,23 @@ class << self
 end
 self.table_en_main = 1;
 
-# line 35 "lib/gherkin/table.rl"
+# line 39 "lib/gherkin/table.rl"
     end
 
     def parse(data)
       @rows = current_row = []
       data = data.unpack("c*") if data.is_a?(String)
+      eof = data.size
       
-# line 120 "lib/gherkin/table.rb"
+# line 129 "lib/gherkin/table.rb"
 begin
 	p ||= 0
 	pe ||= data.length
 	cs = table_start
 end
-# line 41 "lib/gherkin/table.rl"
+# line 46 "lib/gherkin/table.rl"
       
-# line 128 "lib/gherkin/table.rb"
+# line 137 "lib/gherkin/table.rb"
 begin
 	_klen, _trans, _keys, _acts, _nacts = nil
 	_goto_level = 0
@@ -234,7 +243,7 @@ when 3 then
         @_s = p
       		end
 # line 19 "lib/gherkin/table.rl"
-# line 238 "lib/gherkin/table.rb"
+# line 247 "lib/gherkin/table.rb"
 			end # action switch
 		end
 	end
@@ -254,13 +263,35 @@ when 3 then
 	end
 	end
 	if _goto_level <= _test_eof
+	if p == eof
+	__acts = _table_eof_actions[cs]
+	__nacts =  _table_actions[__acts]
+	__acts += 1
+	while __nacts > 0
+		__nacts -= 1
+		__acts += 1
+		case _table_actions[__acts - 1]
+when 1 then
+# line 10 "lib/gherkin/table.rl"
+		begin
+
+        @rows << current_row
+      		end
+# line 10 "lib/gherkin/table.rl"
+# line 282 "lib/gherkin/table.rb"
+		end # eof action switch
+	end
+	if _trigger_goto
+		next
+	end
+end
 	end
 	if _goto_level <= _out
 		break
 	end
 	end
 	end
-# line 42 "lib/gherkin/table.rl"
+# line 47 "lib/gherkin/table.rl"
       @rows
     end
   end

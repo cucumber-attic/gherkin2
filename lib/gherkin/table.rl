@@ -20,11 +20,15 @@ module Gherkin
         @_s = p
       }
             
+      action nil_cell {
+        current_row << nil
+      }
+  
       EOL = '\r'? '\n';
       BAR = '|';
       
       cell = ( alnum @start_cell ) alnum* %term_cell;
-      table_row = space* BAR @start_row (space* cell space* BAR)+ space* :>> EOL $end_row;
+      table_row = space* BAR @start_row (space* cell space* BAR)+ space* (zlen %/end_row)? :>> EOL @end_row;
       table = table_row+;
       
       main := table;
@@ -37,6 +41,7 @@ module Gherkin
     def parse(data)
       @rows = current_row = []
       data = data.unpack("c*") if data.is_a?(String)
+      eof = data.size
       %% write init;
       %% write exec;
       @rows

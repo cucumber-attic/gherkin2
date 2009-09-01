@@ -27,12 +27,10 @@ module Gherkin
     end
 
     it "should parse a 1x2 table without newline" do
-      pending
       parse("| 1 | 2 |").should == [%w{1 2}]
     end
 
     it "should parse a 1x2 table without spaces" do
-      pending
       parse("|1|2|").should == [%w{1 2}]
     end
 
