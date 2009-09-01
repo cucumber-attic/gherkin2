@@ -1,13 +1,12 @@
-= gherkin
+= Gherkin
 
-Fast multi-language Gherkin parser. The goal of this project is to define a grammar for the
-Gherkin language, which has evolved out of the Cucumber project. 
+Fast Gherkin parser based on Ragel. 
 
-Using Ragel, this project can evolve into a general Gherkin parser for all of the programming
-languages supported by Ragel (as of this writing C, C++, Objective-C, D, Java, Ruby and C#).
+Gherkin is the language that has evolved out of the Cucumber project. Cucumber currently uses
+Treetop, which is too slow for larger projects.
 
-This means a lightning fast parser for Cucumber, but it could also be used in a different BDD
-tool.
+This project will *not* include code to build an AST. Instead, this parser will have an API
+that makes it possible to plug in a builder that can buld an AST.
 
 == Notes
 
@@ -15,8 +14,6 @@ Ragel supports Ruby, but it's much slower than C. The ruby target will be used f
 The final version will use C for MRI and Java for JRuby.
 
 == Ragel links
-
-I didn't know Ragel when I started on this project. The following links were very helpful:
 
 * http://www.complang.org/ragel/
 * http://dev.sipdoc.net/attachments/2/ragel_talk.pdf 
