@@ -3,7 +3,7 @@
 module Gherkin
   class Table
     
-# line 26 "lib/gherkin/table.rl"
+# line 31 "lib/gherkin/table.rl"
 
 
     def initialize
@@ -14,7 +14,8 @@ class << self
 	private :_table_actions, :_table_actions=
 end
 self._table_actions = [
-	0, 1, 0, 1, 1, 1, 2
+	0, 1, 0, 1, 1, 1, 2, 1, 
+	3
 ]
 
 class << self
@@ -22,7 +23,7 @@ class << self
 	private :_table_key_offsets, :_table_key_offsets=
 end
 self._table_key_offsets = [
-	0, 0, 4, 10, 11, 21, 25, 30
+	0, 0, 4, 10, 17, 27, 31, 36
 ]
 
 class << self
@@ -31,10 +32,11 @@ class << self
 end
 self._table_trans_keys = [
 	32, 124, 9, 13, 48, 57, 65, 90, 
-	97, 122, 124, 10, 32, 9, 13, 48, 
-	57, 65, 90, 97, 122, 10, 32, 9, 
-	13, 10, 32, 124, 9, 13, 10, 32, 
-	124, 9, 13, 0
+	97, 122, 124, 48, 57, 65, 90, 97, 
+	122, 10, 32, 9, 13, 48, 57, 65, 
+	90, 97, 122, 10, 32, 9, 13, 10, 
+	32, 124, 9, 13, 10, 32, 124, 9, 
+	13, 0
 ]
 
 class << self
@@ -50,7 +52,7 @@ class << self
 	private :_table_range_lengths, :_table_range_lengths=
 end
 self._table_range_lengths = [
-	0, 1, 3, 0, 4, 1, 1, 1
+	0, 1, 3, 3, 4, 1, 1, 1
 ]
 
 class << self
@@ -58,7 +60,7 @@ class << self
 	private :_table_index_offsets, :_table_index_offsets=
 end
 self._table_index_offsets = [
-	0, 0, 4, 8, 10, 17, 21, 26
+	0, 0, 4, 8, 13, 20, 24, 29
 ]
 
 class << self
@@ -67,9 +69,10 @@ class << self
 end
 self._table_indicies = [
 	0, 2, 0, 1, 3, 3, 3, 1, 
-	4, 1, 6, 5, 5, 3, 3, 3, 
-	1, 8, 7, 7, 1, 8, 9, 2, 
-	9, 1, 8, 9, 2, 9, 1, 0
+	5, 4, 4, 4, 1, 7, 6, 6, 
+	3, 3, 3, 1, 9, 8, 8, 1, 
+	9, 10, 2, 10, 1, 9, 10, 2, 
+	10, 1, 0
 ]
 
 class << self
@@ -77,8 +80,8 @@ class << self
 	private :_table_trans_targs, :_table_trans_targs=
 end
 self._table_trans_targs = [
-	1, 0, 2, 3, 4, 5, 7, 5, 
-	7, 6
+	1, 0, 2, 3, 3, 4, 5, 7, 
+	5, 7, 6
 ]
 
 class << self
@@ -86,8 +89,8 @@ class << self
 	private :_table_trans_actions, :_table_trans_actions=
 end
 self._table_trans_actions = [
-	0, 0, 3, 1, 0, 5, 5, 0, 
-	0, 0
+	0, 0, 1, 7, 0, 5, 3, 3, 
+	0, 0, 0
 ]
 
 class << self
@@ -109,23 +112,23 @@ end
 self.table_en_main = 1;
 
 
-# line 30 "lib/gherkin/table.rl"
+# line 35 "lib/gherkin/table.rl"
     end
 
     def scan(data, listener)
       @rows = current_row = []
       data = data.unpack("c*") if data.is_a?(String)
       
-# line 120 "lib/gherkin/table.rb"
+# line 123 "lib/gherkin/table.rb"
 begin
 	p ||= 0
 	pe ||= data.length
 	cs = table_start
 end
 
-# line 36 "lib/gherkin/table.rl"
+# line 41 "lib/gherkin/table.rl"
       
-# line 129 "lib/gherkin/table.rb"
+# line 132 "lib/gherkin/table.rb"
 begin
 	_klen, _trans, _keys, _acts, _nacts = nil
 	_goto_level = 0
@@ -210,24 +213,32 @@ when 0 then
 # line 6 "lib/gherkin/table.rl"
 		begin
 
-        current_row << data[p].chr
+        current_row = []
       		end
 # line 6 "lib/gherkin/table.rl"
 when 1 then
 # line 10 "lib/gherkin/table.rl"
 		begin
 
-        current_row = []
+        @rows << current_row
       		end
 # line 10 "lib/gherkin/table.rl"
 when 2 then
 # line 14 "lib/gherkin/table.rl"
 		begin
 
-        @rows << current_row
+        d = data[@_s..(p-1)].pack('c*')
+        current_row << d
       		end
 # line 14 "lib/gherkin/table.rl"
-# line 231 "lib/gherkin/table.rb"
+when 3 then
+# line 19 "lib/gherkin/table.rl"
+		begin
+
+        @_s = p
+      		end
+# line 19 "lib/gherkin/table.rl"
+# line 242 "lib/gherkin/table.rb"
 			end # action switch
 		end
 	end
@@ -254,7 +265,7 @@ when 2 then
 	end
 	end
 
-# line 37 "lib/gherkin/table.rl"
+# line 42 "lib/gherkin/table.rl"
       listener.table(@rows)
     end
   end

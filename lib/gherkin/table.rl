@@ -2,24 +2,29 @@ module Gherkin
   class Table
     %%{
       machine table;
-      
-      action InsertCell {
-        current_row << data[p].chr
-      }
-      
-      action StartRow {
+            
+      action start_row {
         current_row = []
       }
       
-      action EndRow {
+      action end_row {
         @rows << current_row
       }
       
+      action term_cell {
+        d = data[@_s..(p-1)].pack('c*')
+        current_row << d
+      }
+      
+      action start_cell {
+        @_s = p
+      }
+            
       EOL = '\r'? '\n';
       BAR = '|';
       
-      cell = alnum @InsertCell;
-      table_row = space* BAR @StartRow (cell BAR)+ %EndRow space* EOL;
+      cell = ( alnum @start_cell ) alnum* %term_cell;
+      table_row = space* BAR @start_row (cell BAR)+ %end_row space* EOL;
       table = table_row+;
       
       main := table;

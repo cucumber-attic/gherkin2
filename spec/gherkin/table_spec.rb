@@ -20,6 +20,10 @@ module Gherkin
       Table.new.parse(text)
     end
 
+    it "should parse a multicharacter cell content" do
+      parse("|foo|bar|\n").should == [%w{foo bar}]
+    end
+    
     it "should parse a 1x2 table with newline" do
       pending
       parse(" | 1 | 2 | \n").should == [%w{1 2}]
