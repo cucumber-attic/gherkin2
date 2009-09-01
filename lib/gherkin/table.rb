@@ -3,7 +3,7 @@
 module Gherkin
   class Table
     
-# line 36 "lib/gherkin/table.rl"
+# line 31 "lib/gherkin/table.rl"
 
 
     def initialize
@@ -69,10 +69,10 @@ class << self
 end
 self._table_indicies = [
 	0, 2, 0, 1, 3, 3, 3, 1, 
-	4, 3, 3, 3, 1, 6, 5, 5, 
-	3, 3, 3, 1, 8, 7, 7, 1, 
-	8, 9, 2, 9, 1, 8, 9, 2, 
-	9, 1, 0
+	5, 4, 4, 4, 1, 7, 6, 6, 
+	3, 3, 3, 1, 9, 8, 8, 1, 
+	9, 10, 2, 10, 1, 9, 10, 2, 
+	10, 1, 0
 ]
 
 class << self
@@ -80,8 +80,8 @@ class << self
 	private :_table_trans_targs, :_table_trans_targs=
 end
 self._table_trans_targs = [
-	1, 0, 2, 3, 4, 5, 7, 5, 
-	7, 6
+	1, 0, 2, 3, 3, 4, 5, 7, 
+	5, 7, 6
 ]
 
 class << self
@@ -89,8 +89,8 @@ class << self
 	private :_table_trans_actions, :_table_trans_actions=
 end
 self._table_trans_actions = [
-	0, 0, 1, 5, 7, 3, 3, 0, 
-	0, 0
+	0, 0, 1, 7, 0, 5, 3, 3, 
+	0, 0, 0
 ]
 
 class << self
@@ -112,7 +112,7 @@ end
 self.table_en_main = 1;
 
 
-# line 40 "lib/gherkin/table.rl"
+# line 35 "lib/gherkin/table.rl"
     end
 
     def parse(data)
@@ -126,7 +126,7 @@ begin
 	cs = table_start
 end
 
-# line 46 "lib/gherkin/table.rl"
+# line 41 "lib/gherkin/table.rl"
       
 # line 132 "lib/gherkin/table.rb"
 begin
@@ -210,36 +210,35 @@ begin
 			_acts += 1
 			case _table_actions[_acts - 1]
 when 0 then
-# line 10 "lib/gherkin/table.rl"
+# line 6 "lib/gherkin/table.rl"
 		begin
 
         current_row = []
       		end
-# line 10 "lib/gherkin/table.rl"
+# line 6 "lib/gherkin/table.rl"
 when 1 then
-# line 14 "lib/gherkin/table.rl"
+# line 10 "lib/gherkin/table.rl"
 		begin
 
         @rows << current_row
       		end
-# line 14 "lib/gherkin/table.rl"
+# line 10 "lib/gherkin/table.rl"
 when 2 then
-# line 18 "lib/gherkin/table.rl"
+# line 14 "lib/gherkin/table.rl"
 		begin
 
-        @_cbuf ||= [] 
-        @_cbuf << data[p]; 
+        d = data[@_s..(p-1)].pack('c*')
+        current_row << d
       		end
-# line 18 "lib/gherkin/table.rl"
+# line 14 "lib/gherkin/table.rl"
 when 3 then
-# line 23 "lib/gherkin/table.rl"
+# line 19 "lib/gherkin/table.rl"
 		begin
 
-        current_row << @_cbuf.pack('c*')
-        @_cbuf = []
+        @_s = p
       		end
-# line 23 "lib/gherkin/table.rl"
-# line 243 "lib/gherkin/table.rb"
+# line 19 "lib/gherkin/table.rl"
+# line 242 "lib/gherkin/table.rb"
 			end # action switch
 		end
 	end
@@ -266,7 +265,7 @@ when 3 then
 	end
 	end
 
-# line 47 "lib/gherkin/table.rl"
+# line 42 "lib/gherkin/table.rl"
       @rows
     end
   end
