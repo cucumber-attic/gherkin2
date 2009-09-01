@@ -22,7 +22,7 @@ class << self
 	private :_table_key_offsets, :_table_key_offsets=
 end
 self._table_key_offsets = [
-	0, 0, 4, 8, 9, 17, 21, 26
+	0, 0, 4, 10, 11, 21, 25, 30
 ]
 
 class << self
@@ -30,10 +30,11 @@ class << self
 	private :_table_trans_keys, :_table_trans_keys=
 end
 self._table_trans_keys = [
-	32, 124, 9, 13, 65, 90, 97, 122, 
-	124, 10, 32, 9, 13, 65, 90, 97, 
-	122, 10, 32, 9, 13, 10, 32, 124, 
-	9, 13, 10, 32, 124, 9, 13, 0
+	32, 124, 9, 13, 48, 57, 65, 90, 
+	97, 122, 124, 10, 32, 9, 13, 48, 
+	57, 65, 90, 97, 122, 10, 32, 9, 
+	13, 10, 32, 124, 9, 13, 10, 32, 
+	124, 9, 13, 0
 ]
 
 class << self
@@ -49,7 +50,7 @@ class << self
 	private :_table_range_lengths, :_table_range_lengths=
 end
 self._table_range_lengths = [
-	0, 1, 2, 0, 3, 1, 1, 1
+	0, 1, 3, 0, 4, 1, 1, 1
 ]
 
 class << self
@@ -57,7 +58,7 @@ class << self
 	private :_table_index_offsets, :_table_index_offsets=
 end
 self._table_index_offsets = [
-	0, 0, 4, 7, 9, 15, 19, 24
+	0, 0, 4, 8, 10, 17, 21, 26
 ]
 
 class << self
@@ -65,10 +66,10 @@ class << self
 	private :_table_indicies, :_table_indicies=
 end
 self._table_indicies = [
-	0, 2, 0, 1, 3, 3, 1, 4, 
-	1, 6, 5, 5, 3, 3, 1, 6, 
-	5, 5, 1, 6, 7, 2, 7, 1, 
-	6, 7, 2, 7, 1, 0
+	0, 2, 0, 1, 3, 3, 3, 1, 
+	4, 1, 6, 5, 5, 3, 3, 3, 
+	1, 8, 7, 7, 1, 8, 9, 2, 
+	9, 1, 8, 9, 2, 9, 1, 0
 ]
 
 class << self
@@ -76,7 +77,8 @@ class << self
 	private :_table_trans_targs, :_table_trans_targs=
 end
 self._table_trans_targs = [
-	1, 0, 2, 3, 4, 5, 7, 6
+	1, 0, 2, 3, 4, 5, 7, 5, 
+	7, 6
 ]
 
 class << self
@@ -84,7 +86,8 @@ class << self
 	private :_table_trans_actions, :_table_trans_actions=
 end
 self._table_trans_actions = [
-	0, 0, 3, 1, 0, 0, 5, 0
+	0, 0, 3, 1, 0, 5, 5, 0, 
+	0, 0
 ]
 
 class << self
@@ -113,7 +116,7 @@ self.table_en_main = 1;
       @rows = current_row = []
       data = data.unpack("c*") if data.is_a?(String)
       
-# line 117 "lib/gherkin/table.rb"
+# line 120 "lib/gherkin/table.rb"
 begin
 	p ||= 0
 	pe ||= data.length
@@ -122,7 +125,7 @@ end
 
 # line 36 "lib/gherkin/table.rl"
       
-# line 126 "lib/gherkin/table.rb"
+# line 129 "lib/gherkin/table.rb"
 begin
 	_klen, _trans, _keys, _acts, _nacts = nil
 	_goto_level = 0
@@ -224,7 +227,7 @@ when 2 then
         @rows << current_row
       		end
 # line 14 "lib/gherkin/table.rl"
-# line 228 "lib/gherkin/table.rb"
+# line 231 "lib/gherkin/table.rb"
 			end # action switch
 		end
 	end

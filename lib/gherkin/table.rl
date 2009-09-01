@@ -18,8 +18,8 @@ module Gherkin
       EOL = '\r'? '\n';
       BAR = '|';
       
-      cell = alpha @InsertCell;
-      table_row = space* BAR @StartRow (cell BAR)+ space* EOL @EndRow;
+      cell = alnum @InsertCell;
+      table_row = space* BAR @StartRow (cell BAR)+ %EndRow space* EOL;
       table = table_row+;
       
       main := table;
