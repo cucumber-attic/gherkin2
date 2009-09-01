@@ -9,6 +9,21 @@ languages supported by Ragel (as of this writing C, C++, Objective-C, D, Java, R
 This means a lightning fast parser for Cucumber, but it could also be used in a different BDD
 tool.
 
+== Notes
+
+Ragel supports Ruby, but it's much slower than C. The ruby target will be used for development.
+The final version will use C for MRI and Java for JRuby.
+
+== Ragel links
+
+I didn't know Ragel when I started on this project. The following links were very helpful:
+
+* http://www.complang.org/ragel/
+* http://dev.sipdoc.net/attachments/2/ragel_talk.pdf 
+* http://lambda-the-ultimate.org/node/1125
+* http://www.zedshaw.com/essays/ragel_state_charts.html
+* http://www.devchix.com/2008/01/13/a-hello-world-for-ruby-on-ragel-60/
+
 == Note on Patches/Pull Requests
  
 * Fork the project.

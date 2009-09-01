@@ -47,3 +47,8 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+task :ragel do
+  sh "ragel -R lib/gherkin/table.rl"
+end
+task :spec => :ragel
