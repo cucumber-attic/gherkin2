@@ -21,7 +21,6 @@ module Gherkin
     end
     
     it "should parse a multicharacter cell content" do
-      # parse("|foo|bar|\n").should == [%w{foo bar}]
       scan("|foo|bar|\n", [%w{foo bar}])
     end
     
