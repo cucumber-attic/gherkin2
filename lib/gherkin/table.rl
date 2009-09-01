@@ -12,8 +12,7 @@ module Gherkin
       }
       
       action term_cell {
-        d = data[@_s..(p-1)].pack('c*')
-        current_row << d
+        current_row << data[@_s..(p-1)].pack('c*')
       }
       
       action start_cell {
@@ -40,13 +39,13 @@ module Gherkin
       %% write data;
     end
 
-    def parse(data)
-      @rows = current_row = []
+    def scan(data, listener)
+      @rows = []
       data = data.unpack("c*") if data.is_a?(String)
       eof = data.size
       %% write init;
       %% write exec;
-      @rows
+      listener.table(@rows)
     end
   end
 end
