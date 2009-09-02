@@ -44,14 +44,13 @@ module Gherkin
       scan("| 1 | 2 |", [%w{1 2}])
     end
 
-    it "should parse a 1x2 table without spaces" do
+    it "should parse a 1x2 table without spaces and newline" do
       scan("|1|2|", [%w{1 2}])
     end
-    
+
     it "should not parse a 2x2 table that isn't closed" do
-      # Not the best test, as our helper method doesn't allow for expressing should_not yet,
-      # but the result at least demonstrates the same behavior as the current Cuke table parser
-      scan("| 1 |  |\n|| 4 ", [['1', nil]])
+      # Not the best test, but our helper method doesn't allow for expressing should_not yet
+      scan("| 1 |  |\n|| 4 ", [['1', nil], [nil]])
     end
   end
 end
