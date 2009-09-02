@@ -27,6 +27,10 @@ module Gherkin
     it "should parse a 1x2 table with newline" do
       scan(" | 1 | 2 | \n", [%w{1 2}])
     end
+    
+    it "should allow utf-8" do
+      scan(" | ůﻚ | 2 | \n", [%w{ůﻚ 2}])
+    end
 
     it "should parse a 2x2 table" do
       scan("| 1 | 2 |\n| 3 | 4 |\n", [%w{1 2}, %w{3 4}])

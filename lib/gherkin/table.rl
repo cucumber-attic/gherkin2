@@ -13,7 +13,7 @@ module Gherkin
 
       action accumulate_content {
         @con ||= ''
-        @con += data[p].chr
+        @con += [data[p]].pack("U*")
       }
 
       action store_content {
@@ -60,7 +60,7 @@ module Gherkin
 
     def scan(data, listener)
       @rows = []
-      data = data.unpack("c*") if data.is_a?(String)
+      data = data.unpack("U*") if data.is_a?(String)
       eof = data.size
       %% write init;
       %% write exec;
