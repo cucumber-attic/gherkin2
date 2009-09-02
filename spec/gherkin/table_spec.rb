@@ -39,11 +39,6 @@ module Gherkin
     it "should parse a 2x2 table with empty cells" do
       scan("| 1 |  |\n|| 4 |\n", [['1', nil], [nil, '4']])
     end
-
-    it "should not parse a 2x2 table that isn't closed" do
-      pending
-      scan("| 1 |  |\n|| 4 ", [['1', nil], [nil, '4']])
-    end
     
     it "should parse a 1x2 table without newline" do
       scan("| 1 | 2 |", [%w{1 2}])
@@ -51,6 +46,12 @@ module Gherkin
 
     it "should parse a 1x2 table without spaces" do
       scan("|1|2|", [%w{1 2}])
+    end
+    
+    it "should not parse a 2x2 table that isn't closed" do
+      # Not the best test, as our helper method doesn't allow for expressing should_not yet,
+      # but the result at least demonstrates the same behavior as the current Cuke table parser
+      scan("| 1 |  |\n|| 4 ", [['1', nil]])
     end
   end
 end
