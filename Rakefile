@@ -56,11 +56,19 @@ namespace :ragel do
   desc "Generate Ruby from the Ragel rule files"
   task :gen do
     sh "ragel -R lib/gherkin/table.rl"
+    sh "ragel -R lib/gherkin/feature.rl"
   end
   
   desc "Generate a dot file of the Ragel state machine"
   task :dot do
     sh "ragel -V lib/gherkin/table.rl -o table.dot"
+    sh "ragel -V lib/gherkin/feature.rl -o feature.dot"
+  end
+
+  desc "Generate a png diagram of the Ragel state machine"
+  task :png => :dot do
+    sh "dot -Tpng table.dot > table.png"
+    sh "dot -Tpng feature.dot > feature.png"
   end
 end
 
