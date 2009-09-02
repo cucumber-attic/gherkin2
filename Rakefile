@@ -35,6 +35,7 @@ end
 task :spec => :check_dependencies
 
 task :default => :spec
+task :spec => "ragel:gen"
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
@@ -50,7 +51,15 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-task :ragel do
-  sh "ragel -R lib/gherkin/table.rl"
+namespace :ragel do
+  desc "Generate Ruby from the Ragel rule files"
+  task :gen do
+    sh "ragel -R lib/gherkin/table.rl"
+  end
+  
+  desc "Generate a dot file of the Ragel state machine"
+  task :dot do
+    sh "ragel -V lib/gherkin/table.rl -o table.dot"
+  end
 end
-task :spec => :ragel
+
