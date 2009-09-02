@@ -61,5 +61,10 @@ namespace :ragel do
   task :dot do
     sh "ragel -V lib/gherkin/table.rl -o table.dot"
   end
+
+  desc "Generate a png diagram of the Ragel state machine"
+  task :png => :dot do
+    sh "dot -Tpng table.dot > table.png"
+  end
 end
 
