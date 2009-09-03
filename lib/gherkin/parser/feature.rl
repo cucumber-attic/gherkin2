@@ -19,19 +19,19 @@ module Gherkin
         action store_feature_content {
           con = data[@content_start...@keyword_start].pack("U*")
           con.strip!
-          @listener.feature(con)
+          @listener.feature_found(con)
         }
       
         action store_scenario_content {
           con = data[@content_start...@keyword_start].pack("U*")
           con.strip!
-          @listener.scenario(con)
+          @listener.scenario_found(con)
         }
       
         action store_step_content {
           con = data[@content_start...@keyword_start].pack("U*")
           con.strip!
-          @listener.given(con)
+          @listener.step_found(con)
         }
 
         include feature_common "feature_common.rl"; 
