@@ -62,9 +62,11 @@ module Gherkin
       @rows = []
       data = data.unpack("U*") if data.is_a?(String)
       eof = data.size
+    
       %% write init;
       %% write exec;
-      listener.table(@rows)
+      
+      listener.table_found(@rows)
     end
   end
 end
