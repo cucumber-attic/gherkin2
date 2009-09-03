@@ -4,5 +4,6 @@ coverage
 rdoc
 pkg
 lib/gherkin/table.rb
+lib/gherkin/feature.rb
 *.dot
 *.png
