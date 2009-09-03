@@ -16,19 +16,19 @@ module Gherkin
       }
 
       action store_feature_content {
-        con = data[@content_start...@keyword_start].map { |x| [x].pack("U*")}.join
+        con = data[@content_start...@keyword_start].pack("U*")
         con.strip!
         @listener.feature(con)
       }
       
       action store_scenario_content {
-        con = data[@content_start...@keyword_start].map { |x| [x].pack("U*")}.join
+        con = data[@content_start...@keyword_start].pack("U*")
         con.strip!
         @listener.scenario(con)
       }
       
       action store_step_content {
-        con = data[@content_start...@keyword_start].map { |x| [x].pack("U*")}.join
+        con = data[@content_start...@keyword_start].pack("U*")
         con.strip!
         @listener.given(con)
       }
