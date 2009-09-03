@@ -10,25 +10,24 @@ module Gherkin
     end
 
     before(:each) do
-      @listener = mock('listener')
+      @listener = mock('listener').as_null_object
     end
 
-    it "should parse a feature with a scenario and a step and pass each to the listener" do
-      [[:feature, "Feature Text"],
-       [:scenario, "Reading a Scenario"],
-       [:given,"there is a step"]].each do |event, data|
-         @listener.should_receive(event).with(data)
+    describe "A single feature, single scenario, single step" do
+      it "should find the feature" do
+        @listener.should_receive(:feature_found).with("Feature Text").once
+        Feature.new.scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n", @listener)
       end
-      Feature.new.scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n", @listener)
-    end
-    
-    it "should parse a feature from a file with a scenario and a step and pass each to the listener" do
-      [[:feature, "Feature Text"],
-       [:scenario, "Reading a Scenario"],
-       [:given,"there is a step"]].each do |event, data|
-         @listener.should_receive(event).with(data)
+       
+      it "should find the scenario" do
+        @listener.should_receive(:scenario_found).with("Reading a Scenario")
+        Feature.new.scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n", @listener)
       end
-      scan_file("simple.feature")
+
+      it "should find the step" do
+        @listener.should_receive(:step_found).with("there is a step") 
+        Feature.new.scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n", @listener)
+      end
     end
   end
 end
