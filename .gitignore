@@ -3,7 +3,6 @@
 coverage
 rdoc
 pkg
-lib/gherkin/table.rb
-lib/gherkin/feature.rb
+lib/gherkin/parser/*.rb
 *.dot
 *.png

@@ -1,3 +1,6 @@
+require 'gherkin/parser/feature'
+require 'gherkin/parser/table'
+
 module Gherkin
   module Parser
     extend self

@@ -55,8 +55,11 @@ end
 namespace :ragel do
   desc "Generate Ruby from the Ragel rule files"
   task :gen do
-    sh "ragel -R lib/gherkin/table.rl"
-    sh "ragel -R lib/gherkin/feature.rl"
+    Dir["lib/gherkin/parser/*rl"].each do |path|
+      sh "ragel -R #{path}"  
+    end
+    #sh "ragel -R lib/gherkin/table.rl"
+    #sh "ragel -R lib/gherkin/feature.rl"
   end
   
   desc "Generate a dot file of the Ragel state machine"
