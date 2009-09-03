@@ -1,47 +1,49 @@
 module Gherkin
-  class Table
-    %%{      
-      machine table;
+  module Parser
+    class Table
+      %%{      
+        machine table;
 
-      action initialize {
-        current_row = []
-      }
+        action initialize {
+          current_row = []
+        }
 
-      action store_row {
-        @rows << current_row
-      }
+        action store_row {
+          @rows << current_row
+        }
 
-      action accumulate_content {
-        @con ||= ''
-        @con += [data[p]].pack("U*")
-      }
+        action accumulate_content {
+          @con ||= ''
+          @con += [data[p]].pack("U*")
+        }
 
-      action store_content {
-        @con.strip!
-        current_row << (@con.empty? ? nil : @con)
-        @con = nil
-      }
+        action store_content {
+          @con.strip!
+          current_row << (@con.empty? ? nil : @con)
+          @con = nil
+        }
 
-      action no_content {
-        current_row << nil
-      }
+        action no_content {
+          current_row << nil
+        }
 
-      include table_common "table_common.rl";
-    }%%
+        include table_common "table_common.rl";
+      }%%
 
-    def initialize
-      %% write data;
-    end
+      def initialize
+        %% write data;
+      end
 
-    def scan(data, listener)
-      @rows = []
-      data = data.unpack("U*") if data.is_a?(String)
-      eof = data.size
+      def scan(data, listener)
+        @rows = []
+        data = data.unpack("U*") if data.is_a?(String)
+        eof = data.size
     
-      %% write init;
-      %% write exec;
+        %% write init;
+        %% write exec;
       
-      listener.table_found(@rows)
+        listener.table_found(@rows)
+      end
     end
   end
 end
