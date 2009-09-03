@@ -58,20 +58,20 @@ namespace :ragel do
     Dir["lib/gherkin/parser/*rl"].each do |path|
       sh "ragel -R #{path}"  
     end
-    #sh "ragel -R lib/gherkin/table.rl"
-    #sh "ragel -R lib/gherkin/feature.rl"
   end
   
   desc "Generate a dot file of the Ragel state machine"
   task :dot do
-    sh "ragel -V lib/gherkin/table.rl -o table.dot"
-    sh "ragel -V lib/gherkin/feature.rl -o feature.dot"
+    Dir["lib/gherkin/parser/*rl"].each do |path|
+      sh "ragel -V #{path} -o #{File.basename(path, '.rl')}.dot"
+    end
   end
 
   desc "Generate a png diagram of the Ragel state machine"
   task :png => :dot do
-    sh "dot -Tpng table.dot > table.png"
-    sh "dot -Tpng feature.dot > feature.png"
+    Dir["*dot"].each do |path|
+      sh "dot -Tpng #{path} > #{File.basename(path, '.dot')}.png"
+    end
   end
 end
 
