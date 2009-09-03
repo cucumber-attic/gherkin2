@@ -56,21 +56,21 @@ namespace :ragel do
   desc "Generate Ruby from the Ragel rule files"
   task :gen do
     Dir["lib/gherkin/parser/*rl"].each do |path|
-      sh "ragel -R #{path}"  
+      sh "ragel -R #{path}" unless path =~ /_common\.rl$/ 
     end
   end
   
   desc "Generate a dot file of the Ragel state machine"
   task :dot do
     Dir["lib/gherkin/parser/*rl"].each do |path|
-      sh "ragel -V #{path} -o #{File.basename(path, '.rl')}.dot"
+      sh "ragel -V #{path} -o #{File.basename(path, '.rl')}.dot" unless path =~ /_common\.rl$/
     end
   end
 
   desc "Generate a png diagram of the Ragel state machine"
   task :png => :dot do
     Dir["*dot"].each do |path|
-      sh "dot -Tpng #{path} > #{File.basename(path, '.dot')}.png"
+      sh "dot -Tpng #{path} > #{File.basename(path, '.dot')}.png" unless path =~ /_common\.rl$/
     end
   end
 end
