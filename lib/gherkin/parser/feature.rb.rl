@@ -5,35 +5,38 @@ module Gherkin
         machine feature;
 
         action begin_content {
-          @content_start ||= p
+          @content_start = p
         }
       
-        action keyword {
-          @keyword_start = p
-        }
-
-        action clear_content {
-          @content_start = nil
-        }
-
         action store_feature_content {
-          con = data[@content_start...@keyword_start].pack("U*")
+          con = data[@content_start...p].pack("U*")
           con.strip!
+          if $debug  
+            puts "FOUND FEATURE CONTENT"
+            puts con
+          end
           @listener.feature(con)
         }
       
         action store_scenario_content {
-          con = data[@content_start...@keyword_start].pack("U*")
+          con = data[@content_start...p].pack("U*")
           con.strip!
+          if $debug
+            puts "FOUND SCENARIO CONTENT"
+            puts con
+          end
           @listener.scenario(con)
         }
       
         action store_step_content {
-          con = data[@content_start...@keyword_start].pack("U*")
+          con = data[@content_start...p].pack("U*")
           con.strip!
+          if $debug
+            puts "FOUND STEP CONTENT"
+            puts con
+          end
           @listener.step(con)
         }
-
         include feature_common "feature_common.rl"; 
       }%%
   

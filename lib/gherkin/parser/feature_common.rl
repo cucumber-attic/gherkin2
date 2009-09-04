@@ -4,33 +4,24 @@
   FEATURE = 'Feature:';
   SCENARIO = 'Scenario:';
   GIVEN = 'Given' | 'When' | 'And' | 'Then' | 'But';
+  STEP = GIVEN;
   AND = 'And';
   THEN = 'Then'; 
  
   EOL = '\r'? '\n';
+  text = [A-Za-z_: 0-9?];  #THIS IS NOT EXHAUSTIVE YET
 
-  KEYWORDS = (FEATURE | SCENARIO | GIVEN);
+  Feature = space* FEATURE %begin_content text+ EOL >store_feature_content;  #SINGLE LINE ONLY
+  Scenario = space* SCENARIO %begin_content text+ EOL >store_scenario_content;  #SINGLE LINE ONLY
+  Step = space* STEP %begin_content text+ EOL >store_step_content;  
 
   feature = (
     start: (
-      FEATURE space* ->feature_content
-    ),
-
-    feature_content: (
-      any+ >begin_content %/keyword %/store_feature_content ->feature_content |
-      EOL+ space* SCENARIO >keyword @store_feature_content %clear_content ->scenario_content
-    ),
-
-    scenario_content: (
-      any+ >begin_content %/keyword %/store_scenario_content ->scenario_content | 
-      EOL+ space* GIVEN >keyword @store_scenario_content %clear_content ->step_content
-    ),
- 
-    step_content: (
-      !EOL+ >begin_content EOL >keyword @store_step_content %clear_content -> step_content
-      space* GIVEN ->step_content 
+      Feature ->start |
+      Scenario ->start |
+      Step ->start
     )
-  );     
+  );
 
   main := feature;
 }%%

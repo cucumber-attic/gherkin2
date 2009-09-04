@@ -24,11 +24,11 @@ module Gherkin
         end
        
         it "should find the scenario" do
-          @listener.should_receive(:scenario).with("Reading a Scenario")
+          @listener.should_receive(:scenario).with("Reading a Scenario").once
         end
 
         it "should find the step" do
-          @listener.should_receive(:step).with("there is a step") 
+          @listener.should_receive(:step).with("there is a step").once
         end
       end
 
@@ -43,7 +43,7 @@ module Gherkin
         end
        
         it "should find the scenario" do
-          @listener.should_receive(:scenario).with("Reading a Scenario")
+          @listener.should_receive(:scenario).with("Reading a Scenario").once
         end
 
         it "should find the step" do
@@ -53,26 +53,46 @@ module Gherkin
         end
       end
 
-      describe "A single multi-line feature with no scenario" do
-
+      describe "A single feature with no scenario" do
         it "should find the feature" do
-          @listener.should_receive(:feature).with("Feature Text\n  Line 2 \n Line 3")
-          Feature.new(@listener).scan("Feature: Feature Text\n  Line 2 \n Line 3")
+          @listener.should_receive(:feature).with("Feature Text").once
+          Feature.new(@listener).scan("Feature: Feature Text\n")
         end
-
+      end
+      
+      describe "A multi-line feature with no scenario" do
+        it "should find the feature" do
+          pending
+          @listener.should_receive(:feature).with("Feature Text\n  And some more text").once
+          Feature.new(@listener).scan("Feature: Feature Text\n  And some more text")
+        end
       end
 
-      describe "A multi-line feature with a multi-line scenario but no steps" do
+      describe "A feature with a scenario but no steps" do
         after(:each) do
-          Feature.new(@listener).scan("Feature: Feature Text\n  Line 2 \n Line 3\n    Scenario: Reading a Scenario\n  With two lines\n")
+          Feature.new(@listener).scan("Feature: Feature Text\nScenario: Reading a Scenario\n")
         end
 
         it "should find the feature" do
-          @listener.should_receive(:feature).with("Feature Text\n  Line 2 \n Line 3")
+          @listener.should_receive(:feature).with("Feature Text").once
         end
 
         it "should find the scenario" do
-          @listener.should_receive(:scenario).with("Reading a Scenario\n  With two lines")
+          @listener.should_receive(:scenario).with("Reading a Scenario").once
+        end
+      end
+
+      describe "A feature with two scenarios" do
+        after(:each) do
+          Feature.new(@listener).scan("Feature: Feature Text\nScenario: Reading a Scenario\n  Given a step\n\nScenario: A second scenario\n Given another step\n")
+        end
+
+        it "should find things in the right order" do
+          @listener.should_receive(:feature).with("Feature Text").ordered
+          @listener.should_receive(:scenario).with("Reading a Scenario").ordered
+          @listener.should_receive(:step).with("a step").ordered
+          @listener.should_receive(:scenario).with("A second scenario").ordered
+          @listener.should_receive(:step).with("another step").ordered
         end
       end
     end
