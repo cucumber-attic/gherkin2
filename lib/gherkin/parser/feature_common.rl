@@ -17,12 +17,12 @@
     ),
 
     feature_content: (
-      any+ >begin_content ->feature_content |
+      any+ >begin_content %/keyword %/store_feature_content ->feature_content |
       EOL+ space* SCENARIO >keyword @store_feature_content %clear_content ->scenario_content
     ),
 
     scenario_content: (
-      any+ >begin_content ->scenario_content | 
+      any+ >begin_content %/keyword %/store_scenario_content ->scenario_content | 
       EOL+ space* GIVEN >keyword @store_scenario_content %clear_content ->step_content
     ),
  

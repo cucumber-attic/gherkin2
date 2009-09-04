@@ -52,6 +52,29 @@ module Gherkin
           @listener.should_receive(:step).with("a third step").ordered
         end
       end
+
+      describe "A single multi-line feature with no scenario" do
+
+        it "should find the feature" do
+          @listener.should_receive(:feature).with("Feature Text\n  Line 2 \n Line 3")
+          Feature.new(@listener).scan("Feature: Feature Text\n  Line 2 \n Line 3")
+        end
+
+      end
+
+      describe "A multi-line feature with a multi-line scenario but no steps" do
+        after(:each) do
+          Feature.new(@listener).scan("Feature: Feature Text\n  Line 2 \n Line 3\n    Scenario: Reading a Scenario\n  With two lines\n")
+        end
+
+        it "should find the feature" do
+          @listener.should_receive(:feature).with("Feature Text\n  Line 2 \n Line 3")
+        end
+
+        it "should find the scenario" do
+          @listener.should_receive(:scenario).with("Reading a Scenario\n  With two lines")
+        end
+      end
     end
   end
 end
