@@ -4,7 +4,7 @@ module Gherkin
       %%{
         machine feature;
 
-        action accumulate_content {
+        action begin_content {
           @content_start ||= p
         }
       

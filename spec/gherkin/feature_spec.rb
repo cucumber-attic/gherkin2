@@ -14,19 +14,42 @@ module Gherkin
       end
 
       describe "A single feature, single scenario, single step" do
+        
+        after(:each) do
+          Feature.new(@listener).scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n")
+        end
+
         it "should find the feature" do
           @listener.should_receive(:feature).with("Feature Text").once
-          Feature.new(@listener).scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n")
         end
        
         it "should find the scenario" do
           @listener.should_receive(:scenario).with("Reading a Scenario")
-          Feature.new(@listener).scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n")
         end
 
         it "should find the step" do
           @listener.should_receive(:step).with("there is a step") 
-          Feature.new(@listener).scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n")
+        end
+      end
+
+      describe "A single feature, single scenario, three steps" do
+        
+        after(:each) do
+          Feature.new(@listener).scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n    And another step\n   And a third step\n")
+        end
+
+        it "should find the feature" do
+          @listener.should_receive(:feature).with("Feature Text").once
+        end
+       
+        it "should find the scenario" do
+          @listener.should_receive(:scenario).with("Reading a Scenario")
+        end
+
+        it "should find the step" do
+          @listener.should_receive(:step).with("there is a step").ordered
+          @listener.should_receive(:step).with("another step").ordered
+          @listener.should_receive(:step).with("a third step").ordered
         end
       end
     end
