@@ -4,10 +4,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 module Gherkin
   module Parser
     describe Table do
-      def scan(text, expected)
-        listener = mock('listener')
-        listener.should_receive(:table).with(expected)
-        Table.new(listener).scan(text)
+      before do
+        @listener = mock('listener')
+        @table = Table.new(@listener)
       end
     
       tables = {
@@ -18,45 +17,65 @@ module Gherkin
     
       tables.each do |text, expected|
         it "should parse #{text}" do
-          scan(text, expected)
+          @listener.should_receive(:table).with(expected)
+          @table.scan(text)
         end
-      end
+      end      
     
       it "should parse a multicharacter cell content" do
-        scan("|foo|bar|\n", [%w{foo bar}])
+        @listener.should_receive(:table).with([%w{foo bar}])
+        @table.scan("| foo | bar |\n")
       end
     
+      it "should parse cells with spaces within the content" do
+        @listener.should_receive(:table).with([["Dill pickle", "Valencia orange"], ["Ruby red grapefruit", "Tire iron"]])
+        @table.scan("| Dill pickle | Valencia orange |\n| Ruby red grapefruit | Tire iron |\n")
+      end
+
       it "should parse a 1x2 table with newline" do
-        scan(" | 1 | 2 | \n", [%w{1 2}])
+        @listener.should_receive(:table).with([%w{1 2}])
+        @table.scan("| 1 | 2 |\n")
       end
     
       it "should allow utf-8" do
-        scan(" | ůﻚ | 2 | \n", [%w{ůﻚ 2}])
+        @listener.should_receive(:table).with([%w{ůﻚ 2}])
+        @table.scan(" | ůﻚ | 2 | \n")
       end
 
       it "should parse a 2x2 table" do
-        scan("| 1 | 2 |\n| 3 | 4 |\n", [%w{1 2}, %w{3 4}])
+        @listener.should_receive(:table).with([%w{1 2}, %w{3 4}])
+        @table.scan("| 1 | 2 |\n| 3 | 4 |\n")
       end
 
       it "should parse a 2x2 table with several newlines" do
-        scan("| 1 | 2 |\n| 3 | 4 |\n\n\n", [%w{1 2}, %w{3 4}])
+        @listener.should_receive(:table).with([%w{1 2}, %w{3 4}])
+        @table.scan("| 1 | 2 |\n| 3 | 4 |\n\n\n")
       end
 
       it "should parse a 2x2 table with empty cells" do
-        scan("| 1 |  |\n|| 4 |\n", [['1', nil], [nil, '4']])
+        @listener.should_receive(:table).with([['1', nil], [nil, '4']])
+        @table.scan("| 1 |  |\n|| 4 |\n")
       end
     
       it "should parse a 1x2 table without newline" do
-        scan("| 1 | 2 |", [%w{1 2}])
+        @listener.should_receive(:table).with([%w{1 2}])
+        @table.scan("| 1 | 2 |")
       end
 
       it "should parse a 1x2 table without spaces and newline" do
-        scan("|1|2|", [%w{1 2}])
+        @listener.should_receive(:table).with([%w{1 2}])
+        @table.scan("|1|2|")
       end
 
       it "should not parse a 2x2 table that isn't closed" do
-        # Not the best test, but our helper method doesn't allow for expressing should_not yet
-        scan("| 1 |  |\n|| 4 ", [['1', nil], [nil]])
+        @listener.should_not_receive(:table).with([['1', nil], [nil, 4]])
+        @listener.should_receive(:table).with([['1', nil], [nil]])
+        @table.scan("| 1 |  |\n|| 4 ")
+      end
+      
+      it "should parse a table with tab spacing" do
+        @listener.should_receive(:table).with([["abc", "123"]])
+        @table.scan("|\tabc\t|\t123\t\t\t|\n")
       end
     end
   end
