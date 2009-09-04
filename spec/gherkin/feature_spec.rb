@@ -6,7 +6,7 @@ module Gherkin
     describe Feature do
   
       def scan_file(file)
-        Feature.new.scan(File.new(File.dirname(__FILE__) + "/gherkin_parser/" + file).read,@listener)
+        Feature.new(@listener).scan(File.new(File.dirname(__FILE__) + "/gherkin_parser/" + file).read)
       end
 
       before(:each) do
@@ -16,17 +16,17 @@ module Gherkin
       describe "A single feature, single scenario, single step" do
         it "should find the feature" do
           @listener.should_receive(:feature_found).with("Feature Text").once
-          Feature.new.scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n", @listener)
+          Feature.new(@listener).scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n")
         end
        
         it "should find the scenario" do
           @listener.should_receive(:scenario_found).with("Reading a Scenario")
-          Feature.new.scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n", @listener)
+          Feature.new(@listener).scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n")
         end
 
         it "should find the step" do
           @listener.should_receive(:step_found).with("there is a step") 
-          Feature.new.scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n", @listener)
+          Feature.new(@listener).scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n")
         end
       end
     end

@@ -30,11 +30,12 @@ module Gherkin
         include table_common "table_common.rl";
       }%%
 
-      def initialize
+      def initialize(listener)
+        @listener = listener
         %% write data;
       end
 
-      def scan(data, listener)
+      def scan(data)
         @rows = []
         data = data.unpack("U*") if data.is_a?(String)
         eof = data.size
@@ -42,7 +43,7 @@ module Gherkin
         %% write init;
         %% write exec;
       
-        listener.table_found(@rows)
+        @listener.table_found(@rows)
       end
     end
   end

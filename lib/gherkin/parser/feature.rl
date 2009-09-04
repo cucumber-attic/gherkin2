@@ -37,12 +37,12 @@ module Gherkin
         include feature_common "feature_common.rl"; 
       }%%
   
-      def initialize
+      def initialize(listener)
+        @listener = listener
         %% write data;
       end
   
-      def scan(data, listener)
-        @listener = listener
+      def scan(data)
         data = data.unpack("U*") if data.is_a?(String)
         eof = data.size
         %% write init;
