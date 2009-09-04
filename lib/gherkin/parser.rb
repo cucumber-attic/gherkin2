@@ -6,10 +6,9 @@ module Gherkin
     extend self
     
     def parse_table(text, builder)
-      listener = Listener.new
-      parser = Table.new
-      parser.scan(text, listener)
-      builder.build(listener.table)
+      parser = Table.new(builder)
+      parser.scan(text)
+      builder
     end    
   end
 end
