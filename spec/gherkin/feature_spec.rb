@@ -15,17 +15,17 @@ module Gherkin
 
       describe "A single feature, single scenario, single step" do
         it "should find the feature" do
-          @listener.should_receive(:feature_found).with("Feature Text").once
+          @listener.should_receive(:feature).with("Feature Text").once
           Feature.new(@listener).scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n")
         end
        
         it "should find the scenario" do
-          @listener.should_receive(:scenario_found).with("Reading a Scenario")
+          @listener.should_receive(:scenario).with("Reading a Scenario")
           Feature.new(@listener).scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n")
         end
 
         it "should find the step" do
-          @listener.should_receive(:step_found).with("there is a step") 
+          @listener.should_receive(:step).with("there is a step") 
           Feature.new(@listener).scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n")
         end
       end

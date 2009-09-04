@@ -43,7 +43,7 @@ module Gherkin
         %% write init;
         %% write exec;
       
-        @listener.table_found(@rows)
+        @listener.table(@rows)
       end
     end
   end

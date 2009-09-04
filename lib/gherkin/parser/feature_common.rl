@@ -18,17 +18,17 @@
 
     feature_content: (
       any+ >accumulate_content ->feature_content |
-      EOL+ space* SCENARIO >keyword_found @store_feature_content %clear_content ->scenario_content
+      EOL+ space* SCENARIO >keyword @store_feature_content %clear_content ->scenario_content
     ),
 
     scenario_content: (
       any+ >accumulate_content ->scenario_content | 
-      EOL+ space* GIVEN >keyword_found @store_scenario_content %clear_content ->step_content
+      EOL+ space* GIVEN >keyword @store_scenario_content %clear_content ->step_content
     ),
  
     step_content: (
       any+ >accumulate_content ->step_content |
-      EOL+ >keyword_found %store_step_content -> final
+      EOL+ >keyword %store_step_content -> final
     )
   );     
 

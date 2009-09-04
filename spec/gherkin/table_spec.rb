@@ -6,7 +6,7 @@ module Gherkin
     describe Table do
       def scan(text, expected)
         listener = mock('listener')
-        listener.should_receive(:table_found).with(expected)
+        listener.should_receive(:table).with(expected)
         Table.new(listener).scan(text)
       end
     
