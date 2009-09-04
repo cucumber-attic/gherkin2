@@ -55,8 +55,11 @@ end
 namespace :ragel do
   desc "Generate Ruby from the Ragel rule files"
   task :gen do
-    Dir["lib/gherkin/parser/*rl"].each do |path|
-      sh "ragel -R #{path}" unless path =~ /_common\.rl$/ 
+    Dir["lib/gherkin/parser/*.rl"].each do |rl|
+      unless rl =~ /_common\.rl$/
+        code = rl[0..-4]
+        sh "ragel -R #{rl} -o #{code}" 
+      end
     end
   end
   
