@@ -12,10 +12,25 @@ module Gherkin
           tag = data[tag_start...p].pack("U*")
           @listener.tag(tag)
         }
+
+        action start_pystring {
+          # capture indent as well?
+          pystring_start = p + 4
+        }
+
+        action end_pystring {
+          pystring_content = data[pystring_start...(p - 4)].pack("U*")
+          @listener.pystring(pystring_content)
+        }
         
         Tag = ( '@' [^@\r\n\t ]+ ) >start_tag %end_tag ;
-        Tags = Tag space*;
-        main := Tags+;
+        Tags = Tag space* ;
+
+        PyStringStart = '"""' space* '\n' ;
+        PyStringEnd = '"""' ;
+        PyString = PyStringStart any* PyStringEnd ;
+
+        main := Tags+ | PyString >start_pystring %end_pystring ;
       }%%
       
       def initialize(listener)
