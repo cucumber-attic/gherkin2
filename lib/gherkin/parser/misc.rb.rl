@@ -24,7 +24,8 @@ module Gherkin
         }
         
         Tag = ( '@' [^@\r\n\t ]+ ) >start_tag %end_tag ;
-        Tags = Tag space* ;
+#        Tags = Tag space* ;
+        Tags = space* (Tag space*)+;
 
         PyStringStart = '"""' space* '\n' ;
         PyStringEnd = '"""' ;

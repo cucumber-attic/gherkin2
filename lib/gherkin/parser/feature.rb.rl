@@ -37,6 +37,26 @@ module Gherkin
           end
           @listener.step(con)
         }
+        
+        action store_comment_content {
+          con = data[@content_start...p].pack("U*")
+          con.strip!
+          if $debug
+            puts "FOUND STEP CONTENT"
+            puts con
+          end
+          @listener.comment(con)
+        }
+        
+        action store_tag_content {
+          con = data[@content_start...p].pack("U*")
+          con.strip!
+          if $debug
+            puts "FOUND TAG CONTENT"
+            puts con
+          end
+          @listener.tag(con)
+        }
         include feature_common "feature_common.rl"; 
       }%%
   
