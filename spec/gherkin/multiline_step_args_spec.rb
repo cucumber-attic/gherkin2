@@ -23,7 +23,7 @@ module Gherkin
       end
       
       it "should parse a simple pystring" do
-        @listener.should_receive(:pystring).with("I am a pystring")
+        @listener.should_receive(:pystring).with("I am a pystring\n")
         @parser.scan ps("I am a pystring")
       end
 
@@ -33,32 +33,32 @@ module Gherkin
       end
 
       it "should parse a pystring containing a newline" do
-        @listener.should_receive(:pystring).with("A\nB")
+        @listener.should_receive(:pystring).with("A\nB\n")
         @parser.scan ps("A\nB")
       end
       
       it "should parse a multiline string" do
-        @listener.should_receive(:pystring).with("A\nB\nC\nD")
+        @listener.should_receive(:pystring).with("A\nB\nC\nD\n")
         @parser.scan ps("A\nB\nC\nD")
       end
       
       it "should parse a string with lots of newlines" do
-        @listener.should_receive(:pystring).with("A\n\nB")
+        @listener.should_receive(:pystring).with("A\n\nB\n")
         @parser.scan ps("A\n\nB")
       end
       
       it "should ignore unescaped quotes inside the string delimeters" do
-        @listener.should_receive(:pystring).with('What does "this" mean?')
+        @listener.should_receive(:pystring).with("What does \"this\" mean?\n")
         @parser.scan ps('What does "this" mean?')
       end
       
       it "should remove whitespace up to the column of the opening quote" do
-        @listener.should_receive(:pystring).with('I have been indented')
+        @listener.should_receive(:pystring).with("I have been indented\n")
         @parser.scan indent(ps('I have been indented'), 4)
       end
       
       it "should preserve whitespace after the column of the opening quote" do
-        @listener.should_receive(:pystring).with('  I have been indented')
+        @listener.should_receive(:pystring).with("  I have been indented\n")
         @parser.scan indent(ps('  I have been indented'), 4)
       end
       
