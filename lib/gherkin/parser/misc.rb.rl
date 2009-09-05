@@ -8,12 +8,6 @@ module Gherkin
           start_col = p - @last_newline
           start = p + 4
         }
-
-        # Unused
-        action end {
-          pystring_content = data[start...(p - 4)].pack("U*")
-          @lines << pystring_content
-        }
         
         action start_line {
           line_col = p - @last_newline
@@ -31,7 +25,7 @@ module Gherkin
         PyStringStart = '"""' space* newline ;
         PyStringEnd = '"""' ;
         PyStringLine = space* ( any* >start_line %end_line ) newline;
-        PyString = PyStringStart PyStringLine PyStringEnd ;
+        PyString = PyStringStart PyStringLine* PyStringEnd ;
 
         main := space* PyString >start ;
       }%%
@@ -50,7 +44,7 @@ module Gherkin
         %% write init;
         %% write exec;
         
-        @listener.pystring(@lines.join)
+        @listener.pystring(@lines.join("\n"))
       end
     end
   end
