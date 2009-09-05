@@ -4,25 +4,42 @@ module Gherkin
       %%{
         machine misc;
         
-        action start_pystring {
-          # capture indent as well?
-          pystring_start = p + 4
+        action start {
+          start_col = p - @last_newline
+          start = p + 4
         }
 
-        action end_pystring {
-          pystring_content = data[pystring_start...(p - 4)].pack("U*")
-          @listener.pystring(pystring_content)
+        # Unused
+        action end {
+          pystring_content = data[start...(p - 4)].pack("U*")
+          @lines << pystring_content
         }
         
-        PyStringStart = '"""' space* '\n' ;
+        action start_line {
+          line_col = p - @last_newline
+          line_start = p
+        }
+        
+        action end_line {
+          line = data[line_start...p].pack("U*")
+          offset = line_col - start_col
+          @lines << (offset >= 0 ? line.gsub(/^/, ' ' * offset) : line)
+        }
+        
+        newline = ('\r'? '\n') @{ @last_newline = p + 1} ;
+        
+        PyStringStart = '"""' space* newline ;
         PyStringEnd = '"""' ;
-        PyString = PyStringStart any* PyStringEnd ;
+        PyStringLine = space* ( any* >start_line %end_line ) newline;
+        PyString = PyStringStart PyStringLine PyStringEnd ;
 
-        main := PyString >start_pystring %end_pystring ;
+        main := space* PyString >start ;
       }%%
       
       def initialize(listener)
         @listener = listener
+        @last_newline = 0
+        @lines = []
         %% write data;
       end
       
@@ -32,6 +49,8 @@ module Gherkin
         
         %% write init;
         %% write exec;
+        
+        @listener.pystring(@lines.join)
       end
     end
   end
