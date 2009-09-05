@@ -5,25 +5,28 @@ module Gherkin
   module Parser
     describe "parsing multiline step arguments (pystrings)" do
       
+      def ps(content)
+        '"""%s"""' % ("\n" + content + "\n")
+      end
+      
       before do
         @listener = mock('listener')
         @parser = Misc.new(@listener)
-        @ps = lambda { |content| '"""%s"""' % ("\n" + content + "\n") }
       end
       
       it "should parse a simple pystring" do
         @listener.should_receive(:pystring).with('I am a pystring')
-        @parser.scan @ps["I am a pystring"]
+        @parser.scan ps("I am a pystring")
       end
 
       it "should parse an empty pystring" do
         @listener.should_receive(:pystring).with("")
-        @parser.scan @ps[""]
+        @parser.scan ps("")
       end
 
       it "should parse a pystring containing a newline" do
         @listener.should_receive(:pystring).with("I am on line one\nI am on line two")
-        @parser.scan @ps["I am on line one\nI am on line two"]
+        @parser.scan ps("I am on line one\nI am on line two")
       end
 
       it "should remove whitespace up to the column of the opening quote"
