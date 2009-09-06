@@ -65,7 +65,6 @@ module Gherkin
       it "should provide the amount of indentation to the listener"
       
       it "should handle complex pystrings" do
-        pending "Indenting the pystring makes this pass... not sure why yet"
         pystring = <<EOS
 # Feature comment
 @one
