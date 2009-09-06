@@ -24,7 +24,7 @@ module Gherkin
         
         PyStringStart = '"""' >start space* newline ;
         PyStringEnd = '"""' ;
-        PyStringLine = space* (any* newline) >start_line %end_line ;
+        PyStringLine = space* ^newline* >start_line %end_line newline;
         
         PyString = PyStringStart PyStringLine* PyStringEnd ;
 
@@ -45,7 +45,7 @@ module Gherkin
         %% write init;
         %% write exec;
         
-        @listener.pystring(@lines.join)
+        @listener.pystring(@lines.join("\n"))
       end
     end
   end

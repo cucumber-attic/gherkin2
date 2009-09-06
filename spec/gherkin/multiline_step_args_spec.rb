@@ -23,7 +23,7 @@ module Gherkin
       end
       
       it "should parse a simple pystring" do
-        @listener.should_receive(:pystring).with("I am a pystring\n")
+        @listener.should_receive(:pystring).with("I am a pystring")
         @parser.scan ps("I am a pystring")
       end
 
@@ -32,33 +32,33 @@ module Gherkin
         @parser.scan ps("")
       end
 
-      it "should parse a string containing newlines" do
+      it "should parse a string containing only newlines" do
         @listener.should_receive(:pystring).with("\n\n")
         @parser.scan ps("\n\n")
       end
       
-      it "should parse a pystring containing a newline" do
-        @listener.should_receive(:pystring).with("A\nB\n")
-        @parser.scan ps("A\nB")
+      it "should parse a content separated by two newlines" do
+        @listener.should_receive(:pystring).with("A\n\nB")
+        @parser.scan ps("A\n\nB")
       end
       
       it "should parse a multiline string" do
-        @listener.should_receive(:pystring).with("A\nB\nC\nD\n")
+        @listener.should_receive(:pystring).with("A\nB\nC\nD")
         @parser.scan ps("A\nB\nC\nD")
       end
             
       it "should ignore unescaped quotes inside the string delimeters" do
-        @listener.should_receive(:pystring).with("What does \"this\" mean?\n")
+        @listener.should_receive(:pystring).with("What does \"this\" mean?")
         @parser.scan ps('What does "this" mean?')
       end
       
       it "should remove whitespace up to the column of the opening quote" do
-        @listener.should_receive(:pystring).with("I have been indented\n")
+        @listener.should_receive(:pystring).with("I have been indented")
         @parser.scan indent(ps('I have been indented'), 4)
       end
       
       it "should preserve whitespace after the column of the opening quote" do
-        @listener.should_receive(:pystring).with("  I have been indented\n")
+        @listener.should_receive(:pystring).with("  I have been indented")
         @parser.scan indent(ps('  I have been indented'), 4)
       end
       
