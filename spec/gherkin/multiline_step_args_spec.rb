@@ -32,6 +32,11 @@ module Gherkin
         @parser.scan ps("")
       end
 
+      it "should parse a string containing newlines" do
+        @listener.should_receive(:pystring).with("\n\n")
+        @parser.scan ps("\n\n")
+      end
+      
       it "should parse a pystring containing a newline" do
         @listener.should_receive(:pystring).with("A\nB\n")
         @parser.scan ps("A\nB")
@@ -41,12 +46,7 @@ module Gherkin
         @listener.should_receive(:pystring).with("A\nB\nC\nD\n")
         @parser.scan ps("A\nB\nC\nD")
       end
-      
-      it "should parse a string with lots of newlines" do
-        @listener.should_receive(:pystring).with("A\n\nB\n")
-        @parser.scan ps("A\n\nB")
-      end
-      
+            
       it "should ignore unescaped quotes inside the string delimeters" do
         @listener.should_receive(:pystring).with("What does \"this\" mean?\n")
         @parser.scan ps('What does "this" mean?')

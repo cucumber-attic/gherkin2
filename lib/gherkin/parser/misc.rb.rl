@@ -15,7 +15,7 @@ module Gherkin
         }
         
         action end_line {
-          line = data[line_start..p].pack("U*")
+          line = data[line_start...p].pack("U*")
           offset = line_col - start_col
           @lines << (offset >= 0 ? line.gsub(/^/, ' ' * offset) : line)
         }
@@ -24,8 +24,8 @@ module Gherkin
         
         PyStringStart = '"""' >start space* newline ;
         PyStringEnd = '"""' ;
-        # Ending a line must start an entirely new match
-        PyStringLine = space* ( any+ >start_line %end_line ) newline ;
+        PyStringLine = space* (any* newline) >start_line %end_line ;
+        
         PyString = PyStringStart PyStringLine* PyStringEnd ;
 
         main := space* PyString ;
