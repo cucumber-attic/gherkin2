@@ -17,21 +17,15 @@ module Gherkin
         }
 
         action store_feature_content {
-          con = data[@content_start...@keyword_start].pack("U*")
-          con.strip!
-          @listener.feature(con)
+          @listener.feature(content(data))
         }
 
         action store_scenario_content {
-          con = data[@content_start...@keyword_start].pack("U*")
-          con.strip!
-          @listener.scenario(con)
+          @listener.scenario(content(data))
         }
 
         action store_step_content {
-          con = data[@content_start...@keyword_start].pack("U*")
-          con.strip!
-          @listener.step(con)
+          @listener.step(content(data))
         }
 
         include feature_common "feature_common.rl"; 
@@ -47,6 +41,10 @@ module Gherkin
         eof = data.size
         %% write init;
         %% write exec;
+      end
+
+      def content(data)
+        data[@content_start...@keyword_start].pack("U*").strip
       end
     end
   end
