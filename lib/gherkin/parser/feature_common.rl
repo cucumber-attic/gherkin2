@@ -27,7 +27,7 @@
     ),
  
     step_content: (
-      !EOL+ >begin_content EOL >keyword @store_step_content %clear_content -> step_content
+      !EOL >begin_content EOL >keyword @store_step_content %clear_content -> step_content
       space* GIVEN ->step_content 
     )
   );     
