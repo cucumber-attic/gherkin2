@@ -11,52 +11,46 @@ module Gherkin
         action store_feature_content {
           con = data[@content_start...p].pack("U*")
           con.strip!
-          if $debug  
-            puts "FOUND FEATURE CONTENT"
-            puts con
-          end
-          @listener.feature(con)
+          @listener.feature(@keyword, con, @line_number)
         }
       
         action store_scenario_content {
           con = data[@content_start...p].pack("U*")
           con.strip!
-          if $debug
-            puts "FOUND SCENARIO CONTENT"
-            puts con
-          end
-          @listener.scenario(con)
+          @listener.scenario(@keyword, con, @line_number)
         }
       
         action store_step_content {
           con = data[@content_start...p].pack("U*")
           con.strip!
-          if $debug
-            puts "FOUND STEP CONTENT"
-            puts con
-          end
-          @listener.step(con)
+          @listener.step(@keyword, con, @line_number)
         }
         
         action store_comment_content {
           con = data[@content_start...p].pack("U*")
           con.strip!
-          if $debug
-            puts "FOUND STEP CONTENT"
-            puts con
-          end
-          @listener.comment(con)
+          @listener.comment(con, @line_number)
         }
         
         action store_tag_content {
           con = data[@content_start...p].pack("U*")
           con.strip!
-          if $debug
-            puts "FOUND TAG CONTENT"
-            puts con
-          end
-          @listener.tag(con)
+          @listener.tag(con, @line_number)
         }
+  
+        action inc_line_number {
+          @line_number += 1
+        }
+
+        action start_keyword {
+          @keyword_start ||= p
+        }
+ 
+        action end_keyword {
+          @keyword = data[@keyword_start...p].pack("U*").sub(/:$/,'')
+          @keyword_start = nil
+        }
+
         include feature_common "feature_common.rl"; 
       }%%
   
@@ -67,6 +61,7 @@ module Gherkin
   
       def scan(data)
         data = data.unpack("U*") if data.is_a?(String)
+        @line_number = 1
         eof = data.size
         %% write init;
         %% write exec;
