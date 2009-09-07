@@ -121,6 +121,30 @@ module Gherkin
           scan_file("simple_with_tags.feature")
         end
       end
+   
+      describe "A complex feature with tags, comments, multiple scenarios, and multiple steps" do
+        it "should find things in the right order" do
+          @listener.should_receive(:comment).with("Comment on line 1", 1).ordered
+          @listener.should_receive(:tag).with("@tag1", 2).ordered
+          @listener.should_receive(:tag).with("@tag2", 2).ordered
+          @listener.should_receive(:comment).with("Comment on line 3", 3).ordered
+          @listener.should_receive(:feature).with("Feature", "Feature Text\n  In order to test multiline forms\n  As a ragel writer\n  I need to check for complex combinations", 4).ordered
+          @listener.should_receive(:comment).with("Comment on line 9", 9).ordered
+          @listener.should_receive(:comment).with("Comment on line 11", 11).ordered
+          @listener.should_receive(:tag).with("@tag3", 13).ordered
+          @listener.should_receive(:tag).with("@tag4", 13).ordered
+          @listener.should_receive(:scenario).with("Scenario", "Reading a Scenario", 14).ordered
+          @listener.should_receive(:step).with("Given", "there is a step", 15).ordered
+          @listener.should_receive(:step).with("But", "not another step", 16).ordered
+          @listener.should_receive(:tag).with("@tag3", 18).ordered
+          @listener.should_receive(:scenario).with("Scenario", "Reading a second scenario", 19).ordered
+          @listener.should_receive(:comment).with("Comment on line 20", 20).ordered
+          @listener.should_receive(:step).with("Given", "a third step", 21).ordered
+          @listener.should_receive(:comment).with("Comment on line 22", 22).ordered
+          @listener.should_receive(:step).with("Then", "I am happy", 23).ordered
+          scan_file("complex.feature")
+        end
+      end
     end
   end
 end

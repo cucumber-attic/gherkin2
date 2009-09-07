@@ -8,12 +8,14 @@
   EOL = ('\r'? '\n') @inc_line_number;
   Comment = space* '#' %begin_content ^EOL+ %store_comment_content EOL+;
 
-  Feature = space* FEATURE %begin_content ^EOL+ %store_feature_content EOL+;  #SINGLE LINE ONLY
-  Scenario = space* SCENARIO %begin_content ^EOL+ %store_scenario_content EOL+;  #SINGLE LINE ONLY
-  Step = space* STEP %begin_content ^EOL+ %store_step_content EOL+;  
+  Feature_end = EOL+ <: space* ('Scenario:' | '@' | '#');
+
+  Feature = space* FEATURE %begin_content %current_line ^Feature_end+ %/store_feature_content :>> Feature_end >backup @store_feature_content;
+  Scenario = space* SCENARIO %begin_content %current_line ^EOL+ %store_scenario_content EOL+;  #SINGLE LINE ONLY
+  Step = space* STEP %begin_content %current_line ^EOL+ %store_step_content EOL+;  
 
   Tag = ( '@' [^@\r\n\t ]+ ) >begin_content %store_tag_content;
-  Tags = space* (Tag space*)+ EOL;  
+  Tags = space* %current_line (Tag space*)+ EOL+;  
 
   feature = (
     start: (
