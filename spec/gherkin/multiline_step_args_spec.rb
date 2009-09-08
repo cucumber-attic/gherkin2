@@ -53,13 +53,13 @@ module Gherkin
       end
       
       it "should remove whitespace up to the column of the opening quote" do
-        @listener.should_receive(:pystring).with("I have been indented")
-        @parser.scan indent(ps('I have been indented'), 4)
+        @listener.should_receive(:pystring).with("I have been indented for reasons of style")
+        @parser.scan indent(ps('I have been indented for reasons of style'), 4)
       end
       
       it "should preserve whitespace after the column of the opening quote" do
-        @listener.should_receive(:pystring).with("  I have been indented")
-        @parser.scan indent(ps('  I have been indented'), 4)
+        @listener.should_receive(:pystring).with("  I have been indented to preserve whitespace")
+        @parser.scan indent(ps('  I have been indented to preserve whitespace'), 4)
       end
       
       it "should provide the amount of indentation to the listener"
