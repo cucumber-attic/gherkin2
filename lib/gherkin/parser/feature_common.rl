@@ -6,13 +6,13 @@
   STEP = ('Given' | 'When' | 'And' | 'Then' | 'But') >start_keyword %end_keyword;
  
   EOL = ('\r'? '\n') @inc_line_number;
-  Comment = space* '#' %begin_content ^EOL+ %store_comment_content EOL+;
+  Comment = space* '#' %begin_content ^EOL+ %store_comment_content %/store_comment_content EOL+;
 
   Feature_end = EOL+ space* ('Scenario:' | '@' | '#');
 
   Feature = space* FEATURE %begin_content %current_line ^Feature_end+ %/store_feature_content :>> Feature_end >backup @store_feature_content;
-  Scenario = space* SCENARIO %begin_content %current_line ^EOL+ %store_scenario_content EOL+;  #SINGLE LINE ONLY
-  Step = space* STEP %begin_content %current_line ^EOL+ %store_step_content EOL+;  
+  Scenario = space* SCENARIO %begin_content %current_line ^EOL+ %store_scenario_content %/store_scenario_content EOL+;  #SINGLE LINE ONLY
+  Step = space* STEP %begin_content %current_line ^EOL+ %store_step_content %/store_step_content EOL+;  
 
   Tag = ( '@' [^@\r\n\t ]+ ) >begin_content %store_tag_content;
   Tags = space* (Tag @current_line space*)+ EOL+;  

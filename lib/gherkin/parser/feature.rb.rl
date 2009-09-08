@@ -9,7 +9,7 @@ module Gherkin
         }
       
         action store_feature_content {
-          con = data[@content_start...@backup].pack("U*")
+          con = data[@content_start...(@backup||p)].pack("U*")
           con.strip!
           @listener.feature(@keyword, con, @current_line)
           p = @backup;
