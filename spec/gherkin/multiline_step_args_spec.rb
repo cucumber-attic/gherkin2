@@ -63,7 +63,12 @@ module Gherkin
       end
       
       it "should provide the amount of indentation to the listener"
-      
+    
+      it "should preserve tabs within the content" do
+        @listener.should_receive(:pystring).with("I have\tsome tabs\nInside\t\tthe content")
+        @parser.scan ps("I have\tsome tabs\nInside\t\tthe content")
+      end
+  
       it "should handle complex pystrings" do
         pystring = <<EOS
 # Feature comment
