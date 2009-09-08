@@ -4,22 +4,37 @@ module Gherkin
       %%{
         machine misc;
         
-        action start_tag {
-          tag_start = p
+        action start {
+          start_col = p - @last_newline
+          start = p + 4
         }
         
-        action end_tag {
-          tag = data[tag_start...p].pack("U*")
-          @listener.tag(tag)
+        action start_line {
+          line_col = p - @last_newline
+          line_start = p
         }
         
-        Tag = ( '@' [^@\r\n\t ]+ ) >start_tag %end_tag ;
-        Tags = Tag space*;
-        main := Tags+;
+        action end_line {
+          line = data[line_start...p].pack("U*")
+          offset = line_col - start_col
+          @lines << (offset >= 0 ? line.gsub(/^/, ' ' * offset) : line)
+        }
+        
+        newline = ('\r'? '\n') @{ @last_newline = p + 1} ;
+        
+        PyStringStart = '"""' >start space* newline ;
+        PyStringEnd = '"""' ;
+        PyStringLine = space* ^newline* >start_line %end_line newline;
+        
+        PyString = PyStringStart PyStringLine* PyStringEnd ;
+
+        main := space* PyString ;
       }%%
       
       def initialize(listener)
         @listener = listener
+        @last_newline = 0
+        @lines = []
         %% write data;
       end
       
@@ -29,6 +44,8 @@ module Gherkin
         
         %% write init;
         %% write exec;
+        
+        @listener.pystring(@lines.join("\n"))
       end
     end
   end
