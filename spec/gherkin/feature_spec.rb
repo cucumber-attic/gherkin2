@@ -5,7 +5,7 @@ module Gherkin
   module Parser
     describe Feature do
       before do
-        @listener = SexpRecorder.new
+        @listener = Gherkin::SexpRecorder.new
         @feature = Feature.new(@listener)
       end
 
