@@ -45,7 +45,7 @@ module Gherkin
         end
 
         it "should parse a file with only a multiline comment with newlines" do
-          pending ("TODO:  Do multiline comments need to be compressed into a single message?")
+          pending("TODO:  Do multiline comments need to be compressed into a single message?")
           @listener.should_receive(:comment).with("Hello\n\n# World\n").once
           @feature.scan("# Hello\n\n# World\n")
         end
