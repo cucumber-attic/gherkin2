@@ -347,6 +347,31 @@ Scenario: I have a Button
           @listener.should_receive(:step).with("Then", "I am happy", 23).ordered
           scan_file("complex.feature")
         end
+
+        it "should find things in the right order (using SexpRecorder)" do
+          @listener = SexpRecorder.new
+          scan_file("complex.feature")
+          @listener.to_sexp.should == [
+            [:comment, "Comment on line 1", 1],
+            [:tag, "@tag1", 2],
+            [:tag, "@tag2", 2],
+            [:comment, "Comment on line 3", 3],
+            [:feature, "Feature", "Feature Text\n  In order to test multiline forms\n  As a ragel writer\n  I need to check for complex combinations", 4],
+            [:comment, "Comment on line 9", 9],
+            [:comment, "Comment on line 11", 11],
+            [:tag, "@tag3", 13],
+            [:tag, "@tag4", 13],
+            [:scenario, "Scenario", "Reading a Scenario", 14],
+            [:step, "Given", "there is a step", 15],
+            [:step, "But", "not another step", 16],
+            [:tag, "@tag3", 18],
+            [:scenario, "Scenario", "Reading a second scenario", 19],
+            [:comment, "Comment on line 20", 20],
+            [:step, "Given", "a third step", 21],
+            [:comment, "Comment on line 22", 22],
+            [:step, "Then", "I am happy", 23]
+          ]
+        end
       end
     end
   end
