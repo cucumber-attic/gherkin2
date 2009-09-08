@@ -22,6 +22,8 @@ module Gherkin
         @parser = Misc.new(@listener)
       end
       
+      it "should provide the amount of indentation to the listener"
+
       it "should parse a simple pystring" do
         @listener.should_receive(:pystring).with("I am a pystring")
         @parser.scan ps("I am a pystring")
@@ -62,8 +64,6 @@ module Gherkin
         @parser.scan indent(ps('  I have been indented to preserve whitespace'), 4)
       end
       
-      it "should provide the amount of indentation to the listener"
-    
       it "should preserve tabs within the content" do
         @listener.should_receive(:pystring).with("I have\tsome tabs\nInside\t\tthe content")
         @parser.scan ps("I have\tsome tabs\nInside\t\tthe content")
