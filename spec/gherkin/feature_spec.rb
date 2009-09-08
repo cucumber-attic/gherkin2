@@ -119,7 +119,6 @@ Feature: hi
 
       describe "Background" do
         it "should allow an empty background description" do
-          pending
           @feature.scan("Feature: Hi\nBackground:\nGiven I am a step\n")
           @listener.to_sexp.should == [
             [:feature, "Feature", "Hi", 1],
@@ -129,7 +128,6 @@ Feature: hi
         end
         
         it "should have steps" do
-          pending
           @feature.scan("Feature: Hi\nBackground: Run this first\nGiven I am a step\n")
           @listener.to_sexp.should == [
             [:feature, "Feature", "Hi", 1],
@@ -139,7 +137,6 @@ Feature: hi
         end
 
         it "should find scenarios after background" do
-          pending
           @feature.scan("Feature: Hi\n#This needs to run first\nBackground: Run this first\nGiven I am a step\n\n  Scenario: A Scenario\nGiven I am a step")
           @listener.to_sexp.should == [
             [:feature, "Feature", "Hi", 1],

@@ -16,6 +16,12 @@ module Gherkin
           @backup = nil
         }
       
+        action store_background_content {
+          con = data[@content_start...p].pack("U*")
+          con.strip!
+          @listener.background(@keyword, con, @current_line)
+        }
+          
         action store_scenario_content {
           con = data[@content_start...p].pack("U*")
           con.strip!
