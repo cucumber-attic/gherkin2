@@ -3,60 +3,64 @@ module Gherkin
     class Feature
       %%{
         machine feature;
-
+ 
         action begin_content {
           @content_start = p
         }
       
         action store_feature_content {
-          con = data[@content_start...p].pack("U*")
+          con = data[@content_start...@backup].pack("U*")
           con.strip!
-          if $debug  
-            puts "FOUND FEATURE CONTENT"
-            puts con
-          end
-          @listener.feature(con)
+          @listener.feature(@keyword, con, @current_line)
+          p = @backup;
+          @backup = nil
         }
       
         action store_scenario_content {
           con = data[@content_start...p].pack("U*")
           con.strip!
-          if $debug
-            puts "FOUND SCENARIO CONTENT"
-            puts con
-          end
-          @listener.scenario(con)
+          @listener.scenario(@keyword, con, @current_line)
         }
       
         action store_step_content {
           con = data[@content_start...p].pack("U*")
           con.strip!
-          if $debug
-            puts "FOUND STEP CONTENT"
-            puts con
-          end
-          @listener.step(con)
+          @listener.step(@keyword, con, @current_line)
         }
         
         action store_comment_content {
           con = data[@content_start...p].pack("U*")
           con.strip!
-          if $debug
-            puts "FOUND STEP CONTENT"
-            puts con
-          end
-          @listener.comment(con)
+          @listener.comment(con, @line_number)
         }
         
         action store_tag_content {
           con = data[@content_start...p].pack("U*")
           con.strip!
-          if $debug
-            puts "FOUND TAG CONTENT"
-            puts con
-          end
-          @listener.tag(con)
+          @listener.tag(con, @current_line)
         }
+  
+        action inc_line_number {
+          @line_number += 1
+        }
+ 
+        action current_line {
+          @current_line = @line_number
+        }
+
+        action start_keyword {
+          @keyword_start ||= p
+        }
+ 
+        action end_keyword {
+          @keyword = data[@keyword_start...p].pack("U*").sub(/:$/,'')
+          @keyword_start = nil
+        }
+ 
+        action backup {
+          @backup = p
+        }
+
         include feature_common "feature_common.rl"; 
       }%%
   
@@ -67,6 +71,7 @@ module Gherkin
   
       def scan(data)
         data = data.unpack("U*") if data.is_a?(String)
+        @line_number = 1
         eof = data.size
         %% write init;
         %% write exec;
