@@ -70,7 +70,7 @@ module Gherkin
       end
   
       it "should handle complex pystrings" do
-        pystring = <<EOS
+        pystring = %{
 # Feature comment
 @one
 Feature: Sample
@@ -82,10 +82,16 @@ Feature: Sample
 1 scenario (1 passed)
 1 step (1 passed)
 
-EOS
+}
         
         @listener.should_receive(:pystring).with(pystring)
         @parser.scan ps(pystring)
+      end
+
+      it "should set indentation to zero if the content begins before the start delimeter" do
+        pystring = "    \"\"\"\nContent\n\"\"\""
+        @listener.should_receive(:pystring).with("Content")
+        @parser.scan(pystring)
       end
     end
   end
