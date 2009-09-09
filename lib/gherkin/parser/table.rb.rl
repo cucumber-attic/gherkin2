@@ -8,19 +8,18 @@ module Gherkin
           current_row = []
         }
 
+        action begin_content {
+          @content_start = p
+        }
+
         action store_row {
           @rows << current_row
         }
 
-        action accumulate_content {
-          @con ||= ''
-          @con += [data[p]].pack("U*")
-        }
-
-        action store_content {
-          @con.strip!
-          current_row << (@con.empty? ? nil : @con)
-          @con = nil
+        action store_cell_content {
+          con = data[@content_start...p].pack("U*")
+          con.strip!
+          current_row << (con.empty? ? nil : con)
         }
 
         action no_content {
