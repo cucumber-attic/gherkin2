@@ -22,6 +22,8 @@ module Gherkin
         @parser = Misc.new(@listener)
       end
       
+      it "should provide the amount of indentation to the listener"
+
       it "should parse a simple pystring" do
         @listener.should_receive(:pystring).with("I am a pystring")
         @parser.scan ps("I am a pystring")
@@ -53,19 +55,22 @@ module Gherkin
       end
       
       it "should remove whitespace up to the column of the opening quote" do
-        @listener.should_receive(:pystring).with("I have been indented")
-        @parser.scan indent(ps('I have been indented'), 4)
+        @listener.should_receive(:pystring).with("I have been indented for reasons of style")
+        @parser.scan indent(ps('I have been indented for reasons of style'), 4)
       end
       
       it "should preserve whitespace after the column of the opening quote" do
-        @listener.should_receive(:pystring).with("  I have been indented")
-        @parser.scan indent(ps('  I have been indented'), 4)
+        @listener.should_receive(:pystring).with("  I have been indented to preserve whitespace")
+        @parser.scan indent(ps('  I have been indented to preserve whitespace'), 4)
       end
       
-      it "should provide the amount of indentation to the listener"
-      
+      it "should preserve tabs within the content" do
+        @listener.should_receive(:pystring).with("I have\tsome tabs\nInside\t\tthe content")
+        @parser.scan ps("I have\tsome tabs\nInside\t\tthe content")
+      end
+  
       it "should handle complex pystrings" do
-        pystring = <<EOS
+        pystring = %{
 # Feature comment
 @one
 Feature: Sample
@@ -77,10 +82,16 @@ Feature: Sample
 1 scenario (1 passed)
 1 step (1 passed)
 
-EOS
+}
         
         @listener.should_receive(:pystring).with(pystring)
         @parser.scan ps(pystring)
+      end
+
+      it "should set indentation to zero if the content begins before the start delimeter" do
+        pystring = "    \"\"\"\nContent\n\"\"\""
+        @listener.should_receive(:pystring).with("Content")
+        @parser.scan(pystring)
       end
     end
   end
