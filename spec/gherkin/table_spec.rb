@@ -5,7 +5,7 @@ module Gherkin
   module Parser
     describe Table do
       before do
-        @listener = mock('listener')
+        @listener = Gherkin::SexpRecorder.new
         @table = Table.new(@listener)
       end
     
@@ -68,9 +68,10 @@ module Gherkin
       end
 
       it "should not parse a 2x2 table that isn't closed" do
-        @listener.should_not_receive(:table).with([['1', nil], [nil, 4]])
-        @listener.should_receive(:table).with([['1', nil], [nil]])
         @table.scan("| 1 |  |\n|| 4 ")
+        @listener.to_sexp.should == [
+          [:table, [['1', nil]]]
+        ]
       end
       
       it "should parse a table with tab spacing" do

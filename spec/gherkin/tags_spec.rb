@@ -11,7 +11,7 @@ module Gherkin
         end
       
         it "should parse a single tag" do
-          @listener.should_receive(:tag).with("@dog", 1)
+          @listener.should_receive(:tag).with("dog", 1)
           @feature.scan("@dog\n")
         end
     
@@ -21,13 +21,13 @@ module Gherkin
         end
     
         it "should parse UTF-8 tags" do
-          @listener.should_receive(:tag).with("@シナリオテンプレート", 1)
+          @listener.should_receive(:tag).with("シナリオテンプレート", 1)
           @feature.scan("@シナリオテンプレート\n")
         end
           
         it "should parse mixed tags" do
-          @listener.should_receive(:tag).with("@wip", 1).ordered
-          @listener.should_receive(:tag).with("@Значения", 1).ordered
+          @listener.should_receive(:tag).with("wip", 1).ordered
+          @listener.should_receive(:tag).with("Значения", 1).ordered
           @feature.scan("@wip @Значения\n")
         end
     
