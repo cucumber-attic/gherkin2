@@ -17,21 +17,21 @@ module Gherkin
         it "should parse a file with only a one line comment" do
           @feature.scan("# My comment\nFeature: hi")
           @listener.to_sexp.should == [
-            [:comment, "My comment", 1],
+            [:comment, "# My comment", 1],
             [:feature, "Feature", "hi", 2],
           ]
         end
 
         it "should parse a one line comment" do
           @feature.scan("# My comment")
-          @listener.to_sexp.should == [[:comment, "My comment", 1]]
+          @listener.to_sexp.should == [[:comment, "# My comment", 1]]
         end
 
         it "should parse a file with only a multiline comment" do
           @feature.scan("#Hello\n#World\nFeature: hi")
           @listener.to_sexp.should == [
-            [:comment, "Hello", 1],
-            [:comment, "World", 2],
+            [:comment, "#Hello", 1],
+            [:comment, "#World", 2],
             [:feature, "Feature", "hi", 3]
           ] 
         end
@@ -40,7 +40,7 @@ module Gherkin
           pending("TODO:  Do multiline comments need to be compressed into a single message?")
           @feature.scan("# Hello\n# World\nFeature: hi")
           @listener.to_sexp.should == [
-            [:comment, "Hello\nWorld", 1],
+            [:comment, "# Hello\n# World", 1],
             [:feature, "hi", 3]
           ]
         end
@@ -53,7 +53,7 @@ module Gherkin
         it "should parse a file with only a multiline comment with newlines" do
           pending("TODO:  Do multiline comments need to be compressed into a single message?")
           @feature.scan("# Hello\n\n# World\n")
-          @listener.to_sexp.should == [[:comment, "Hello\n\n# World\n"]]
+          @listener.to_sexp.should == [[:comment, "# Hello\n\n# World\n"]]
         end
   
         it "should not consume comments as part of a multiline name" do
@@ -61,7 +61,7 @@ module Gherkin
           @listener.to_sexp.should == [
             [:feature, "Feature", "hi", 1],
             [:scenario, "Scenario", "test", 2],
-            [:comment, "hello", 4],
+            [:comment, "#hello", 4],
             [:scenario, "Scenario", "another", 5]
           ]
         end
@@ -71,9 +71,9 @@ module Gherkin
         it "should parse a file with tags on a feature" do
           @feature.scan("# My comment\n@hello @world\nFeature: hi\n")
           @listener.to_sexp.should == [
-            [:comment, "My comment", 1],
-            [:tag, "@hello", 2],
-            [:tag, "@world", 2],
+            [:comment, "# My comment", 1],
+            [:tag, "hello", 2],
+            [:tag, "world", 2],
             [:feature, "Feature", "hi", 3]
           ]
         end
@@ -83,7 +83,7 @@ module Gherkin
           @listener.to_sexp.should == [
             [:feature, "Feature", "hi", 1],
             [:scenario, "Scenario", "test", 2],
-            [:tag, "@hello", 4],
+            [:tag, "hello", 4],
             [:scenario, "Scenario", "another", 5]
           ]
         end
@@ -101,17 +101,17 @@ Feature: hi
    @st4    @ST5  @#^%&ST6**!
   Scenario: Second})
           @listener.to_sexp.should == [
-            [:comment, "FC", 1],
-            [:tag, "@ft",2],
+            [:comment, "# FC", 1],
+            [:tag, "ft",2],
             [:feature, "Feature", "hi", 3],
-            [:tag, "@st1", 5],
-            [:tag, "@st2", 5],
+            [:tag, "st1", 5],
+            [:tag, "st2", 5],
             [:scenario, "Scenario", "First", 6],
             [:step, "Given", "Pepper", 7],
-            [:tag, "@st3", 9],
-            [:tag, "@st4", 10],
-            [:tag, "@ST5", 10],
-            [:tag, "@#^%&ST6**!", 10],
+            [:tag, "st3", 9],
+            [:tag, "st4", 10],
+            [:tag, "ST5", 10],
+            [:tag, "#^%&ST6**!", 10],
             [:scenario, "Scenario", "Second", 11]
           ]
         end
@@ -148,7 +148,7 @@ Feature: hi
           @feature.scan("Feature: Hi\n#This needs to run first\nBackground: Run this first\nGiven I am a step\n\n  Scenario: A Scenario\nGiven I am a step")
           @listener.to_sexp.should == [
             [:feature, "Feature", "Hi", 1],
-            [:comment, "This needs to run first", 2],
+            [:comment, "#This needs to run first", 2],
             [:background, "Background", "Run this first", 3],
             [:step, "Given", "I am a step", 4],
             [:scenario, "Scenario", "A Scenario", 6],
@@ -348,13 +348,13 @@ Scenario: I have a Button
         it "should find the feature, scenarios, steps, and comments in the proper order" do
           scan_file("simple_with_comments.feature")
           @listener.to_sexp.should == [
-            [:comment, "Here is a comment", 1],
+            [:comment, "# Here is a comment", 1],
             [:feature, "Feature", "Feature Text", 2],
-            [:comment, "Here is another # comment", 3],
+            [:comment, "# Here is another # comment", 3],
             [:scenario, "Scenario", "Reading a Scenario", 4],
-            [:comment, "Here is a third comment", 5],
+            [:comment, "# Here is a third comment", 5],
             [:step, "Given", "there is a step", 6],
-            [:comment, "Here is a fourth comment", 7]
+            [:comment, "# Here is a fourth comment", 7]
           ]
         end
       end
@@ -363,11 +363,11 @@ Scenario: I have a Button
         it "should find the feature, scenario, step, and tags in the proper order" do
           scan_file("simple_with_tags.feature")
           @listener.to_sexp.should == [
-            [:tag, "@tag1", 1],
-            [:tag, "@tag2", 1],
+            [:tag, "tag1", 1],
+            [:tag, "tag2", 1],
             [:feature, "Feature", "Feature Text", 2],
-            [:tag, "@tag3", 3],
-            [:tag, "@tag4", 3],
+            [:tag, "tag3", 3],
+            [:tag, "tag4", 3],
             [:scenario, "Scenario", "Reading a Scenario", 4],
             [:step, "Given", "there is a step", 5]
           ]
@@ -378,23 +378,23 @@ Scenario: I have a Button
         it "should find things in the right order" do
           scan_file("complex.feature")
           @listener.to_sexp.should == [
-            [:comment, "Comment on line 1", 1],
-            [:tag, "@tag1", 2],
-            [:tag, "@tag2", 2],
-            [:comment, "Comment on line 3", 3],
+            [:comment, "#Comment on line 1", 1],
+            [:tag, "tag1", 2],
+            [:tag, "tag2", 2],
+            [:comment, "#Comment on line 3", 3],
             [:feature, "Feature", "Feature Text\n  In order to test multiline forms\n  As a ragel writer\n  I need to check for complex combinations", 4],
-            [:comment, "Comment on line 9", 9],
-            [:comment, "Comment on line 11", 11],
-            [:tag, "@tag3", 13],
-            [:tag, "@tag4", 13],
+            [:comment, "#Comment on line 9", 9],
+            [:comment, "#Comment on line 11", 11],
+            [:tag, "tag3", 13],
+            [:tag, "tag4", 13],
             [:scenario, "Scenario", "Reading a Scenario", 14],
             [:step, "Given", "there is a step", 15],
             [:step, "But", "not another step", 16],
-            [:tag, "@tag3", 18],
+            [:tag, "tag3", 18],
             [:scenario, "Scenario", "Reading a second scenario", 19],
-            [:comment, "Comment on line 20", 20],
+            [:comment, "#Comment on line 20", 20],
             [:step, "Given", "a third step", 21],
-            [:comment, "Comment on line 22", 22],
+            [:comment, "#Comment on line 22", 22],
             [:step, "Then", "I am happy", 23]
           ]
         end
