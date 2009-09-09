@@ -2,26 +2,37 @@
   machine feature_common;
 
   FEATURE = 'Feature:' >start_keyword %end_keyword;
+  BACKGROUND = 'Background:' >start_keyword %end_keyword;
   SCENARIO = 'Scenario:' >start_keyword %end_keyword;
   STEP = ('Given' | 'When' | 'And' | 'Then' | 'But') >start_keyword %end_keyword;
  
   EOL = ('\r'? '\n') @inc_line_number;
-  Comment = space* '#' %begin_content ^EOL+ %store_comment_content EOL+;
+  Comment = space* '#' %begin_content ^EOL+ %store_comment_content %/store_comment_content EOL+;
 
-  Feature_end = EOL+ space* ('Scenario:' | '@' | '#');
+  Feature_end = EOL+ space* (BACKGROUND | SCENARIO | '@' | '#');
 
   Feature = space* FEATURE %begin_content %current_line ^Feature_end+ %/store_feature_content :>> Feature_end >backup @store_feature_content;
-  Scenario = space* SCENARIO %begin_content %current_line ^EOL+ %store_scenario_content EOL+;  #SINGLE LINE ONLY
-  Step = space* STEP %begin_content %current_line ^EOL+ %store_step_content EOL+;  
+  Background = space* BACKGROUND %begin_content %current_line ^EOL* %store_background_content %/store_background_content EOL+;  #SINGLE LINE ONLY
+  Scenario = space* SCENARIO %begin_content %current_line ^EOL+ %store_scenario_content %/store_scenario_content EOL+;  #SINGLE LINE ONLY
+  Step = space* STEP %begin_content %current_line ^EOL+ %store_step_content %/store_step_content EOL+;  
 
   Tag = ( '@' [^@\r\n\t ]+ ) >begin_content %store_tag_content;
   Tags = space* (Tag @current_line space*)+ EOL+;  
+
+  #NOTE:  The following state machine will likely ultimately be reduced to simple machines,
+  #        But is useful until a full BNF is defined
 
   feature = (
     start: (
       Comment ->start |
       Tags ->start |
-      Feature ->feature_found 
+      Feature ->feature_found_looking_for_background 
+    ),
+    feature_found_looking_for_background: (
+      Comment ->feature_found_looking_for_background |
+      Tags ->feature_found |
+      Background ->scenario_found |
+      Scenario ->scenario_found 
     ),
     feature_found: (
       Comment ->feature_found |
