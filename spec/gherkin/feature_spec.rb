@@ -127,6 +127,14 @@ Feature: hi
           ]
         end
         
+        it "should allow multiline names ending at eof" do
+          @feature.scan("Feature: Feature Text\n  Background: I have several\n   Lines to look at\n None starting with Given")
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "Feature Text", 1],
+            [:background, "Background", "I have several\nLines to look at\nNone starting with Given", 2]
+          ]
+        end
+        
         it "should have steps" do
           @feature.scan("Feature: Hi\nBackground: Run this first\nGiven I am a step\n")
           @listener.to_sexp.should == [
@@ -149,7 +157,6 @@ Feature: hi
         end
  
         it "should allow multiline names" do
-          pending
           @feature.scan(%{Feature: Hi
 Background: It is my ambition to say 
             in ten sentences
@@ -157,7 +164,7 @@ Background: It is my ambition to say
             in a whole book.
 Given I am a step})
           @listener.to_sexp.should == [
-            [:feature, "Feature", "hi", 1],
+            [:feature, "Feature", "Hi", 1],
             [:background, "Background", "It is my ambition to say\nin ten sentences\nwhat others say\nin a whole book.",2],
             [:step, "Given", "I am a step", 6]
           ]
@@ -232,7 +239,6 @@ Given I have a string
         end
 
         it "should allow multiline names" do
-          pending
           @feature.scan(%{Feature: Hi
 Scenario: It is my ambition to say
           in ten sentences
@@ -247,9 +253,16 @@ Given I am a step
             [:step, "Given", "I am a step", 6]
           ]
         end
+
+        it "should allow multiline names ending at eof" do
+          @feature.scan("Feature: Feature Text\n  And some more text\n\n  Scenario: I have several\n       Lines to look at\n None starting with Given")
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "Feature Text\n  And some more text", 1],
+            [:scenario, "Scenario", "I have several\nLines to look at\nNone starting with Given", 4]
+          ]
+        end
   
         it "should ignore gherkin keywords which are parts of other words in the name" do
-          pending
           @feature.scan(%{Feature: Parser bug
 Scenario: I have a Button
           Buttons are great
@@ -257,7 +270,7 @@ Scenario: I have a Button
 })
           @listener.to_sexp.should == [
             [:feature, "Feature", "Parser bug", 1],
-            [:scenario, "Scenario", "I have a Buggon\nButtons are great", 2],
+            [:scenario, "Scenario", "I have a Button\nButtons are great", 2],
             [:step, "Given", "I have it", 4]
           ]
         end
@@ -303,7 +316,6 @@ Scenario: I have a Button
       
       describe "A multi-line feature with no scenario" do
         it "should find the feature" do
-          pending
           @feature.scan("Feature: Feature Text\n  And some more text")
           @listener.to_sexp.should == [[:feature, "Feature", "Feature Text\n  And some more text", 1]]
         end
