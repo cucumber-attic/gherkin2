@@ -9,17 +9,43 @@ module Gherkin
         }
       
         action store_feature_content {
-          con = data[@content_start...(@backup||p)].pack("U*")
+          if !@backup or (p==eof)
+            con = data[@content_start...p].pack("U*")
+          else
+            con = data[@content_start...@backup].pack("U*")
+          end
           con.strip!
           @listener.feature(@keyword, con, @current_line)
-          p = @backup;
+          if @backup
+            p = @backup-1
+          end
           @backup = nil
         }
       
+        action store_background_content {
+          if !@backup or (p==eof)
+            con = data[@content_start...p].pack("U*")
+          else
+            con = data[@content_start...@backup].pack("U*")
+          end
+          @listener.background(@keyword, multiline_strip(con), @current_line)
+          if @backup
+            p = @backup-1
+          end
+          @backup = nil
+        }
+          
         action store_scenario_content {
-          con = data[@content_start...p].pack("U*")
-          con.strip!
-          @listener.scenario(@keyword, con, @current_line)
+          if !@backup or (p==eof)
+            con = data[@content_start...p].pack("U*")
+          else
+            con = data[@content_start...@backup].pack("U*")
+          end
+          @listener.scenario(@keyword, multiline_strip(con), @current_line)
+          if @backup
+            p = @backup-1
+          end
+          @backup = nil
         }
       
         action store_step_content {
@@ -53,12 +79,18 @@ module Gherkin
         }
  
         action end_keyword {
-          @keyword = data[@keyword_start...p].pack("U*").sub(/:$/,'')
+          @keyword = data[@keyword_start...p].pack("U*").sub(/:$/,'').strip
           @keyword_start = nil
         }
  
         action backup {
           @backup = p
+        }
+  
+        action end_table {
+          table_to_parse = '|' + data[@content_start...p].pack("U*").strip
+          Gherkin::Parser::Table.new(@listener, @current_line).scan(table_to_parse)
+          p = p-1
         }
 
         include feature_common "feature_common.rl"; 
@@ -75,6 +107,10 @@ module Gherkin
         eof = data.size
         %% write init;
         %% write exec;
+      end
+ 
+      def multiline_strip(text)
+        text.split("\n").map{|s| s.strip!}.join("\n")
       end
     end
   end

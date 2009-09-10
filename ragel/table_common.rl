@@ -3,28 +3,10 @@
 
   EOL = '\r'? '\n';
   BAR = '|';
-  cell_content = [^|\r\n];
+  cell_content = ^('|' | EOL);
 
-  end_of_row = (any* %/store_row) :>> EOL; # match any* if there are no EOLs
-
-  table_row = (
-    start: (
-      space* BAR ->start_new_cell
-    ),
-
-    start_new_cell: (
-      BAR @no_content ->start_new_cell |
-      cell_content @accumulate_content ->until_cell_end |
-      end_of_row @store_row ->final
-    ),
-
-    until_cell_end: (
-      BAR @store_content ->start_new_cell |
-      cell_content @accumulate_content ->until_cell_end |
-      end_of_row @store_row ->final
-    )    
-  ) >initialize;
-
-  table = table_row+;
+  cell = cell_content+ >begin_content BAR >store_cell_content | BAR >no_content;
+  table_row = space* BAR >initialize cell+ space* %/store_row space* :>> EOL; 
+  table = table_row+ @store_row;
   main := table;
 }%%

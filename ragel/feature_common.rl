@@ -1,40 +1,37 @@
 %%{
   machine feature_common;
 
+  # Language specific
   FEATURE = 'Feature:' >start_keyword %end_keyword;
+  BACKGROUND = 'Background:' >start_keyword %end_keyword;
   SCENARIO = 'Scenario:' >start_keyword %end_keyword;
-  STEP = ('Given' | 'When' | 'And' | 'Then' | 'But') >start_keyword %end_keyword;
+  STEP = ('Given ' | 'When ' | 'And ' | 'Then ' | 'But ') >start_keyword %end_keyword;
  
   EOL = ('\r'? '\n') @inc_line_number;
-  Comment = space* '#' %begin_content ^EOL+ %store_comment_content %/store_comment_content EOL+;
+  BAR = '|' >start_keyword %end_keyword;
 
-  Feature_end = EOL+ space* ('Scenario:' | '@' | '#');
+  # Terminators
+  EndFeatureHeading = EOL+ space* (BACKGROUND | SCENARIO | '@' | '#');
+  EndScenarioHeading = EOL+ space* ( SCENARIO | STEP | '@' | '#' );
+  EndBackgroundHeading = EOL+ space* ( SCENARIO | STEP | '@' | '#' );
+  StartTable = space* '|';
+  EndTable = EOL space* ^('|' | space);
 
-  Feature = space* FEATURE %begin_content %current_line ^Feature_end+ %/store_feature_content :>> Feature_end >backup @store_feature_content;
-  Scenario = space* SCENARIO %begin_content %current_line ^EOL+ %store_scenario_content %/store_scenario_content EOL+;  #SINGLE LINE ONLY
+  FeatureHeading = space* FEATURE %begin_content %current_line ^EndFeatureHeading* %/store_feature_content :>> EndFeatureHeading >backup @store_feature_content;
+  BackgroundHeading = space* BACKGROUND %begin_content %current_line ^EndBackgroundHeading* %/store_background_content :>> EndBackgroundHeading >backup @store_background_content;
+  ScenarioHeading = space* SCENARIO %begin_content %current_line ^EndScenarioHeading* %/store_scenario_content :>> EndScenarioHeading >backup @store_scenario_content;
+
   Step = space* STEP %begin_content %current_line ^EOL+ %store_step_content %/store_step_content EOL+;  
-
-  Tag = ( '@' [^@\r\n\t ]+ ) >begin_content %store_tag_content;
+  Comment = space* '#' >begin_content ^EOL+ %store_comment_content %/store_comment_content EOL+;
+  Tag = ( '@' [^@\r\n\t ]+ >begin_content ) %store_tag_content;
   Tags = space* (Tag @current_line space*)+ EOL+;  
+  Table = StartTable %begin_content %current_line any+ %/end_table :>> EndTable >backup @end_table;
+  
+  MultilineStep = Step Table?;
+  Scenario = ScenarioHeading (Comment | MultilineStep)*;
+  Background = BackgroundHeading (Comment | MultilineStep)*;
 
-  feature = (
-    start: (
-      Comment ->start |
-      Tags ->start |
-      Feature ->feature_found 
-    ),
-    feature_found: (
-      Comment ->feature_found |
-      Tags ->feature_found |
-      Scenario ->scenario_found 
-    ),
-    scenario_found: (
-      Comment ->scenario_found |
-      Tags ->feature_found | 
-      Scenario ->scenario_found |
-      Step ->scenario_found
-    )
-  );
+  Feature = (Tags | Comment)* FeatureHeading (Tags | Comment)* Background? ((Tags | Comment)* Scenario)*;
 
-  main := feature;
+  main := Feature;
 }%%

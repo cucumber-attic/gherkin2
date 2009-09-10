@@ -8,19 +8,18 @@ module Gherkin
           current_row = []
         }
 
+        action begin_content {
+          @content_start = p
+        }
+
         action store_row {
           @rows << current_row
         }
 
-        action accumulate_content {
-          @con ||= ''
-          @con += [data[p]].pack("U*")
-        }
-
-        action store_content {
-          @con.strip!
-          current_row << (@con.empty? ? nil : @con)
-          @con = nil
+        action store_cell_content {
+          con = data[@content_start...p].pack("U*")
+          con.strip!
+          current_row << (con.empty? ? nil : con)
         }
 
         action no_content {
@@ -30,7 +29,8 @@ module Gherkin
         include table_common "table_common.rl";
       }%%
 
-      def initialize(listener)
+      def initialize(listener,line=nil)
+        @line = line
         @listener = listener
         %% write data;
       end
@@ -43,7 +43,11 @@ module Gherkin
         %% write init;
         %% write exec;
       
-        @listener.table(@rows)
+        if @line
+          @listener.table(@rows, @line)
+        else
+          @listener.table(@rows)
+        end
       end
     end
   end
