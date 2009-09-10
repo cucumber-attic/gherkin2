@@ -16,7 +16,9 @@ module Gherkin
           end
           con.strip!
           @listener.feature(@keyword, con, @current_line)
-          p = @backup
+          if @backup
+            p = @backup-1
+          end
           @backup = nil
         }
       
@@ -27,7 +29,9 @@ module Gherkin
             con = data[@content_start...@backup].pack("U*")
           end
           @listener.background(@keyword, multiline_strip(con), @current_line)
-          p = @backup 
+          if @backup
+            p = @backup-1
+          end
           @backup = nil
         }
           
@@ -38,7 +42,9 @@ module Gherkin
             con = data[@content_start...@backup].pack("U*")
           end
           @listener.scenario(@keyword, multiline_strip(con), @current_line)
-          p = @backup 
+          if @backup
+            p = @backup-1
+          end
           @backup = nil
         }
       
@@ -80,8 +86,14 @@ module Gherkin
         action backup {
           @backup = p
         }
+  
+        action end_table {
+          table_to_parse = '|' + data[@content_start...p].pack("U*").strip
+          Gherkin::Parser::Table.new(@listener, @current_line).scan(table_to_parse)
+          p = p-1
+        }
 
-        include feature_common "feature_common.rl"; 
+        include feature_common "feature_common.<%= lang %>.rl"; 
       }%%
   
       def initialize(listener)

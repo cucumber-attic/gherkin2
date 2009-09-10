@@ -3,10 +3,10 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 module Gherkin
   module Parser
-    describe Feature do
+    describe "parsing" do
       before do
         @listener = Gherkin::SexpRecorder.new
-        @feature = Feature.new(@listener)
+        @feature = Parser['en'].new(@listener)
       end
 
       def scan_file(file)
@@ -203,7 +203,6 @@ Scenario: bar
         end
 
         it "should have steps with inline table" do
-          pending
           @feature.scan(%{Feature: Hi
 Scenario: Hello
 Given I have a table 
@@ -214,6 +213,31 @@ Given I have a table
             [:scenario, "Scenario", "Hello", 2],
             [:step, "Given", "I have a table", 3],
             [:table, [['a','b']], 4]
+          ]
+        end
+        
+        it "should allow multiple steps each with tables" do
+          @feature.scan(%{Feature: Hi
+Scenario: Hello
+Given I have a table 
+|a|b|
+|c|d|
+|e|f|
+And I am still testing things
+  |g|h|
+  |e|r|
+  |k|i|
+  |n|| 
+And I am done testing these tables
+})
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "Hi", 1],
+            [:scenario, "Scenario", "Hello", 2],
+            [:step, "Given", "I have a table", 3],
+            [:table, [['a','b'],['c','d'],['e','f']], 4],
+            [:step, "And", "I am still testing things", 7],
+            [:table, [['g','h'],['e','r'],['k','i'],['n',nil]], 8],
+            [:step, "And", "I am done testing these tables", 12],
           ]
         end
 
@@ -340,6 +364,17 @@ Scenario: I have a Button
             [:step, "Given", "a step", 3],
             [:scenario, "Scenario", "A second scenario", 5],
             [:step, "Given", "another step", 6]
+          ]
+        end
+        
+        it "should find the feature and two scenarios without indentation" do
+          @feature.scan("Feature: Feature Text\nScenario: Reading a Scenario\nGiven a step\nScenario: A second scenario\nGiven another step\n")
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "Feature Text", 1],
+            [:scenario, "Scenario", "Reading a Scenario", 2],
+            [:step, "Given", "a step", 3],
+            [:scenario, "Scenario", "A second scenario", 4],
+            [:step, "Given", "another step", 5]
           ]
         end
       end

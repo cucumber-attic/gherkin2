@@ -29,7 +29,8 @@ module Gherkin
         include table_common "table_common.rl";
       }%%
 
-      def initialize(listener)
+      def initialize(listener,line=nil)
+        @line = line
         @listener = listener
         %% write data;
       end
@@ -42,7 +43,11 @@ module Gherkin
         %% write init;
         %% write exec;
       
-        @listener.table(@rows)
+        if @line
+          @listener.table(@rows, @line)
+        else
+          @listener.table(@rows)
+        end
       end
     end
   end
