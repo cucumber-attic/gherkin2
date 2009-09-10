@@ -18,23 +18,22 @@ class RagelCompiler
     i18n = @langs['en'].merge(@langs[lang])
     common_file = File.dirname(__FILE__) + "/../ragel/feature_common.#{lang}.rl"
     impl_file = File.dirname(__FILE__) + "/../ragel/feature_#{lang}.rb.rl"
-    rb_file = File.dirname(__FILE__) + "/../lib/gherkin/parser/feature_#{lang}.rb"
 
     common = @common.result(binding)
     impl = @impl.result(binding)
 
-    File.open(common_file, "wb") do |file|
-      file.write(common)
-    end
-
-    File.open(impl_file, "wb") do |file|
-      file.write(impl)
-    end
+    write common, common_file
+    write impl, impl_file
 
     sh "ragel -R #{impl_file} -o lib/gherkin/parser/feature_#{lang}.rb"
 
-    FileUtils.rm(impl_file)
-    FileUtils.rm(common_file)
+    FileUtils.rm([impl_file, common_file])
+  end
+
+  def write(content, filename)
+    File.open(filename, "wb") do |file|
+      file.write(content)
+    end
   end
 end
 
@@ -55,12 +54,12 @@ namespace :ragel do
     end
   end
 
-  desc "Regenerate all Ruby i18n parsers"
+  desc "Generate all Ruby i18n parsers"
   task :i18n do
     RagelCompiler.new.compile_all
   end
 
-  desc "Regenerate Ruby English language parser"
+  desc "Generate Ruby English language parser"
   task :i18n_en do
     RagelCompiler.new.compile('en')
   end
