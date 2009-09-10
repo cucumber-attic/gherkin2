@@ -3,17 +3,31 @@ class RagelCompiler
     require 'yaml'
     require 'erb'
     
-    @template = ERB.new(IO.read(File.dirname(__FILE__) + '/../ragel/feature_common.rl.erb'))
+    @impl = ERB.new(IO.read(File.dirname(__FILE__) + '/../ragel/feature.rb.rl.erb'))
+    @common = ERB.new(IO.read(File.dirname(__FILE__) + '/../ragel/feature_common.rl.erb'))
     @langs = YAML.load_file(File.dirname(__FILE__) + '/../lib/gherkin/i18n.yml')
   end
 
-  def compile
-    i18n = @langs['en']
-    rule_file = File.dirname(__FILE__) + '/../ragel/i18n/feature_common.en.rl'
-    rules = @template.result(binding)
+  def compile_all
+    @langs.keys.each do |lang|
+      compile(lang)
+    end
+  end
 
-    File.open(rule_file, "wb") do |file|
-      file.write(rules)
+  def compile(lang)
+    i18n = @langs['en'].merge(@langs[lang])
+    common_file = File.dirname(__FILE__) + "/../ragel/i18n/feature_common.#{lang}.rl"
+    impl_file = File.dirname(__FILE__) + "/../ragel/feature_#{lang}.rb.rl"
+
+    common = @common.result(binding)
+    impl = @impl.result(binding)
+
+    File.open(common_file, "wb") do |file|
+      file.write(common)
+    end
+
+    File.open(impl_file, "wb") do |file|
+      file.write(impl)
     end
   end
 end
@@ -37,7 +51,7 @@ namespace :ragel do
 
   desc "Generate all common i18n rule files"
   task :i18n do
-    RagelCompiler.new.compile
+    RagelCompiler.new.compile_all
   end
 
   desc "Generate a dot file of the Ragel state machine"
