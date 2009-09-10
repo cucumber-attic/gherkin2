@@ -4,19 +4,21 @@
   FEATURE = 'Feature:' >start_keyword %end_keyword;
   BACKGROUND = 'Background:' >start_keyword %end_keyword;
   SCENARIO = 'Scenario:' >start_keyword %end_keyword;
-  STEP = ('Given' | 'When' | 'And' | 'Then' | 'But') >start_keyword %end_keyword;
+  STEP = ('Given ' | 'When ' | 'And ' | 'Then ' | 'But ') >start_keyword %end_keyword;
  
   EOL = ('\r'? '\n') @inc_line_number;
-  Comment = space* '#' %begin_content ^EOL+ %store_comment_content %/store_comment_content EOL+;
+  Comment = space* '#' >begin_content ^EOL+ %store_comment_content %/store_comment_content EOL+;
 
   Feature_end = EOL+ space* (BACKGROUND | SCENARIO | '@' | '#');
+  Scenario_end = EOL+ space* ( SCENARIO | STEP | '@' | '#' );
+  Background_end = EOL+ space* ( SCENARIO | STEP | '@' | '#' );
 
-  Feature = space* FEATURE %begin_content %current_line ^Feature_end+ %/store_feature_content :>> Feature_end >backup @store_feature_content;
-  Background = space* BACKGROUND %begin_content %current_line ^EOL* %store_background_content %/store_background_content EOL+;  #SINGLE LINE ONLY
-  Scenario = space* SCENARIO %begin_content %current_line ^EOL+ %store_scenario_content %/store_scenario_content EOL+;  #SINGLE LINE ONLY
+  Feature = space* FEATURE %begin_content %current_line ^Feature_end* %/store_feature_content :>> Feature_end >backup @store_feature_content;
+  Background = space* BACKGROUND %begin_content %current_line ^Background_end* %/store_background_content :>> Background_end >backup @store_background_content;
+  Scenario = space* SCENARIO %begin_content %current_line ^Scenario_end* %/store_scenario_content :>> Scenario_end >backup @store_scenario_content;
   Step = space* STEP %begin_content %current_line ^EOL+ %store_step_content %/store_step_content EOL+;  
 
-  Tag = ( '@' [^@\r\n\t ]+ ) >begin_content %store_tag_content;
+  Tag = ( '@' [^@\r\n\t ]+ >begin_content ) %store_tag_content;
   Tags = space* (Tag @current_line space*)+ EOL+;  
 
   #NOTE:  The following state machine will likely ultimately be reduced to simple machines,
