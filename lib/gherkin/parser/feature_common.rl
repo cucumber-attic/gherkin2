@@ -7,6 +7,8 @@
   STEP = ('Given ' | 'When ' | 'And ' | 'Then ' | 'But ') >start_keyword %end_keyword;
  
   EOL = ('\r'? '\n') @inc_line_number;
+  BAR = '|' >start_keyword %end_keyword;
+
   Comment = space* '#' >begin_content ^EOL+ %store_comment_content %/store_comment_content EOL+;
 
   Feature_end = EOL+ space* (BACKGROUND | SCENARIO | '@' | '#');
@@ -20,6 +22,11 @@
 
   Tag = ( '@' [^@\r\n\t ]+ >begin_content ) %store_tag_content;
   Tags = space* (Tag @current_line space*)+ EOL+;  
+
+  Table_start = space* '|';
+  Table_end = EOL space* ^('|' | space);
+
+  Table = Table_start %begin_content %current_line any+ %/end_table :>> Table_end >backup @end_table;
 
   #NOTE:  The following state machine will likely ultimately be reduced to simple machines,
   #        But is useful until a full BNF is defined
@@ -45,7 +52,20 @@
       Comment ->scenario_found |
       Tags ->feature_found | 
       Scenario ->scenario_found |
-      Step ->scenario_found
+      Step ->step_found
+    ),
+    step_found: (
+      Comment ->step_found |
+      Tags ->feature_found |
+      Scenario ->scenario_found |
+      Step ->step_found |
+      Table ->step_multiline_found 
+    ),
+    step_multiline_found: (
+      Comment ->step_found |
+      Tags ->feature_found |
+      Scenario ->scenario_found |
+      Step ->step_found
     )
   );
 
