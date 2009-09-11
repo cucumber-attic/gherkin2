@@ -10,9 +10,9 @@ module Gherkin
       
         action store_feature_content {
           if !@backup or (p==eof)
-            con = data[@content_start...p].pack("U*")
+            con = data[@content_start...p].pack("c*")
           else
-            con = data[@content_start...@backup].pack("U*")
+            con = data[@content_start...@backup].pack("c*")
           end
           con.strip!
           @listener.feature(@keyword, con, @current_line)
@@ -24,9 +24,9 @@ module Gherkin
       
         action store_background_content {
           if !@backup or (p==eof)
-            con = data[@content_start...p].pack("U*")
+            con = data[@content_start...p].pack("c*")
           else
-            con = data[@content_start...@backup].pack("U*")
+            con = data[@content_start...@backup].pack("c*")
           end
           @listener.background(@keyword, multiline_strip(con), @current_line)
           if @backup
@@ -37,9 +37,9 @@ module Gherkin
           
         action store_scenario_content {
           if !@backup or (p==eof)
-            con = data[@content_start...p].pack("U*")
+            con = data[@content_start...p].pack("c*")
           else
-            con = data[@content_start...@backup].pack("U*")
+            con = data[@content_start...@backup].pack("c*")
           end
           @listener.scenario(@keyword, multiline_strip(con), @current_line)
           if @backup
@@ -49,19 +49,19 @@ module Gherkin
         }
       
         action store_step_content {
-          con = data[@content_start...p].pack("U*")
+          con = data[@content_start...p].pack("c*")
           con.strip!
           @listener.step(@keyword, con, @current_line)
         }
         
         action store_comment_content {
-          con = data[@content_start...p].pack("U*")
+          con = data[@content_start...p].pack("c*")
           con.strip!
           @listener.comment(con, @line_number)
         }
         
         action store_tag_content {
-          con = data[@content_start...p].pack("U*")
+          con = data[@content_start...p].pack("c*")
           con.strip!
           @listener.tag(con, @current_line)
         }
@@ -79,7 +79,7 @@ module Gherkin
         }
  
         action end_keyword {
-          @keyword = data[@keyword_start...p].pack("U*").sub(/:$/,'').strip
+          @keyword = data[@keyword_start...p].pack("c*").sub(/:$/,'').strip
           @keyword_start = nil
         }
  
@@ -88,7 +88,7 @@ module Gherkin
         }
   
         action end_table {
-          table_to_parse = '|' + data[@content_start...p].pack("U*").strip
+          table_to_parse = '|' + data[@content_start...p].pack("c*").strip
           Gherkin::Parser::Table.new(@listener, @current_line).scan(table_to_parse)
           p = p-1
         }
@@ -102,7 +102,7 @@ module Gherkin
       end
   
       def scan(data)
-        data = data.unpack("U*") if data.is_a?(String)
+        data = data.unpack("c*") if data.is_a?(String)
         @line_number = 1
         eof = data.size
         %% write init;
