@@ -10,7 +10,7 @@ module Gherkin
       end
 
       def scan_file(file)
-        Feature.new(@listener).scan(File.new(File.dirname(__FILE__) + "/gherkin_parser/" + file).read)
+        Parser['en'].new(@listener).scan(File.new(File.dirname(__FILE__) + "/gherkin_parser/" + file).read)
       end
 
       describe "Comments" do
