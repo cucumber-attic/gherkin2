@@ -17,8 +17,7 @@ Gem::Specification.new do |s|
      "README.rdoc"
   ]
   s.files = [
-    ".document",
-     ".gitignore",
+    ".gitignore",
      "LICENSE",
      "README.rdoc",
      "Rakefile",
@@ -28,7 +27,6 @@ Gem::Specification.new do |s|
      "lib/gherkin.rb",
      "lib/gherkin/i18n.yml",
      "lib/gherkin/parser.rb",
-     "lib/gherkin/parser/.preserve",
      "ragel/feature.rb.rl.erb",
      "ragel/feature_common.rl.erb",
      "ragel/misc.c.rl",
