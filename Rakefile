@@ -9,9 +9,9 @@ begin
     gem.name = "gherkin"
     gem.summary = %Q{Fast Gherkin parser}
     gem.description = %Q{A fast Gherkin parser in Ragel}
-    gem.email = "aslak.hellesoy@gmail.com"
+    gem.email = "cukes@googlegroups.com"
     gem.homepage = "http://github.com/aslakhellesoy/gherkin"
-    gem.authors = ["Aslak Hellesøy"]
+    gem.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
     gem.add_development_dependency "rspec"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
