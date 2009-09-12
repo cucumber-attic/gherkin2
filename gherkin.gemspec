@@ -8,10 +8,10 @@ Gem::Specification.new do |s|
   s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Aslak Helles\303\270y"]
+  s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
   s.date = %q{2009-09-12}
   s.description = %q{A fast Gherkin parser in Ragel}
-  s.email = %q{aslak.hellesoy@gmail.com}
+  s.email = %q{cukes@googlegroups.com}
   s.extra_rdoc_files = [
     "LICENSE",
      "README.rdoc"
@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
      "lib/gherkin.rb",
      "lib/gherkin/i18n.yml",
      "lib/gherkin/parser.rb",
+     "lib/gherkin/parser/README.rdoc",
      "ragel/feature.rb.rl.erb",
      "ragel/feature_common.rl.erb",
      "ragel/misc.c.rl",

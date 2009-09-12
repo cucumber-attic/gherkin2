@@ -3,6 +3,5 @@
 coverage
 rdoc
 pkg
-lib/gherkin/parser/*.rb
 *.dot
 *.png

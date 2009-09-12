@@ -34,4 +34,4 @@ The final version will use C for MRI and Java for JRuby.
 
 == Copyright
 
-Copyright (c) 2009 Aslak Hellesøy. See LICENSE for details.
+Copyright (c) 2009 Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy. See LICENSE for details.
