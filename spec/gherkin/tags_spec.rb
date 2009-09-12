@@ -3,11 +3,11 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 module Gherkin
   module Parser
-    describe Feature do
+    describe "parsing" do
       describe "tags" do
         before do
           @listener = mock('listener')
-          @feature = Feature.new(@listener)
+          @feature = Parser['en'].new(@listener)
         end
       
         it "should parse a single tag" do

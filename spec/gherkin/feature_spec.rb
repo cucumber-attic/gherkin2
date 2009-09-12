@@ -3,10 +3,10 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 module Gherkin
   module Parser
-    describe Feature do
+    describe "parsing" do
       before do
         @listener = Gherkin::SexpRecorder.new
-        @feature = Feature.new(@listener)
+        @feature = Parser['en'].new(@listener)
       end
 
       def scan_file(file)
