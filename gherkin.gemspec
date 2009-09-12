@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gherkin}
-  s.version = "1.2.3"
+  s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Aslak Helles\303\270y"]
-  s.date = %q{2009-09-01}
+  s.date = %q{2009-09-12}
   s.description = %q{A fast Gherkin parser in Ragel}
   s.email = %q{aslak.hellesoy@gmail.com}
   s.extra_rdoc_files = [
@@ -22,9 +22,35 @@ Gem::Specification.new do |s|
      "LICENSE",
      "README.rdoc",
      "Rakefile",
+     "VERSION.yml",
+     "ext/gherkin/extconf.rb",
+     "gherkin.gemspec",
      "lib/gherkin.rb",
-     "spec/gherkin_spec.rb",
-     "spec/spec_helper.rb"
+     "lib/gherkin/i18n.yml",
+     "lib/gherkin/parser.rb",
+     "lib/gherkin/parser/.preserve",
+     "ragel/feature.rb.rl.erb",
+     "ragel/feature_common.rl.erb",
+     "ragel/misc.c.rl",
+     "ragel/misc.rb.rl",
+     "ragel/table.rb.rl",
+     "ragel/table_common.rl",
+     "spec/gherkin/feature_spec.rb",
+     "spec/gherkin/gherkin_parser/complex.feature",
+     "spec/gherkin/gherkin_parser/i18n_no.feature",
+     "spec/gherkin/gherkin_parser/simple.feature",
+     "spec/gherkin/gherkin_parser/simple_with_comments.feature",
+     "spec/gherkin/gherkin_parser/simple_with_tags.feature",
+     "spec/gherkin/i18n_spec.rb",
+     "spec/gherkin/multiline_step_args_spec.rb",
+     "spec/gherkin/sexp_recorder.rb",
+     "spec/gherkin/table_spec.rb",
+     "spec/gherkin/tags_spec.rb",
+     "spec/spec_helper.rb",
+     "tasks/ext.rake",
+     "tasks/ragel.rake",
+     "tasks/rdoc.rake",
+     "tasks/rspec.rake"
   ]
   s.homepage = %q{http://github.com/aslakhellesoy/gherkin}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -32,7 +58,12 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.4}
   s.summary = %q{Fast Gherkin parser}
   s.test_files = [
-    "spec/gherkin_spec.rb",
+    "spec/gherkin/feature_spec.rb",
+     "spec/gherkin/i18n_spec.rb",
+     "spec/gherkin/multiline_step_args_spec.rb",
+     "spec/gherkin/sexp_recorder.rb",
+     "spec/gherkin/table_spec.rb",
+     "spec/gherkin/tags_spec.rb",
      "spec/spec_helper.rb"
   ]
 
