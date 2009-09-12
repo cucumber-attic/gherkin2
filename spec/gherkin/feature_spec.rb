@@ -242,7 +242,6 @@ And I am done testing these tables
         end
 
         it "should have steps with inline py_string" do
-          pending
           @feature.scan(%{Feature: Hi
 Scenario: Hello
 Given I have a string
@@ -258,7 +257,7 @@ Given I have a string
             [:feature, "Feature", "Hi", 1],
             [:scenario, "Scenario", "Hello", 2],
             [:step, "Given", "I have a string", 3],
-            [:py_string, "hello\nworld"]
+            [:py_string, "hello\nworld", 6] # Line number starts at start of text, not opening of py_string
           ]
         end
 

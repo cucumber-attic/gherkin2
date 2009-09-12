@@ -7,6 +7,26 @@ module Gherkin
         action begin_content {
           @content_start = p
         }
+
+        action begin_pystring {
+          @lines = []
+        }
+
+        action start_pystring {
+          start_col = p - @last_newline
+          start = p + 4
+        }
+
+        action start_line {
+          line_col = p - @last_newline
+          line_start = p
+        }
+
+        action end_line {
+          line = data[line_start...p].pack("c*")
+          offset = line_col - start_col
+          @lines << (offset >= 0 ? line.gsub(/^/, ' ' * offset) : line) 
+        }
       
         action store_feature_content {
           if !@backup or (p==eof)
@@ -66,6 +86,13 @@ module Gherkin
           @listener.tag(con, @current_line)
         }
   
+        action store_pystring_content {
+          if @lines == [""]  # Parser isn't grabbing newlines from 'empty' py_string
+            (@line_number - @current_line -1).times { @lines << "" }
+          end
+          @listener.py_string(@lines.join("\n"), @current_line) 
+        }
+
         action inc_line_number {
           @line_number += 1
         }
@@ -104,6 +131,7 @@ module Gherkin
       def scan(data)
         data = data.unpack("c*") if data.is_a?(String)
         @line_number = 1
+        @last_newline = 0
         eof = data.size
         %% write init;
         %% write exec;
