@@ -5,19 +5,19 @@ class RagelCompiler
     
     @impl = ERB.new(IO.read(File.dirname(__FILE__) + '/../ragel/feature.rb.rl.erb'))
     @common = ERB.new(IO.read(File.dirname(__FILE__) + '/../ragel/feature_common.rl.erb'))
-    @langs = YAML.load_file(File.dirname(__FILE__) + '/../lib/gherkin/i18n.yml')
+    @i18n_languages = YAML.load_file(File.dirname(__FILE__) + '/../lib/gherkin/i18n.yml')
   end
 
-  def compile_all
-    @langs.keys.each do |lang|
-      compile(lang)
+  def compile_all_rb
+    @i18n_languages.keys.each do |lang|
+      compile_rb(lang)
     end
   end
 
-  def compile(lang)
-    i18n = @langs['en'].merge(@langs[lang])
-    common_file = File.dirname(__FILE__) + "/../ragel/feature_common.#{lang}.rl"
-    impl_file = File.dirname(__FILE__) + "/../ragel/feature_#{lang}.rb.rl"
+  def compile_rb(i18n_language)
+    i18n = @i18n_languages['en'].merge(@i18n_languages[i18n_language])
+    common_file = File.dirname(__FILE__) + "/../ragel/feature_common.#{i18n_language}.rl"
+    impl_file = File.dirname(__FILE__) + "/../ragel/feature_#{i18n_language}.rb.rl"
 
     common = @common.result(binding)
     impl = @impl.result(binding)
@@ -25,7 +25,7 @@ class RagelCompiler
     write common, common_file
     write impl, impl_file
 
-    sh "ragel -R #{impl_file} -o lib/gherkin/parser/feature_#{lang}.rb"
+    sh "ragel -R #{impl_file} -o lib/gherkin/parser/feature_#{i18n_language}.rb"
 
     FileUtils.rm([impl_file, common_file])
   end
@@ -39,7 +39,7 @@ end
 
 namespace :ragel do
   desc "Generate Ruby from the Ragel rule files"
-  task :rb => :i18n_en do
+  task :rb => :i18n_rb_en do
     Dir["ragel/*.rb.rl"].each do |rl|
       basename = File.basename(rl[0..-4])
       sh "ragel -R #{rl} -o lib/gherkin/parser/#{basename}"
@@ -54,14 +54,14 @@ namespace :ragel do
     end
   end
 
-  desc "Generate all Ruby i18n parsers"
-  task :i18n do
-    RagelCompiler.new.compile_all
+  desc "Generate all i18n Ruby parsers"
+  task :i18n_rb do
+    RagelCompiler.new.compile_all_rb
   end
 
   desc "Generate Ruby English language parser"
-  task :i18n_en do
-    RagelCompiler.new.compile('en')
+  task :i18n_rb_en do
+    RagelCompiler.new.compile_rb('en')
   end
 
   desc "Generate a dot file of the Ragel state machine"
