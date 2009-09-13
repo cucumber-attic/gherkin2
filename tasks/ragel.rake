@@ -55,7 +55,7 @@ namespace :ragel do
   desc "Generate C from the Ragel rule files"
   task :c do
     Dir["ragel/*.c.rl"].each do |rl|
-      basename = File.basename(rl[0..-3])
+      basename = File.basename(rl[0..-4])
       sh "ragel -C #{rl} -o ext/gherkin/#{basename}" 
     end
   end
