@@ -6,7 +6,7 @@ Gherkin is the language that has evolved out of the Cucumber project. Cucumber c
 Treetop, which is too slow for larger projects.
 
 This project will *not* include code to build an AST. Instead, this parser will have an API
-that makes it possible to plug in a builder that can buld an AST.
+that makes it possible to plug in a builder that can build an AST.
 
 == Notes
 
