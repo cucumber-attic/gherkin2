@@ -1,45 +1,62 @@
-class RagelCompiler
-  def initialize
+class RagelCompiler 
+  RL_OUTPUT_DIR = File.dirname(__FILE__) + "/../ragel/i18n"
+  
+  def initialize(target)
     require 'yaml'
     require 'erb'
     
-    @impl = ERB.new(IO.read(File.dirname(__FILE__) + '/../ragel/feature.rb.rl.erb'))
-    @common = ERB.new(IO.read(File.dirname(__FILE__) + '/../ragel/feature_common.rl.erb'))
+    @target = target
+    @flag, @output_dir = case
+      when @target == "rb" then ["-R", "lib/gherkin/parser"]
+      when @target == "c" then ["-C", "ext/gherkin"]
+    end
+
     @i18n_languages = YAML.load_file(File.dirname(__FILE__) + '/../lib/gherkin/i18n.yml')
+    @common_tmpl = ERB.new(IO.read(File.dirname(__FILE__) + '/../ragel/feature_common.rl.erb'))
+    @actions_tmpl = ERB.new(IO.read(File.dirname(__FILE__) + "/../ragel/feature.#{@target}.rl.erb"))
   end
 
-  def compile_all_rb
+  def compile_all
     @i18n_languages.keys.each do |lang|
-      compile_rb(lang)
+      compile(lang)
     end
   end
 
-  def compile_rb(i18n_language)
+  def compile(i18n_language, cleanup=true)
+    FileUtils.mkdir(RL_OUTPUT_DIR) unless File.exist?(RL_OUTPUT_DIR)
+    
+    common_path = RL_OUTPUT_DIR + "/feature_common.#{i18n_language}.rl"
+    actions_path = RL_OUTPUT_DIR + "/feature_#{i18n_language}.#{@target}.rl"
+    
+    generate_common(i18n_language, common_path)
+    generate_actions(i18n_language, actions_path)
+    
+    sh "ragel #{@flag} #{actions_path} -o #{@output_dir}/feature_#{i18n_language}.#{@target}"
+    
+    FileUtils.rm_r(RL_OUTPUT_DIR) if cleanup
+  end
+  
+  def generate_common(i18n_language, path)
     i18n = prep_keywords(@i18n_languages['en'].merge(@i18n_languages[i18n_language]))
+    common = @common_tmpl.result(binding)
+    write common, path
+  end
+  
+  def generate_actions(i18n_language, path)
     i18n_parser_class_name = i18n_language.gsub(/[\s-]/, '').capitalize + "Feature"
-    common_file = File.dirname(__FILE__) + "/../ragel/feature_common.#{i18n_language}.rl"
-    impl_file = File.dirname(__FILE__) + "/../ragel/feature_#{i18n_language}.rb.rl"
-
-    common = @common.result(binding)
-    impl = @impl.result(binding)
-
-    write common, common_file
-    write impl, impl_file
-
-    sh "ragel -R #{impl_file} -o lib/gherkin/parser/feature_#{i18n_language}.rb"
-
-    FileUtils.rm([impl_file, common_file])
+    impl = @actions_tmpl.result(binding)
+    write impl, path
   end
 
   def prep_keywords(i18n)
-    %w{feature background scenario scenario_outline examples given when then and but}.each do |keyword|
-      i18n[keyword] = i18n[keyword].split("|")
-    end
-    %w{given when then and but}.each { |keyword| i18n[keyword].map! { |v| v += ' '} } if i18n['space_after_keyword']
-    %w{feature background scenario scenario_outline examples}.each { |keyword| i18n[keyword].map! { |v| v += ':'}}
-    %w{feature background scenario scenario_outline examples given when then and but}.each do |keyword|
-      i18n[keyword] = "('" + i18n[keyword].join("' | '") + "')"
-    end
+    delimited_keywords = %w{feature background scenario scenario_outline examples}
+    bare_keywords = %w{given when then and but}
+    all_keywords = delimited_keywords + bare_keywords
+    
+    all_keywords.each { |kw| i18n[kw] = i18n[kw].split("|") }
+    delimited_keywords.each { |kw| i18n[kw].map! { |v| v += ':'} }
+    bare_keywords.each { |kw| i18n[kw].map! { |v| v += ' '} } if i18n['space_after_keyword']
+    all_keywords.each { |kw| i18n[kw] = "('" + i18n[kw].join("' | '") + "')" }    
     i18n
   end
 
@@ -47,7 +64,7 @@ class RagelCompiler
     File.open(filename, "wb") do |file|
       file.write(content)
     end
-  end
+  end  
 end
 
 namespace :ragel do
@@ -69,14 +86,19 @@ namespace :ragel do
 
   desc "Generate all i18n Ruby parsers"
   task :i18n_rb do
-    RagelCompiler.new.compile_all_rb
+    RagelCompiler.new("rb").compile_all
   end
 
   desc "Generate Ruby English language parser"
   task :i18n_rb_en do
-    RagelCompiler.new.compile_rb('en')
+    RagelCompiler.new("rb").compile('en')
   end
 
+  desc "Generate Ruby parser specified by I18N, leaving intermediate Ragel files in ragel/i18n"
+  task :debug do
+    RagelCompiler.new("rb").compile(ENV['I18N'] || 'en', false)
+  end
+  
   desc "Generate a dot file of the Ragel state machine"
   task :dot do
     Dir["ragel/*.rb.rl"].each do |path|
