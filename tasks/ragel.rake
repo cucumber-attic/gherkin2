@@ -15,7 +15,7 @@ class RagelCompiler
   end
 
   def compile_rb(i18n_language)
-    i18n = @i18n_languages['en'].merge(@i18n_languages[i18n_language])
+    i18n = add_keyword_spaces(@i18n_languages['en'].merge(@i18n_languages[i18n_language]))
     i18n_parser_class_name = i18n_language.gsub(/[\s-]/, '').capitalize + "Feature"
     common_file = File.dirname(__FILE__) + "/../ragel/feature_common.#{i18n_language}.rl"
     impl_file = File.dirname(__FILE__) + "/../ragel/feature_#{i18n_language}.rb.rl"
@@ -29,6 +29,11 @@ class RagelCompiler
     sh "ragel -R #{impl_file} -o lib/gherkin/parser/feature_#{i18n_language}.rb"
 
     FileUtils.rm([impl_file, common_file])
+  end
+
+  def add_keyword_spaces(i18n)
+    %w{given when then and but}.each { |keyword| i18n[keyword] += ' ' } if i18n['space_after_keyword']
+    i18n
   end
 
   def write(content, filename)
