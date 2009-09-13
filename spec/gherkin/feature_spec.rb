@@ -330,6 +330,19 @@ Examples:
           ]
         end
 
+        it "can have no steps or examples" do
+          @feature.scan(%{Feature: Hi
+Scenario Outline: Hello
+
+Scenario: My Scenario
+})
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "Hi", 1],
+            [:scenario_outline, "Scenario Outline", "Hello", 2],
+            [:scenario, "Scenario", "My Scenario", 4]
+          ]
+        end
+
         it "should have line numbered steps with inline table" do
           @feature.scan(%{Feature: Hi
 Scenario Outline: Hello

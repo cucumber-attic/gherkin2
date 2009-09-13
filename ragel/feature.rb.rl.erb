@@ -164,7 +164,7 @@ module Gherkin
       end
  
       def multiline_strip(text)
-        text.split("\n").map{|s| s.strip!}.join("\n")
+        text.split("\n").map{|s| s.strip}.join("\n").strip
       end
     end
   end
