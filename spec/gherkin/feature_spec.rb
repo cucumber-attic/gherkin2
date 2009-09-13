@@ -297,6 +297,118 @@ Scenario: I have a Button
             [:step, "Given", "I have it", 4]
           ]
         end
+        
+        it "should allow step names in Scenario descriptions" do
+          @feature.scan(%{Feature: Hi
+Scenario: When I have when in scenario
+          I should be fine
+Given I am a step
+})
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "Hi", 1],
+            [:scenario, "Scenario", "When I have when in scenario\nI should be fine", 2],
+            [:step, "Given", "I am a step", 4]
+          ]
+        end
+      end
+
+      describe "Scenario Outlines" do
+        it "can be empty" do
+          @feature.scan(%{Feature: Hi
+Scenario Outline: Hello
+Given a <what> cucumber
+Examples:
+|what|
+|green|
+})
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "Hi", 1],
+            [:scenario_outline, "Scenario Outline", "Hello", 2],
+            [:step, "Given", "a <what> cucumber", 3],
+            [:examples, "Examples", "", 4],
+            [:table, [["what"],["green"]], 5]
+          ]
+        end
+
+        it "should have line numbered steps with inline table" do
+          @feature.scan(%{Feature: Hi
+Scenario Outline: Hello
+
+Given I have a table
+
+|<a>|<b>|
+Examples:
+|a|b|
+|c|d|
+})
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "Hi", 1],
+            [:scenario_outline, "Scenario Outline", "Hello", 2],
+            [:step, "Given", "I have a table", 4],
+            [:table, [["<a>","<b>"]], 6],
+            [:examples, "Examples", "", 7],
+            [:table, [["a","b"],["c","d"]], 8]
+          ]
+        end
+
+        it "should have examples" do
+          @feature.scan("Feature: Hi
+
+  Scenario Outline: Hello
+
+  Given I have a table
+    |1|2|
+
+  Examples:
+|x|y|
+|5|6|
+
+")
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "Hi", 1],
+            [:scenario_outline, "Scenario Outline", "Hello", 3],
+            [:step, "Given", "I have a table", 5],
+            [:table, [["1","2"]], 6],
+            [:examples, "Examples", "", 8],
+            [:table, [["x","y"],["5","6"]], 9]
+          ]
+        end
+
+        it "should allow multiline names" do
+          @feature.scan(%{Feature: Hi
+Scenario Outline: It is my ambition to say 
+          in ten sentences
+          what others say 
+          in a whole book.
+Given I am a step
+
+})
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "Hi", 1],
+            [:scenario_outline, "Scenario Outline", "It is my ambition to say\nin ten sentences\nwhat others say\nin a whole book.", 2],
+            [:step, "Given", "I am a step", 6]
+          ]
+        end
+        
+        it "should allow Examples to have multiline names" do
+          @feature.scan(%{Feature: Hi
+Scenario Outline: name
+Given I am a step
+
+Examples: I'm a multiline name
+          and I'm ok
+|x|
+|5|
+
+})
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "Hi", 1],
+            [:scenario_outline, "Scenario Outline", "name", 2],
+            [:step, "Given", "I am a step", 3],
+            [:examples, "Examples", "I'm a multiline name\nand I'm ok", 5],
+            [:table, [["x"],["5"]], 7]
+          ]
+        end
       end
 
       describe "A single feature, single scenario, single step" do

@@ -67,6 +67,32 @@ module Gherkin
           end
           @backup = nil
         }
+        
+        action store_scenario_outline_content {
+          if !@backup or (p==eof)
+            con = data[@content_start...p].pack("c*")
+          else
+            con = data[@content_start...@backup].pack("c*")
+          end
+          @listener.scenario_outline(@keyword, multiline_strip(con), @current_line)
+          if @backup
+            p = @backup-1
+          end
+          @backup = nil
+        }
+        
+        action store_examples_content {
+          if !@backup or (p==eof)
+            con = data[@content_start...p].pack("c*")
+          else
+            con = data[@content_start...@backup].pack("c*")
+          end
+          @listener.examples(@keyword, multiline_strip(con), @current_line)
+          if @backup
+            p = @backup-1
+          end
+          @backup = nil
+        }
       
         action store_step_content {
           con = data[@content_start...p].pack("c*")
