@@ -7,6 +7,26 @@ module Gherkin
         action begin_content {
           @content_start = p
         }
+
+        action begin_pystring {
+          @lines = []
+        }
+
+        action start_pystring {
+          start_col = p - @last_newline
+          start = p + 4
+        }
+
+        action start_line {
+          line_col = p - @last_newline
+          line_start = p
+        }
+
+        action end_line {
+          line = data[line_start...p].pack("c*")
+          offset = line_col - start_col
+          @lines << (offset >= 0 ? line.gsub(/^/, ' ' * offset) : line) 
+        }
       
         action store_feature_content {
           if !@backup or (p==eof)
@@ -47,6 +67,32 @@ module Gherkin
           end
           @backup = nil
         }
+        
+        action store_scenario_outline_content {
+          if !@backup or (p==eof)
+            con = data[@content_start...p].pack("c*")
+          else
+            con = data[@content_start...@backup].pack("c*")
+          end
+          @listener.scenario_outline(@keyword, multiline_strip(con), @current_line)
+          if @backup
+            p = @backup-1
+          end
+          @backup = nil
+        }
+        
+        action store_examples_content {
+          if !@backup or (p==eof)
+            con = data[@content_start...p].pack("c*")
+          else
+            con = data[@content_start...@backup].pack("c*")
+          end
+          @listener.examples(@keyword, multiline_strip(con), @current_line)
+          if @backup
+            p = @backup-1
+          end
+          @backup = nil
+        }
       
         action store_step_content {
           con = data[@content_start...p].pack("c*")
@@ -66,6 +112,13 @@ module Gherkin
           @listener.tag(con, @current_line)
         }
   
+        action store_pystring_content {
+          if @lines == [""]  # Parser isn't grabbing newlines from 'empty' py_string
+            (@line_number - @current_line -1).times { @lines << "" }
+          end
+          @listener.py_string(@lines.join("\n"), @current_line) 
+        }
+
         action inc_line_number {
           @line_number += 1
         }
@@ -104,13 +157,14 @@ module Gherkin
       def scan(data)
         data = data.unpack("c*") if data.is_a?(String)
         @line_number = 1
+        @last_newline = 0
         eof = data.size
         %% write init;
         %% write exec;
       end
  
       def multiline_strip(text)
-        text.split("\n").map{|s| s.strip!}.join("\n")
+        text.split("\n").map{|s| s.strip}.join("\n").strip
       end
     end
   end
