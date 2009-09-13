@@ -2,12 +2,12 @@
   machine feature_common;
 
   # Language specific
-  FEATURE = '<%= i18n['feature'] %>:' >start_keyword %end_keyword; 
-  BACKGROUND = '<%= i18n['background'] %>:' >start_keyword %end_keyword;
-  SCENARIO_OUTLINE = '<%= i18n['scenario_outline'] %>:' >start_keyword %end_keyword;
-  SCENARIO = '<%= i18n['scenario'] %>:' >start_keyword %end_keyword;
-  STEP = ('<%= i18n['given'] %>' | '<%= i18n['when'] %>' | '<%= i18n['and'] %>' | '<%= i18n['then'] %>' | '<%= i18n['but'] %>') >start_keyword %end_keyword;
-  EXAMPLES = ('Examples:' | 'Scenarios:') >start_keyword %end_keyword;
+  FEATURE = <%= i18n['feature'] %> >start_keyword %end_keyword; 
+  BACKGROUND = <%= i18n['background'] %> >start_keyword %end_keyword;
+  SCENARIO_OUTLINE = <%= i18n['scenario_outline'] %> >start_keyword %end_keyword;
+  SCENARIO = <%= i18n['scenario'] %> >start_keyword %end_keyword;
+  STEP = (<%= i18n['given'] %> | <%= i18n['when'] %> | <%= i18n['and'] %> | <%= i18n['then'] %> | <%= i18n['but'] %>) >start_keyword %end_keyword;
+  EXAMPLES = <%= i18n['examples'] %> >start_keyword %end_keyword;
  
   EOL = ('\r'? '\n') @inc_line_number @{ @last_newline = p + 1} ;
   BAR = '|' >start_keyword %end_keyword;
