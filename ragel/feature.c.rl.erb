@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <string.h>
+#include <ruby.h>
+
+%%{
+  machine feature;
+  
+  main := 'say_it' @{ str = rb_str_new2("Mah parser, it haz a C flavr!\n"); };
+}%%
+
+%% write data;
+
+static VALUE mGherkin;
+static VALUE mParser;
+static VALUE cFeature;
+
+VALUE Feature_init(VALUE self, VALUE listener)
+{
+  rb_iv_set(self, "@listener", listener);
+  return self;
+}
+
+VALUE Feature_scan(VALUE self, VALUE text)
+{
+  int cs;
+  char *p = RSTRING(text)->ptr;
+  char *pe = p + strlen(p);
+  VALUE str;
+  
+  %%{
+    write init;
+    write exec;
+  }%%
+  
+  return str;
+}
+
+void Init_gherkin() {
+  mGherkin = rb_define_module("Gherkin");
+  mParser = rb_define_module_under(mGherkin, "Parser");
+  cFeature = rb_define_class_under(mParser, "Feature", rb_cObject);
+  
+  rb_define_method(cFeature, "initialize", Feature_init, 1);
+  rb_define_method(cFeature, "scan", Feature_scan, 1);
+}

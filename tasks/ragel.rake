@@ -82,6 +82,7 @@ namespace :ragel do
       basename = File.basename(rl[0..-4])
       sh "ragel -C #{rl} -o ext/gherkin/#{basename}" 
     end
+    RagelCompiler.new("c").compile('en')
   end
 
   desc "Generate all i18n Ruby parsers"
