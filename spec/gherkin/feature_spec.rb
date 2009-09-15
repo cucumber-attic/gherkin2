@@ -65,6 +65,16 @@ module Gherkin
             [:scenario, "Scenario", "another", 5]
           ]
         end
+
+        it "should allow empty comment lines" do 
+          @feature.scan("Feature: hi\n   #\n   # A comment\n   #\n")
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "hi", 1],
+            [:comment, "#", 2],
+            [:comment, "# A comment", 3],
+            [:comment, "#", 4]
+          ]
+        end
       end
 
       describe "Tags" do
@@ -257,7 +267,7 @@ Given I have a string
             [:feature, "Feature", "Hi", 1],
             [:scenario, "Scenario", "Hello", 2],
             [:step, "Given", "I have a string", 3],
-            [:py_string, "hello\nworld", 6] # Line number starts at start of text, not opening of py_string
+            [:py_string, "hello\nworld", 6]
           ]
         end
 
@@ -330,6 +340,17 @@ Examples:
           ]
         end
 
+        it "can follow scenarios" do
+          @feature.scan(%{Feature: Hi
+Scenario: My Scenario
+Scenario Outline: Hello})
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "Hi", 1],
+            [:scenario, "Scenario", "My Scenario", 2],
+            [:scenario_outline, "Scenario Outline", "Hello", 3]
+          ]
+        end
+
         it "can have no steps or examples" do
           @feature.scan(%{Feature: Hi
 Scenario Outline: Hello
@@ -384,6 +405,31 @@ Examples:
             [:table, [["1","2"]], 6],
             [:examples, "Examples", "", 8],
             [:table, [["x","y"],["5","6"]], 9]
+          ]
+        end
+
+        it "should allow multiple sets of examples" do
+          @feature.scan("Feature: Hi
+  Scenario Outline: Hello
+  Given I have a table
+    |1|2|
+  Examples:
+|x|y|
+|5|6|
+  Examples: More
+|z|a|
+|3|4|
+
+")
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "Hi", 1],
+            [:scenario_outline, "Scenario Outline", "Hello", 2],
+            [:step, "Given", "I have a table", 3],
+            [:table, [["1","2"]], 4],
+            [:examples, "Examples", "", 5],
+            [:table, [["x","y"],["5","6"]], 6],
+            [:examples, "Examples", "More", 8],
+            [:table, [["z","a"],["3","4"]], 9]
           ]
         end
 

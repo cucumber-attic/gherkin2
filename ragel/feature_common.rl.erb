@@ -2,46 +2,44 @@
   machine feature_common;
 
   # Language specific
-  FEATURE = <%= i18n['feature'] %> >start_keyword %end_keyword; 
-  BACKGROUND = <%= i18n['background'] %> >start_keyword %end_keyword;
-  SCENARIO_OUTLINE = <%= i18n['scenario_outline'] %> >start_keyword %end_keyword;
-  SCENARIO = <%= i18n['scenario'] %> >start_keyword %end_keyword;
-  STEP = (<%= i18n['given'] %> | <%= i18n['when'] %> | <%= i18n['and'] %> | <%= i18n['then'] %> | <%= i18n['but'] %>) >start_keyword %end_keyword;
-  EXAMPLES = <%= i18n['examples'] %> >start_keyword %end_keyword;
+  I18N_Feature = <%= i18n['feature'] %> >start_keyword %end_keyword; 
+  I18N_Background = <%= i18n['background'] %> >start_keyword %end_keyword;
+  I18N_ScenarioOutline = <%= i18n['scenario_outline'] %> >start_keyword %end_keyword;
+  I18N_Scenario = <%= i18n['scenario'] %> >start_keyword %end_keyword;
+  I18N_Step = (<%= i18n['given'] %> | <%= i18n['when'] %> | <%= i18n['and'] %> | <%= i18n['then'] %> | <%= i18n['but'] %>) >start_keyword %end_keyword;
+  I18N_Examples = <%= i18n['examples'] %> >start_keyword %end_keyword;
  
-  EOL = ('\r'? '\n') @inc_line_number @{ @last_newline = p + 1} ;
-  BAR = '|' >start_keyword %end_keyword;
+  EOL = ('\r'? '\n') @inc_line_number @last_newline;
 
   # Terminators
-  EndFeatureHeading = EOL+ space* (BACKGROUND | SCENARIO | SCENARIO_OUTLINE | '@' | '#');
-  EndScenarioHeading = EOL+ space* ( SCENARIO | STEP | '@' | '#' );
-  EndBackgroundHeading = EOL+ space* ( SCENARIO | STEP | '@' | '#' );
-  EndScenarioOutlineHeading = EOL+ space* ( SCENARIO | STEP | '@' | '#' );
-  EndExamplesHeading = EOL+ space* '|';
+  FeatureHeadingEnd = EOL+ space* (I18N_Background | I18N_Scenario | I18N_ScenarioOutline | '@' | '#');
+  ScenarioHeadingEnd = EOL+ space* ( I18N_Scenario | I18N_ScenarioOutline | I18N_Step | '@' | '#' );
+  BackgroundHeadingEnd = EOL+ space* ( I18N_Scenario | I18N_ScenarioOutline | I18N_Step | '@' | '#' );
+  ScenarioOutlineHeadingEnd = EOL+ space* ( I18N_Scenario | I18N_Step | '@' | '#' );
+  ExamplesHeadingEnd = EOL+ space* '|';
   StartTable = space* '|';
   EndTable = EOL space* ^('|' | space);
   StartPyString = '"""' >start_pystring space* EOL; 
   EndPyString = '"""';
  
-  FeatureHeading = space* FEATURE %begin_content %current_line ^EndFeatureHeading* %/store_feature_content :>> EndFeatureHeading >backup @store_feature_content;
-  BackgroundHeading = space* BACKGROUND %begin_content %current_line ^EndBackgroundHeading* %/store_background_content :>> EndBackgroundHeading >backup @store_background_content;
-  ScenarioHeading = space* SCENARIO %begin_content %current_line ^EndScenarioHeading* %/store_scenario_content :>> EndScenarioHeading >backup @store_scenario_content;
-  ScenarioOutlineHeading = space* SCENARIO_OUTLINE %begin_content %current_line ^EndScenarioOutlineHeading* %/store_scenario_outline_content :>> EndScenarioOutlineHeading >backup @store_scenario_outline_content;
-  ExamplesHeading = space* EXAMPLES %begin_content %current_line ^EndExamplesHeading* %/store_examples_content :>> EndExamplesHeading >backup @store_examples_content;
+  FeatureHeading = space* I18N_Feature %begin_content %current_line ^FeatureHeadingEnd* %/store_feature_content :>> FeatureHeadingEnd >next_keyword_start @store_feature_content;
+  BackgroundHeading = space* I18N_Background %begin_content %current_line ^BackgroundHeadingEnd* %/store_background_content :>> BackgroundHeadingEnd >next_keyword_start @store_background_content;
+  ScenarioHeading = space* I18N_Scenario %begin_content %current_line ^ScenarioHeadingEnd* %/store_scenario_content :>> ScenarioHeadingEnd >next_keyword_start @store_scenario_content;
+  ScenarioOutlineHeading = space* I18N_ScenarioOutline %begin_content %current_line ^ScenarioOutlineHeadingEnd* %/store_scenario_outline_content :>> ScenarioOutlineHeadingEnd >next_keyword_start @store_scenario_outline_content;
+  ExamplesHeading = space* I18N_Examples %begin_content %current_line ^ExamplesHeadingEnd* %/store_examples_content :>> ExamplesHeadingEnd >next_keyword_start @store_examples_content;
 
-
-  Step = space* STEP %begin_content %current_line ^EOL+ %store_step_content %/store_step_content EOL+;  
-  Comment = space* '#' >begin_content ^EOL+ %store_comment_content %/store_comment_content EOL+;
+  Step = space* I18N_Step %begin_content %current_line ^EOL+ %store_step_content %/store_step_content EOL+;  
+  Comment = space* '#' >begin_content ^EOL* %store_comment_content %/store_comment_content EOL+;
   Tag = ( '@' [^@\r\n\t ]+ >begin_content ) %store_tag_content;
   Tags = space* (Tag @current_line space*)+ EOL+;  
-  Table = StartTable %begin_content %current_line any+ %/end_table :>> EndTable >backup @end_table;
+  Table = StartTable %begin_content %current_line any+ %/end_table :>> EndTable >next_keyword_start @end_table;
   PyStringLine = (space* ^EOL+ >start_line %end_line :>> EOL) | (space* EOL >start_line %end_line);
   PyString = space* StartPyString %begin_pystring >current_line PyStringLine* space* :>> EndPyString %store_pystring_content %/store_pystring_content :>> EOL+;
   
   MultilineStep = Step (Table | PyString)?;
   Scenario = ScenarioHeading (Comment | MultilineStep)*;
   Examples = ExamplesHeading Comment* Table;
-  ScenarioOutline = ScenarioOutlineHeading Comment* ((MultilineStep+ Examples?) | (MultilineStep*));
+  ScenarioOutline = ScenarioOutlineHeading Comment* ((MultilineStep+ Examples*) | (MultilineStep*));
   Background = BackgroundHeading (Comment | MultilineStep)*;
 
   Feature = (Tags | Comment)* FeatureHeading (Tags | Comment)* Background? ((Tags | Comment)* (Scenario | ScenarioOutline))*;

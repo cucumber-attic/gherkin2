@@ -8,7 +8,7 @@ class RagelCompiler
     @target = target
     @flag, @output_dir = case
       when @target == "rb" then ["-R", "lib/gherkin/parser"]
-      when @target == "c" then ["-C", "ext/gherkin"]
+      when @target == "c" then ["-C", "ext/feature"]
     end
 
     @i18n_languages = YAML.load_file(File.dirname(__FILE__) + '/../lib/gherkin/i18n.yml')
