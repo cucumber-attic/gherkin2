@@ -28,69 +28,33 @@ module Gherkin
           @lines << (offset >= 0 ? line.gsub(/^/, ' ' * offset) : line) 
         }
       
-        action store_feature_content {
-          if !@next_keyword_start or (p==eof)
-            con = data[@content_start...p].pack("c*")
-          else
-            con = data[@content_start...@next_keyword_start].pack("c*")
-          end
-          con.strip!
-          @listener.feature(@keyword, con, @current_line)
-          if @next_keyword_start
-            p = @next_keyword_start-1
-          end
+        action store_feature_content {          
+          store_keyword_content(:feature, data, p, eof) { |con| con.strip }
+          p = @next_keyword_start - 1 if @next_keyword_start          
           @next_keyword_start = nil
         }
       
         action store_background_content {
-          if !@next_keyword_start or (p==eof)
-            con = data[@content_start...p].pack("c*")
-          else
-            con = data[@content_start...@next_keyword_start].pack("c*")
-          end
-          @listener.background(@keyword, multiline_strip(con), @current_line)
-          if @next_keyword_start
-            p = @next_keyword_start-1
-          end
+          store_keyword_content(:background, data, p, eof) { |con| multiline_strip(con) }
+          p = @next_keyword_start - 1 if @next_keyword_start          
           @next_keyword_start = nil
         }
           
-        action store_scenario_content {
-          if !@next_keyword_start or (p==eof)
-            con = data[@content_start...p].pack("c*")
-          else
-            con = data[@content_start...@next_keyword_start].pack("c*")
-          end
-          @listener.scenario(@keyword, multiline_strip(con), @current_line)
-          if @next_keyword_start
-            p = @next_keyword_start-1
-          end
+        action store_scenario_content {          
+          store_keyword_content(:scenario, data, p, eof) { |con| multiline_strip(con) }
+          p = @next_keyword_start - 1 if @next_keyword_start                    
           @next_keyword_start = nil
         }
         
         action store_scenario_outline_content {
-          if !@next_keyword_start or (p==eof)
-            con = data[@content_start...p].pack("c*")
-          else
-            con = data[@content_start...@next_keyword_start].pack("c*")
-          end
-          @listener.scenario_outline(@keyword, multiline_strip(con), @current_line)
-          if @next_keyword_start
-            p = @next_keyword_start-1
-          end
+          store_keyword_content(:scenario_outline, data, p, eof) { |con| multiline_strip(con) }
+          p = @next_keyword_start - 1 if @next_keyword_start                    
           @next_keyword_start = nil
         }
         
         action store_examples_content {
-          if !@next_keyword_start or (p==eof)
-            con = data[@content_start...p].pack("c*")
-          else
-            con = data[@content_start...@next_keyword_start].pack("c*")
-          end
-          @listener.examples(@keyword, multiline_strip(con), @current_line)
-          if @next_keyword_start
-            p = @next_keyword_start-1
-          end
+          store_keyword_content(:examples, data, p, eof) { |con| multiline_strip(con) }
+          p = @next_keyword_start - 1 if @next_keyword_start                    
           @next_keyword_start = nil
         }
       
@@ -152,7 +116,7 @@ module Gherkin
 
         include feature_common "feature_common.<%= i18n_language %>.rl"; 
       }%%
-  
+      
       def initialize(listener)
         @listener = listener
         %% write data;
@@ -160,9 +124,10 @@ module Gherkin
   
       def scan(data)
         data = data.unpack("c*") if data.is_a?(String)
+        eof = data.size
+        
         @line_number = 1
         @last_newline = 0
-        eof = data.size
         
         %% write init;
         %% write exec;
@@ -170,6 +135,12 @@ module Gherkin
  
       def multiline_strip(text)
         text.split("\n").map{|s| s.strip}.join("\n").strip
+      end
+      
+      def store_keyword_content(event, data, p, eof)        
+        end_point = (!@next_keyword_start or (p == eof)) ? p : @next_keyword_start
+        con = yield data[@content_start...end_point].pack("c*")
+        @listener.send(event, @keyword, con, @current_line)
       end
     end
   end
