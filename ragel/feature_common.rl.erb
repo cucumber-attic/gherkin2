@@ -10,7 +10,6 @@
   EXAMPLES = <%= i18n['examples'] %> >start_keyword %end_keyword;
  
   EOL = ('\r'? '\n') @inc_line_number @last_newline;
-  BAR = '|' >start_keyword %end_keyword;
 
   # Terminators
   FeatureHeadingEnd = EOL+ space* (BACKGROUND | SCENARIO | SCENARIO_OUTLINE | '@' | '#');
@@ -28,7 +27,6 @@
   ScenarioHeading = space* SCENARIO %begin_content %current_line ^ScenarioHeadingEnd* %/store_scenario_content :>> ScenarioHeadingEnd >backup @store_scenario_content;
   ScenarioOutlineHeading = space* SCENARIO_OUTLINE %begin_content %current_line ^ScenarioOutlineHeadingEnd* %/store_scenario_outline_content :>> ScenarioOutlineHeadingEnd >backup @store_scenario_outline_content;
   ExamplesHeading = space* EXAMPLES %begin_content %current_line ^ExamplesHeadingEnd* %/store_examples_content :>> ExamplesHeadingEnd >backup @store_examples_content;
-
 
   Step = space* STEP %begin_content %current_line ^EOL+ %store_step_content %/store_step_content EOL+;  
   Comment = space* '#' >begin_content ^EOL* %store_comment_content %/store_comment_content EOL+;
