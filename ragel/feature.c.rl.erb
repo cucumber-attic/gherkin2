@@ -5,29 +5,90 @@
 %%{
   machine feature;
   
-  # main := 'say_it' @{ str = rb_str_new2("Mah parser, it haz a C flavr!\n"); };
+  action begin_content {
+    printf("begin_content\n");
+  }
   
-  action begin_content {}
-  action begin_pystring {}
-  action start_pystring {}
-  action start_line {}
-  action end_line {}
-  action store_feature_content {}
-  action store_background_content {}
-  action store_scenario_content {}
-  action store_scenario_outline_content {}
-  action store_examples_content {}
-  action store_step_content {}
-  action store_comment_content {}
-  action store_tag_content {}
-  action store_pystring_content {}
-  action inc_line_number {}
-  action current_line {}
-  action last_newline {}
-  action start_keyword {}
-  action end_keyword {}
-  action backup {}
-  action end_table {}
+  action begin_pystring {
+    printf("begin_pystring\n");
+  }
+  
+  action start_pystring {
+    printf("start_pystring\n");
+  }
+  
+  action start_line {
+    printf("start_line\n");
+  }
+  
+  action end_line {
+    printf("end_line\n");
+  }
+  
+  action store_feature_content {
+    printf("store_feature_content\n");
+  }
+  
+  action store_background_content {
+    printf("store_background_content\n");
+  }
+  
+  action store_scenario_content {
+    printf("store_scenario_content\n");
+  }
+  
+  action store_scenario_outline_content {
+    printf("store_scenario_outline_content\n");
+  }
+  
+  action store_examples_content {
+    printf("store_examples_content\n");
+  }
+  
+  action store_step_content {
+    printf("store_step_content\n");
+  }
+  
+  action store_comment_content {
+    printf("store_comment_content\n");
+  }
+  
+  action store_tag_content {
+    printf("store_tag_content\n");
+    rb_funcall(listener, rb_intern("tag"), 0);
+  }
+  
+  action store_pystring_content {
+    printf("store_pystring_content\n");
+  }
+  
+  action inc_line_number {
+    printf("inc_line_number\n");
+  }
+  
+  action current_line {
+    printf("current_line\n");
+  }
+  
+  action last_newline {
+    printf("last_newline\n");
+  }
+  
+  action start_keyword {
+    printf("start_keyword\n");
+  }
+  
+  action end_keyword {
+    printf("end_keyword\n");
+  }
+  
+  action backup {
+    printf("backup\n");
+  }
+  
+  action end_table {
+    printf("end_table\n");
+  }
   
   include feature_common "feature_common.<%= i18n_language %>.rl"; 
 }%%
@@ -50,14 +111,15 @@ VALUE Feature_scan(VALUE self, VALUE text)
   char *p = RSTRING(text)->ptr;
   char *pe = p + strlen(p);
   char *eof = pe;
-  VALUE str;
+  
+  VALUE listener = rb_iv_get(self, "@listener");
   
   %%{
     write init;
     write exec;
   }%%
   
-  return str;
+  return Qnil;
 }
 
 void Init_feature() {
