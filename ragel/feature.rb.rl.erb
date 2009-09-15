@@ -2,6 +2,11 @@ module Gherkin
   module Parser
     class <%= i18n_parser_class_name %>
       %%{
+        # patterns:
+        # * data[start...end].pack("c*").strip_of_some_sort
+        # * changing the end point of the range according to next_keyword_start
+        # * methods taking the machine state because Ragel doesn't seem to know about ivars
+        
         machine feature;
  
         action begin_content {
@@ -59,20 +64,17 @@ module Gherkin
         }
       
         action store_step_content {
-          con = data[@content_start...p].pack("c*")
-          con.strip!
+          con = data[@content_start...p].pack("c*").strip
           @listener.step(@keyword, con, @current_line)
         }
         
         action store_comment_content {
-          con = data[@content_start...p].pack("c*")
-          con.strip!
+          con = data[@content_start...p].pack("c*").strip
           @listener.comment(con, @line_number)
         }
         
         action store_tag_content {
-          con = data[@content_start...p].pack("c*")
-          con.strip!
+          con = data[@content_start...p].pack("c*").strip
           @listener.tag(con, @current_line)
         }
   
@@ -111,7 +113,7 @@ module Gherkin
         action end_table {
           table_to_parse = '|' + data[@content_start...p].pack("c*").strip
           Gherkin::Parser::Table.new(@listener, @current_line).scan(table_to_parse)
-          p = p-1
+          p = p - 1
         }
 
         include feature_common "feature_common.<%= i18n_language %>.rl"; 
