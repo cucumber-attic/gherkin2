@@ -35,7 +35,7 @@ VALUE Feature_scan(VALUE self, VALUE text)
   return str;
 }
 
-void Init_gherkin() {
+void Init_feature() {
   mGherkin = rb_define_module("Gherkin");
   mParser = rb_define_module_under(mGherkin, "Parser");
   cFeature = rb_define_class_under(mParser, "Feature", rb_cObject);
