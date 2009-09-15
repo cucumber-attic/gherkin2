@@ -11,5 +11,9 @@ module Gherkin
     def to_sexp
       @sexps
     end
+    
+    def reset!
+      @sexps = []
+    end
   end
 end
