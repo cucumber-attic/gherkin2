@@ -29,69 +29,69 @@ module Gherkin
         }
       
         action store_feature_content {
-          if !@backup or (p==eof)
+          if !@next_keyword_start or (p==eof)
             con = data[@content_start...p].pack("c*")
           else
-            con = data[@content_start...@backup].pack("c*")
+            con = data[@content_start...@next_keyword_start].pack("c*")
           end
           con.strip!
           @listener.feature(@keyword, con, @current_line)
-          if @backup
-            p = @backup-1
+          if @next_keyword_start
+            p = @next_keyword_start-1
           end
-          @backup = nil
+          @next_keyword_start = nil
         }
       
         action store_background_content {
-          if !@backup or (p==eof)
+          if !@next_keyword_start or (p==eof)
             con = data[@content_start...p].pack("c*")
           else
-            con = data[@content_start...@backup].pack("c*")
+            con = data[@content_start...@next_keyword_start].pack("c*")
           end
           @listener.background(@keyword, multiline_strip(con), @current_line)
-          if @backup
-            p = @backup-1
+          if @next_keyword_start
+            p = @next_keyword_start-1
           end
-          @backup = nil
+          @next_keyword_start = nil
         }
           
         action store_scenario_content {
-          if !@backup or (p==eof)
+          if !@next_keyword_start or (p==eof)
             con = data[@content_start...p].pack("c*")
           else
-            con = data[@content_start...@backup].pack("c*")
+            con = data[@content_start...@next_keyword_start].pack("c*")
           end
           @listener.scenario(@keyword, multiline_strip(con), @current_line)
-          if @backup
-            p = @backup-1
+          if @next_keyword_start
+            p = @next_keyword_start-1
           end
-          @backup = nil
+          @next_keyword_start = nil
         }
         
         action store_scenario_outline_content {
-          if !@backup or (p==eof)
+          if !@next_keyword_start or (p==eof)
             con = data[@content_start...p].pack("c*")
           else
-            con = data[@content_start...@backup].pack("c*")
+            con = data[@content_start...@next_keyword_start].pack("c*")
           end
           @listener.scenario_outline(@keyword, multiline_strip(con), @current_line)
-          if @backup
-            p = @backup-1
+          if @next_keyword_start
+            p = @next_keyword_start-1
           end
-          @backup = nil
+          @next_keyword_start = nil
         }
         
         action store_examples_content {
-          if !@backup or (p==eof)
+          if !@next_keyword_start or (p==eof)
             con = data[@content_start...p].pack("c*")
           else
-            con = data[@content_start...@backup].pack("c*")
+            con = data[@content_start...@next_keyword_start].pack("c*")
           end
           @listener.examples(@keyword, multiline_strip(con), @current_line)
-          if @backup
-            p = @backup-1
+          if @next_keyword_start
+            p = @next_keyword_start-1
           end
-          @backup = nil
+          @next_keyword_start = nil
         }
       
         action store_step_content {
@@ -140,8 +140,8 @@ module Gherkin
           @keyword_start = nil
         }
  
-        action backup {
-          @backup = p
+        action next_keyword_start {
+          @next_keyword_start = p
         }
   
         action end_table {
@@ -163,6 +163,7 @@ module Gherkin
         @line_number = 1
         @last_newline = 0
         eof = data.size
+        
         %% write init;
         %% write exec;
       end
