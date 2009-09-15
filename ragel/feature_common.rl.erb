@@ -14,8 +14,8 @@
 
   # Terminators
   EndFeatureHeading = EOL+ space* (BACKGROUND | SCENARIO | SCENARIO_OUTLINE | '@' | '#');
-  EndScenarioHeading = EOL+ space* ( SCENARIO | STEP | '@' | '#' );
-  EndBackgroundHeading = EOL+ space* ( SCENARIO | STEP | '@' | '#' );
+  EndScenarioHeading = EOL+ space* ( SCENARIO | SCENARIO_OUTLINE | STEP | '@' | '#' );
+  EndBackgroundHeading = EOL+ space* ( SCENARIO | SCENARIO_OUTLINE | STEP | '@' | '#' );
   EndScenarioOutlineHeading = EOL+ space* ( SCENARIO | STEP | '@' | '#' );
   EndExamplesHeading = EOL+ space* '|';
   StartTable = space* '|';
@@ -31,7 +31,7 @@
 
 
   Step = space* STEP %begin_content %current_line ^EOL+ %store_step_content %/store_step_content EOL+;  
-  Comment = space* '#' >begin_content ^EOL+ %store_comment_content %/store_comment_content EOL+;
+  Comment = space* '#' >begin_content ^EOL* %store_comment_content %/store_comment_content EOL+;
   Tag = ( '@' [^@\r\n\t ]+ >begin_content ) %store_tag_content;
   Tags = space* (Tag @current_line space*)+ EOL+;  
   Table = StartTable %begin_content %current_line any+ %/end_table :>> EndTable >backup @end_table;
@@ -41,7 +41,7 @@
   MultilineStep = Step (Table | PyString)?;
   Scenario = ScenarioHeading (Comment | MultilineStep)*;
   Examples = ExamplesHeading Comment* Table;
-  ScenarioOutline = ScenarioOutlineHeading Comment* ((MultilineStep+ Examples?) | (MultilineStep*));
+  ScenarioOutline = ScenarioOutlineHeading Comment* ((MultilineStep+ Examples*) | (MultilineStep*));
   Background = BackgroundHeading (Comment | MultilineStep)*;
 
   Feature = (Tags | Comment)* FeatureHeading (Tags | Comment)* Background? ((Tags | Comment)* (Scenario | ScenarioOutline))*;
