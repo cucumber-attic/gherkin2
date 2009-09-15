@@ -126,6 +126,10 @@ module Gherkin
         action current_line {
           @current_line = @line_number
         }
+        
+        action last_newline {
+          @last_newline = p + 1
+        }
 
         action start_keyword {
           @keyword_start ||= p

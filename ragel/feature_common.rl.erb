@@ -9,7 +9,7 @@
   STEP = (<%= i18n['given'] %> | <%= i18n['when'] %> | <%= i18n['and'] %> | <%= i18n['then'] %> | <%= i18n['but'] %>) >start_keyword %end_keyword;
   EXAMPLES = <%= i18n['examples'] %> >start_keyword %end_keyword;
  
-  EOL = ('\r'? '\n') @inc_line_number @{ @last_newline = p + 1} ;
+  EOL = ('\r'? '\n') @inc_line_number @last_newline;
   BAR = '|' >start_keyword %end_keyword;
 
   # Terminators

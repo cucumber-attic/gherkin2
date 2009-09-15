@@ -5,7 +5,31 @@
 %%{
   machine feature;
   
-  main := 'say_it' @{ str = rb_str_new2("Mah parser, it haz a C flavr!\n"); };
+  # main := 'say_it' @{ str = rb_str_new2("Mah parser, it haz a C flavr!\n"); };
+  
+  action begin_content {}
+  action begin_pystring {}
+  action start_pystring {}
+  action start_line {}
+  action end_line {}
+  action store_feature_content {}
+  action store_background_content {}
+  action store_scenario_content {}
+  action store_scenario_outline_content {}
+  action store_examples_content {}
+  action store_step_content {}
+  action store_comment_content {}
+  action store_tag_content {}
+  action store_pystring_content {}
+  action inc_line_number {}
+  action current_line {}
+  action last_newline {}
+  action start_keyword {}
+  action end_keyword {}
+  action backup {}
+  action end_table {}
+  
+  include feature_common "feature_common.<%= i18n_language %>.rl"; 
 }%%
 
 %% write data;
@@ -25,6 +49,7 @@ VALUE Feature_scan(VALUE self, VALUE text)
   int cs;
   char *p = RSTRING(text)->ptr;
   char *pe = p + strlen(p);
+  char *eof = pe;
   VALUE str;
   
   %%{
