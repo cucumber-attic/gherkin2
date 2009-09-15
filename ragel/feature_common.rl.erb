@@ -13,21 +13,21 @@
   BAR = '|' >start_keyword %end_keyword;
 
   # Terminators
-  EndFeatureHeading = EOL+ space* (BACKGROUND | SCENARIO | SCENARIO_OUTLINE | '@' | '#');
-  EndScenarioHeading = EOL+ space* ( SCENARIO | SCENARIO_OUTLINE | STEP | '@' | '#' );
-  EndBackgroundHeading = EOL+ space* ( SCENARIO | SCENARIO_OUTLINE | STEP | '@' | '#' );
-  EndScenarioOutlineHeading = EOL+ space* ( SCENARIO | STEP | '@' | '#' );
-  EndExamplesHeading = EOL+ space* '|';
+  FeatureHeadingEnd = EOL+ space* (BACKGROUND | SCENARIO | SCENARIO_OUTLINE | '@' | '#');
+  ScenarioHeadingEnd = EOL+ space* ( SCENARIO | SCENARIO_OUTLINE | STEP | '@' | '#' );
+  BackgroundHeadingEnd = EOL+ space* ( SCENARIO | SCENARIO_OUTLINE | STEP | '@' | '#' );
+  ScenarioOutlineHeadingEnd = EOL+ space* ( SCENARIO | STEP | '@' | '#' );
+  ExamplesHeadingEnd = EOL+ space* '|';
   StartTable = space* '|';
   EndTable = EOL space* ^('|' | space);
   StartPyString = '"""' >start_pystring space* EOL; 
   EndPyString = '"""';
  
-  FeatureHeading = space* FEATURE %begin_content %current_line ^EndFeatureHeading* %/store_feature_content :>> EndFeatureHeading >backup @store_feature_content;
-  BackgroundHeading = space* BACKGROUND %begin_content %current_line ^EndBackgroundHeading* %/store_background_content :>> EndBackgroundHeading >backup @store_background_content;
-  ScenarioHeading = space* SCENARIO %begin_content %current_line ^EndScenarioHeading* %/store_scenario_content :>> EndScenarioHeading >backup @store_scenario_content;
-  ScenarioOutlineHeading = space* SCENARIO_OUTLINE %begin_content %current_line ^EndScenarioOutlineHeading* %/store_scenario_outline_content :>> EndScenarioOutlineHeading >backup @store_scenario_outline_content;
-  ExamplesHeading = space* EXAMPLES %begin_content %current_line ^EndExamplesHeading* %/store_examples_content :>> EndExamplesHeading >backup @store_examples_content;
+  FeatureHeading = space* FEATURE %begin_content %current_line ^FeatureHeadingEnd* %/store_feature_content :>> FeatureHeadingEnd >backup @store_feature_content;
+  BackgroundHeading = space* BACKGROUND %begin_content %current_line ^BackgroundHeadingEnd* %/store_background_content :>> BackgroundHeadingEnd >backup @store_background_content;
+  ScenarioHeading = space* SCENARIO %begin_content %current_line ^ScenarioHeadingEnd* %/store_scenario_content :>> ScenarioHeadingEnd >backup @store_scenario_content;
+  ScenarioOutlineHeading = space* SCENARIO_OUTLINE %begin_content %current_line ^ScenarioOutlineHeadingEnd* %/store_scenario_outline_content :>> ScenarioOutlineHeadingEnd >backup @store_scenario_outline_content;
+  ExamplesHeading = space* EXAMPLES %begin_content %current_line ^ExamplesHeadingEnd* %/store_examples_content :>> ExamplesHeadingEnd >backup @store_examples_content;
 
 
   Step = space* STEP %begin_content %current_line ^EOL+ %store_step_content %/store_step_content EOL+;  
