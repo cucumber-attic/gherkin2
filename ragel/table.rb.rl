@@ -6,6 +6,7 @@ module Gherkin
 
         action initialize {
           current_row = []
+          @begin_row = p
         }
 
         action begin_content {
@@ -17,8 +18,7 @@ module Gherkin
         }
 
         action store_cell_content {
-          con = data[@content_start...p].pack("U*")
-          con.strip!
+          con = data[@content_start...p].pack("U*").strip
           current_row << (con.empty? ? nil : con)
         }
 
@@ -26,11 +26,31 @@ module Gherkin
           current_row << nil
         }
 
+        action store_table {
+          if @rows.size != 0
+            @listener.table(@rows, @line)
+          end
+        }
+ 
+        action bad_table_row {
+          con = data[@begin_row...p].pack("U*").strip
+          @listener.table_error("Unclosed table row", con, @bad_row_line)
+        }
+    
+        action inc_line_number {
+          @cur_line += 1
+        }
+ 
+        action set_bad_table_row_line {
+          @bad_row_line = @cur_line
+        }
+
         include table_common "table_common.rl";
       }%%
 
-      def initialize(listener,line=nil)
+      def initialize(listener,line)
         @line = line
+        @cur_line = line
         @listener = listener
         %% write data;
       end
@@ -42,12 +62,6 @@ module Gherkin
     
         %% write init;
         %% write exec;
-      
-        if @line
-          @listener.table(@rows, @line)
-        else
-          @listener.table(@rows)
-        end
       end
     end
   end
