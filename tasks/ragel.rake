@@ -43,6 +43,7 @@ class RagelCompiler
   end
   
   def generate_actions(i18n_language, path)
+    i18n = @i18n_languages['en'].merge(@i18n_languages[i18n_language])
     i18n_parser_class_name = i18n_language.gsub(/[\s-]/, '').capitalize + "Feature"
     impl = @actions_tmpl.result(binding)
     write impl, path

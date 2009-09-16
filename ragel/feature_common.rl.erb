@@ -8,29 +8,24 @@
   I18N_Scenario = <%= i18n['scenario'] %> >start_keyword %end_keyword;
   I18N_Step = (<%= i18n['given'] %> | <%= i18n['when'] %> | <%= i18n['and'] %> | <%= i18n['then'] %> | <%= i18n['but'] %>) >start_keyword %end_keyword;
   I18N_Examples = <%= i18n['examples'] %> >start_keyword %end_keyword;
+
+  Keyword = I18N_Background | I18N_ScenarioOutline | I18N_Scenario | I18N_Examples;
  
   EOL = ('\r'? '\n') @inc_line_number @last_newline;
 
   # Terminators
   HeadingEnd = EOL+ space* (I18N_Feature | I18N_Background | I18N_Scenario | I18N_ScenarioOutline | I18N_Step | '@' | '#' | '|' | '"""');
   FeatureHeadingEnd = EOL+ space* (I18N_Feature | I18N_Background | I18N_Scenario | I18N_ScenarioOutline | '@' | '#' | '|' | '"""');
+
   StartTable = space* '|';
   EndTable = EOL space* ^('|' | space);
   StartPyString = '"""' >start_pystring space* EOL; 
   EndPyString = '"""';
  
   FeatureHeading = space* I18N_Feature %begin_content %current_line ^FeatureHeadingEnd* %/store_feature_content :>> FeatureHeadingEnd >next_keyword_start @store_feature_content;
-  BackgroundHeading = space* I18N_Background %begin_content %current_line ^HeadingEnd* %/store_background_content :>> HeadingEnd >next_keyword_start @store_background_content;
-  ScenarioHeading = space* I18N_Scenario %begin_content %current_line ^HeadingEnd* %/store_scenario_content :>> HeadingEnd >next_keyword_start @store_scenario_content;
-  ScenarioOutlineHeading = space* I18N_ScenarioOutline %begin_content %current_line ^HeadingEnd* %/store_scenario_outline_content :>> HeadingEnd >next_keyword_start @store_scenario_outline_content;
-  ExamplesHeading = space* I18N_Examples %begin_content %current_line ^HeadingEnd* %/store_examples_content :>> HeadingEnd >next_keyword_start @store_examples_content;
 
-  # Can we simplify all of the above except FeatureHeading to:
-  #
-  # Token = space* KeyWord %begin_content %current_line ^HeadingEnd* %/store_content :>> HeadingEnd >next_keyword_start @store_content;
-  #
-  #  and send the keyword as the message to listener in store_content?
- 
+  MultilineToken = space* Keyword %begin_content %current_line ^HeadingEnd* %/store_multiline_content :>> HeadingEnd >next_keyword_start @store_multiline_content;
+
   Step = space* I18N_Step %begin_content %current_line ^EOL+ %store_step_content %/store_step_content EOL+;  
   Comment = space* '#' >begin_content ^EOL* %store_comment_content %/store_comment_content EOL+;
   Tag = ( '@' [^@\r\n\t ]+ >begin_content ) %store_tag_content;
@@ -39,7 +34,7 @@
   PyStringLine = (space* ^EOL+ >start_line %end_line :>> EOL) | (space* EOL >start_line %end_line);
   PyString = space* StartPyString %begin_pystring >current_line PyStringLine* space* :>> EndPyString %store_pystring_content %/store_pystring_content :>> EOL+;
   
-  Tokens = (Tags | Comment | FeatureHeading | BackgroundHeading | ScenarioHeading | ScenarioOutlineHeading | Step | ExamplesHeading | Table | PyString)*;
+  Tokens = (Tags | Comment | FeatureHeading | MultilineToken | Step | Table | PyString)*;
 
   main := Tokens;
 }%%

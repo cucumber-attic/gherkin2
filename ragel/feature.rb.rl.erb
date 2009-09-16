@@ -39,30 +39,12 @@ module Gherkin
           @next_keyword_start = nil
         }
       
-        action store_background_content {
-          store_keyword_content(:background, data, p, eof) { |con| multiline_strip(con) }
-          p = @next_keyword_start - 1 if @next_keyword_start          
-          @next_keyword_start = nil
-        }
-          
-        action store_scenario_content {          
-          store_keyword_content(:scenario, data, p, eof) { |con| multiline_strip(con) }
-          p = @next_keyword_start - 1 if @next_keyword_start                    
-          @next_keyword_start = nil
-        }
-        
-        action store_scenario_outline_content {
+        action store_multiline_content {
           store_keyword_content(:scenario_outline, data, p, eof) { |con| multiline_strip(con) }
           p = @next_keyword_start - 1 if @next_keyword_start                    
           @next_keyword_start = nil
         }
-        
-        action store_examples_content {
-          store_keyword_content(:examples, data, p, eof) { |con| multiline_strip(con) }
-          p = @next_keyword_start - 1 if @next_keyword_start                    
-          @next_keyword_start = nil
-        }
-      
+
         action store_step_content {
           con = data[@content_start...p].pack("c*").strip
           @listener.step(@keyword, con, @current_line)
@@ -84,7 +66,7 @@ module Gherkin
           end
           @listener.py_string(@lines.join("\n"), @current_line) 
         }
-
+        
         action inc_line_number {
           @line_number += 1
         }
@@ -142,8 +124,21 @@ module Gherkin
       def store_keyword_content(event, data, p, eof)        
         end_point = (!@next_keyword_start or (p == eof)) ? p : @next_keyword_start
         con = yield data[@content_start...end_point].pack("c*")
-        @listener.send(event, @keyword, con, @current_line)
+        myevent = keyword_to_message(@keyword)
+        @listener.send(myevent, @keyword, con, @current_line)
       end
+
+      def keyword_to_message(i18n_keyword)
+        KEYWORD_LOOKUP[i18n_keyword]
+      end
+        
+      KEYWORD_LOOKUP = {
+        <% ['feature', 'background', 'scenario', 'scenario_outline', 'examples'].each do |key| %>
+          <% i18n[key].split("|").each do |multi_key| %>
+            <%= "'#{multi_key}' => '#{key}'," %>
+          <% end %>
+        <% end %>
+      }
     end
   end
 end
