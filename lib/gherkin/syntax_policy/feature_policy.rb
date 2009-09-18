@@ -3,37 +3,60 @@ module Gherkin
     FeatureSyntaxError = Class.new(SyntaxError)
     
     class FeaturePolicy
-      def initialize(strict=true)
-        @strict = strict
-        @feature, @body = false
+      attr_writer :permissive
+      
+      def initialize(listener, permissive=false)
+        @listener, @permissive = listener, permissive
+        @feature, @background, @body = false
       end
       
-      def feature(keyword, content, line)
-        error if @feature
-        @feature = true
+      def feature(*args)
+        if !@feature
+          @feature = true
+          @listener.feature(*args)
+        else
+          error(:feature, args) if @feature
+        end
       end
       
-      def background(keyword, content, line)
-        error unless @feature and !@body
+      def background(*args)
+        if @feature and !@background and !@body
+          @background = true
+          @listener.background(*args)
+        else
+          error(:background, args)
+        end
       end
       
-      def scenario_outline(keyword, content, line)
-        error unless @feature
-        @body = true
+      def scenario_outline(*args)
+        if @feature
+          @body = true
+          @listener.scenario_outline(*args)
+        else
+          error(:scenario_outline, args)
+        end
       end
       
-      def scenario(keyword, content, line)
-        error unless @feature
-        @body = true
+      def scenario(*args)
+        if @feature
+          @body = true
+          @listener.scenario_outline(*args)
+        else
+          error(:scenario, args)
+        end
       end
       
-      def examples(keyword, content, line)
-        error unless @feature
-        @body = true
+      def examples(*args)
+        if @feature
+          @body = true
+          @listener.examples(*args)
+        else
+          error(:keyword, args)
+        end
       end
       
-      def error
-        @strict ? raise(FeatureSyntaxError) : nil # Will delegate error message to listener eventually
+      def error(event, args)
+        @permissive ? @listener.error(event, args) : raise(FeatureSyntaxError)
       end
     end
   end
