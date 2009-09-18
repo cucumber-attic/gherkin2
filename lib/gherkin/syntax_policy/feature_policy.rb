@@ -3,32 +3,37 @@ module Gherkin
     FeatureSyntaxError = Class.new(SyntaxError)
     
     class FeaturePolicy
-      def initialize
+      def initialize(strict=true)
+        @strict = strict
         @feature, @body = false
       end
       
       def feature(keyword, content, line)
-        raise FeatureSyntaxError if @feature
+        error if @feature
         @feature = true
       end
       
       def background(keyword, content, line)
-        raise FeatureSyntaxError unless @feature and !@body
+        error unless @feature and !@body
       end
       
       def scenario_outline(keyword, content, line)
-        raise FeatureSyntaxError unless @feature
+        error unless @feature
         @body = true
       end
       
       def scenario(keyword, content, line)
-        raise FeatureSyntaxError unless @feature
+        error unless @feature
         @body = true
       end
       
       def examples(keyword, content, line)
-        raise FeatureSyntaxError unless @feature
+        error unless @feature
         @body = true
+      end
+      
+      def error
+        @strict ? raise(FeatureSyntaxError) : nil # Will delegate error message to listener eventually
       end
     end
   end

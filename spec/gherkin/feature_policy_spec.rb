@@ -44,6 +44,18 @@ module Gherkin
       end
     end
     
+    describe FeaturePolicy, "error modes" do
+      it "should raise errors by default" do
+        policy = FeaturePolicy.new
+        lambda { policy.background("Background", "Out of order", 1) }.should raise_error(FeatureSyntaxError)
+      end
+      
+      it "should send an error message to the listener when in permissive mode" do
+        policy = FeaturePolicy.new(false)
+        lambda { policy.background("Background", "Out of order", 1) }.should_not raise_error(FeatureSyntaxError)
+      end
+    end
+    
     describe FeaturePolicy, "delegating events to a listener" do
       it "should delegate events to the listener"
       it "should not delegate when there is an error"
