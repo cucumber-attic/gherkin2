@@ -1,6 +1,14 @@
 module Gherkin
   module SyntaxPolicy
-    FeatureSyntaxError = Class.new(SyntaxError)
+
+    class FeatureSyntaxError < SyntaxError
+      attr_reader :line
+      
+      def initialize(line)
+        @line = line
+        super "Syntax error on line #{@line}."
+      end
+    end
     
     class FeaturePolicy
       attr_writer :permissive
@@ -56,7 +64,7 @@ module Gherkin
       end
       
       def error(event, args)
-        @permissive ? @listener.error(event, args) : raise(FeatureSyntaxError)
+        @permissive ? @listener.error(event, args) : raise(FeatureSyntaxError.new(args.last))
       end
     end
   end

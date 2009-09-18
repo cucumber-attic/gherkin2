@@ -50,20 +50,28 @@ module Gherkin
       end
     end
     
-    describe FeaturePolicy, "error modes" do
+    describe FeaturePolicy, "handling errors" do
+      before do
+        @policy = FeaturePolicy.new(mock)
+      end
+      
       it "should raise errors by default" do
-        policy = FeaturePolicy.new(mock)
-        lambda { policy.background("Background", "Out of order", 1) }.should raise_error(FeatureSyntaxError)
+        lambda { @policy.background("Background", "Out of order", 1) }.should raise_error(FeatureSyntaxError)
       end
       
       it "should not raise an error message in permissive mode" do
-        permissive = true
-        policy = FeaturePolicy.new(mock, permissive)
-        lambda { policy.background("Background", "Out of order", 1) }.should_not raise_error(FeatureSyntaxError)
+        @policy.permissive = true
+        lambda { @policy.background("Background", "Out of order", 1) }.should_not raise_error(FeatureSyntaxError)
+      end
+      
+      it "should give helpful error messages" do
+        lambda { 
+          @policy.scenario("Scenario", "My pet scenario", 12) 
+        }.should raise_error(FeatureSyntaxError, "Syntax error on line 12.")
       end
     end
     
-    describe FeaturePolicy, "delegating events to a listener" do
+    describe FeaturePolicy, "delegating events to the listener" do
       before do
         @listener = mock('listener')
         @policy = FeaturePolicy.new(@listener)
