@@ -6,7 +6,7 @@ module Gherkin
     describe Table do
       before do
         @listener = Gherkin::SexpRecorder.new
-        @table = Table.new(@listener)
+        @table = Table.new(@listener, 1)
       end
     
       tables = {
@@ -17,66 +17,102 @@ module Gherkin
     
       tables.each do |text, expected|
         it "should parse #{text}" do
-          @listener.should_receive(:table).with(expected)
+          @listener.should_receive(:table).with(expected, 1)
           @table.scan(text)
         end
       end      
     
       it "should parse a multicharacter cell content" do
-        @listener.should_receive(:table).with([%w{foo bar}])
+        @listener.should_receive(:table).with([%w{foo bar}], 1)
         @table.scan("| foo | bar |\n")
       end
     
       it "should parse cells with spaces within the content" do
-        @listener.should_receive(:table).with([["Dill pickle", "Valencia orange"], ["Ruby red grapefruit", "Tire iron"]])
+        @listener.should_receive(:table).with([["Dill pickle", "Valencia orange"], ["Ruby red grapefruit", "Tire iron"]], 1)
         @table.scan("| Dill pickle | Valencia orange |\n| Ruby red grapefruit | Tire iron |\n")
       end
 
       it "should parse a 1x2 table with newline" do
-        @listener.should_receive(:table).with([%w{1 2}])
+        @listener.should_receive(:table).with([%w{1 2}], 1)
         @table.scan("| 1 | 2 |\n")
       end
     
       it "should allow utf-8" do
-        @listener.should_receive(:table).with([%w{ůﻚ 2}])
+        @listener.should_receive(:table).with([%w{ůﻚ 2}], 1)
         @table.scan(" | ůﻚ | 2 | \n")
       end
 
       it "should parse a 2x2 table" do
-        @listener.should_receive(:table).with([%w{1 2}, %w{3 4}])
+        @listener.should_receive(:table).with([%w{1 2}, %w{3 4}], 1)
         @table.scan("| 1 | 2 |\n| 3 | 4 |\n")
       end
 
       it "should parse a 2x2 table with several newlines" do
-        @listener.should_receive(:table).with([%w{1 2}, %w{3 4}])
+        @listener.should_receive(:table).with([%w{1 2}, %w{3 4}], 1)
         @table.scan("| 1 | 2 |\n| 3 | 4 |\n\n\n")
       end
 
       it "should parse a 2x2 table with empty cells" do
-        @listener.should_receive(:table).with([['1', nil], [nil, '4']])
+        @listener.should_receive(:table).with([['1', nil], [nil, '4']], 1)
         @table.scan("| 1 |  |\n|| 4 |\n")
       end
     
       it "should parse a 1x2 table without newline" do
-        @listener.should_receive(:table).with([%w{1 2}])
+        @listener.should_receive(:table).with([%w{1 2}], 1)
         @table.scan("| 1 | 2 |")
       end
 
       it "should parse a 1x2 table without spaces and newline" do
-        @listener.should_receive(:table).with([%w{1 2}])
-        @table.scan("|1|2|")
-      end
-
-      it "should not parse a 2x2 table that isn't closed" do
-        @table.scan("| 1 |  |\n|| 4 ")
-        @listener.to_sexp.should == [
-          [:table, [['1', nil]]]
-        ]
+        @listener.should_receive(:table).with([%w{1 2}], 1)
+        @table.scan("|1|2|\n")
       end
       
       it "should parse a table with tab spacing" do
-        @listener.should_receive(:table).with([["abc", "123"]])
+        @listener.should_receive(:table).with([["abc", "123"]], 1)
         @table.scan("|\tabc\t|\t123\t\t\t|\n")
+      end
+
+      describe "Bad tables" do
+
+        it "should send a table error for rows that aren't closed" do
+          @table.scan("|| 4 \n")
+          @listener.to_sexp.should == [
+            [:table_error, "Unclosed table row", "|| 4", 1]
+          ]
+        end
+
+        it "should send all closed rows after sending the error" do
+          @table.scan("| 1 |  |\n| hi | bad\n| 3 | 4 |")
+          @listener.to_sexp.should == [
+            [:table_error, "Unclosed table row", "| hi | bad", 2],
+            [:table, [['1', nil],['3','4']], 1]
+          ]
+        end
+
+        it "should send multiple table errors for rows that aren't closed" do
+          @table.scan("|| 4\n|hi|there")
+          @listener.to_sexp.should == [
+            [:table_error, "Unclosed table row", "|| 4", 1],
+            [:table_error, "Unclosed table row", "|hi|there", 2],
+          ]
+        end
+        
+        it "should allow multiple newlines between error rows and good rows" do
+          @table.scan("|| 4\n\n|hi|there\n\n|1|2|")
+          @listener.to_sexp.should == [
+            [:table_error, "Unclosed table row", "|| 4", 1],
+            [:table_error, "Unclosed table row", "|hi|there", 3],
+            [:table, [['1', '2']], 1]
+          ]
+        end
+         
+        it "should not send a good table row if it ends with a newline" do
+          @table.scan("|| 4\n|1|2|\n")
+          @listener.to_sexp.should == [
+            [:table_error, "Unclosed table row", "|| 4", 1],
+            [:table, [['1', '2']], 1]
+          ]
+        end
       end
     end
   end
