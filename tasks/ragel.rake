@@ -22,7 +22,7 @@ class RagelCompiler
     end
   end
 
-  def compile(i18n_language, cleanup=true)
+  def compile(i18n_language)
     FileUtils.mkdir(RL_OUTPUT_DIR) unless File.exist?(RL_OUTPUT_DIR)
     
     common_path = RL_OUTPUT_DIR + "/feature_common.#{i18n_language}.rl"
@@ -32,8 +32,6 @@ class RagelCompiler
     generate_actions(i18n_language, actions_path)
     
     sh "ragel #{@flag} #{actions_path} -o #{@output_dir}/feature_#{i18n_language}.#{@target}"
-    
-    FileUtils.rm_r(RL_OUTPUT_DIR) if cleanup
   end
   
   def generate_common(i18n_language, path)
@@ -95,11 +93,6 @@ namespace :ragel do
     RagelCompiler.new("rb").compile('en')
   end
 
-  desc "Generate Ruby parser specified by I18N, leaving intermediate Ragel files in ragel/i18n"
-  task :debug do
-    RagelCompiler.new("rb").compile(ENV['I18N'] || 'en', false)
-  end
-  
   desc "Generate a dot file of the Ragel state machine"
   task :dot do
     Dir["ragel/*.rb.rl"].each do |path|
