@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
-  s.date = %q{2009-09-13}
+  s.date = %q{2009-09-19}
   s.description = %q{A fast Gherkin parser in Ragel}
   s.email = %q{cukes@googlegroups.com}
   s.extra_rdoc_files = [
@@ -22,8 +22,9 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION.yml",
-     "ext/gherkin/extconf.rb",
+     "ext/feature/extconf.rb",
      "gherkin.gemspec",
+     "lib/.gitignore",
      "lib/gherkin.rb",
      "lib/gherkin/i18n.yml",
      "lib/gherkin/parser.rb",
@@ -66,15 +67,18 @@ Gem::Specification.new do |s|
      "lib/gherkin/parser/feature_vi.rb",
      "lib/gherkin/parser/feature_zh-CN.rb",
      "lib/gherkin/parser/feature_zh-TW.rb",
+     "lib/gherkin/parser/misc.rb",
      "lib/gherkin/parser/table.rb",
+     "ragel/feature.c.rl.erb",
      "ragel/feature.rb.rl.erb",
      "ragel/feature_common.rl.erb",
-     "ragel/misc.c.rl",
+     "ragel/i18n/.gitignore",
      "ragel/table.rb.rl",
      "ragel/table_common.rl",
      "spec/gherkin/feature_spec.rb",
      "spec/gherkin/gherkin_parser/complex.feature",
      "spec/gherkin/gherkin_parser/i18n_no.feature",
+     "spec/gherkin/gherkin_parser/i18n_zh-CN.feature",
      "spec/gherkin/gherkin_parser/simple.feature",
      "spec/gherkin/gherkin_parser/simple_with_comments.feature",
      "spec/gherkin/gherkin_parser/simple_with_tags.feature",

@@ -11,7 +11,8 @@ module Gherkin
     def to_sexp
       @sexps
     end
-    
+
+    # Useful in IRB
     def reset!
       @sexps = []
     end
