@@ -11,6 +11,7 @@ module Gherkin
  
         action begin_content {
           @content_start = p
+          @current_line = @line_number
         }
 
         action begin_pystring {
@@ -18,6 +19,7 @@ module Gherkin
         }
 
         action start_pystring {
+          @current_line = @line_number
           start_col = p - @last_newline
           start = p + 4
         }
@@ -80,7 +82,7 @@ module Gherkin
   
         action store_pystring_content {
           if @lines == [""]  # Parser isn't grabbing newlines from 'empty' py_string
-            (@line_number - @current_line -1).times { @lines << "" }
+            (@line_number - @current_line - 1).times { @lines << "" }
           end
           @listener.py_string(@lines.join("\n"), @current_line) 
         }
@@ -88,11 +90,7 @@ module Gherkin
         action inc_line_number {
           @line_number += 1
         }
- 
-        action current_line {
-          @current_line = @line_number
-        }
-        
+         
         action last_newline {
           @last_newline = p + 1
         }
