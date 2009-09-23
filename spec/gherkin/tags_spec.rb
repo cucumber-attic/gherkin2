@@ -6,7 +6,7 @@ module Gherkin
     describe "parsing" do
       describe "tags" do
         before do
-          @listener = mock('listener')
+          @listener = mock('listener').as_null_object
           @feature = Parser['en'].new(@listener)
         end
       

@@ -44,10 +44,10 @@ Given a step
 
 """}) 
         @listener.to_sexp.should == [
-          [:feature, "Feature", "Hi", 1],
-          [:scenario, "Scenario", "Hi", 2],
-          [:step, "Given", "a step", 3],
-          [:py_string, "\n\n", 4],
+          [:feature, "Feature", "Hi", 2],
+          [:scenario, "Scenario", "Hi", 3],
+          [:step, "Given", "a step", 4],
+          [:py_string, "\n\n", 5],
         ]
       end
       
@@ -113,7 +113,7 @@ Given a step
     """
 Content
 """}
-        @listener.should_receive(:py_string).with("Content", 4)
+        @listener.should_receive(:py_string).with("Content", 5)
         @parser.scan(py_string)
       end
     end

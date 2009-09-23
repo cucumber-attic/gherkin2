@@ -114,6 +114,16 @@ module Gherkin
           p = p - 1
         }
 
+        action eof_found {
+          @eof_found = true 
+        }
+
+        action end_feature {
+          if !@eof_found
+            @listener.syntax_error
+          end
+        }
+
         include feature_common "feature_common.<%= i18n_language %>.rl"; 
       }%%
       
@@ -123,8 +133,8 @@ module Gherkin
       end
   
       def scan(data)
-        data = (data + "\n").unpack("c*")
-        eof = data.size
+        data = (data + "\n__TAKE_OFF_EVERY_ZIG__").unpack("c*")
+        eof = pe = data.length
         
         @line_number = 1
         @last_newline = 0
