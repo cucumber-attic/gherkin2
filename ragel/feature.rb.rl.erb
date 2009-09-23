@@ -6,7 +6,7 @@ module Gherkin
         # * data[start...end].pack("c*").strip_of_some_sort
         # * changing the end point of the range according to next_keyword_start
         # * methods taking the machine state because Ragel doesn't seem to know about ivars
-        
+ 
         machine feature;
  
         action begin_content {
@@ -34,63 +34,63 @@ module Gherkin
           offset = line_col - start_col
           @lines << (offset >= 0 ? line.gsub(/^/, ' ' * offset) : line) 
         }
-      
+ 
         action store_feature_content {          
           store_keyword_content(:feature, data, p, eof) { |con| con.strip }
           p = @next_keyword_start - 1 if @next_keyword_start          
           @next_keyword_start = nil
         }
-      
+ 
         action store_background_content {
           store_keyword_content(:background, data, p, eof) { |con| multiline_strip(con) }
-          p = @next_keyword_start - 1 if @next_keyword_start          
+          p = @next_keyword_start - 1 if @next_keyword_start                    
           @next_keyword_start = nil
         }
-          
-        action store_scenario_content {          
+
+        action store_scenario_content {
           store_keyword_content(:scenario, data, p, eof) { |con| multiline_strip(con) }
           p = @next_keyword_start - 1 if @next_keyword_start                    
           @next_keyword_start = nil
         }
-        
+
         action store_scenario_outline_content {
           store_keyword_content(:scenario_outline, data, p, eof) { |con| multiline_strip(con) }
           p = @next_keyword_start - 1 if @next_keyword_start                    
           @next_keyword_start = nil
         }
-        
+
         action store_examples_content {
           store_keyword_content(:examples, data, p, eof) { |con| multiline_strip(con) }
           p = @next_keyword_start - 1 if @next_keyword_start                    
           @next_keyword_start = nil
         }
-      
+
         action store_step_content {
           con = data[@content_start...p].pack("c*").strip
           @listener.step(@keyword, con, @current_line)
         }
-        
+ 
         action store_comment_content {
           con = data[@content_start...p].pack("c*").strip
           @listener.comment(con, @line_number)
         }
-        
+ 
         action store_tag_content {
           con = data[@content_start...p].pack("c*").strip
           @listener.tag(con, @current_line)
         }
-  
+ 
         action store_pystring_content {
           if @lines == [""]  # Parser isn't grabbing newlines from 'empty' py_string
             (@line_number - @current_line - 1).times { @lines << "" }
           end
           @listener.py_string(@lines.join("\n"), @current_line) 
         }
-
+ 
         action inc_line_number {
           @line_number += 1
         }
-         
+ 
         action last_newline {
           @last_newline = p + 1
         }
@@ -107,7 +107,7 @@ module Gherkin
         action next_keyword_start {
           @next_keyword_start = p
         }
-  
+ 
         action end_table {
           table_to_parse = '|' + data[@content_start...p].pack("c*").strip
           Gherkin::Parser::Table.new(@listener, @current_line).scan(table_to_parse)
@@ -122,19 +122,19 @@ module Gherkin
 
         include feature_common "feature_common.<%= i18n_language %>.rl"; 
       }%%
-      
+ 
       def initialize(listener)
         @listener = listener
         %% write data;
       end
-  
+ 
       def scan(data)
         data = (data + "\n__TAKE_OFF_EVERY_ZIG__").unpack("c*") # Explicitly signal EOF simplifies things considerably
         eof = pe = data.length
-        
+ 
         @line_number = 1
         @last_newline = 0
-        
+ 
         %% write init;
         %% write exec;
       end
@@ -142,7 +142,7 @@ module Gherkin
       def multiline_strip(text)
         text.split("\n").map{|s| s.strip}.join("\n").strip
       end
-      
+ 
       def store_keyword_content(event, data, p, eof)        
         end_point = (!@next_keyword_start or (p == eof)) ? p : @next_keyword_start
         con = yield data[@content_start...end_point].pack("c*")

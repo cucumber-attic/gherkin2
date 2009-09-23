@@ -18,6 +18,7 @@
   BackgroundHeadingEnd = EOL+ space* ( I18N_Scenario | I18N_ScenarioOutline | I18N_Step | '@' | '#'| EOF ) >next_keyword_start;
   ScenarioOutlineHeadingEnd = EOL+ space* ( I18N_Scenario | I18N_Step | '@' | '#' | EOF ) >next_keyword_start;
   ExamplesHeadingEnd = EOL+ space* '|' >next_keyword_start;
+
   StartTable = space* '|';
   EndTable = EOL space* ^('|' | space) >next_keyword_start;
   StartPyString = '"""' >start_pystring space* EOL; 
@@ -37,13 +38,7 @@
   PyStringLine = (space* ^EOL+ >start_line %end_line :>> EOL) | (space* EOL >start_line %end_line);
   PyString = space* StartPyString %begin_pystring PyStringLine* space* :>> EndPyString %store_pystring_content EOL+;
   
-  MultilineStep = Step (Table | PyString)?;
-  Scenario = ScenarioHeading (Comment | MultilineStep)*;
-  Examples = ExamplesHeading Comment* Table;
-  ScenarioOutline = ScenarioOutlineHeading Comment* ((MultilineStep+ Examples*) | (MultilineStep*));
-  Background = BackgroundHeading (Comment | MultilineStep)*;
+  Tokens = (space | EOL)* (Tags | Comment | FeatureHeading | BackgroundHeading | ScenarioHeading | ScenarioOutlineHeading | ExamplesHeading | Step | Table | PyString)* <: EOL* EOF;
 
-  Feature = (space|EOL)* Comment* ((Tags | Comment)* FeatureHeading (Tags | Comment)* Background? ((Tags | Comment)* (Scenario | ScenarioOutline))*)? <: EOL* EOF;
-
-  main := Feature %end_feature @err(end_feature);
+  main := Tokens %end_feature @!end_feature;
 }%%
