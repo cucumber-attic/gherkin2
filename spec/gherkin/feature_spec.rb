@@ -23,7 +23,6 @@ module Gherkin
         end
 
         it "should parse a one line comment" do
-          pending("This currently throws a syntax error.  We're looking for Feature:")
           @feature.scan("# My comment")
           @listener.to_sexp.should == [[:comment, "# My comment", 1]]
         end
