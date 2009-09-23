@@ -23,17 +23,17 @@
   StartPyString = '"""' >start_pystring space* EOL; 
   EndPyString = '"""';
  
-  FeatureHeading = space* I18N_Feature %begin_content ^FeatureHeadingEnd* %/store_feature_content :>> FeatureHeadingEnd >next_keyword_start @store_feature_content;
-  BackgroundHeading = space* I18N_Background %begin_content ^BackgroundHeadingEnd* %/store_background_content :>> BackgroundHeadingEnd >next_keyword_start @store_background_content;
-  ScenarioHeading = space* I18N_Scenario %begin_content ^ScenarioHeadingEnd* %/store_scenario_content :>> ScenarioHeadingEnd >next_keyword_start @store_scenario_content;
-  ScenarioOutlineHeading = space* I18N_ScenarioOutline %begin_content ^ScenarioOutlineHeadingEnd* %/store_scenario_outline_content :>> ScenarioOutlineHeadingEnd >next_keyword_start @store_scenario_outline_content;
-  ExamplesHeading = space* I18N_Examples %begin_content ^ExamplesHeadingEnd* %/store_examples_content :>> ExamplesHeadingEnd >next_keyword_start @store_examples_content;
+  FeatureHeading = space* I18N_Feature %begin_content ^FeatureHeadingEnd* :>> FeatureHeadingEnd >next_keyword_start @store_feature_content;
+  BackgroundHeading = space* I18N_Background %begin_content ^BackgroundHeadingEnd* :>> BackgroundHeadingEnd >next_keyword_start @store_background_content;
+  ScenarioHeading = space* I18N_Scenario %begin_content ^ScenarioHeadingEnd* :>> ScenarioHeadingEnd >next_keyword_start @store_scenario_content;
+  ScenarioOutlineHeading = space* I18N_ScenarioOutline %begin_content ^ScenarioOutlineHeadingEnd* :>> ScenarioOutlineHeadingEnd >next_keyword_start @store_scenario_outline_content;
+  ExamplesHeading = space* I18N_Examples %begin_content ^ExamplesHeadingEnd* :>> ExamplesHeadingEnd >next_keyword_start @store_examples_content;
 
   Step = space* I18N_Step %begin_content ^EOL+ %store_step_content EOL+;  
   Comment = space* '#' >begin_content ^EOL* %store_comment_content EOL+;
   Tag = ( '@' [^@\r\n\t ]+ >begin_content ) %store_tag_content;
   Tags = space* (Tag space*)+ EOL+;  
-  Table = StartTable %begin_content any+ %/end_table :>> EndTable >next_keyword_start @end_table;
+  Table = StartTable %begin_content any+ :>> EndTable >next_keyword_start @end_table;
   PyStringLine = (space* ^EOL+ >start_line %end_line :>> EOL) | (space* EOL >start_line %end_line);
   PyString = space* StartPyString %begin_pystring PyStringLine* space* :>> EndPyString %store_pystring_content EOL+;
   
