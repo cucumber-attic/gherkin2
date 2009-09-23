@@ -114,12 +114,8 @@ module Gherkin
           p = p - 1
         }
 
-        action eof_found {
-          @eof_found = true 
-        }
-
         action end_feature {
-          if !@eof_found
+          if cs < feature_first_final
             @listener.syntax_error
           end
         }
@@ -133,7 +129,7 @@ module Gherkin
       end
   
       def scan(data)
-        data = (data + "\n__TAKE_OFF_EVERY_ZIG__").unpack("c*")
+        data = (data + "\n__TAKE_OFF_EVERY_ZIG__").unpack("c*") # Explicitly signal EOF simplifies things considerably
         eof = pe = data.length
         
         @line_number = 1
