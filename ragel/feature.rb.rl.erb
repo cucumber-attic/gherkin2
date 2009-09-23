@@ -129,7 +129,7 @@ module Gherkin
       end
  
       def scan(data)
-        data = (data + "\n__TAKE_OFF_EVERY_ZIG__").unpack("c*") # Explicitly signal EOF simplifies things considerably
+        data = (data + "\n%_FEATURE_END_%").unpack("c*") # Explicit EOF simplifies things considerably
         eof = pe = data.length
  
         @line_number = 1
