@@ -123,7 +123,7 @@ module Gherkin
       end
   
       def scan(data)
-        data = data.unpack("c*")
+        data = (data + "\n").unpack("c*")
         eof = data.size
         
         @line_number = 1
