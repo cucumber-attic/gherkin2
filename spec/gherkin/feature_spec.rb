@@ -609,7 +609,7 @@ Examples: I'm a multiline name
         it "should send a syntax error to the listener if the file doesn't start with a Feature, comment, or tag" do
           @feature.scan("Some text\nFeature: Hi")
           @listener.to_sexp.should == [
-            [:syntax_error]
+            [:syntax_error, 1]
           ]
         end
 
@@ -621,7 +621,17 @@ Examples: I'm a multiline name
             [:step, "Given", "I am a step", 3],
             [:comment, "# A comment", 4],
             [:tag, "tag1", 5],
-            [:syntax_error]
+            [:syntax_error, 6]
+          ]
+        end
+
+        it "should send the line number the syntax error appears on" do
+          @feature.scan("Feature: hello\nScenario: My scenario\nGiven foo\nAand blah\nHmmm wrong\nThen something something")
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "hello", 1],
+            [:scenario, "Scenario", "My scenario", 2],
+            [:step, "Given", "foo", 3],
+            [:syntax_error, 4] 
           ]
         end
       end
