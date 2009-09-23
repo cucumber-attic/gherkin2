@@ -99,13 +99,13 @@ static VALUE mGherkin;
 static VALUE mParser;
 static VALUE cFeature;
 
-VALUE Feature_init(VALUE self, VALUE listener)
+static VALUE Feature_init(VALUE self, VALUE listener)
 {
   rb_iv_set(self, "@listener", listener);
   return self;
 }
 
-VALUE Feature_scan(VALUE self, VALUE text)
+static VALUE Feature_scan(VALUE self, VALUE text)
 {
   int cs;
   char *p = RSTRING(text)->ptr;
