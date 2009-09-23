@@ -37,11 +37,11 @@ module Gherkin
         end
 
         it "should parse a file with only a multiline comment" do
-          pending("TODO:  Do multiline comments need to be compressed into a single message?")
           @feature.scan("# Hello\n# World\nFeature: hi")
           @listener.to_sexp.should == [
-            [:comment, "# Hello\n# World", 1],
-            [:feature, "hi", 3]
+            [:comment, "# Hello", 1],
+            [:comment, "# World", 2],
+            [:feature, "Feature", "hi", 3]
           ]
         end
 
@@ -51,9 +51,11 @@ module Gherkin
         end
 
         it "should parse a file with only a multiline comment with newlines" do
-          pending("TODO:  Do multiline comments need to be compressed into a single message?")
           @feature.scan("# Hello\n\n# World\n")
-          @listener.to_sexp.should == [[:comment, "# Hello\n\n# World\n"]]
+          @listener.to_sexp.should == [
+            [:comment, "# Hello", 1],
+            [:comment, "# World", 3]
+          ]
         end
   
         it "should not consume comments as part of a multiline name" do
