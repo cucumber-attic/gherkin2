@@ -11,6 +11,7 @@ Spec::Rake::SpecTask.new(:rcov) do |spec|
   spec.spec_opts << '--color'
   spec.pattern = 'spec/**/*_spec.rb'
   spec.rcov = true
+  spec.rcov_opts = %w{--exclude spec\/}
 end
 
 task :spec => [:check_dependencies, "ragel:rb"]
