@@ -1,2 +1,3 @@
-default: --format progress --tags ~@c_parser
+default: --format progress --tags ~@c_parser,~@pending
+pending: --format pretty --tags @pending,~@c_parser
 c_parser: --format pretty --tags @c_parser
