@@ -21,8 +21,8 @@ module Gherkin
       @sexps.select { |sexp| sexp[0] == :syntax_error }
     end
 
-    def error_on(line)
-      errors.find { |error| error.last == line }
+    def line(number)
+      @sexps.find { |sexp| sexp.last == number }
     end
   end
 end

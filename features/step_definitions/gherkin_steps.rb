@@ -12,10 +12,7 @@ Then "there should be no errors" do
 end
 
 Then /^there should be a syntax error on (line \d+)$/ do |line|
-  error = listener.error_on(line)
-  error.should_not be_nil
-  error.first.should == :syntax_error
-  error.last.should == line
+  listener.line(line).should include(:syntax_error, line)
 end
 
 Then /^there should be syntax errors on lines (.*)$/ do |lines|

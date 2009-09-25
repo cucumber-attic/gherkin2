@@ -48,10 +48,16 @@ Feature: Parsing Gherkin using the Feature policy
       """
     Then there should be syntax errors on lines 1, 2 and 3
 
-  Scenario: I18N Feature parsing
-    Given a Norwegian-language feature parser
+  Scenario: Tag ends a scenario
+    Given an English-language feature parser
     When the following text is parsed:
       """
-      Egenskap: Oh hello
+      Feature: test feature
+      Scenario: my scenario
+        @tag
+        Given this is a step
+        @oh_hai
+        And this is a horrible idea
+        Then it shouldn't work
       """
-    Then there should be no errors
+    Then there should be syntax errors on lines 4, 6 and 7

@@ -15,7 +15,7 @@ module Gherkin
       
       def initialize(listener, raise_on_error=true)
         @listener, @raise_on_error = listener, raise_on_error
-        @feature, @background, @body = false
+        @feature, @background, @body, @step_allowed = false
       end
       
       def feature(*args)
@@ -30,6 +30,7 @@ module Gherkin
       def background(*args)
         if @feature and !@background and !@body
           @background = true
+          @step_allowed = true
           @listener.background(*args)
         else
           error([:background] + args)
@@ -39,6 +40,7 @@ module Gherkin
       def scenario_outline(*args)
         if @feature
           @body = true
+          @step_allowed = true
           @listener.scenario_outline(*args)
         else
           error([:scenario_outline] + args)
@@ -48,6 +50,7 @@ module Gherkin
       def scenario(*args)
         if @feature
           @body = true
+          @step_allowed = true
           @listener.scenario_outline(*args)
         else
           error([:scenario] + args)
@@ -64,7 +67,7 @@ module Gherkin
       end
 
       def step(*args)
-        if @feature
+        if @feature and @step_allowed
           @body = true
           @listener.step(*args)
         else
@@ -77,7 +80,14 @@ module Gherkin
       end
       
       def tag(*args)
+        @step_allowed = false
         @listener.tag(*args)
+        #if @tag_allowed
+        #  @listener.tag(*args)
+        #else
+          # Good place to test out verbose error messages like "You tried to tag a step. Stop thinking crazy."
+        #  error([:tag] + args)
+        #end
       end
       
       def error(args)
