@@ -11,8 +11,7 @@ class GherkinWorld
   end
 
   def load_feature_parser(i18n_lang)
-    policy = Gherkin::SyntaxPolicy::FeaturePolicy.new(listener)
-    @parser = Gherkin::Parser[i18n_lang].new(policy)
+    @parser = Gherkin::Feature.new(i18n_lang, listener, :raise_on_error => false)
   end
 end
 
