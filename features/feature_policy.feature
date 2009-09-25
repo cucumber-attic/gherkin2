@@ -1,9 +1,11 @@
 Feature: Parsing Gherkin using the Feature policy
 
   Scenario: Correctly formed feature
-    Given an 'en' feature parser
+    Given an English-language feature parser
     When the following text is parsed:
       """
+      # Shout out to Calvin and Hobbes
+      @cardboard_box
       Feature: Transmogrification
         Scenario: Whoozit to whatzit transfer
           Given I have a whoozit
@@ -12,8 +14,8 @@ Feature: Parsing Gherkin using the Feature policy
       """
    Then there should be no errors
 
-  Scenario: Incorrectly formed feature
-    Given an 'en' feature parser
+  Scenario: Keyword before feature
+    Given an English-language feature parser
     When the following text is parsed:
       """
       Scenario: Bullying my way to the head of the line
@@ -23,3 +25,11 @@ Feature: Parsing Gherkin using the Feature policy
       Feature: Too timid to stand up for myself
       """
     Then there should be a syntax error on line 1
+
+  Scenario: I18N Feature parsing
+    Given a Norwegian-language feature parser
+    When the following text is parsed:
+      """
+      Egenskap: Oh hello
+      """
+    Then there should be no errors

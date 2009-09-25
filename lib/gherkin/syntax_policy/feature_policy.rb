@@ -72,6 +72,14 @@ module Gherkin
         end
       end
       
+      def comment(*args)
+        @listener.comment(*args)
+      end
+      
+      def tag(*args)
+        @listener.tag(*args)
+      end
+      
       def error(args)
         @raise_on_error ? raise(FeatureSyntaxError.new(args.last)) : @listener.syntax_error(*args)
       end
