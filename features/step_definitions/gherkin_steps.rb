@@ -13,8 +13,15 @@ end
 
 Then /^there should be a syntax error on (line \d+)$/ do |line|
   error = listener.error_on(line)
+  error.should_not be_nil
   error.first.should == :syntax_error
   error.last.should == line
+end
+
+Then /^there should be syntax errors on lines (.*)$/ do |lines|
+  lines.scan(/\d+/).each do |line|
+    Then "there should be a syntax error on line #{line}"
+  end
 end
 
 Transform /^line \d+$/ do |step_arg|
