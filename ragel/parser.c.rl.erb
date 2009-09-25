@@ -3,7 +3,7 @@
 #include <ruby.h>
 
 %%{
-  machine feature;
+  machine parser;
   
   action begin_content {
     printf("begin_content\n");
@@ -97,15 +97,15 @@
 
 static VALUE mGherkin;
 static VALUE mParser;
-static VALUE cFeature;
+static VALUE cCParser;
 
-static VALUE Feature_init(VALUE self, VALUE listener)
+static VALUE CParser_init(VALUE self, VALUE listener)
 {
   rb_iv_set(self, "@listener", listener);
   return self;
 }
 
-static VALUE Feature_scan(VALUE self, VALUE text)
+static VALUE CParser_scan(VALUE self, VALUE text)
 {
   int cs;
   char *p = RSTRING(text)->ptr;
@@ -122,11 +122,11 @@ static VALUE Feature_scan(VALUE self, VALUE text)
   return Qnil;
 }
 
-void Init_feature() {
+void Init_gherkin_parser() {
   mGherkin = rb_define_module("Gherkin");
   mParser = rb_define_module_under(mGherkin, "Parser");
-  cFeature = rb_define_class_under(mParser, "CParser", rb_cObject);
+  cCParser = rb_define_class_under(mParser, "CParser", rb_cObject);
   
-  rb_define_method(cCParser, "initialize", Feature_init, 1);
-  rb_define_method(cCParser, "scan", Feature_scan, 1);
+  rb_define_method(cCParser, "initialize", CParser_init, 1);
+  rb_define_method(cCParser, "scan", CParser_scan, 1);
 }

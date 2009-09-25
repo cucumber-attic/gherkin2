@@ -8,7 +8,7 @@ class RagelCompiler
     @target = target
     @flag, @output_dir = case
       when @target == "rb" then ["-R", "lib/gherkin/parser"]
-      when @target == "c" then ["-C", "ext/parser"]
+      when @target == "c" then ["-C", "ext/gherkin_parser"]
     end
 
     @i18n_languages = YAML.load_file(File.dirname(__FILE__) + '/../lib/gherkin/i18n.yml')
@@ -78,7 +78,7 @@ namespace :ragel do
   task :c do
     Dir["ragel/*.c.rl"].each do |rl|
       basename = File.basename(rl[0..-4])
-      sh "ragel -C #{rl} -o ext/gherkin/#{basename}" 
+      sh "ragel -C #{rl} -o ext/gherkin_parser/#{basename}" 
     end
     RagelCompiler.new("c").compile('en')
   end
