@@ -70,11 +70,17 @@ Feature: Gherkin Feature parser/policy
   Scenario: Tables
     Given the following text is parsed:
       """
-      Feature: Tables
-      Scenario: test
+      Feature: Antiques Roadshow
+      Scenario Outline: Table
+        | stop | making | sense |
+        Given a <foo>
+        Then a <bar>
+        
+      Scenario: Table with a broken leg
         Given I have an unclosed table:
           | foo | bar |
-          | 1   | 2   |
+          | 1   | 2   
       """
-    Then there should be a syntax error on line 5
+    # Not really, but look at the output
+    Then there should be a syntax error on line 2 
 
