@@ -12,10 +12,10 @@ namespace :cucumber do
     t.rcov_opts = %w{--exclude spec\/}
   end
 
-  Cucumber::Rake::Task.new(:c, "Run @c_parser Cucumber features") do |t|
+  Cucumber::Rake::Task.new(:c_parser, "Run @c_parser Cucumber features") do |t|
     t.cucumber_opts = "--profile c_parser"
   end
-  task :c => [:check_dependencies, "compile"]
+  task :c => [:check_dependencies, :clean, :compile]
 end
 
 

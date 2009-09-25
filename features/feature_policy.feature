@@ -4,9 +4,11 @@ Feature: Gherkin Feature parser/policy
   I want a feature parser that uses a feature policy to
     makes all the syntax decisions for me
 
-  Scenario: Correctly formed feature
+  Background:
     Given an English-language feature parser
-    When the following text is parsed:
+
+  Scenario: Correctly formed feature
+    Given the following text is parsed:
       """
       # Apologies to Bill Watterson
       @cardboard_box @wip
@@ -24,12 +26,24 @@ Feature: Gherkin Feature parser/policy
           When I put it in the transmogrifier
           And I press the "transmogrify" button
           Then I should have a whatzit
+
+        Scenario Outline: Imaginary Beings
+          Given I have a <boring being>
+          When I transmogrify it
+          Then I should have an <exciting being>
+
+          # See Cucumber #414. It's nothing personal. :-)
+          @borges
+          Examples:
+          | boring being | exciting being |
+          | Sparrow      | Alicanto       |
+          | Goldfish     | Baldanders     |
+          | Cow          | Hsiao          |
       """
    Then there should be no syntax errors
    
   Scenario: Keyword before feature
-    Given an English-language feature parser
-    When the following text is parsed:
+    Given the following text is parsed:
       """
       Scenario: Bullying my way to the head of the line
         Given I am a big bully of a scenario
@@ -40,8 +54,7 @@ Feature: Gherkin Feature parser/policy
     Then there should be syntax errors on lines 1 through 3
 
   Scenario: Tag ends a scenario
-    Given an English-language feature parser
-    When the following text is parsed:
+    Given the following text is parsed:
       """
       Feature: test feature
       Scenario: my scenario
@@ -52,3 +65,22 @@ Feature: Gherkin Feature parser/policy
         Then it shouldn't work
       """
     Then there should be syntax errors on lines 4, 6 and 7
+
+  @pending
+  Scenario: Tables
+    Given the following text is parsed:
+      """
+      Feature: Antiques Roadshow
+      Scenario Outline: Table
+        | stop | making | sense |
+        Given a <foo>
+        Then a <bar>
+        
+      Scenario: Table with a broken leg
+        Given I have an unclosed table:
+          | foo | bar |
+          | 1   | 2   
+      """
+    # Not really, but look at the output
+    Then there should be a syntax error on line 2 
+

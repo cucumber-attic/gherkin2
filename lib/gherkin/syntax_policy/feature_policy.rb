@@ -82,12 +82,10 @@ module Gherkin
       def tag(*args)
         @step_allowed = false
         @listener.tag(*args)
-        #if @tag_allowed
-        #  @listener.tag(*args)
-        #else
-          # Good place to test out verbose error messages like "You tried to tag a step. Stop thinking crazy."
-        #  error([:tag] + args)
-        #end
+      end
+
+      def table(*args)
+        @listener.tag(*args)
       end
       
       def error(args)
