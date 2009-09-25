@@ -62,6 +62,15 @@ module Gherkin
           error(:keyword, args)
         end
       end
+
+      def step(*args)
+        if @feature
+          @body = true
+          @listener.examples(*args)
+        else
+          error(:step, args)
+        end
+      end
       
       def error(event, args)
         @permissive ? @listener.error(event, args) : raise(FeatureSyntaxError.new(args.last))

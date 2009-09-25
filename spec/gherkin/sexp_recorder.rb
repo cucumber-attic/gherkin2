@@ -16,5 +16,9 @@ module Gherkin
     def reset!
       @sexps = []
     end
+
+    def syntax_errors
+      @sexps.select { |sexp| sexp[0] == :syntax_error }
+    end
   end
 end
