@@ -44,12 +44,12 @@ module Gherkin
       
         it "should not parse tags beginning with two @@ signs" do
           @listener.should_not_receive(:tag)
-          @feature.scan("@@test\n")
+          lambda { @feature.scan("@@test\n") }.should raise_error(ParsingError)
         end
       
         it "should not parse a lone @ sign" do
           @listener.should_not_receive(:tag)
-          @feature.scan("@\n")
+          lambda { @feature.scan("@\n") }.should raise_error(ParsingError)
         end
       end
     end

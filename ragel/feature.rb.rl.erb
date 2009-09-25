@@ -116,7 +116,7 @@ module Gherkin
 
         action end_feature {
           if cs < feature_first_final
-            @listener.syntax_error(@line_number)
+            raise ParsingError.new(@line_number)
           end
         }
 

@@ -607,34 +607,19 @@ Examples: I'm a multiline name
         end
       end
 
-      describe "Parsing syntax errors" do
-        it "should send a syntax error to the listener if the file doesn't start with a Feature, comment, or tag" do
-          @feature.scan("Some text\nFeature: Hi")
-          @listener.to_sexp.should == [
-            [:syntax_error, 1]
-          ]
+      describe "Parsing errors" do
+        it "should raise a parsing error if an unparseable token is found" do
+          ["Some text\nFeature: Hi", 
+            "Feature: Hi\nBackground:\nGiven something\nScenario A scenario",
+            "Scenario: My scenario\nGiven foo\nAand bar\nScenario: another one\nGiven blah"].each do |text|
+              lambda { @feature.scan(text) }.should raise_error(ParsingError)
+          end
         end
-
-        it "should send a syntax error to the listener if unparsable text is found after a step" do
-          @feature.scan("Feature: Hi\nScenario: A scenario\nGiven I am a step\n# A comment\n@tag1\nScenario needs a colon")
-          @listener.to_sexp.should == [
-            [:feature, "Feature", "Hi", 1],
-            [:scenario, "Scenario", "A scenario", 2],
-            [:step, "Given", "I am a step", 3],
-            [:comment, "# A comment", 4],
-            [:tag, "tag1", 5],
-            [:syntax_error, 6]
-          ]
-        end
-
-        it "should send the line number the syntax error appears on" do
-          @feature.scan("Feature: hello\nScenario: My scenario\nGiven foo\nAand blah\nHmmm wrong\nThen something something")
-          @listener.to_sexp.should == [
-            [:feature, "Feature", "hello", 1],
-            [:scenario, "Scenario", "My scenario", 2],
-            [:step, "Given", "foo", 3],
-            [:syntax_error, 4] 
-          ]
+        
+        it "should include the line number the error occurs on" do
+          lambda {
+            @feature.scan("Feature: hello\nScenario: My scenario\nGiven foo\nAand blah\nHmmm wrong\nThen something something")
+          }.should raise_error(ParsingError, "Parsing error on line 4.")
         end
       end
     end

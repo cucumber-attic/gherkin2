@@ -4,6 +4,15 @@ module Gherkin
   module Parser
     I18nParserNotFound = Class.new(LoadError)
 
+    class ParsingError < StandardError
+      attr_reader :line
+      
+      def initialize(line)
+        @line = line
+        super "Parsing error on line #{line}."
+      end
+    end
+    
     def self.[](i18n_language)
       begin
         require "gherkin/parser/feature_#{i18n_language}"
