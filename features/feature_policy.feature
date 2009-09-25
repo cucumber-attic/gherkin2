@@ -1,4 +1,8 @@
-Feature: Parsing Gherkin using the Feature policy
+Feature: Gherkin Feature parser/policy
+  In order to make it easy to control the Gherkin syntax
+  As a Gherkin developer bent on Gherkin world-domination
+  I want a feature parser that uses a feature policy to
+    makes all the syntax decisions for me
 
   Scenario: Correctly formed feature
     Given an English-language feature parser
