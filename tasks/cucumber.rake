@@ -15,7 +15,7 @@ namespace :cucumber do
   Cucumber::Rake::Task.new(:c, "Run @c_parser Cucumber features") do |t|
     t.cucumber_opts = "--profile c_parser"
   end
-  task :c => [:check_dependencies, "compile"]
+  task :c => [:check_dependencies, :clean, :compile]
 end
 
 
