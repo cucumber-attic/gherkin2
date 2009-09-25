@@ -22,14 +22,14 @@ Feature: Parsing Gherkin using the Feature policy
         
         Background: 
           Given I have a transmogrifier
-          
+        
         Scenario: Whoozit to whatzit transmogrification
           Given I have a whoozit
           When I put it in the transmogrifier
           And I press the "transmogrify" button
           Then I should have a whatzit
       """
-   Then there should be no errors
+   Then there should be no syntax errors
    # And 1 Feature token should have been found
    # And 1 Background token should have been found
    # And 1 Scenario token should have been found
@@ -46,7 +46,7 @@ Feature: Parsing Gherkin using the Feature policy
       
       Feature: Too timid to stand up for myself
       """
-    Then there should be syntax errors on lines 1, 2 and 3
+    Then there should be syntax errors on lines 1 through 3
 
   Scenario: Tag ends a scenario
     Given an English-language feature parser
