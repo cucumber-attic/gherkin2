@@ -15,7 +15,7 @@ module Gherkin
     
     def self.[](i18n_language)
       begin
-        require "gherkin/parser/parser_#{i18n_language}"
+        require "gherkin/parser/parser_#{i18n_language}" unless i18n_language == 'C' # XXX HACK XXX: Make it easy to fetch the C parser for the time being
       rescue LoadError
         raise I18nParserNotFound, "No parser was found for #{i18n_language}. Supported languages are listed in gherkin/i18n.yml."
       end

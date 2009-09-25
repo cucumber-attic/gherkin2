@@ -1,1 +1,2 @@
-default: --format progress
+default: --format progress --tags ~@c_parser
+c_parser: --format pretty --tags @c_parser
