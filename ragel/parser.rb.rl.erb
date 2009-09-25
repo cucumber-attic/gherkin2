@@ -7,7 +7,7 @@ module Gherkin
         # * changing the end point of the range according to next_keyword_start
         # * methods taking the machine state because Ragel doesn't seem to know about ivars
  
-        machine feature;
+        machine parser;
  
         action begin_content {
           @content_start = p
@@ -115,12 +115,12 @@ module Gherkin
         }
 
         action end_feature {
-          if cs < feature_first_final
+          if cs < parser_first_final
             raise ParsingError.new(@line_number)
           end
         }
 
-        include feature_common "feature_common.<%= i18n_language %>.rl"; 
+        include parser_common "parser_common.<%= i18n_language %>.rl"; 
       }%%
  
       def initialize(listener)

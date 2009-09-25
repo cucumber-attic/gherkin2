@@ -90,7 +90,7 @@
     printf("end_feature\n");
   }
   
-  include feature_common "feature_common.<%= i18n_language %>.rl"; 
+  include parser_common "parser_common.<%= i18n_language %>.rl"; 
 }%%
 
 %% write data;
@@ -125,8 +125,8 @@ static VALUE Feature_scan(VALUE self, VALUE text)
 void Init_feature() {
   mGherkin = rb_define_module("Gherkin");
   mParser = rb_define_module_under(mGherkin, "Parser");
-  cFeature = rb_define_class_under(mParser, "Feature", rb_cObject);
+  cFeature = rb_define_class_under(mParser, "CParser", rb_cObject);
   
-  rb_define_method(cFeature, "initialize", Feature_init, 1);
-  rb_define_method(cFeature, "scan", Feature_scan, 1);
+  rb_define_method(cCParser, "initialize", Feature_init, 1);
+  rb_define_method(cCParser, "scan", Feature_scan, 1);
 }

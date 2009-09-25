@@ -8,12 +8,12 @@ class RagelCompiler
     @target = target
     @flag, @output_dir = case
       when @target == "rb" then ["-R", "lib/gherkin/parser"]
-      when @target == "c" then ["-C", "ext/feature"]
+      when @target == "c" then ["-C", "ext/parser"]
     end
 
     @i18n_languages = YAML.load_file(File.dirname(__FILE__) + '/../lib/gherkin/i18n.yml')
-    @common_tmpl = ERB.new(IO.read(File.dirname(__FILE__) + '/../ragel/feature_common.rl.erb'))
-    @actions_tmpl = ERB.new(IO.read(File.dirname(__FILE__) + "/../ragel/feature.#{@target}.rl.erb"))
+    @common_tmpl = ERB.new(IO.read(File.dirname(__FILE__) + '/../ragel/parser_common.rl.erb'))
+    @actions_tmpl = ERB.new(IO.read(File.dirname(__FILE__) + "/../ragel/parser.#{@target}.rl.erb"))
   end
 
   def compile_all
@@ -25,13 +25,13 @@ class RagelCompiler
   def compile(i18n_language)
     FileUtils.mkdir(RL_OUTPUT_DIR) unless File.exist?(RL_OUTPUT_DIR)
     
-    common_path = RL_OUTPUT_DIR + "/feature_common.#{i18n_language}.rl"
-    actions_path = RL_OUTPUT_DIR + "/feature_#{i18n_language}.#{@target}.rl"
+    common_path = RL_OUTPUT_DIR + "/parser_common.#{i18n_language}.rl"
+    actions_path = RL_OUTPUT_DIR + "/parser_#{i18n_language}.#{@target}.rl"
     
     generate_common(i18n_language, common_path)
     generate_actions(i18n_language, actions_path)
     
-    sh "ragel #{@flag} #{actions_path} -o #{@output_dir}/feature_#{i18n_language}.#{@target}"
+    sh "ragel #{@flag} #{actions_path} -o #{@output_dir}/parser_#{i18n_language}.#{@target}"
   end
   
   def generate_common(i18n_language, path)
@@ -41,7 +41,7 @@ class RagelCompiler
   end
   
   def generate_actions(i18n_language, path)
-    i18n_parser_class_name = i18n_language.gsub(/[\s-]/, '').capitalize + "Feature"
+    i18n_parser_class_name = i18n_language.gsub(/[\s-]/, '').capitalize + "Parser"
     impl = @actions_tmpl.result(binding)
     write impl, path
   end
