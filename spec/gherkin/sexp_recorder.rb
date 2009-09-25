@@ -17,8 +17,12 @@ module Gherkin
       @sexps = []
     end
 
-    def syntax_errors
+    def errors
       @sexps.select { |sexp| sexp[0] == :syntax_error }
+    end
+
+    def error_on(line)
+      errors.find { |error| error.last == line }
     end
   end
 end

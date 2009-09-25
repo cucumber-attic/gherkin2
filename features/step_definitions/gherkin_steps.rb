@@ -7,5 +7,12 @@ Given "the following text is parsed:" do |text|
 end
 
 Then "there should be no errors" do
-  listener.syntax_errors.should be_empty
+  listener.errors.should be_empty
+end
+
+Then /^there should be a syntax error on line (\d+)$/ do |line|
+  line = line.to_i
+  error = listener.error_on(line)
+  error.first.should == :syntax_error
+  error.last.should == line
 end

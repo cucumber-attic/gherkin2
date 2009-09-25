@@ -11,10 +11,10 @@ module Gherkin
     end
     
     class FeaturePolicy
-      attr_writer :permissive
+      attr_writer :raise_on_error
       
-      def initialize(listener, permissive=false)
-        @listener, @permissive = listener, permissive
+      def initialize(listener, raise_on_error=true)
+        @listener, @raise_on_error = listener, raise_on_error
         @feature, @background, @body = false
       end
       
@@ -23,7 +23,7 @@ module Gherkin
           @feature = true
           @listener.feature(*args)
         else
-          error(:feature, args) if @feature
+          error([:feature] + args) if @feature
         end
       end
       
@@ -32,7 +32,7 @@ module Gherkin
           @background = true
           @listener.background(*args)
         else
-          error(:background, args)
+          error([:background] + args)
         end
       end
       
@@ -41,7 +41,7 @@ module Gherkin
           @body = true
           @listener.scenario_outline(*args)
         else
-          error(:scenario_outline, args)
+          error([:scenario_outline] + args)
         end
       end
       
@@ -50,7 +50,7 @@ module Gherkin
           @body = true
           @listener.scenario_outline(*args)
         else
-          error(:scenario, args)
+          error([:scenario] + args)
         end
       end
       
@@ -59,21 +59,21 @@ module Gherkin
           @body = true
           @listener.examples(*args)
         else
-          error(:keyword, args)
+          error([:keyword] + args) # Not actually the keyword
         end
       end
 
       def step(*args)
         if @feature
           @body = true
-          @listener.examples(*args)
+          @listener.step(*args)
         else
-          error(:step, args)
+          error([:step] + args)
         end
       end
       
-      def error(event, args)
-        @permissive ? @listener.error(event, args) : raise(FeatureSyntaxError.new(args.last))
+      def error(args)
+        @raise_on_error ? raise(FeatureSyntaxError.new(args.last)) : @listener.syntax_error(*args)
       end
     end
   end
