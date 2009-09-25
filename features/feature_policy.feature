@@ -24,6 +24,17 @@ Feature: Gherkin Feature parser/policy
           When I put it in the transmogrifier
           And I press the "transmogrify" button
           Then I should have a whatzit
+
+        Scenario Outline: Imaginary Beings
+          Given I have a <boring being>
+          When I transmogrify it
+          Then I should have an <exciting being>
+
+          Examples:
+          | boring being | exciting being |
+          | Sparrow      | Alicanto       |
+          | Goldfish     | Baldanders     |
+          | Cow          | Hsiao          |
       """
    Then there should be no syntax errors
    
@@ -52,3 +63,4 @@ Feature: Gherkin Feature parser/policy
         Then it shouldn't work
       """
     Then there should be syntax errors on lines 4, 6 and 7
+
