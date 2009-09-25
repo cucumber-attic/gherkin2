@@ -1,12 +1,8 @@
-# And the following tokens should be found:
-#   | Token      | Count |
-#   | feature    | 1     |
-#   | scenario   | 1     |
-#   | tags       | 2     |
-#   | background | 1     |
-#   | steps      | 4     |
-
-Feature: Parsing Gherkin using the Feature policy
+Feature: Gherkin Feature parser/policy
+  In order to make it easy to control the Gherkin syntax
+  As a Gherkin developer bent on Gherkin world-domination
+  I want a feature parser that uses a feature policy to
+    makes all the syntax decisions for me
 
   Scenario: Correctly formed feature
     Given an English-language feature parser
@@ -30,11 +26,6 @@ Feature: Parsing Gherkin using the Feature policy
           Then I should have a whatzit
       """
    Then there should be no syntax errors
-   # And 1 Feature token should have been found
-   # And 1 Background token should have been found
-   # And 1 Scenario token should have been found
-   # And 5 Step tokens should have been found
-   # And 2 Tag tokens should have been found
    
   Scenario: Keyword before feature
     Given an English-language feature parser

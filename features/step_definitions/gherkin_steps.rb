@@ -1,4 +1,4 @@
-Given /^an? (\w+[\s\w]+?)-language feature parser$/ do |lang_name|
+Given /^an? (\w+)-language feature parser$/ do |lang_name|
   i18n_lang = code_from_lang_name(lang_name)
   load_feature_parser(i18n_lang)
 end

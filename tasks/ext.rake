@@ -28,7 +28,7 @@ def ext_task(name)
   end
 end
 
-ext_task :feature
+ext_task :gherkin_parser
   
 desc "Compile the C extensions"
 task :compile
