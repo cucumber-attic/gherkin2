@@ -64,3 +64,16 @@ Feature: Gherkin Feature parser/policy
       """
     Then there should be syntax errors on lines 4, 6 and 7
 
+  @pending
+  Scenario: Broken tables
+    Given an English-language feature parser
+    When the following text is parsed:
+      """
+      Feature: Tables
+      Scenario: test
+        Given I have an unclosed table:
+          | foo | bar |
+          | 1   | 2   
+      """
+    Then there should be a syntax error on line 5
+
