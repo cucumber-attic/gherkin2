@@ -38,7 +38,7 @@
   PyStringLine = (space* ^EOL+ >start_line %end_line :>> EOL) | (space* EOL >start_line %end_line);
   PyString = space* StartPyString %begin_pystring PyStringLine* space* :>> EndPyString %store_pystring_content EOL+;
   
-  Tokens = (space | EOL)* (Tags | Comment | FeatureHeading | BackgroundHeading | ScenarioHeading | ScenarioOutlineHeading | ExamplesHeading | Step | Table | PyString)* <: EOL* EOF;
+  Tokens = (space | EOL)* (Tags | Comment | FeatureHeading | BackgroundHeading | ScenarioHeading | ScenarioOutlineHeading | ExamplesHeading | Step | Table | PyString)* (space | EOL)* EOF;
 
   main := Tokens %end_feature @!end_feature;
 }%%

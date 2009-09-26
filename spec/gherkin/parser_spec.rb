@@ -491,6 +491,17 @@ Examples: I'm a multiline name
         end
       end
 
+      describe "A feature ending in whitespace" do
+        it "should not raise an error when whitespace follows the Feature, Scenario, and Steps" do
+          @feature.scan("Feature: Feature Text\n Scenario: Reading a Scenario\n    Given there is a step\n    ")
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "Feature Text", 1],
+            [:scenario, "Scenario", "Reading a Scenario", 2],
+            [:step, "Given", "there is a step", 3]
+          ]
+        end
+      end
+
       describe "A single feature, single scenario, three steps" do
         
         it "should find the feature, scenario, and three steps" do
