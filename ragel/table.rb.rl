@@ -18,7 +18,7 @@ module Gherkin
         }
 
         action store_cell_content {
-          con = data[@content_start...p].pack("U*").strip
+          con = data[@content_start...p].pack("c*").strip
           current_row << (con.empty? ? nil : con)
         }
 
@@ -33,7 +33,7 @@ module Gherkin
         }
  
         action bad_table_row {
-          con = data[@begin_row...p].pack("U*").strip
+          con = data[@begin_row...p].pack("c*").strip
           # @listener.table_error("Unclosed table row", con, @bad_row_line)
           raise ParsingError.new(@bad_row_line)
         }
@@ -58,7 +58,7 @@ module Gherkin
 
       def scan(data)
         @rows = []
-        data = data.unpack("U*") if data.is_a?(String)
+        data = data.unpack("c*") if data.is_a?(String)
         eof = data.size
     
         %% write init;
