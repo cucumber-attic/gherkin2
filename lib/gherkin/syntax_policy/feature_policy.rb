@@ -85,7 +85,11 @@ module Gherkin
       end
 
       def table(*args)
-        @listener.tag(*args)
+        @listener.table(*args)
+      end
+      
+      def py_string(*args)
+        @listener.pystring(*args)
       end
       
       def error(args)
