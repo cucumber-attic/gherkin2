@@ -2,7 +2,7 @@ Feature: Gherkin Feature parser/policy
   In order to make it easy to control the Gherkin syntax
   As a Gherkin developer bent on Gherkin world-domination
   I want a feature parser that uses a feature policy to
-    makes all the syntax decisions for me
+    make all the syntax decisions for me
 
   Background:
     Given an English-language feature parser
@@ -76,6 +76,6 @@ Feature: Gherkin Feature parser/policy
         Given a <foo>
         Then a <bar>        
       """
-    # Not really, but look at the output
+    # Not really, but look at the output, it considers the table part of the scenario name
     Then there should be a syntax error on line 2 
 
