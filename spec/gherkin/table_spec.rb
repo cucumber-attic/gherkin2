@@ -37,16 +37,6 @@ module Gherkin
         @listener.should_receive(:table).with([["Dill pickle", "Valencia orange"], ["Ruby red grapefruit", "Tire iron"]], 1)
         @table.scan("| Dill pickle | Valencia orange |\n| Ruby red grapefruit | Tire iron |\n")
       end
-
-      it "should parse a 1x2 table with newline" do
-        @listener.should_receive(:table).with([%w{1 2}], 1)
-        @table.scan("| 1 | 2 |\n")
-      end
-      
-      it "should parse a row with whitespace after" do
-        @listener.should_receive(:table).with([%w{1 2}], 1)
-        @table.scan("| 1 | 2 | \n ")
-      end
       
       it "should allow utf-8" do
         pending
@@ -66,10 +56,10 @@ module Gherkin
 
       it "should parse a 2x2 table with empty cells" do
         @listener.should_receive(:table).with([['1', nil], [nil, '4']], 1)
-        @table.scan("| 1 |  | \n || 4 | \n")
+        @table.scan("| 1 |  |\n|| 4 |\n")
       end
     
-      it "should parse a 1x2 table without newline" do
+      it "should parse a 1x2 table that does not end in a newline" do
         @listener.should_receive(:table).with([%w{1 2}], 1)
         @table.scan("| 1 | 2 |")
       end
@@ -79,11 +69,16 @@ module Gherkin
         @table.scan("|1|2|\n")
       end
       
+      it "should parse a row with whitespace after the rows" do
+        @listener.should_receive(:table).with([%w{1 2}, %w{a b}], 1)
+        @table.scan("| 1 | 2 | \n | a | b | \n")
+      end
+      
       it "should parse a table with lots of whitespace" do
         @listener.should_receive(:table).with([["abc", "123"]], 1)
         @table.scan("  \t| \t   abc\t| \t123\t \t\t| \t\t   \t \t\n  ")
       end
-
+      
       describe "Bad tables" do
 
         it "should raise ParsingError for rows that aren't closed" do

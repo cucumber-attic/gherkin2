@@ -5,23 +5,19 @@ module Gherkin
         machine table;
 
         action start_row {
-          puts "ROW STARTED"
           current_row = []
           @begin_row = p
         }
 
         action begin_content {
-          puts "CELL CONTENT STARTED"
           @content_start = p
         }
 
         action store_row {
-          puts "ROW ENDED"
           @rows << current_row
         }
 
         action store_cell_content {
-          puts "CELL CONTENT ENDED"
           con = data[@content_start...p].pack("c*").strip
           current_row << (con.empty? ? nil : con)
         }
@@ -68,7 +64,7 @@ module Gherkin
 
       def scan(data)
         @rows = []
-        data = data.unpack("c*")
+        data = (data + "\n").unpack("c*")
         pe = eof = data.length
     
         %% write init;

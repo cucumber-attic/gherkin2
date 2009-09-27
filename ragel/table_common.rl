@@ -7,16 +7,10 @@
   
   # | UnclosedRow >set_bad_table_row_line %bad_table_row)+;
 
-  # table is one or more rows
-  # a row is space* then any number of cells followed by a '| space* EOL'
-  # a cell is a '|' followed by anything that is not a '|'
-
-  EOL = '\r'? '\n' @inc_line_number;
+  EOL = ('\r'? '\n') @inc_line_number;
   
-  CellContent = (any - '|')* >begin_content %store_cell_content;
-  Cell = '|' CellContent;
-  Row = space* Cell* >start_row '|' %store_row :>> EOL;
-  Table = Row+;
-  
-  main := Table %store_table @!end_table;
+  Cell = '|' (any - '|')* >begin_content %store_cell_content;
+  Row = space* Cell* >start_row '|' :>> (space* EOL+ space*) %store_row;
+  Table = Row+ %store_table @!end_table;
+  main := Table;
 }%%
