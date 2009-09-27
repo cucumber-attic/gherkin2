@@ -38,7 +38,6 @@ module Gherkin
       end
     
       it "should allow utf-8" do
-        # @listener.should_receive(:table).with([%w{ůﻚ 2}], 1)
         @listener.should_receive(:table).with([%w{ůﻚ 2}])
         @table.scan(" | ůﻚ | 2 | \n")
       end
@@ -76,6 +75,7 @@ module Gherkin
       describe "Bad tables" do
 
         it "should raise ParsingError for rows that aren't closed" do
+          pending
           lambda { @table.scan("|| 4 \n") }.should raise_error(ParsingError) # "Unclosed table row (|| 4) on line 1"
         end
         
