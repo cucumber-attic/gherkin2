@@ -7,7 +7,6 @@ module Gherkin
       before do
         @listener = Gherkin::SexpRecorder.new
         @table = Table.new(@listener, 1)
-        @listener.should_not_receive(:table_error)
       end
     
       tables = {
