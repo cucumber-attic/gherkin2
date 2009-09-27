@@ -38,9 +38,10 @@ module Gherkin
       end
       
       it "should parse a row with whitespace after" do
+        pending
         @listener.should_receive(:table).with([%w{1 2}], 1)
         @listener.should_not_receive(:table_error)
-        @table.scan("| 1 | 2 | \n")
+        @table.scan("| 1 | 2 | \n ")
       end
       
       it "should allow utf-8" do
@@ -61,7 +62,8 @@ module Gherkin
 
       it "should parse a 2x2 table with empty cells" do
         @listener.should_receive(:table).with([['1', nil], [nil, '4']], 1)
-        @table.scan("| 1 |  |\n|| 4 |\n")
+        @listener.should_not_receive(:table_error)
+        @table.scan("| 1 |  | \n || 4 | \n")
       end
     
       it "should parse a 1x2 table without newline" do
@@ -74,9 +76,10 @@ module Gherkin
         @table.scan("|1|2|\n")
       end
       
-      it "should parse a table with tab spacing" do
+      it "should parse a table with lots of whitespace" do
         @listener.should_receive(:table).with([["abc", "123"]], 1)
-        @table.scan("|\tabc\t|\t123\t\t\t|\n")
+        @listener.should_not_receive(:table_error)
+        @table.scan("  \t| \t   abc\t| \t123\t \t\t| \t\t   \t \t\n  ")
       end
 
       describe "Bad tables" do
