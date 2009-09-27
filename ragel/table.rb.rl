@@ -34,7 +34,8 @@ module Gherkin
  
         action bad_table_row {
           con = data[@begin_row...p].pack("U*").strip
-          @listener.table_error("Unclosed table row", con, @bad_row_line)
+          # @listener.table_error("Unclosed table row", con, @bad_row_line)
+          raise ParsingError.new(@bad_row_line)
         }
     
         action inc_line_number {
