@@ -39,9 +39,11 @@ module Gherkin
       end
       
       it "should allow utf-8" do
-        pending
+        pending "KCODE might be needed, multibytes bigger than 2 bytes seem to confuse Ruby itself"
         @listener.should_receive(:table).with([%w{ůﻚ 2}])
         @table.scan(" | ůﻚ | 2 | \n")
+        @listener.should_receive(:table).with([%w{ 繁體中文  而且|並且} %w{ 繁體中文  而且|並且}])
+        @table.scan("| 繁體中文  而且|並且| 繁體中文  而且|並且|\n")
       end
 
       it "should parse a 2x2 table" do
