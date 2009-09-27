@@ -39,9 +39,7 @@ module Gherkin
       end
       
       it "should parse a row with whitespace after" do
-        pending
         @listener.should_receive(:table).with([%w{1 2}], 1)
-        @listener.should_not_receive(:table_error)
         @table.scan("| 1 | 2 | \n ")
       end
       
@@ -63,7 +61,6 @@ module Gherkin
 
       it "should parse a 2x2 table with empty cells" do
         @listener.should_receive(:table).with([['1', nil], [nil, '4']], 1)
-        @listener.should_not_receive(:table_error)
         @table.scan("| 1 |  | \n || 4 | \n")
       end
     
@@ -79,7 +76,6 @@ module Gherkin
       
       it "should parse a table with lots of whitespace" do
         @listener.should_receive(:table).with([["abc", "123"]], 1)
-        @listener.should_not_receive(:table_error)
         @table.scan("  \t| \t   abc\t| \t123\t \t\t| \t\t   \t \t\n  ")
       end
 

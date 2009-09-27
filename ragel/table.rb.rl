@@ -59,7 +59,7 @@ module Gherkin
       def scan(data)
         @rows = []
         data = data.unpack("c*") if data.is_a?(String)
-        eof = data.size
+        pe = eof = data.length
     
         %% write init;
         %% write exec;
