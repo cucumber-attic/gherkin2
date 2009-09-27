@@ -21,7 +21,12 @@ module Gherkin
           @listener.should_receive(:table).with(expected, 1)
           @table.scan(text)
         end
-      end      
+      end
+      
+      it "should parse a table with many columns" do
+        @listener.should_receive(:table).with([%w{a b c d e f g h i j k l m n o p}], 1)
+        @table.scan("|a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|\n")
+      end
     
       it "should parse a multicharacter cell content" do
         @listener.should_receive(:table).with([%w{foo bar}], 1)

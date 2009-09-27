@@ -13,11 +13,10 @@
 
   EOL = '\r'? '\n' @inc_line_number;
   
-  CellContent = ^('|' EOL);
-  Cell = '|' CellContent+ >begin_content %store_cell_content;
-  RowEnd = ('|' EOL);
-  Row = space* Cell+ >start_row RowEnd %store_row;
-  Table = Row+; 
+  CellContent = (any - '|')* >begin_content %store_cell_content;
+  Cell = '|' CellContent;
+  Row = space* Cell* >start_row '|' %store_row :>> EOL;
+  Table = Row+;
   
   main := Table %store_table @!end_table;
 }%%
