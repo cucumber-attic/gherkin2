@@ -81,45 +81,10 @@ module Gherkin
         @table.scan("  \t| \t   abc\t| \t123\t \t\t| \t\t   \t \t\n  ")
       end
       
-      describe "Bad tables" do
-
-        it "should raise ParsingError for rows that aren't closed" do
-          pending
-          lambda { @table.scan("|| 4 \n") }.should raise_error(ParsingError) # "Unclosed table row (|| 4) on line 1"
-        end
-        
-        xit "should send all closed rows after sending the error" do
-          @table.scan("| 1 |  |\n| hi | bad\n| 3 | 4 |")
-          @listener.to_sexp.should == [
-            [:table_error, "Unclosed table row", "| hi | bad", 2],
-            [:table, [['1', nil],['3','4']], 1]
-          ]
-        end
-
-        xit "should send multiple table errors for rows that aren't closed" do
-          @table.scan("|| 4\n|hi|there")
-          @listener.to_sexp.should == [
-            [:table_error, "Unclosed table row", "|| 4", 1],
-            [:table_error, "Unclosed table row", "|hi|there", 2],
-          ]
-        end
-        
-        xit "should allow multiple newlines between error rows and good rows" do
-          @table.scan("|| 4\n\n|hi|there\n\n|1|2|")
-          @listener.to_sexp.should == [
-            [:table_error, "Unclosed table row", "|| 4", 1],
-            [:table_error, "Unclosed table row", "|hi|there", 3],
-            [:table, [['1', '2']], 1]
-          ]
-        end
-         
-        xit "should not send a good table row if it ends with a newline" do
-          @table.scan("|| 4\n|1|2|\n")
-          @listener.to_sexp.should == [
-            [:table_error, "Unclosed table row", "|| 4", 1],
-            [:table, [['1', '2']], 1]
-          ]
-        end
+      it "should raise ParsingError for rows that aren't closed" do
+        lambda { 
+          @table.scan("|| 4 \n") 
+        }.should raise_error(ParsingError, "Parsing error on line 1.") # "Unclosed table row (|| 4) on line 1"
       end
     end
   end

@@ -25,21 +25,11 @@ module Gherkin
         action no_content {
           current_row << nil
         }
- 
-        action bad_table_row {
-          con = data[@begin_row..p].pack("c*").strip
-          @listener.table_error("Unclosed table row", con, @bad_row_line)
-          # raise ParsingError.new(@bad_row_line)
-        }
-    
+     
         action inc_line_number {
-          @cur_line += 1
+          @current_line += 1
         }
  
-        action set_bad_table_row_line {
-          @bad_row_line = @cur_line
-        }
-
         action store_table {
           if @rows.size != 0
             @listener.table(@rows, @line)
@@ -48,7 +38,7 @@ module Gherkin
         
         action end_table {
           if cs < table_first_final
-            # raise ParsingError.new("TEMP")
+            raise ParsingError.new(@current_line)
           end
         }
 
@@ -57,7 +47,7 @@ module Gherkin
 
       def initialize(listener,line)
         @line = line
-        @cur_line = line
+        @current_line = line
         @listener = listener
         %% write data;
       end
