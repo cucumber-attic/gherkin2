@@ -10,11 +10,11 @@
   
   Cell = CellContent+ >begin_content '|' >store_cell_content | '|' >no_content;
   
-  Row = space* '|' >initialize Cell+ space* %/store_row %/store_table space* :>> (EOL+ space*); 
+  Row = space* '|' >start_row Cell+ space* %/store_row %/store_table space* :>> (EOL+ space*) %store_row; 
   
-  UnclosedRow = space* '|' >initialize Cell* space* CellContent+ %/bad_table_row %/store_table :>> (EOL+ space*);
+  # UnclosedRow = space* '|' >start_row Cell* space* CellContent+ %/bad_table_row %/store_table :>> (EOL+ space*);
   
-  Table = (Row %store_row | UnclosedRow >set_bad_table_row_line %bad_table_row)+;
+  Table = Row+; # | UnclosedRow >set_bad_table_row_line %bad_table_row)+;
   
-  main := Table %store_table;
+  main := Table %store_table @!end_table;
 }%%

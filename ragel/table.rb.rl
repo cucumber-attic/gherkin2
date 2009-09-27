@@ -4,7 +4,7 @@ module Gherkin
       %%{      
         machine table;
 
-        action initialize {
+        action start_row {
           current_row = []
           @begin_row = p
         }
@@ -25,12 +25,6 @@ module Gherkin
         action no_content {
           current_row << nil
         }
-
-        action store_table {
-          if @rows.size != 0
-            @listener.table(@rows, @line)
-          end
-        }
  
         action bad_table_row {
           con = data[@begin_row...p].pack("c*").strip
@@ -44,6 +38,18 @@ module Gherkin
  
         action set_bad_table_row_line {
           @bad_row_line = @cur_line
+        }
+
+        action store_table {
+          if @rows.size != 0
+            @listener.table(@rows, @line)
+          end
+        }
+        
+        action end_table {
+          if cs < table_first_final
+            # raise ParsingError.new("TEMP")
+          end
         }
 
         include table_common "table_common.rl";
