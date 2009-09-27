@@ -36,8 +36,15 @@ module Gherkin
         @listener.should_receive(:table).with([%w{1 2}], 1)
         @table.scan("| 1 | 2 |\n")
       end
-    
+      
+      it "should parse a row with whitespace after" do
+        @listener.should_receive(:table).with([%w{1 2}], 1)
+        @listener.should_not_receive(:table_error)
+        @table.scan("| 1 | 2 | \n")
+      end
+      
       it "should allow utf-8" do
+        pending
         @listener.should_receive(:table).with([%w{ůﻚ 2}])
         @table.scan(" | ůﻚ | 2 | \n")
       end
