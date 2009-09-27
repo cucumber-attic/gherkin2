@@ -74,12 +74,7 @@ Feature: Gherkin Feature parser/policy
       Scenario Outline: Table
         | stop | making | sense |
         Given a <foo>
-        Then a <bar>
-        
-      Scenario: Table with a broken leg
-        Given I have an unclosed table:
-          | foo | bar |
-          | 1   | 2   
+        Then a <bar>        
       """
     # Not really, but look at the output
     Then there should be a syntax error on line 2 
