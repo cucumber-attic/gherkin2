@@ -109,6 +109,7 @@ static VALUE CParser_scan(VALUE self, VALUE text)
 {
   int cs;
   char *p = RSTRING(text)->ptr;
+  strcat(p, "\n%_FEATURE_END_%");
   char *pe = p + strlen(p);
   char *eof = pe;
   
