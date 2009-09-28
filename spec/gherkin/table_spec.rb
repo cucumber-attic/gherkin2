@@ -38,10 +38,22 @@ module Gherkin
       end
       
       it "should allow utf-8" do
-        pending "KCODE might be needed, multibytes bigger than 2 bytes seem to confuse Ruby itself"
-        @listener.should_receive(:table).with([%w{ůﻚ 2}])
+        #  Fails in 1.9.1! 
+        #  'Gherkin::Parser::Table should allow utf-8 with using == to evaluate' FAILED 
+        #    expected: [[:table, [["ůﻚ", "2"]], 1]],
+        #         got: [[:table, [["\xC5\xAF\xEF\xBB\x9A", "2"]], 1]] (using ==)
+        #  BUT, simply running:
+        #     [[:table, [["ůﻚ", "2"]], 1]].should == [[:table, [["\xC5\xAF\xEF\xBB\x9A", "2"]], 1]] 
+        #  passes
+        #
         @table.scan(" | ůﻚ | 2 | \n")
-        @listener.should_receive(:table).with([%w{ 繁體中文  而且|並且} %w{ 繁體中文  而且|並且}])
+        @listener.to_sexp.should == [
+          [:table, [["ůﻚ", "2"]], 1]
+        ]
+      end 
+
+      it "should allow utf-8 using should_receive" do
+        @listener.should_receive(:table).with([['繁體中文  而且','並且','繁體中文  而且','並且']], 1)
         @table.scan("| 繁體中文  而且|並且| 繁體中文  而且|並且|\n")
       end
 

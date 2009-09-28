@@ -7,7 +7,7 @@ module Gherkin
       describe "tags" do
         before do
           @listener = mock('listener').as_null_object
-          @feature = Parser['en'].new(@listener)
+          @feature = Gherkin::Parser['en'].new(@listener)
         end
       
         it "should parse a single tag" do

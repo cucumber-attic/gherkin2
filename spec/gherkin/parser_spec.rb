@@ -6,11 +6,11 @@ module Gherkin
     describe "parsing" do
       before do
         @listener = Gherkin::SexpRecorder.new
-        @feature = Parser['en'].new(@listener)
+        @feature = Gherkin::Parser['en'].new(@listener)
       end
 
       def scan_file(file)
-        Parser['en'].new(@listener).scan(File.new(File.dirname(__FILE__) + "/gherkin_parser/" + file).read)
+        Gherkin::Parser['en'].new(@listener).scan(File.new(File.dirname(__FILE__) + "/gherkin_parser/" + file).read)
       end
 
       describe "Comments" do

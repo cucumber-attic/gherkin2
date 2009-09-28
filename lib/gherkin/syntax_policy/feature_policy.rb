@@ -51,7 +51,7 @@ module Gherkin
         if @feature
           @body = true
           @step_allowed = true
-          @listener.scenario_outline(*args)
+          @listener.scenario(*args)
         else
           error([:scenario] + args)
         end
@@ -89,7 +89,7 @@ module Gherkin
       end
       
       def py_string(*args)
-        @listener.pystring(*args)
+        @listener.py_string(*args)
       end
       
       def error(args)

@@ -19,7 +19,7 @@ module Gherkin
             
       before do
         @listener = Gherkin::SexpRecorder.new
-        @parser = Parser['en'].new(@listener)
+        @parser = Gherkin::Parser['en'].new(@listener)
       end
       
       it "should provide the amount of indentation to the listener"
