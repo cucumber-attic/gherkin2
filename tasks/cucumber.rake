@@ -18,4 +18,3 @@ namespace :cucumber do
   task :c_parser => [:check_dependencies, :clean, :compile]
 end
 
-
