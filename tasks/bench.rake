@@ -105,10 +105,15 @@ class Benchmarker
   end
 end
 
+task :bench => ["bench:clean", "bench:gen"] do
+  benchmarker = Benchmarker.new
+  benchmarker.report_all
+end
+
 namespace :bench do
   desc "Generate [number] features with random content, or 500 features if number is not provided"
   task :gen, :number do |t, args|
-    args.with_defaults(:number => 50)
+    args.with_defaults(:number => 500)
     generator = RandomFeatureGenerator.new(args.number.to_i)
     generator.generate    
   end
