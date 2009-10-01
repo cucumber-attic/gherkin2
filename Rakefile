@@ -13,6 +13,7 @@ begin
     gem.homepage = "http://github.com/aslakhellesoy/gherkin"
     gem.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
     gem.add_development_dependency "rspec"
+    gem.add_development_dependency "cucumber"
     
     # Jeweler only includes files in git by default. Add the generated ones.
     gem.files += FileList['lib/gherkin/parser/*.rb']
