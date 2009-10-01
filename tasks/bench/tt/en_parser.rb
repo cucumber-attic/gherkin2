@@ -8,7 +8,7 @@ require 'treetop/ruby_extensions'
 require 'tt/feature'
 require 'tt/table'
 
-module Cucumber
+module Cuke
   module Parser
     module I18n
       module En
