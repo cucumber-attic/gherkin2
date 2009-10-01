@@ -61,9 +61,9 @@ class Benchmarker
     @features = Dir[GENERATED_FEATURES + "/**/*feature"]
   end
   
-  def report(label)
+  def report(parser)
     Benchmark.bm do |x|
-      x.report("#{label}:") { send :"run_#{label}" }
+      x.report("#{parser}:") { send :"run_#{parser}" }
     end
   end
   
@@ -105,6 +105,7 @@ class Benchmarker
   end
 end
 
+desc "Generate 500 random features and benchmark Cucumber, Treetop and Gherkin with them"
 task :bench => ["bench:clean", "bench:gen"] do
   benchmarker = Benchmarker.new
   benchmarker.report_all
