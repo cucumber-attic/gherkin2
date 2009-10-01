@@ -56,12 +56,6 @@ class RandomFeatureGenerator
   end
 end
 
-module BenchmarkHelper  
-  def self.report(&block)
-    require 'benchmark'    
-  end
-end
-
 class Benchmarker
   def initialize
     @features = Dir[GENERATED_FEATURES + "/**/*feature"]
@@ -73,10 +67,10 @@ class Benchmarker
     end
   end
   
-  def report_all
+  def report_all 
     Benchmark.bmbm do |x|
-      x.report("tt:") { run_tt }
       x.report("cucumber:") { run_cucumber }
+      x.report("tt:") { run_tt }
       x.report("rb_gherkin:") { run_rb_gherkin }
     end
   end
@@ -95,7 +89,7 @@ class Benchmarker
     require 'tt/en_parser'
     parser = Cuke::Parser::I18n::EnParser.new 
     @features.each do |feature|
-      res = parser.parse(File.read(feature))
+      res = parser.parse(IO.read(feature))
       raise "Parsing error encountered in #{feature}" unless res
     end
   end
@@ -109,11 +103,6 @@ class Benchmarker
       parser.scan(File.read(feature))
     end
   end
-end
-
-task :bench => ["bench:clean", "bench:gen"] do
-  benchmarker = Benchmarker.new
-  benchmarker.report_all
 end
 
 namespace :bench do
