@@ -54,10 +54,8 @@ class RandomFeatureGenerator
   end
 end
 
-module BenchmarkHelper
-  extend self
-  
-  def report(&block)
+module BenchmarkHelper  
+  def self.report(&block)
     require 'benchmark'
     
     Benchmark.bm do |x|
@@ -70,45 +68,34 @@ module BenchmarkHelper
   end
 end
 
+task :bench => ["bench:gen", "bench:stats", "bench:cucumber", "bench:tt", "bench:rb_gherkin"]
+
 namespace :bench do
   desc "Generate ENV['NUMBER'] Features with random content"
-  task :gen do
+  task :gen => :clean do
     generator = RandomFeatureGenerator.new(ENV['NUMBER'].to_i)
     generator.generate    
   end
 
-  task :prof_tt do
-    require 'tt/en_parser'
-    require 'ruby-prof'
-   
-    parser = Cucumber::Parser::I18n::EnParser.new 
-    result = RubyProf.profile do
-      Dir["features/generated/**/*feature"].each do |path|
-        res = parser.parse(File.read(path))
-        raise "Parsing error" unless res
+  desc "Benchmark Cucumber AST building from the features in tasks/bench/generated"
+  task :cucumber do
+    require 'cucumber'
+    require 'logger'
+    require 'benchmark'
+    
+    step_mother = Cucumber::StepMother.new
+    logger = Logger.new(STDOUT)
+    logger.level = Logger::INFO
+    step_mother.log = logger
+    Benchmark.bm do |x|
+      x.report do
+        step_mother.load_plain_text_features(Dir[GENERATED_FEATURES + "/**/*feature"])
       end
     end
-    printer = RubyProf::FlatPrinter.new(result)
-    printer.print(STDOUT, 0)
   end
-
-  task :prof_gherkin do
-    require 'gherkin'
-    require 'ruby-prof'
-
-    listener = NullListener.new   
-    result = RubyProf.profile do
-      Dir["features/generated/**/*feature"].each do |path|
-        parser = Gherkin::Feature.new('en', listener)
-        parser.scan(File.read(path))
-      end
-    end
-    printer = RubyProf::FlatPrinter.new(result)
-    printer.print(STDOUT, 0)
-  end
-
+  
   desc "Benchmark the Treetop parser with the features in tasks/bench/generated"
-  task :tt => :stats do
+  task :tt do
     require 'tt/en_parser'
 
     parser = Cucumber::Parser::I18n::EnParser.new 
@@ -118,8 +105,8 @@ namespace :bench do
     end      
   end
 
-  desc "Benchmark the Gherkin parser with the features in tasks/bench/generated"
-  task :gherkin => :stats do
+  desc "Benchmark the Ruby Gherkin parser with the features in tasks/bench/generated"
+  task :rb_gherkin do
     require 'gherkin'
     require 'null_listener'
 
@@ -137,7 +124,8 @@ namespace :bench do
     end
   end
 
+  desc "Remove all generated features in tasks/bench/generated"
   task :clean do
-    puts "Delete all the files in GENERATED_FEATURES"
+    rm_f FileList[GENERATED_FEATURES + "/**/*feature"]
   end
 end
