@@ -22,7 +22,9 @@ module Gherkin
         @parser = Gherkin::Parser['en'].new(@listener)
       end
       
-      it "should provide the amount of indentation to the listener"
+      it "should provide the amount of indentation to the listener" do
+        pending
+      end
 
       it "should parse a simple py_string" do
         @listener.should_receive(:py_string).with("I am a py_string", 4)
