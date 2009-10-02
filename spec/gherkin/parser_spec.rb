@@ -276,7 +276,7 @@ Given I have a string
             [:feature, "Feature", "Hi", 1],
             [:scenario, "Scenario", "Hello", 2],
             [:step, "Given", "I have a string", 3],
-            [:py_string, "hello\nworld", 6]
+            [:py_string, "hello\nworld", 6, 3]
           ]
         end
 

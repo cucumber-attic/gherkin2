@@ -22,17 +22,29 @@ module Gherkin
         @parser = Gherkin::Parser['en'].new(@listener)
       end
       
-      it "should provide the amount of indentation to the listener" do
-        pending
+      it "should provide the amount of indentation of the triple quotes to the listener" do
+# parsing this string should send the listener "4"
+str = <<EOF
+Feature: some feature
+  Scenario: some scenario
+    Given foo
+    """
+      Hello
+    Goodbye
+    """
+    Then bar
+EOF
+        @listener.should_receive(:py_string).with("  Hello\nGoodbye", 4, 4)
+        @parser.scan(str)
       end
 
       it "should parse a simple py_string" do
-        @listener.should_receive(:py_string).with("I am a py_string", 4)
+        @listener.should_receive(:py_string).with("I am a py_string", 4, 0)
         @parser.scan ps("I am a py_string")
       end
 
       it "should parse an empty py_string" do
-        @listener.should_receive(:py_string).with("", 4)
+        @listener.should_receive(:py_string).with("", 4, 0)
         @parser.scan("Feature: Hi\nScenario: Hi\nGiven a step\n\"\"\"\n\"\"\"")
       end
 
@@ -49,7 +61,7 @@ Given a step
           [:feature, "Feature", "Hi", 2],
           [:scenario, "Scenario", "Hi", 3],
           [:step, "Given", "a step", 4],
-          [:py_string, "\n\n", 5],
+          [:py_string, "\n\n", 5, 0],
         ]
       end
       
@@ -59,32 +71,32 @@ Given a step
           [:feature, "Feature", "Hi", 1],
           [:scenario, "Scenario", "Hi", 2],
           [:step, "Given", "a step", 3],
-          [:py_string, "A\n\nB", 4],
+          [:py_string, "A\n\nB", 4, 0],
         ]
       end
       
       it "should parse a multiline string" do
-        @listener.should_receive(:py_string).with("A\nB\nC\nD", 4)
+        @listener.should_receive(:py_string).with("A\nB\nC\nD", 4, 0)
         @parser.scan ps("A\nB\nC\nD")
       end
             
       it "should ignore unescaped quotes inside the string delimeters" do
-        @listener.should_receive(:py_string).with("What does \"this\" mean?", 4)
+        @listener.should_receive(:py_string).with("What does \"this\" mean?", 4, 0)
         @parser.scan ps('What does "this" mean?')
       end
       
       it "should remove whitespace up to the column of the opening quote" do
-        @listener.should_receive(:py_string).with("I have been indented for reasons of style", 4)
+        @listener.should_receive(:py_string).with("I have been indented for reasons of style", 4, 4)
         @parser.scan indent(ps('I have been indented for reasons of style'), 4)
       end
       
       it "should preserve whitespace after the column of the opening quote" do
-        @listener.should_receive(:py_string).with("  I have been indented to preserve whitespace", 4)
+        @listener.should_receive(:py_string).with("  I have been indented to preserve whitespace", 4, 4)
         @parser.scan indent(ps('  I have been indented to preserve whitespace'), 4)
       end
       
       it "should preserve tabs within the content" do
-        @listener.should_receive(:py_string).with("I have\tsome tabs\nInside\t\tthe content", 4)
+        @listener.should_receive(:py_string).with("I have\tsome tabs\nInside\t\tthe content", 4, 0)
         @parser.scan ps("I have\tsome tabs\nInside\t\tthe content")
       end
   
@@ -103,7 +115,7 @@ Feature: Sample
 
 }
         
-        @listener.should_receive(:py_string).with(py_string, 4)
+        @listener.should_receive(:py_string).with(py_string, 4, 0)
         @parser.scan ps(py_string)
       end
 
@@ -115,7 +127,7 @@ Given a step
     """
 Content
 """}
-        @listener.should_receive(:py_string).with("Content", 5)
+        @listener.should_receive(:py_string).with("Content", 5, 4)
         @parser.scan(py_string)
       end
     end
