@@ -127,13 +127,6 @@ Feature: hi
             [:scenario, "Scenario", "Second", 11]
           ]
         end
-
-        # Is this a comment spec or a tag?
-        it "should parse tag followed by a comment" do
-           pending do 
-             @feature.scan("@foo # Comment\nFeature: blah")
-           end
-        end
       end
 
       describe "Background" do
