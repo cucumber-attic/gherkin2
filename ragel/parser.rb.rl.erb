@@ -25,14 +25,12 @@ module Gherkin
         }
 
         action start_line {
-          line_col = p - @last_newline
           line_start = p
         }
 
         action end_line {
           line = data[line_start...p].pack("c*")
-          offset = line_col - @start_col
-          @lines << (offset >= 0 ? line.gsub(/^/, ' ' * offset) : line) 
+          @lines << line
         }
  
         action store_feature_content {          
@@ -81,9 +79,6 @@ module Gherkin
         }
  
         action store_pystring_content {
-          if @lines == [""]  # Parser isn't grabbing newlines from 'empty' py_string
-            (@line_number - @current_line - 1).times { @lines << "" }
-          end
           @listener.py_string(@lines.join("\n"), @current_line, @start_col) 
         }
  

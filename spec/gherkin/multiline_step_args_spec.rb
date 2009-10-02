@@ -8,23 +8,14 @@ module Gherkin
       def ps(content)
         "Feature:Hi\nScenario: Hi\nGiven a step\n" + '"""%s"""' % ("\n" + content + "\n")
       end
-      
-      def indent(s, n)
-        if n >= 0
-          s.gsub(/^/, ' ' * n)
-        else
-          s.gsub(/^ {0,#{-n}}/, "")
-        end
-      end
-            
+                  
       before do
         @listener = Gherkin::SexpRecorder.new
         @parser = Gherkin::Parser['en'].new(@listener)
       end
       
       it "should provide the amount of indentation of the triple quotes to the listener" do
-# parsing this string should send the listener "4"
-str = <<EOF
+str = <<EOS
 Feature: some feature
   Scenario: some scenario
     Given foo
@@ -33,8 +24,8 @@ Feature: some feature
     Goodbye
     """
     Then bar
-EOF
-        @listener.should_receive(:py_string).with("  Hello\nGoodbye", 4, 4)
+EOS
+        @listener.should_receive(:py_string).with("      Hello\n    Goodbye", 4, 4)
         @parser.scan(str)
       end
 
@@ -48,7 +39,7 @@ EOF
         @parser.scan("Feature: Hi\nScenario: Hi\nGiven a step\n\"\"\"\n\"\"\"")
       end
 
-      it "should parse a string containing only newlines" do
+      it "should treat a string containing only newlines as an empty string" do
         @parser.scan(%{
 Feature: Hi
 Scenario: Hi
@@ -61,7 +52,7 @@ Given a step
           [:feature, "Feature", "Hi", 2],
           [:scenario, "Scenario", "Hi", 3],
           [:step, "Given", "a step", 4],
-          [:py_string, "\n\n", 5, 0],
+          [:py_string, "", 5, 0],
         ]
       end
       
@@ -85,23 +76,27 @@ Given a step
         @parser.scan ps('What does "this" mean?')
       end
       
-      it "should remove whitespace up to the column of the opening quote" do
-        @listener.should_receive(:py_string).with("I have been indented for reasons of style", 4, 4)
-        @parser.scan indent(ps('I have been indented for reasons of style'), 4)
+      it "should preserve whitespace within the triple quotes" do
+str = <<EOS
+Feature: My feature
+  Scenario: a scenario
+    Given a pystring
+    """
+      Line one
+ Line two
+    """
+EOS
+        @listener.should_receive(:py_string).with("      Line one\n Line two", 4, 4)
+        @parser.scan(str)
       end
-      
-      it "should preserve whitespace after the column of the opening quote" do
-        @listener.should_receive(:py_string).with("  I have been indented to preserve whitespace", 4, 4)
-        @parser.scan indent(ps('  I have been indented to preserve whitespace'), 4)
-      end
-      
+            
       it "should preserve tabs within the content" do
         @listener.should_receive(:py_string).with("I have\tsome tabs\nInside\t\tthe content", 4, 0)
         @parser.scan ps("I have\tsome tabs\nInside\t\tthe content")
       end
   
       it "should handle complex py_strings" do
-        py_string = %{
+py_string = <<EOS
 # Feature comment
 @one
 Feature: Sample
@@ -113,7 +108,7 @@ Feature: Sample
 1 scenario (1 passed)
 1 step (1 passed)
 
-}
+EOS
         
         @listener.should_receive(:py_string).with(py_string, 4, 0)
         @parser.scan ps(py_string)

@@ -36,7 +36,7 @@
   
   StartPyString = '"""' >start_pystring space* EOL; 
   EndPyString = '"""';
-  PyStringLine = (space* ^EOL+ >start_line %end_line :>> EOL) | (space* EOL >start_line %end_line);
+  PyStringLine = (any - EOL)* >start_line %end_line EOL;
   PyString = space* StartPyString %init_pystring PyStringLine* space* :>> EndPyString %store_pystring_content EOL+;
   
   Tokens = (space | EOL)* (Tags | Comment | FeatureHeading | BackgroundHeading | ScenarioHeading | ScenarioOutlineHeading | ExamplesHeading | Step | Table | PyString)* (space | EOL)* EOF;
