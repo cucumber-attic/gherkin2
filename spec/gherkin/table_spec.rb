@@ -94,8 +94,8 @@ module Gherkin
       
       it "should raise ParsingError for rows that aren't closed" do
         lambda { 
-          @table.scan("|| 4 \n") 
-        }.should raise_error(ParsingError, "Parsing error on line 1.") # "Unclosed table row (|| 4) on line 1"
+          @table.scan("|| oh hello \n") 
+        }.should raise_error(ParsingError, "Parsing error on line 1: '|| oh hello'.")
       end
     end
   end

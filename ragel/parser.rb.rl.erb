@@ -111,7 +111,8 @@ module Gherkin
 
         action end_feature {
           if cs < parser_first_final
-            raise ParsingError.new(@line_number)
+            content = current_line_content(data, p)
+            raise ParsingError.new(@line_number, content)
           end
         }
 
@@ -142,6 +143,13 @@ module Gherkin
         end_point = (!@next_keyword_start or (p == eof)) ? p : @next_keyword_start
         con = yield data[@content_start...end_point].pack("c*")
         @listener.send(event, @keyword, con, @current_line)
+      end
+      
+      def current_line_content(data, p)
+        rest = data[p..-1]
+        offset = data.length - rest.length
+        next_newline = rest.index(10) + offset
+        data[@last_newline..next_newline].pack("c*").strip
       end
     end
   end

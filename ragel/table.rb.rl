@@ -29,6 +29,10 @@ module Gherkin
         action inc_line_number {
           @current_line += 1
         }
+        
+        action last_newline {
+          @last_newline = p + 1
+        }
  
         action store_table {
           if @rows.size != 0
@@ -38,7 +42,8 @@ module Gherkin
         
         action end_table {
           if cs < table_first_final
-            raise ParsingError.new(@current_line)
+            content = current_line_content(data, p)
+            raise ParsingError.new(@current_line, content)
           end
         }
 
@@ -48,6 +53,7 @@ module Gherkin
       def initialize(listener,line)
         @line = line
         @current_line = line
+        @last_newline = 0
         @listener = listener
         %% write data;
       end
@@ -59,6 +65,10 @@ module Gherkin
     
         %% write init;
         %% write exec;
+      end
+      
+      def current_line_content(data, p)
+        data[@last_newline..p].pack("c*").strip
       end
     end
   end

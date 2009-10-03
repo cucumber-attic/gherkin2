@@ -2,11 +2,11 @@ module Gherkin
   module SyntaxPolicy
 
     class FeatureSyntaxError < SyntaxError
-      attr_reader :line
+      attr_reader :keyword, :content, :line
       
-      def initialize(line)
-        @line = line
-        super "Syntax error on line #{@line}."
+      def initialize(event, keyword, content, line, *args)
+        @event, @keyword, @content, @line = event, keyword, content, line
+        super "Syntax error on line #{@line}: '#{@keyword}: #{@content}'."
       end
     end
     
@@ -93,7 +93,7 @@ module Gherkin
       end
       
       def error(args)
-        @raise_on_error ? raise(FeatureSyntaxError.new(args.last)) : @listener.syntax_error(*args)
+        @raise_on_error ? raise(FeatureSyntaxError.new(*args)) : @listener.syntax_error(*args)
       end
     end
   end

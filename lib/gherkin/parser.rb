@@ -5,11 +5,11 @@ module Gherkin
     I18nParserNotFound = Class.new(LoadError)
 
     class ParsingError < StandardError
-      attr_reader :line
+      attr_reader :line, :content
       
-      def initialize(line)
-        @line = line
-        super "Parsing error on line #{line}."
+      def initialize(line, content)
+        @line, @content = line, content
+        super "Parsing error on line #{line}: '#{content}'."
       end
     end
     

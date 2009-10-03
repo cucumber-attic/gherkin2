@@ -627,10 +627,10 @@ Examples: I'm a multiline name
           end
         end
         
-        it "should include the line number the error occurs on" do
+        it "should include the line number and context of the error" do
           lambda {
             @feature.scan("Feature: hello\nScenario: My scenario\nGiven foo\nAand blah\nHmmm wrong\nThen something something")
-          }.should raise_error(ParsingError, "Parsing error on line 4.")
+          }.should raise_error(ParsingError, "Parsing error on line 4: 'Aand blah'.")
         end
       end
     end
