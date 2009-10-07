@@ -14,34 +14,16 @@ module Gherkin
       end
 
       describe "Comments" do
-        it "should parse a file with only a one line comment" do
-          @feature.scan("# My comment\nFeature: hi")
-          @listener.to_sexp.should == [
-            [:comment, "# My comment", 1],
-            [:feature, "Feature", "hi", 2],
-          ]
-        end
-
         it "should parse a one line comment" do
-          @feature.scan("# My comment")
+          @feature.scan("# My comment\n")
           @listener.to_sexp.should == [[:comment, "# My comment", 1]]
         end
 
         it "should parse a file with only a multiline comment" do
-          @feature.scan("#Hello\n#World\nFeature: hi")
-          @listener.to_sexp.should == [
-            [:comment, "#Hello", 1],
-            [:comment, "#World", 2],
-            [:feature, "Feature", "hi", 3]
-          ] 
-        end
-
-        it "should parse a file with only a multiline comment" do
-          @feature.scan("# Hello\n# World\nFeature: hi")
+          @feature.scan("# Hello\n# World\n")
           @listener.to_sexp.should == [
             [:comment, "# Hello", 1],
-            [:comment, "# World", 2],
-            [:feature, "Feature", "hi", 3]
+            [:comment, "# World", 2]
           ]
         end
 
@@ -59,22 +41,20 @@ module Gherkin
         end
   
         it "should not consume comments as part of a multiline name" do
-          @feature.scan("Feature: hi\n Scenario: test\n\n#hello\n Scenario: another")
+          @feature.scan("Scenario: test\n#hello\n Scenario: another")
           @listener.to_sexp.should == [
-            [:feature, "Feature", "hi", 1],
-            [:scenario, "Scenario", "test", 2],
-            [:comment, "#hello", 4],
-            [:scenario, "Scenario", "another", 5]
+            [:scenario, "Scenario", "test", 1],
+            [:comment, "#hello", 2],
+            [:scenario, "Scenario", "another", 3]
           ]
         end
 
         it "should allow empty comment lines" do 
-          @feature.scan("Feature: hi\n   #\n   # A comment\n   #\n")
+          @feature.scan("#\n   # A comment\n   #\n")
           @listener.to_sexp.should == [
-            [:feature, "Feature", "hi", 1],
-            [:comment, "#", 2],
-            [:comment, "# A comment", 3],
-            [:comment, "#", 4]
+            [:comment, "#", 1],
+            [:comment, "# A comment", 2],
+            [:comment, "#", 3]
           ]
         end
       end
@@ -618,7 +598,7 @@ Examples: I'm a multiline name
         end
       end
 
-      describe "Parsing errors" do
+      describe "errors" do
         it "should raise a parsing error if an unparseable token is found" do
           ["Some text\nFeature: Hi", 
             "Feature: Hi\nBackground:\nGiven something\nScenario A scenario",
