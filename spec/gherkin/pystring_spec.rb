@@ -3,10 +3,10 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 module Gherkin
   module Parser
-    describe "parsing multiline step arguments (py_strings)" do
+    describe "parsing py_strings" do
             
       def ps(content)
-        "Feature:Hi\nScenario: Hi\nGiven a step\n" + '"""%s"""' % ("\n" + content + "\n")
+        '"""%s"""' % ("\n" + content + "\n")
       end
                   
       before do
@@ -30,7 +30,7 @@ EOS
       end
 
       it "should parse a simple py_string" do
-        @listener.should_receive(:py_string).with("I am a py_string", 4, 0)
+        @listener.should_receive(:py_string).with("I am a py_string", 1, 0)
         @parser.scan ps("I am a py_string")
       end
 
@@ -40,58 +40,46 @@ EOS
       end
 
       it "should treat a string containing only newlines as an empty string" do
-        @parser.scan(%{
-Feature: Hi
-Scenario: Hi
-Given a step
+py_string = <<EOS
 """
 
 
-"""}) 
-        @listener.to_sexp.should == [
-          [:feature, "Feature", "Hi", 2],
-          [:scenario, "Scenario", "Hi", 3],
-          [:step, "Given", "a step", 4],
-          [:py_string, "", 5, 0],
-        ]
+"""
+EOS
+        @listener.should_receive(:py_string).with("", 1, 0)
+        @parser.scan(py_string)
       end
       
-      it "should parse a content separated by two newlines" do
+      it "should parse content separated by two newlines" do
         @parser.scan ps("A\n\nB")
         @listener.to_sexp.should == [
-          [:feature, "Feature", "Hi", 1],
-          [:scenario, "Scenario", "Hi", 2],
-          [:step, "Given", "a step", 3],
-          [:py_string, "A\n\nB", 4, 0],
+          [:py_string, "A\n\nB", 1, 0],
         ]
       end
       
       it "should parse a multiline string" do
-        @listener.should_receive(:py_string).with("A\nB\nC\nD", 4, 0)
+        @listener.should_receive(:py_string).with("A\nB\nC\nD", 1, 0)
         @parser.scan ps("A\nB\nC\nD")
       end
             
       it "should ignore unescaped quotes inside the string delimeters" do
-        @listener.should_receive(:py_string).with("What does \"this\" mean?", 4, 0)
+        @listener.should_receive(:py_string).with("What does \"this\" mean?", 1, 0)
         @parser.scan ps('What does "this" mean?')
       end
       
       it "should preserve whitespace within the triple quotes" do
 str = <<EOS
-Feature: My feature
-  Scenario: a scenario
-    Given a pystring
     """
       Line one
  Line two
     """
 EOS
-        @listener.should_receive(:py_string).with("      Line one\n Line two", 4, 4)
+        @listener.should_receive(:py_string).with("      Line one\n Line two", 1, 4)
         @parser.scan(str)
       end
             
       it "should preserve tabs within the content" do
-        @listener.should_receive(:py_string).with("I have\tsome tabs\nInside\t\tthe content", 4, 0)
+        @listener.should_receive(:py_string).with("I have\tsome tabs\nInside\t\tthe content", 1, 0)
         @parser.scan ps("I have\tsome tabs\nInside\t\tthe content")
       end
   
@@ -110,20 +98,8 @@ Feature: Sample
 
 EOS
         
-        @listener.should_receive(:py_string).with(py_string, 4, 0)
+        @listener.should_receive(:py_string).with(py_string, 1, 0)
         @parser.scan ps(py_string)
-      end
-
-      it "should set indentation to zero if the content begins before the start delimeter" do
-        py_string = %{
-Feature: Hi
-Scenario: Hi
-Given a step
-    """
-Content
-"""}
-        @listener.should_receive(:py_string).with("Content", 5, 4)
-        @parser.scan(py_string)
       end
     end
   end
