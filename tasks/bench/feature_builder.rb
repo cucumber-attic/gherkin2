@@ -3,8 +3,19 @@ class StepsBuilder
     @steps = []
   end
 
-  def step(content)
-    @steps << "Given #{content}"
+  def step(content, generator)
+    @steps << "    Given #{content}"
+    if(rand(5) == 0)
+      cols = rand(8) + 1
+      rows = rand(10)
+      rows.times do
+        row = "      |"
+        cols.times do
+          row << generator.table_cell << "|"
+        end
+        @steps << row
+      end
+    end
   end
 
   def to_s
@@ -28,7 +39,7 @@ class FeatureBuilder
     str = "Feature: #{@name}\n"
     @scenarios.each do |scenario, steps|
       str += "\n"
-      str += "Scenario: #{scenario}\n"
+      str += "  Scenario: #{scenario}\n"
       str += steps.to_s
       str += "\n"
     end

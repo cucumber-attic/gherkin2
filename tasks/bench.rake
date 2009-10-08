@@ -23,7 +23,7 @@ class RandomFeatureGenerator
           f.scenario(bs) do |steps|
             num_steps = rand_in(3..10)
             num_steps.times do
-              steps.step(sentence)
+              steps.step(sentence, self)
             end
           end
         end
@@ -53,6 +53,10 @@ class RandomFeatureGenerator
   
   def sentence
     Faker::Lorem.sentence
+  end
+
+  def table_cell
+    Faker::Lorem.words(rand(2)+1).join(" ")
   end
 end
 
