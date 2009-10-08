@@ -10,6 +10,10 @@ Feature: Feature Text
 
   #Comment on line 11
 
+  Background:
+    Given this is a background step
+    And this is another one
+
   @tag3 @tag4
   Scenario: Reading a Scenario
     Given there is a step
