@@ -68,7 +68,7 @@ module Gherkin
       end
 
       it "should parse a 2x2 table with empty cells" do
-        @listener.should_receive(:table).with([['1', nil], [nil, '4']], 1)
+        @listener.should_receive(:table).with([['1', ''], ['', '4']], 1)
         @table.scan("| 1 |  |\n|| 4 |\n")
       end
     

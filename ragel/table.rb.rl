@@ -19,13 +19,9 @@ module Gherkin
 
         action store_cell_content {
           con = data[@content_start...p].pack("c*").strip
-          current_row << (con.empty? ? nil : con)
+          current_row << con
         }
 
-        action no_content {
-          current_row << nil
-        }
-     
         action inc_line_number {
           @current_line += 1
         }

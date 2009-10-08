@@ -248,7 +248,7 @@ And I am done testing these tables
             [:step, "Given", "I have a table", 3],
             [:table, [['a','b'],['c','d'],['e','f']], 4],
             [:step, "And", "I am still testing things", 7],
-            [:table, [['g','h'],['e','r'],['k','i'],['n',nil]], 8],
+            [:table, [['g','h'],['e','r'],['k','i'],['n','']], 8],
             [:step, "And", "I am done testing these tables", 12],
           ]
         end
