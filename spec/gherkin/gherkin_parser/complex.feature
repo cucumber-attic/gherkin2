@@ -21,7 +21,23 @@ Feature: Feature Text
 
   @tag3
   Scenario: Reading a second scenario
-    #Comment on line 20
-    Given a third step
-    #Comment on line 22
+    #Comment on line 24
+    Given a third step with a table
+    |a|b|
+    |c|d|
+    |e|f|
+    And I am still testing things
+      |g|h|
+      |e|r|
+      |k|i|
+      |n|| 
+    And I am done testing these tables
+    #Comment on line 29
     Then I am happy
+
+  Scenario: Hammerzeit
+    Given All work and no play
+      """
+      Makes Homer something something
+      """
+    Then crazy

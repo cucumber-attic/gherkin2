@@ -6,13 +6,13 @@ module Gherkin
       before do
         @policy = FeaturePolicy.new(mock.as_null_object)
       end
-          
+                      
       it "should not allow any keywords before the the feature name" do
         %w{background scenario_outline scenario examples}.each do |keyword|
           lambda { @policy.send(keyword, "Keyword", "Content", 1) }.should raise_error(FeatureSyntaxError)
         end
       end
-            
+                      
       it "should not allow a background to follow any other keywords" do
         %w{scenario_outline scenario examples}.each do |keyword|          
           lambda {
@@ -32,6 +32,20 @@ module Gherkin
         @policy.feature("Feature", "hi", 1)
         @policy.background("Background", "bg", 2)
         lambda { @policy.background("Background", "Another", 3) }.should raise_error(FeatureSyntaxError)
+      end
+      
+      context "initial state: Feature-heading section" do
+        it "background should have steps" do
+          @policy.feature("Feature", "Hi", 1)
+          @policy.background("Background", "Run this first", 2)
+          lambda { @policy.step("Given", "I am a step", 3) }.should_not raise_error(FeatureSyntaxError)
+        end
+      
+        it "should find scenarios after background" do
+          @policy.feature("Feature", "start", 1)
+          @policy.background("Background", "", 2)
+          lambda { @policy.scenario("Scenario", "Something", 3) }.should_not raise_error(FeatureSyntaxError)          
+        end
       end
     end
     

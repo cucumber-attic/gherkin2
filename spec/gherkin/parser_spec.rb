@@ -110,27 +110,7 @@ Feature: hi
             [:background, "Background", "I have several\nLines to look at\nNone starting with Given", 1]
           ]
         end
-        
-        it "should have steps" do
-          pending "Move to feature policy"
-          @feature.scan("Background: Run this first\nGiven I am a step\n")
-          @listener.to_sexp.should == [
-            [:background, "Background", "Run this first", 1],
-            [:step, "Given", "I am a step", 2]
-          ]
-        end
-
-        it "should find scenarios after background" do
-          pending "Move to feature policy"
-          @feature.scan("Background: Run this first\nGiven I am a step\n\n  Scenario: A Scenario\nGiven I am a step")
-          @listener.to_sexp.should == [
-            [:background, "Background", "Run this first", 1],
-            [:step, "Given", "I am a step", 2],
-            [:scenario, "Scenario", "A Scenario", 4],
-            [:step, "Given", "I am a step", 5]
-          ]
-        end
- 
+         
         it "should allow multiline names" do
           @feature.scan(%{Feature: Hi
 Background: It is my ambition to say 
@@ -163,63 +143,7 @@ Given I am a step})
             [:step, "Given", "baz", 3]
           ]
         end
-
-        it "should parse steps with inline table" do
-          pending "Break out into separate Step parsing context"
-          @feature.scan(%{Scenario: Hello
-Given I have a table 
-|a|b|
-})
-          @listener.to_sexp.should == [
-            [:scenario, "Scenario", "Hello", 1],
-            [:step, "Given", "I have a table", 2],
-            [:table, [['a','b']], 3]
-          ]
-        end
         
-        it "should parse multiple steps each with tables" do
-          pending "Move into complex feature test (?)"
-          @feature.scan(%{Scenario: Hello
-Given I have a table 
-|a|b|
-|c|d|
-|e|f|
-And I am still testing things
-  |g|h|
-  |e|r|
-  |k|i|
-  |n|| 
-And I am done testing these tables
-})
-          @listener.to_sexp.should == [
-            [:scenario, "Scenario", "Hello", 1],
-            [:step, "Given", "I have a table", 2],
-            [:table, [['a','b'],['c','d'],['e','f']], 3],
-            [:step, "And", "I am still testing things", 6],
-            [:table, [['g','h'],['e','r'],['k','i'],['n','']], 7],
-            [:step, "And", "I am done testing these tables", 11],
-          ]
-        end
-
-        it "should parse steps with inline py_string" do
-          pending "Move into Step context section"
-          @feature.scan(%{Scenario: Hello
-Given I have a string
-
-
-   """
-  hello
-  world
-  """
-
-})
-          @listener.to_sexp.should == [
-            [:scenario, "Scenario", "Hello", 1],
-            [:step, "Given", "I have a string", 2],
-            [:py_string, "  hello\n  world", 5, 3]
-          ]
-        end
-
         it "should allow multiline names" do
           @feature.scan(%{Scenario: It is my ambition to say
           in ten sentences
@@ -241,14 +165,16 @@ Given I am a step
           ]
         end
   
-        it "should ignore gherkin keywords which are parts of other words in the name" do
+        it "should ignore gherkin keywords embedded in other words" do
           @feature.scan(%{Scenario: I have a Button
           Buttons are great
-  Given I have it
+  Given I have some
+  But I might not because I am a Charles Dickens character
 })
           @listener.to_sexp.should == [
             [:scenario, "Scenario", "I have a Button\nButtons are great", 1],
-            [:step, "Given", "I have it", 3]
+            [:step, "Given", "I have some", 3],
+            [:step, "But", "I might not because I am a Charles Dickens character", 4]
           ]
         end
         
@@ -386,8 +312,42 @@ Examples: I'm a multiline name
         end
       end
 
-      describe "A single feature, single scenario, single step" do
+      describe "Examples" do
+      end
+      
+      describe "Steps" do
+        it "should parse steps with inline table" do
+          @feature.scan(%{Scenario: Hello
+Given I have a table 
+|a|b|
+})
+          @listener.to_sexp.should == [
+            [:scenario, "Scenario", "Hello", 1],
+            [:step, "Given", "I have a table", 2],
+            [:table, [['a','b']], 3]
+          ]
+        end
         
+        it "should parse steps with inline py_string" do
+          @feature.scan(%{Scenario: Hello
+Given I have a string
+
+
+   """
+  hello
+  world
+  """
+
+})
+          @listener.to_sexp.should == [
+            [:scenario, "Scenario", "Hello", 1],
+            [:step, "Given", "I have a string", 2],
+            [:py_string, "  hello\n  world", 5, 3]
+          ]
+        end
+      end
+            
+      describe "A single feature, single scenario, single step" do
         it "should find the feature, scenario, and step" do
           @feature.scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n")
           @listener.to_sexp.should == [
@@ -506,7 +466,7 @@ Examples: I'm a multiline name
         end
       end
    
-      describe "A complex feature with tags, comments, multiple scenarios, and multiple steps" do
+      describe "A complex feature with tags, comments, multiple scenarios, and multiple steps and tables" do
         it "should find things in the right order" do
           scan_file("complex.feature")
           @listener.to_sexp.should == [
@@ -527,12 +487,20 @@ Examples: I'm a multiline name
             [:step, "But", "not another step", 20],
             [:tag, "tag3", 22],
             [:scenario, "Scenario", "Reading a second scenario", 23],
-            [:comment, "#Comment on line 20", 24],
-            [:step, "Given", "a third step", 25],
-            [:comment, "#Comment on line 22", 26],
-            [:step, "Then", "I am happy", 27]
+            [:comment, "#Comment on line 24", 24],
+            [:step, "Given", "a third step with a table", 25],
+            [:table, [['a','b'],['c','d'],['e','f']], 26],
+            [:step, "And", "I am still testing things", 29],
+            [:table, [['g','h'],['e','r'],['k','i'],['n','']], 30],
+            [:step, "And", "I am done testing these tables", 34],
+            [:comment, "#Comment on line 29", 35],
+            [:step, "Then", "I am happy", 36],
+            [:scenario, "Scenario", "Hammerzeit", 38],
+            [:step, "Given", "All work and no play", 39],
+            [:py_string, "      Makes Homer something something", 40, 6],
+            [:step, "Then", "crazy", 43]
           ]
-        end
+        end        
       end
 
       describe "errors" do
