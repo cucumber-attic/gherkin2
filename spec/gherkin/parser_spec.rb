@@ -47,15 +47,6 @@ module Gherkin
       end
 
       describe "Tags" do
-        it "should parse a file with tags on a feature" do
-          @feature.scan("@hello @world\nFeature: hi\n")
-          @listener.to_sexp.should == [
-            [:tag, "hello", 1],
-            [:tag, "world", 1],
-            [:feature, "Feature", "hi", 2]
-          ]
-        end
-
         it "should not take the tags as part of a multiline name feature element" do
           @feature.scan("Feature: hi\n Scenario: test\n\n@hello\n Scenario: another")
           @listener.to_sexp.should == [
@@ -64,35 +55,7 @@ module Gherkin
             [:tag, "hello", 4],
             [:scenario, "Scenario", "another", 5]
           ]
-        end
-  
-        it "should parse a file with tags scattered around" do
-          @feature.scan(%{# FC
-  @ft
-Feature: hi
-
-  @st1 @st2   
-  Scenario: First
-    Given Pepper
-
-@st3 
-   @st4    @ST5  @#^%&ST6**!
-  Scenario: Second})
-          @listener.to_sexp.should == [
-            [:comment, "# FC", 1],
-            [:tag, "ft",2],
-            [:feature, "Feature", "hi", 3],
-            [:tag, "st1", 5],
-            [:tag, "st2", 5],
-            [:scenario, "Scenario", "First", 6],
-            [:step, "Given", "Pepper", 7],
-            [:tag, "st3", 9],
-            [:tag, "st4", 10],
-            [:tag, "ST5", 10],
-            [:tag, "#^%&ST6**!", 10],
-            [:scenario, "Scenario", "Second", 11]
-          ]
-        end
+        end  
       end
 
       describe "Background" do
@@ -137,7 +100,8 @@ Given I am a step})
         it "should allow whitespace lines after the Scenario line" do
           @feature.scan(%{Scenario: bar
 
-  Given baz})
+                          Given baz
+                          })
           @listener.to_sexp.should == [
             [:scenario, "Scenario", "bar", 1],
             [:step, "Given", "baz", 3]
@@ -146,12 +110,11 @@ Given I am a step})
         
         it "should allow multiline names" do
           @feature.scan(%{Scenario: It is my ambition to say
-          in ten sentences
-          what others say 
-          in a whole book.
-Given I am a step
-
-})
+                          in ten sentences
+                          what others say 
+                          in a whole book.
+                          Given I am a step
+                          })
           @listener.to_sexp.should == [
             [:scenario, "Scenario", "It is my ambition to say\nin ten sentences\nwhat others say\nin a whole book.", 1],
             [:step, "Given", "I am a step", 5]
@@ -193,11 +156,11 @@ Given I am a step
       describe "Scenario Outlines" do
         it "should be parsed" do
           @feature.scan(%{Scenario Outline: Hello
-Given a <what> cucumber
-Examples:
-|what|
-|green|
-})
+                          Given a <what> cucumber
+                          Examples:
+                          |what|
+                          |green|
+                          })
           @listener.to_sexp.should == [
             [:scenario_outline, "Scenario Outline", "Hello", 1],
             [:step, "Given", "a <what> cucumber", 2],
@@ -209,66 +172,22 @@ Examples:
         it "should parse with no steps or examples" do
           @feature.scan(%{Scenario Outline: Hello
 
-Scenario: My Scenario
-})
+                          Scenario: My Scenario
+                          })
           @listener.to_sexp.should == [
             [:scenario_outline, "Scenario Outline", "Hello", 1],
             [:scenario, "Scenario", "My Scenario", 3]
           ]
         end
 
-        it "should maintain line numbers of steps and tables" do
-          pending "delete me"
-          @feature.scan(%{Scenario Outline: Hello
-
-Given I have a table
-
-|<a>|<b>|
-Examples:
-|a|b|
-|c|d|
-})
-          @listener.to_sexp.should == [
-            [:scenario_outline, "Scenario Outline", "Hello", 1],
-            [:step, "Given", "I have a table", 3],
-            [:table, [["<a>","<b>"]], 5],
-            [:examples, "Examples", "", 6],
-            [:table, [["a","b"],["c","d"]], 7]
-          ]
-        end
-
-        it "should allow multiple sets of examples" do
-          pending "delete me"
-          @feature.scan("Scenario Outline: Hello
-  Given I have a table
-    |1|2|
-  Examples:
-|x|y|
-|5|6|
-  Examples: More
-|z|a|
-|3|4|
-
-")
-          @listener.to_sexp.should == [
-            [:scenario_outline, "Scenario Outline", "Hello", 1],
-            [:step, "Given", "I have a table", 2],
-            [:table, [["1","2"]], 3],
-            [:examples, "Examples", "", 4],
-            [:table, [["x","y"],["5","6"]], 5],
-            [:examples, "Examples", "More", 7],
-            [:table, [["z","a"],["3","4"]], 8]
-          ]
-        end
-
         it "should allow multiline names" do
           @feature.scan(%{Scenario Outline: It is my ambition to say 
-          in ten sentences
-          what others say 
-          in a whole book.
-Given I am a step
+                          in ten sentences
+                          what others say 
+                          in a whole book.
+                          Given I am a step
 
-})
+                          })
           @listener.to_sexp.should == [
             [:scenario_outline, "Scenario Outline", "It is my ambition to say\nin ten sentences\nwhat others say\nin a whole book.", 1],
             [:step, "Given", "I am a step", 5]
@@ -304,32 +223,20 @@ Given I am a step
       
       describe "Steps" do
         it "should parse steps with inline table" do
-          @feature.scan(%{Scenario: Hello
-Given I have a table 
-|a|b|
-})
+          @feature.scan(%{Given I have a table 
+                          |a|b|
+                          })
           @listener.to_sexp.should == [
-            [:scenario, "Scenario", "Hello", 1],
-            [:step, "Given", "I have a table", 2],
-            [:table, [['a','b']], 3]
+            [:step, "Given", "I have a table", 1],
+            [:table, [['a','b']], 2]
           ]
         end
         
         it "should parse steps with inline py_string" do
-          @feature.scan(%{Scenario: Hello
-Given I have a string
-
-
-   """
-  hello
-  world
-  """
-
-})
+          @feature.scan("Given I have a string\n\"\"\"\nhello\nworld\n\"\"\"")
           @listener.to_sexp.should == [
-            [:scenario, "Scenario", "Hello", 1],
-            [:step, "Given", "I have a string", 2],
-            [:py_string, "  hello\n  world", 5, 3]
+            [:step, "Given", "I have a string", 1],
+            [:py_string, "hello\nworld", 2, 0]
           ]
         end
       end
@@ -438,19 +345,24 @@ Given I have a string
         end
       end
       
-      describe "A simple feature with tags" do
+      describe "A feature with tags everywhere" do
         it "should find the feature, scenario, step, and tags in the proper order" do
           scan_file("simple_with_tags.feature")
           @listener.to_sexp.should == [
-            [:tag, "tag1", 1],
-            [:tag, "tag2", 1],
-            [:feature, "Feature", "Feature Text", 2],
-            [:tag, "tag3", 3],
-            [:tag, "tag4", 3],
-            [:scenario, "Scenario", "Reading a Scenario", 4],
-            [:step, "Given", "there is a step", 5]
+            [:comment, "# FC", 1],
+            [:tag, "ft",2],
+            [:feature, "Feature", "hi", 3],
+            [:tag, "st1", 5],
+            [:tag, "st2", 5],
+            [:scenario, "Scenario", "First", 6],
+            [:step, "Given", "Pepper", 7],
+            [:tag, "st3", 9],
+            [:tag, "st4", 10],
+            [:tag, "ST5", 10],
+            [:tag, "#^%&ST6**!", 10],
+            [:scenario, "Scenario", "Second", 11]
           ]
-        end
+        end        
       end
    
       describe "A complex feature with tags, comments, multiple scenarios, and multiple steps and tables" do

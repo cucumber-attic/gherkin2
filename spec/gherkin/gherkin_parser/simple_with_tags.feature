@@ -1,5 +1,11 @@
-@tag1 @tag2
-Feature: Feature Text
-  @tag3 @tag4
-  Scenario: Reading a Scenario
-    Given there is a step
+# FC
+@ft
+Feature: hi
+
+@st1 @st2   
+Scenario: First
+Given Pepper
+
+@st3 
+@st4    @ST5  @#^%&ST6**!
+Scenario: Second
