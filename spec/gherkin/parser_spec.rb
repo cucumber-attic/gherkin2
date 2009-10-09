@@ -218,6 +218,7 @@ Scenario: My Scenario
         end
 
         it "should maintain line numbers of steps and tables" do
+          pending "delete me"
           @feature.scan(%{Scenario Outline: Hello
 
 Given I have a table
@@ -236,27 +237,8 @@ Examples:
           ]
         end
 
-        it "should parse example tables" do
-          @feature.scan(%{Scenario Outline: Hello
-
-  Given I have a table
-    |1|2|
-
-  Examples:
-|x|y|
-|5|6|
-
-})
-          @listener.to_sexp.should == [
-            [:scenario_outline, "Scenario Outline", "Hello", 1],
-            [:step, "Given", "I have a table", 3],
-            [:table, [["1","2"]], 4],
-            [:examples, "Examples", "", 6],
-            [:table, [["x","y"],["5","6"]], 7]
-          ]
-        end
-
         it "should allow multiple sets of examples" do
+          pending "delete me"
           @feature.scan("Scenario Outline: Hello
   Given I have a table
     |1|2|
@@ -291,28 +273,33 @@ Given I am a step
             [:scenario_outline, "Scenario Outline", "It is my ambition to say\nin ten sentences\nwhat others say\nin a whole book.", 1],
             [:step, "Given", "I am a step", 5]
           ]
-        end
-        
-        it "should allow Examples to have multiline names" do
-          @feature.scan(%{Scenario Outline: name
-Given I am a step
-
-Examples: I'm a multiline name
-          and I'm ok
-|x|
-|5|
-
-})
-          @listener.to_sexp.should == [
-            [:scenario_outline, "Scenario Outline", "name", 1],
-            [:step, "Given", "I am a step", 2],
-            [:examples, "Examples", "I'm a multiline name\nand I'm ok", 4],
-            [:table, [["x"],["5"]], 6]
-          ]
-        end
+        end        
       end
 
       describe "Examples" do
+        it "should be parsed" do
+          @feature.scan(%{Examples:
+                          |x|y|
+                          |5|6|
+                          })
+          @listener.to_sexp.should == [
+            [:examples, "Examples", "", 1],
+            [:table, [["x","y"],["5","6"]], 2]
+          ]
+        end
+        
+        it "should parse multiline example names" do
+          @feature.scan(%{Examples: I'm a multiline name
+                          and I'm ok
+                          f'real
+                          |x|
+                          |5|
+                          })
+          @listener.to_sexp.should == [
+            [:examples, "Examples", "I'm a multiline name\nand I'm ok\nf'real", 1],
+            [:table, [["x"],["5"]], 4]
+          ]
+        end
       end
       
       describe "Steps" do
