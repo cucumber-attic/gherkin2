@@ -6,88 +6,88 @@
   machine parser;
   
   action begin_content {
-    printf("begin_content\n");
+    //printf("begin_content\n");
   }
   
   action init_pystring {
-    printf("init_pystring\n");
+    //printf("init_pystring\n");
   }
   
   action start_pystring {
-    printf("start_pystring\n");
+    //printf("start_pystring\n");
   }
   
   action start_line {
-    printf("start_line\n");
+    //printf("start_line\n");
   }
   
   action end_line {
-    printf("end_line\n");
+    //printf("end_line\n");
   }
   
   action store_feature_content {
-    printf("store_feature_content\n");
+    //printf("store_feature_content\n");
   }
   
   action store_background_content {
-    printf("store_background_content\n");
+    //printf("store_background_content\n");
   }
   
   action store_scenario_content {
-    printf("store_scenario_content\n");
+    //printf("store_scenario_content\n");
   }
   
   action store_scenario_outline_content {
-    printf("store_scenario_outline_content\n");
+    //printf("store_scenario_outline_content\n");
   }
   
   action store_examples_content {
-    printf("store_examples_content\n");
+    //printf("store_examples_content\n");
   }
   
   action store_step_content {
-    printf("store_step_content\n");
+    //printf("store_step_content\n");
   }
   
   action store_comment_content {
-    printf("store_comment_content\n");
+    //printf("store_comment_content\n");
   }
   
   action store_tag_content {
-    printf("store_tag_content\n");
+    //printf("store_tag_content\n");
     rb_funcall(listener, rb_intern("tag"), 0);
   }
   
   action store_pystring_content {
-    printf("store_pystring_content\n");
+    //printf("store_pystring_content\n");
   }
   
   action inc_line_number {
-    printf("inc_line_number\n");
+    //printf("inc_line_number\n");
   }
     
   action last_newline {
-    printf("last_newline\n");
+    //printf("last_newline\n");
   }
   
   action start_keyword {
-    printf("start_keyword\n");
+    //printf("start_keyword\n");
   }
   
   action end_keyword {
-    printf("end_keyword\n");
+    //printf("end_keyword\n");
   }
   
   action next_keyword_start {
-    printf("next_keyword_start\n");
+    //printf("next_keyword_start\n");
   }
   
   action end_table {
-    printf("end_table\n");
+    //printf("end_table\n");
   }
  
   action end_feature {
-    printf("end_feature\n");
+    //printf("end_feature\n");
   }
   
   include parser_common "parser_common.<%= i18n_language %>.rl"; 
@@ -108,7 +108,7 @@ static VALUE CParser_init(VALUE self, VALUE listener)
 static VALUE CParser_scan(VALUE self, VALUE text)
 {
   int cs;
-  char *p = RSTRING(text)->ptr;
+  char *p = RSTRING_PTR(text);
   strcat(p, "\n%_FEATURE_END_%");
   char *pe = p + strlen(p);
   char *eof = pe;
