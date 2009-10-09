@@ -90,14 +90,18 @@ class Benchmarker
   end
   
   def run_tt
-    require 'tt/en_parser'
-    parser = Cuke::Parser::I18n::EnParser.new 
-    @features.each do |feature|
-      res = parser.parse(IO.read(feature))
-      raise "Parsing error encountered in #{feature}" unless res
+    require 'cucumber'
+    # Using Cucumber's Treetop parser, but never calling #build to build the AST
+    parser = Cucumber::Parser::NaturalLanguage.new(nil, 'en').parser
+    @features.each do |file|
+      source = IO.read(file)
+      parse_tree = parser.parse(source)
+      if parse_tree.nil?
+        raise Cucumber::Parser::SyntaxError.new(parser, file, 0)
+      end
     end
   end
-  
+
   def run_rb_gherkin    
     require 'gherkin'
     require 'null_listener'
