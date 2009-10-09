@@ -89,16 +89,19 @@ Feature: Gherkin Feature parser/policy
       """
     Then there should be no syntax errors
     
-  @pending
+  @wip
   Scenario: Tables
     Given the following text is parsed:
       """
       Feature: Antiques Roadshow
       Scenario Outline: Table
-        | stop | making | sense |
         Given a <foo>
         Then a <bar>        
+        
+      Examples:
+        | foo | bar   |
+        | 42  | towel |
+        @hello
+        | 1   | prime |
       """
-    # Not really, but look at the output, it considers the table part of the scenario name
-    Then there should be a syntax error on line 2 
-
+    Then there should be a syntax error on line 10

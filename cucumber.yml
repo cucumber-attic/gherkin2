@@ -1,3 +1,4 @@
-default: --format progress --tags ~@c_parser,~@pending
+default: --format progress --tags ~@c_parser,~@pending,~@wip --strict features
+wip: --format pretty --tags @wip --wip features
 pending: --format pretty --tags @pending,~@c_parser
 c_parser: --format pretty --tags @c_parser
