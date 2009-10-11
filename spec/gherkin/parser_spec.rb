@@ -44,6 +44,12 @@ module Gherkin
             [:comment, "#", 3]
           ]
         end
+        
+        it "should not allow comments within the Feature description" do
+          lambda { 
+            @feature.scan("Feature: something\nAs a something\n# Comment\nI want something") 
+            }.should raise_error(ParsingError)
+        end
       end
 
       describe "Tags" do

@@ -34,7 +34,7 @@ module Gherkin
         lambda { @policy.background("Background", "Another", 3) }.should raise_error(FeatureSyntaxError)
       end
       
-      context "initial state: Feature-heading section" do
+      context "initial state: Feature section" do
         it "background should have steps" do
           @policy.feature("Feature", "Hi", 1)
           @policy.background("Background", "Run this first", 2)
@@ -46,6 +46,10 @@ module Gherkin
           @policy.background("Background", "", 2)
           lambda { @policy.scenario("Scenario", "Something", 3) }.should_not raise_error(FeatureSyntaxError)          
         end
+        
+        it "should allow tags on the feature"
+        it "should allow comments before the feature"
+        it "should allow comments within the feature description"
       end
     end
     
