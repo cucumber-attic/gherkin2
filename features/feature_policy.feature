@@ -89,7 +89,6 @@ Feature: Gherkin Feature parser/policy
       """
     Then there should be no syntax errors
     
-  @wip
   Scenario: Tables
     Given the following text is parsed:
       """

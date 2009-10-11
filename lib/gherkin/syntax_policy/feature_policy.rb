@@ -60,6 +60,7 @@ module Gherkin
       def examples(*args)
         if @feature
           @body = true
+          @step_allowed = true
           @listener.examples(*args)
         else
           error([:keyword] + args) # Not actually the keyword
@@ -85,7 +86,11 @@ module Gherkin
       end
 
       def table(*args)
-        @listener.table(*args)
+        if @step_allowed
+          @listener.table(*args)
+        else
+          error([:table] + args)
+        end
       end
       
       def py_string(*args)
