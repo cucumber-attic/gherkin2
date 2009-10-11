@@ -62,6 +62,7 @@ module Gherkin
       def examples(*args)
         if @feature and @examples_allowed
           @body = true
+          @step_allowed = false
           @listener.examples(*args)
         else
           error([:examples] + args)
@@ -85,12 +86,12 @@ module Gherkin
       end
       
       def tag(*args)
-        @step_allowed = false
+        @step_allowed, @examples_allowed = false
         @listener.tag(*args)
       end
 
       def table(*args)
-        if @step_allowed
+        if @step_allowed or @examples_allowed
           @listener.table(*args)
         else
           error([:table] + args)

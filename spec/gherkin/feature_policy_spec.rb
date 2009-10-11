@@ -129,8 +129,24 @@ module Gherkin
       end
       
       describe "Example state" do
-        it "should allow table"
-        it "should not allow anything else"
+        before do
+          @policy.feature("Feature", "Hello", 1)
+          @policy.scenario_outline("Scenario Outline", "Desc", 2)
+          @policy.step("Given", "a <foo>", 3)
+          @policy.examples("Examples", "Some examples", 4)
+        end
+        
+        it "should allow tables, examples, scenarios, scenario outlines, comments and tags" do
+          [:table, :examples, :tag, :comment, :scenario, :scenario_outline].each do |event|
+            lambda { @policy.send(event, event.to_s.capitalize, "Content", 5) }.should_not raise_error(FeatureSyntaxError) 
+          end
+        end
+        
+        it "should not allow steps, py_strings, features or backgrounds" do
+          [:step, :py_string, :feature, :background].each do |event|
+            lambda { @policy.send(event, event.to_s.capitalize, "Content", 5) }.should raise_error(FeatureSyntaxError)
+          end
+        end
       end
       
       describe "Step state" do
