@@ -6,13 +6,7 @@ module Gherkin
       before do
         @policy = FeaturePolicy.new(mock.as_null_object)
       end
-                      
-      it "should not allow any keywords before the the feature name" do
-        %w{background scenario_outline scenario examples}.each do |keyword|
-          lambda { @policy.send(keyword, "Keyword", "Content", 1) }.should raise_error(FeatureSyntaxError)
-        end
-      end
-                      
+          
       it "should not allow a background to follow any other keywords" do
         %w{scenario_outline scenario examples}.each do |keyword|          
           lambda {
@@ -22,34 +16,58 @@ module Gherkin
           }.should raise_error(FeatureSyntaxError)
         end
       end
-      
-      it "should not allow two features" do
-        @policy.feature("Feature", "First", 1)
-        lambda { @policy.feature("Feature", "Second", 2) }.should raise_error(FeatureSyntaxError)
+            
+      context "initial Feature section state" do      
+        it "should allow tags on the feature"
+        it "should allow comments before the feature"
+        
+        it "should not allow two features" do
+          @policy.feature("Feature", "First", 1)
+          lambda { @policy.feature("Feature", "Second", 2) }.should raise_error(FeatureSyntaxError)
+        end
+
+        it "should not allow two backgrounds" do
+          @policy.feature("Feature", "hi", 1)
+          @policy.background("Background", "bg", 2)
+          lambda { @policy.background("Background", "Another", 3) }.should raise_error(FeatureSyntaxError)
+        end
+        
+        it "should not allow any keywords before the feature name" do
+          %w{background scenario_outline scenario examples table py_string}.each do |keyword|
+            lambda { @policy.send(keyword, "Keyword", "Content", 1) }.should raise_error(FeatureSyntaxError)
+          end
+        end
       end
       
-      it "should not allow two backgrounds" do
-        @policy.feature("Feature", "hi", 1)
-        @policy.background("Background", "bg", 2)
-        lambda { @policy.background("Background", "Another", 3) }.should raise_error(FeatureSyntaxError)
-      end
-      
-      context "initial state: Feature section" do
-        it "background should have steps" do
+      context "Background state" do
+        it "allows steps" do
           @policy.feature("Feature", "Hi", 1)
           @policy.background("Background", "Run this first", 2)
           lambda { @policy.step("Given", "I am a step", 3) }.should_not raise_error(FeatureSyntaxError)
         end
-      
-        it "should find scenarios after background" do
+        
+        it "can be followed by a Scenario or Scenario Outline" do
           @policy.feature("Feature", "start", 1)
           @policy.background("Background", "", 2)
-          lambda { @policy.scenario("Scenario", "Something", 3) }.should_not raise_error(FeatureSyntaxError)          
+          [:scenario, :scenario_outline].each do |event|
+            lambda { @policy.send(event, "Keyword", "Content", 3) }.should_not raise_error(FeatureSyntaxError)          
+          end
         end
         
-        it "should allow tags on the feature"
-        it "should allow comments before the feature"
-        it "should allow comments within the feature description"
+        it "cannot be followed by a Feature" do
+          @policy.feature("Feature", "start", 1)
+          @policy.background("Background", "", 2)
+          lambda { @policy.feature("Feature", "again", 3) }.should raise_error(FeatureSyntaxError)
+        end
+      end
+      
+      context "Scenario state" do
+      end
+      
+      context "Scenario outline state" do
+      end
+      
+      context "Example state" do
       end
     end
     

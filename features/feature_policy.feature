@@ -39,6 +39,23 @@ Feature: Gherkin Feature parser/policy
           | Sparrow      | Alicanto       |
           | Goldfish     | Baldanders     |
           | Cow          | Hsiao          |
+          
+        Scenario: Sense of humor detection
+          Given the following excerpt:
+            \"\"\"
+            WOMAN:  Who are the Britons?
+            ARTHUR:  Well, we all are. we're all Britons and I am your king.
+            WOMAN:  I didn't know we had a king.  I thought we were an autonomous
+                collective.
+            DENNIS:  You're fooling yourself.  We're living in a dictatorship.
+                A self-perpetuating autocracy in which the working classes--
+            WOMAN:  Oh there you go, bringing class into it again.
+            DENNIS:  That's what it's all about if only people would--
+            ARTHUR:  Please, please good people.  I am in haste.  Who lives
+                in that castle?  
+            \"\"\"
+          When I read it
+          Then I should be amused
       """
    Then there should be no syntax errors
    
@@ -65,29 +82,6 @@ Feature: Gherkin Feature parser/policy
         Then it shouldn't work
       """
     Then there should be syntax errors on lines 4, 6 and 7
-
-  Scenario: Pystrings
-    Given the following text is parsed:
-      """
-      Feature: Pystring feature
-      Scenario: Long step arguments
-        Given the following excerpt:
-          \"\"\"
-          WOMAN:  Who are the Britons?
-          ARTHUR:  Well, we all are. we're all Britons and I am your king.
-          WOMAN:  I didn't know we had a king.  I thought we were an autonomous
-              collective.
-          DENNIS:  You're fooling yourself.  We're living in a dictatorship.
-              A self-perpetuating autocracy in which the working classes--
-          WOMAN:  Oh there you go, bringing class into it again.
-          DENNIS:  That's what it's all about if only people would--
-          ARTHUR:  Please, please good people.  I am in haste.  Who lives
-              in that castle?  
-          \"\"\"
-        When I read it
-        Then I should be amused
-      """
-    Then there should be no syntax errors
     
   Scenario: Tables
     Given the following text is parsed:

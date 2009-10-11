@@ -94,7 +94,11 @@ module Gherkin
       end
       
       def py_string(*args)
-        @listener.py_string(*args)
+        if @step_allowed
+          @listener.py_string(*args)
+        else
+          error([:py_string] + args)
+        end
       end
       
       def error(args)
