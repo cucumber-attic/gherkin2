@@ -20,6 +20,7 @@ Feature: Gherkin Feature parser/policy
         
         Background: 
           Given I have a transmogrifier
+          And I am a member of G.R.O.S.S
         
         Scenario: Whoozit to whatzit transmogrification
           Given I have a whoozit
