@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 module Gherkin
   module SyntaxPolicy
-    describe FeaturePolicy, "ensuring correct feature syntax" do      
+    describe FeaturePolicy do      
       before do
         @policy = FeaturePolicy.new(mock.as_null_object)
       end
@@ -17,30 +17,36 @@ module Gherkin
         end
       end
             
-      context "initial Feature section state" do      
-        it "should allow tags and comments before the feature" do
-          [:comment, :tag, :tag].each do |event|
-            lambda { @policy.send(event, "Content", 1) }.should_not raise_error(FeatureSyntaxError)
+      describe "initial Feature state" do
+        context "before keyword" do      
+          it "should allow tags and comments" do
+            [:comment, :tag, :tag].each do |event|
+              lambda { @policy.send(event, event.to_s.capitalize, 1) }.should_not raise_error(FeatureSyntaxError)
+            end
+          end
+        
+          it "should not allow anything else" do
+            [:background, :scenario, :scenario_outline, :examples, :step, :table, :py_string].each do |event|
+              lambda { @policy.send(event, event.to_s.capitalize, "Content", 1) }.should raise_error(FeatureSyntaxError)
+            end
           end
         end
         
-        it "should not allow anything else before the feature" do
-          [:background, :scenario, :scenario_outline, :examples, :step, :table, :py_string].each do |event|
-            lambda { @policy.send(event, "Keyword", "Content", 1) }.should raise_error(FeatureSyntaxError)
+        context "after keyword" do
+          before do
+            @policy.feature("Feature", "Start", 1)
           end
-        end
-        
-        it "should allow step containers, tags and comments after the feature" do
-          @policy.send(:feature, "Start", 1)
-          [:background, :scenario, :scenario_outline, :tag, :comment].each do |event|
-            lambda { @policy.send(event, "Keyword", "Content", 1) }.should_not raise_error(FeatureSyntaxError)
+          
+          it "should allow step containers, tags and comments" do
+            [:background, :scenario, :scenario_outline, :tag, :comment].each do |event|
+              lambda { @policy.send(event, event.to_s.capitalize, "Content", 1) }.should_not raise_error(FeatureSyntaxError)
+            end
           end
-        end
         
-        it "should not allow anything else after the feature" do
-          @policy.send(:feature, "Start", 1)
-          [:step, :table, :py_string, :examples].each do |event|
-            lambda { @policy.send(event, "Keyword", "Content", 1) }.should raise_error(FeatureSyntaxError)
+          it "should not allow anything else" do
+            [:step, :table, :py_string, :examples].each do |event|
+              lambda { @policy.send(event, event.to_s.capitalize, "Content", 1) }.should raise_error(FeatureSyntaxError)
+            end
           end
         end
         
@@ -56,35 +62,80 @@ module Gherkin
         end        
       end
       
-      context "Background state" do
-        it "should allows steps" do
-          @policy.feature("Feature", "Hi", 1)
-          @policy.background("Background", "Run this first", 2)
-          lambda { @policy.step("Given", "I am a step", 3) }.should_not raise_error(FeatureSyntaxError)
-        end
-        
-        it "should be followed by a Scenario or Scenario Outline" do
+      describe "Background state" do
+        before do
           @policy.feature("Feature", "start", 1)
           @policy.background("Background", "", 2)
-          [:scenario, :scenario_outline].each do |event|
-            lambda { @policy.send(event, "Keyword", "Content", 3) }.should_not raise_error(FeatureSyntaxError)          
+        end       
+        
+        it "should allows steps, scenarios, scenario outlines, comments and tags" do
+          [:step, :scenario, :scenario_outline, :comment, :tag].each do |event|
+            lambda { @policy.send(event, event.to_s.capitalize, "content", 3) }.should_not raise_error(FeatureSyntaxError)
+          end
+        end
+
+        it "should not allow features or examples" do
+          [:feature, :examples].each do |event|
+            lambda { @policy.send(event, event.to_s.capitalize, "Content", 3) }.should raise_error(FeatureSyntaxError)
+          end
+        end        
+      end
+      
+      describe "Scenario state" do
+        before do
+          @policy.feature("Feature", "hi", 1)
+          @policy.scenario("Scenario", "Foo", 2)
+        end
+        
+        it "should allow step, comment and tag" do
+          [:step, :comment, :tag].each do |event|
+            lambda { @policy.send(event, event.to_s.capitalize, "Content", 3) }.should_not raise_error(FeatureSyntaxError)
           end
         end
         
-        it "cannot be followed by a Feature" do
-          @policy.feature("Feature", "start", 1)
-          @policy.background("Background", "", 2)
-          lambda { @policy.feature("Feature", "again", 3) }.should raise_error(FeatureSyntaxError)
+        it "should not allow feature, background or examples" do
+          [:feature, :background, :examples].each do |event|
+            lambda { @policy.send(event, event.to_s.capitalize, "Content", 3) }.should raise_error(FeatureSyntaxError)
+          end
         end
       end
       
-      context "Scenario state" do
+      describe "Scenario outline state" do
+        before do
+          @policy.feature("Feature", "Hi", 1)
+          @policy.scenario_outline("Scenario Outline", "Some outline", 2)
+        end
+        
+        it "should allow step, comment, tag, scenario or scenario outline" do
+          [:step, :comment, :tag, :scenario, :scenario_outline].each do |even|
+            lambda { @policy.send(event, event.to_s.capitalize, "Content", 3) }.should_not raise_error(FeatureSyntaxError)
+          end
+        end
+      
+        it "should allow examples that follow a step" do
+          @policy.step("Given", "a foo", 3)
+          lambda { @policy.examples("Examples", "Some nice examples", 4) }.should_not raise_error(FeatureSyntaxError)
+        end
+        
+        it "should not allow examples that do not follow a step" do
+          lambda { @policy.examples("Examples", "Some nice examples", 4) }.should raise_error(FeatureSyntaxError)
+        end
+      
+        it "should not allow feature or background" do
+          [:feature, :background].each do |event|
+            lambda { @policy.send(event, event.to_s.capitalize, "Content", 3) }.should raise_error(FeatureSyntaxError)
+          end
+        end
       end
       
-      context "Scenario outline state" do
+      describe "Example state" do
+        it "should allow table"
+        it "should not allow anything else"
       end
       
-      context "Example state" do
+      describe "Step state" do
+        it "should allow step, table, py_string, tag and comment"
+        it "should not allow feature or background"
       end
     end
     

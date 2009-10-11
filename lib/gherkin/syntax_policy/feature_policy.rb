@@ -15,7 +15,7 @@ module Gherkin
       
       def initialize(listener, raise_on_error=true)
         @listener, @raise_on_error = listener, raise_on_error
-        @feature, @background, @body, @step_allowed = false
+        @feature, @background, @body, @scenario_outline, @step_allowed, @examples_allowed = false
       end
       
       def feature(*args)
@@ -36,10 +36,22 @@ module Gherkin
           error([:background] + args)
         end
       end
+            
+      def scenario(*args)
+        if @feature
+          @body = true
+          @step_allowed = true
+          @scenario_outline, @examples_allowed = false
+          @listener.scenario(*args)
+        else
+          error([:scenario] + args)
+        end
+      end
       
       def scenario_outline(*args)
         if @feature
           @body = true
+          @scenario_outline = true
           @step_allowed = true
           @listener.scenario_outline(*args)
         else
@@ -47,18 +59,8 @@ module Gherkin
         end
       end
       
-      def scenario(*args)
-        if @feature
-          @body = true
-          @step_allowed = true
-          @listener.scenario(*args)
-        else
-          error([:scenario] + args)
-        end
-      end
-      
       def examples(*args)
-        if @feature and @step_allowed
+        if @feature and @examples_allowed
           @body = true
           @listener.examples(*args)
         else
@@ -69,6 +71,9 @@ module Gherkin
       def step(*args)
         if @feature and @step_allowed
           @body = true
+          if @scenario_outline
+            @examples_allowed = true
+          end
           @listener.step(*args)
         else
           error([:step] + args)
