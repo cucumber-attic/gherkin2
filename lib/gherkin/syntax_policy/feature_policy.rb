@@ -58,12 +58,11 @@ module Gherkin
       end
       
       def examples(*args)
-        if @feature
+        if @feature and @step_allowed
           @body = true
-          @step_allowed = true
           @listener.examples(*args)
         else
-          error([:keyword] + args) # Not actually the keyword
+          error([:examples] + args)
         end
       end
 

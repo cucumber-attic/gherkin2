@@ -33,8 +33,6 @@ Feature: Gherkin Feature parser/policy
           When I transmogrify it
           Then I should have an <exciting being>
 
-          # See Cucumber #414. It's nothing personal. :-)
-          @borges
           Examples:
           | boring being | exciting being |
           | Sparrow      | Alicanto       |
