@@ -6,17 +6,7 @@ module Gherkin
       before do
         @policy = FeaturePolicy.new(mock.as_null_object)
       end
-          
-      it "should not allow a background to follow any other keywords" do
-        %w{scenario_outline scenario examples}.each do |keyword|          
-          lambda {
-            @policy.feature("Feature", "Feature", 1)
-            @policy.send(keyword, "Keyword", "Content", 2)
-            @policy.background("Background", "Background", 3)
-          }.should raise_error(FeatureSyntaxError)
-        end
-      end
-            
+                  
       describe "initial Feature state" do
         context "before keyword" do      
           it "should allow tags and comments" do
@@ -37,13 +27,13 @@ module Gherkin
             @policy.feature("Feature", "Start", 1)
           end
           
-          it "should allow step containers, tags and comments" do
+          it "should allow background, scenario, scenario outline, tags and comments" do
             [:background, :scenario, :scenario_outline, :tag, :comment].each do |event|
               lambda { @policy.send(event, event.to_s.capitalize, "Content", 1) }.should_not raise_error(FeatureSyntaxError)
             end
           end
         
-          it "should not allow anything else" do
+          it "should not step, table, py_string or examples" do
             [:step, :table, :py_string, :examples].each do |event|
               lambda { @policy.send(event, event.to_s.capitalize, "Content", 1) }.should raise_error(FeatureSyntaxError)
             end
@@ -147,12 +137,7 @@ module Gherkin
             lambda { @policy.send(event, event.to_s.capitalize, "Content", 5) }.should raise_error(FeatureSyntaxError)
           end
         end
-      end
-      
-      describe "Step state" do
-        it "should allow step, table, py_string, tag and comment"
-        it "should not allow feature or background"
-      end
+      end      
     end
     
     describe FeaturePolicy, "handling errors" do
