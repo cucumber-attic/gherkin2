@@ -69,10 +69,16 @@ Feature: Gherkin Feature parser/policy
       """
     Then there should be syntax errors on lines 1 through 3
 
-  Scenario: Tag ends a scenario
+  Scenario: Tag ends background and scenario
     Given the following text is parsed:
       """
       Feature: test feature
+        Background:
+          Given a something
+          @tag
+          And something else
+          
+      @foo
       Scenario: my scenario
         @tag
         Given this is a step
@@ -80,8 +86,8 @@ Feature: Gherkin Feature parser/policy
         And this is a horrible idea
         Then it shouldn't work
       """
-    Then there should be syntax errors on lines 4, 6 and 7
-    
+    Then there should be syntax errors on lines 5, 10 and 12
+      
   Scenario: Tables
     Given the following text is parsed:
       """
@@ -95,5 +101,12 @@ Feature: Gherkin Feature parser/policy
         | 42  | towel |
         @hello
         | 1   | prime |
+        
+      Scenario: Table arguments
+        Given this step needs this table:
+        | foo | bar |
+        | one | two |
+        @tag
+        | aaa | bbb |
       """
-    Then there should be a syntax error on line 10
+    Then there should be syntax errors on lines 10 and 17
