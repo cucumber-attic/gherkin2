@@ -10,11 +10,11 @@ module Gherkin
         false
       end
       
-      def background(*args)
+      def background
         false
       end
             
-      def scenario(*args)
+      def scenario
         if @feature
           @body = true
           @step_allowed = true
@@ -25,7 +25,7 @@ module Gherkin
         end
       end
       
-      def scenario_outline(*args)
+      def scenario_outline
         if @feature
           @body = true
           @scenario_outline = true
@@ -36,7 +36,7 @@ module Gherkin
         end
       end
       
-      def examples(*args)
+      def examples
         if @feature and @examples_allowed
           @body = true
           @step_allowed = false
@@ -46,7 +46,7 @@ module Gherkin
         end
       end
 
-      def step(*args)
+      def step
         if @feature and @step_allowed
           @body = true
           if @scenario_outline
@@ -58,16 +58,16 @@ module Gherkin
         end
       end
       
-      def comment(*args)
+      def comment
         true
       end
       
-      def tag(*args)
+      def tag
         @step_allowed, @examples_allowed = false
         true
       end
 
-      def table(*args)
+      def table
         if @step_allowed or @examples_allowed
           true
         else
@@ -75,7 +75,7 @@ module Gherkin
         end
       end
       
-      def py_string(*args)
+      def py_string
         if @step_allowed
           true
         else
