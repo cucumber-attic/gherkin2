@@ -1,4 +1,5 @@
 require 'gherkin/syntax_policy/feature_state'
+require 'gherkin/syntax_policy/scenario_state'
 
 module Gherkin
   module SyntaxPolicy
@@ -14,20 +15,32 @@ module Gherkin
     
     class FeaturePolicy
       attr_writer :raise_on_error
-      attr_reader :listener
       
       def initialize(listener, raise_on_error=true)
         @listener, @raise_on_error = listener, raise_on_error
-        @state = FeatureState.new
+        @states = { :feature => FeatureState.new, :scenario => ScenarioState.new }
+        @current = @states[:feature]
       end
             
       def error(args)
         @raise_on_error ? raise(FeatureSyntaxError.new(*args)) : @listener.syntax_error(*args)
       end
 
+      def scenario(*args)
+        if @current.scenario
+          @current = @states[:scenario] # Switch states if allowed
+        end
+
+        if @current.send(:scenario)
+          @listener.send(:scenario, *args)
+        else
+          error([:scenario] + args)
+        end
+      end
+
       def method_missing(meth, *args)
-        if @state.respond_to?(meth)
-          if @state.send(meth)
+        if @current.respond_to?(meth)
+          if @current.send(meth)
            @listener.send(meth, *args)
           else
             error([meth] + args)
