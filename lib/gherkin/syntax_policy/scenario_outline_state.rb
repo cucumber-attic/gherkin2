@@ -1,18 +1,11 @@
 module Gherkin
   module SyntaxPolicy
-    class ScenarioOutlineState
+    class ScenarioOutlineState < FeaturePolicyState
       def initialize
-        @step_allowed, @examples_allowed = false
+        @examples_allowed = false
+        super
       end
 
-      def feature
-        false
-      end
-      
-      def background
-        false
-      end
-            
       def scenario
         true
       end
@@ -29,22 +22,18 @@ module Gherkin
         end
       end
 
+      def tag
+        @examples_allowed = false
+        super
+      end
+
       def step
         if @step_allowed
           @examples_allowed = true
           true
         end
       end
-      
-      def comment
-        true
-      end
-      
-      def tag
-        @step_allowed, @examples_allowed = false
-        true
-      end
-
+ 
       def table
         @step_allowed or @examples_allowed
       end

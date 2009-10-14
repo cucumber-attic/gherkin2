@@ -1,96 +1,32 @@
+require 'gherkin/syntax_policy/feature_policy_state'
+
 module Gherkin
   module SyntaxPolicy
-    class FeatureState
+    class FeatureState < FeaturePolicyState
       def initialize
-        @feature, @background, @body, @scenario_outline, @step_allowed, @examples_allowed = false
+        @feature, @background = false
+        super
       end
 
       def feature
         if !@feature
           @feature = true
-          true
-        else
-          false
         end
       end
       
       def background
-        if @feature and !@background and !@body
-          @background = true
+        if @feature and !@background 
           @step_allowed = true
-          true
-        else
-          false
+          @background = true
         end
       end
             
       def scenario
-        if @feature
-          @body = true
-          @step_allowed = true
-          @scenario_outline, @examples_allowed = false
-          true
-        else
-          false
-        end
+        @feature
       end
       
       def scenario_outline
-        if @feature
-          @body = true
-          @scenario_outline = true
-          @step_allowed = true
-          true
-        else
-          false
-        end
-      end
-      
-      def examples
-        if @feature and @examples_allowed
-          @body = true
-          @step_allowed = false
-          true
-        else
-          false
-        end
-      end
-
-      def step
-        if @feature and @step_allowed
-          @body = true
-          if @scenario_outline
-            @examples_allowed = true
-          end
-          true
-        else
-          false
-        end
-      end
-      
-      def comment
-        true
-      end
-      
-      def tag
-        @step_allowed, @examples_allowed = false
-        true
-      end
-
-      def table
-        if @step_allowed or @examples_allowed
-          true
-        else
-          false
-        end
-      end
-      
-      def py_string
-        if @step_allowed
-          true
-        else
-          false
-        end
+        @feature
       end
     end
   end
