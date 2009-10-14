@@ -152,6 +152,19 @@ module Gherkin
           end
         end
       end      
+
+      describe "Step order" do
+        before do
+          @policy.feature("Feature", "Hello", 1)
+          @policy.scenario("Scenario", "Step order test", 2)
+        end
+
+        it "should not allow a multi-line step before a single-line step" do
+           [:py_string, :table].each do |event|
+             lambda { @policy.send(event, "Content", 3) }.should raise_error(FeatureSyntaxError)
+           end
+        end
+      end
     end
     
     describe FeaturePolicy, "handling errors" do
