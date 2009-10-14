@@ -18,7 +18,7 @@ module Gherkin
       
       def initialize(listener, raise_on_error=true)
         @listener, @raise_on_error = listener, raise_on_error
-        @states = { :feature => FeatureState.new, :scenario => ScenarioState.new }
+        @states = { :feature => FeatureState.new, :scenario => ScenarioState.new, :scenario_outline => ScenarioOutline.new }
         @current = @states[:feature]
       end
             
@@ -33,6 +33,18 @@ module Gherkin
 
         if @current.send(:scenario)
           @listener.send(:scenario, *args)
+        else
+          error([:scenario] + args)
+        end
+      end
+
+      def scenario_outline(*args)
+        if @current.scenario_outline
+          @current = @stats[:scenario_outline]
+        end
+
+        if @current.send(:scenario_outline)
+          @listener.send(:scenario_outline, *args)
         else
           error([:scenario] + args)
         end
