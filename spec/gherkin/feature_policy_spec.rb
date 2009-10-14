@@ -159,10 +159,18 @@ module Gherkin
           @policy.scenario("Scenario", "Step order test", 2)
         end
 
-        it "should not allow a multi-line step before a single-line step" do
-           [:py_string, :table].each do |event|
-             lambda { @policy.send(event, "Content", 3) }.should raise_error(FeatureSyntaxError)
-           end
+        it "should not allow a py_string before a single-line step" do
+          lambda { @policy.py_string("Content", 2, 3) }.should raise_error(FeatureSyntaxError)
+        end
+
+        it "should not allow a table before a single-line step" do
+          lambda { @policy.table([["a", "b"]], 1, 3) }.should raise_error(FeatureSyntaxError)
+        end
+
+        it "should not allow a multiline step to follow a multiline step" do
+          @policy.step("Given", "something something", 3)
+          @policy.table([["a", "b"]], 1, 4)
+          lambda { @policy.py_string("Content", 2, 5) }.should raise_error(FeatureSyntaxError) 
         end
       end
     end

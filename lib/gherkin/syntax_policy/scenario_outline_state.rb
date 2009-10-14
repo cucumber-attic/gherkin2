@@ -26,8 +26,6 @@ module Gherkin
         if @examples_allowed
           @step_allowed = false
           true
-        else
-          false
         end
       end
 
@@ -35,8 +33,6 @@ module Gherkin
         if @step_allowed
           @examples_allowed = true
           true
-        else
-          false
         end
       end
       

@@ -1,6 +1,10 @@
+require 'gherkin/syntax_policy/step_order'
+
 module Gherkin
   module SyntaxPolicy
     class ScenarioState
+      include StepOrder
+
       def initialize
         @step_allowed = false
       end
@@ -26,10 +30,6 @@ module Gherkin
         false
       end
 
-      def step
-        @step_allowed
-      end
-      
       def comment
         true
       end
@@ -37,14 +37,6 @@ module Gherkin
       def tag
         @step_allowed = false
         true
-      end
-
-      def table
-        @step_allowed 
-      end
-      
-      def py_string
-        @step_allowed
       end
     end
   end
