@@ -2,7 +2,7 @@ module Gherkin
   module SyntaxPolicy
     class ScenarioOutlineState
       def initialize
-        @scenario_outline, @step_allowed, @examples_allowed = false
+        @step_allowed, @examples_allowed = false
       end
 
       def feature
@@ -14,13 +14,10 @@ module Gherkin
       end
             
       def scenario
-        @step_allowed = true
-        @scenario_outline, @examples_allowed = false
         true
       end
       
       def scenario_outline
-        @scenario_outline = true
         @step_allowed = true
         true
       end
@@ -36,9 +33,7 @@ module Gherkin
 
       def step
         if @step_allowed
-          if @scenario_outline
-            @examples_allowed = true
-          end
+          @examples_allowed = true
           true
         else
           false

@@ -2,7 +2,7 @@ module Gherkin
   module SyntaxPolicy
     class ScenarioState
       def initialize
-        @scenario_outline, @step_allowed, @examples_allowed = false
+        @step_allowed = false
       end
 
       def feature
@@ -15,34 +15,19 @@ module Gherkin
             
       def scenario
         @step_allowed = true
-        @scenario_outline, @examples_allowed = false
         true
       end
       
       def scenario_outline
-        @scenario_outline = true
-        @step_allowed = true
         true
       end
       
       def examples
-        if @examples_allowed
-          @step_allowed = false
-          true
-        else
-          false
-        end
+        false
       end
 
       def step
-        if @step_allowed
-          if @scenario_outline
-            @examples_allowed = true
-          end
-          true
-        else
-          false
-        end
+        @step_allowed
       end
       
       def comment
@@ -50,12 +35,12 @@ module Gherkin
       end
       
       def tag
-        @step_allowed, @examples_allowed = false
+        @step_allowed = false
         true
       end
 
       def table
-        @step_allowed or @examples_allowed
+        @step_allowed 
       end
       
       def py_string
