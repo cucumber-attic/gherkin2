@@ -1,12 +1,16 @@
 module Gherkin
   module SyntaxPolicy
-    module FeatureState
-      def feature(*args)
+    class FeatureState
+      def initialize
+        @feature, @background, @body, @scenario_outline, @step_allowed, @examples_allowed = false
+      end
+
+      def feature
         if !@feature
           @feature = true
-          @listener.feature(*args)
+          true
         else
-          error([:feature] + args) if @feature
+          false
         end
       end
       
@@ -14,9 +18,9 @@ module Gherkin
         if @feature and !@background and !@body
           @background = true
           @step_allowed = true
-          @listener.background(*args)
+          true
         else
-          error([:background] + args)
+          false
         end
       end
             
@@ -25,9 +29,9 @@ module Gherkin
           @body = true
           @step_allowed = true
           @scenario_outline, @examples_allowed = false
-          @listener.scenario(*args)
+          true
         else
-          error([:scenario] + args)
+          false
         end
       end
       
@@ -36,9 +40,9 @@ module Gherkin
           @body = true
           @scenario_outline = true
           @step_allowed = true
-          @listener.scenario_outline(*args)
+          true
         else
-          error([:scenario_outline] + args)
+          false
         end
       end
       
@@ -46,9 +50,9 @@ module Gherkin
         if @feature and @examples_allowed
           @body = true
           @step_allowed = false
-          @listener.examples(*args)
+          true
         else
-          error([:examples] + args)
+          false
         end
       end
 
@@ -58,34 +62,34 @@ module Gherkin
           if @scenario_outline
             @examples_allowed = true
           end
-          @listener.step(*args)
+          true
         else
-          error([:step] + args)
+          false
         end
       end
       
       def comment(*args)
-        @listener.comment(*args)
+        true
       end
       
       def tag(*args)
         @step_allowed, @examples_allowed = false
-        @listener.tag(*args)
+        true
       end
 
       def table(*args)
         if @step_allowed or @examples_allowed
-          @listener.table(*args)
+          true
         else
-          error([:table] + args)
+          false
         end
       end
       
       def py_string(*args)
         if @step_allowed
-          @listener.py_string(*args)
+          true
         else
-          error([:py_string] + args)
+          false
         end
       end
     end

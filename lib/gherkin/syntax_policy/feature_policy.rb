@@ -13,16 +13,28 @@ module Gherkin
     end
     
     class FeaturePolicy
-      include FeatureState
       attr_writer :raise_on_error
+      attr_reader :listener
       
       def initialize(listener, raise_on_error=true)
         @listener, @raise_on_error = listener, raise_on_error
-        @feature, @background, @body, @scenario_outline, @step_allowed, @examples_allowed = false
+        @state = FeatureState.new
       end
             
       def error(args)
         @raise_on_error ? raise(FeatureSyntaxError.new(*args)) : @listener.syntax_error(*args)
+      end
+
+      def method_missing(meth, *args)
+        if @state.respond_to?(meth)
+          if @state.send(meth)
+           @listener.send(meth, *args)
+          else
+            error([meth] + args)
+          end
+        else
+          super
+        end
       end
     end
   end
