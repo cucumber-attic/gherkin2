@@ -1,5 +1,6 @@
 require 'gherkin/syntax_policy/feature_state'
 require 'gherkin/syntax_policy/scenario_state'
+require 'gherkin/syntax_policy/scenario_outline_state'
 
 module Gherkin
   module SyntaxPolicy
@@ -18,7 +19,7 @@ module Gherkin
       
       def initialize(listener, raise_on_error=true)
         @listener, @raise_on_error = listener, raise_on_error
-        @states = { :feature => FeatureState.new, :scenario => ScenarioState.new, :scenario_outline => ScenarioOutline.new }
+        @states = { :feature => FeatureState.new, :scenario => ScenarioState.new, :scenario_outline => ScenarioOutlineState.new }
         @current = @states[:feature]
       end
             
@@ -40,7 +41,7 @@ module Gherkin
 
       def scenario_outline(*args)
         if @current.scenario_outline
-          @current = @stats[:scenario_outline]
+          @current = @states[:scenario_outline]
         end
 
         if @current.send(:scenario_outline)
