@@ -6,7 +6,23 @@ module Gherkin
       before do
         @policy = FeaturePolicy.new(mock.as_null_object)
       end
-                  
+      
+      shared_examples_for "a section containing steps" do
+        it "should not allow a py_string before a single-line step" do
+          lambda { @policy.py_string("Content", 2, 3) }.should raise_error(FeatureSyntaxError)
+        end
+
+        it "should not allow a table before a single-line step" do
+          lambda { @policy.table([["a", "b"]], 1, 3) }.should raise_error(FeatureSyntaxError)
+        end
+
+        it "should not allow a multiline step to follow a multiline step" do
+          @policy.step("Given", "something something", 3)
+          @policy.table([["a", "b"]], 1, 4)
+          lambda { @policy.py_string("Content", 2, 5) }.should raise_error(FeatureSyntaxError) 
+        end
+      end
+      
       describe "initial Feature state" do
         context "before keyword" do      
           it "should allow tags and comments" do
@@ -71,6 +87,8 @@ module Gherkin
             @policy.background("Background", "", 2)
           end       
         
+          it_should_behave_like "a section containing steps"
+          
           it "should allows steps, scenarios, scenario outlines, comments and tags" do
             [:step, :scenario, :scenario_outline, :comment, :tag].each do |event|
               lambda { @policy.send(event, event.to_s.capitalize, "content", 3) }.should_not raise_error(FeatureSyntaxError)
@@ -91,6 +109,8 @@ module Gherkin
           @policy.scenario("Scenario", "Foo", 2)
         end
         
+        it_should_behave_like "a section containing steps"
+        
         it "should allow step, comment and tag" do
           [:step, :comment, :tag].each do |event|
             lambda { @policy.send(event, event.to_s.capitalize, "Content", 3) }.should_not raise_error(FeatureSyntaxError)
@@ -109,6 +129,8 @@ module Gherkin
           @policy.feature("Feature", "Hi", 1)
           @policy.scenario_outline("Scenario Outline", "Some outline", 2)
         end
+        
+        it_should_behave_like "a section containing steps"
         
         it "should allow step, comment, tag, scenario or scenario outline" do
           [:step, :comment, :tag, :scenario, :scenario_outline].each do |even|
@@ -150,27 +172,6 @@ module Gherkin
           [:step, :py_string, :feature, :background].each do |event|
             lambda { @policy.send(event, event.to_s.capitalize, "Content", 5) }.should raise_error(FeatureSyntaxError)
           end
-        end
-      end      
-
-      describe "Step order" do
-        before do
-          @policy.feature("Feature", "Hello", 1)
-          @policy.scenario("Scenario", "Step order test", 2)
-        end
-
-        it "should not allow a py_string before a single-line step" do
-          lambda { @policy.py_string("Content", 2, 3) }.should raise_error(FeatureSyntaxError)
-        end
-
-        it "should not allow a table before a single-line step" do
-          lambda { @policy.table([["a", "b"]], 1, 3) }.should raise_error(FeatureSyntaxError)
-        end
-
-        it "should not allow a multiline step to follow a multiline step" do
-          @policy.step("Given", "something something", 3)
-          @policy.table([["a", "b"]], 1, 4)
-          lambda { @policy.py_string("Content", 2, 5) }.should raise_error(FeatureSyntaxError) 
         end
       end
     end

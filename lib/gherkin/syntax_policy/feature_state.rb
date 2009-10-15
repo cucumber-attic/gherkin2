@@ -16,7 +16,7 @@ module Gherkin
       
       def background
         if @feature and !@background 
-          @step_allowed = true
+          @step = true
           @background = true
         end
       end

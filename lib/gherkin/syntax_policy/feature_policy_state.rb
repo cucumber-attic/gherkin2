@@ -2,7 +2,7 @@ module Gherkin
   module SyntaxPolicy
     class FeaturePolicyState
       def initialize
-        @step_allowed = false
+        @step, @multiline = false
       end
 
       def feature
@@ -26,28 +26,27 @@ module Gherkin
       end
 
       def step
-        if @step_allowed
-          @multiline_allowed = true
-          true
+        if @step
+          @multiline = true
         end
       end
 
       def table
-        if @multiline_allowed
-          @multiline_allowed = false
+        if @multiline
+          @multiline = false
           true
         end
       end
 
       def py_string
-        if @multiline_allowed
-          @multiline_allowed = false
+        if @multiline
+          @multiline = false
           true
         end
       end
 
       def tag
-        @step_allowed = false
+        @step = false
         true
       end
 

@@ -4,8 +4,7 @@ module Gherkin
   module SyntaxPolicy
     class ScenarioState < FeaturePolicyState
       def scenario
-        @step_allowed = true
-        true
+        @step = true
       end
       
       def scenario_outline
