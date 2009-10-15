@@ -110,3 +110,33 @@ Feature: Gherkin Feature parser/policy
         | aaa | bbb |
       """
     Then there should be syntax errors on lines 10 and 17
+
+  Scenario: Multiline keyword descriptions
+    Given the following text is parsed:
+      """
+        Feature: Documentation is fun
+          Scenario Outline: With lots of docs
+            We need lots of embedded documentation for some reason 
+            \"\"\" # Not interpreted as a pystring, just plain text
+            Oh hai
+            \"\"\"
+
+            La la la
+
+            Examples:
+            | one | two |
+            | foo | bar |
+
+            \"\"\"
+            Oh Hello
+            \"\"\"
+ 
+            # Body of the scenario outline starts below
+            Given <something> # Steps start the body of the scenario outline
+            And something <else>
+ 
+            Examples: # The real examples table
+            | something | else |
+            | orange | apple |
+      """
+      Then there should be no syntax errors
