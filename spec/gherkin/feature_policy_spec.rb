@@ -8,34 +8,36 @@ module Gherkin
       end
       
       shared_examples_for "a section containing steps" do
-        it "should not allow a py_string before a single-line step" do
+        it "should not allow a py_string unless preceded by a step" do
           lambda { @policy.py_string("Content", 2, 3) }.should raise_error(FeatureSyntaxError)
         end
 
-        it "should not allow a table before a single-line step" do
+        it "should not allow a table unless preceded by a step" do
           lambda { @policy.table([["a", "b"]], 1, 3) }.should raise_error(FeatureSyntaxError)
         end
 
-        it "should not allow a py_string to follow a table" do
-          @policy.step("Given", "something something", 3)
-          @policy.table([["a", "b"]], 1, 4)
-          lambda { @policy.py_string("Content", 2, 5) }.should raise_error(FeatureSyntaxError) 
-        end
+        describe "following a step" do
+          before do
+            @policy.step("Given", "something something", 3)
+          end
 
-        it "should not allow a table to follow a py_string" do
-          @policy.step("Given", "something something", 3)
-          @policy.py_string("Content", 2, 4)
-          lambda { @policy.table([["a", "b"]], 1, 5) }.should raise_error(FeatureSyntaxError)
-        end
+          it "should not allow a py_string to follow a table" do
+            @policy.table([["a", "b"]], 1, 4)
+            lambda { @policy.py_string("Content", 2, 5) }.should raise_error(FeatureSyntaxError) 
+          end
 
-        it "should allow py_string to follow a step" do
-          @policy.step("Given", "something", 3)
-          lambda { @policy.py_string("Content", 4, 2) }.should_not raise_error(FeatureSyntaxError)
-        end
+          it "should not allow a table to follow a py_string" do
+            @policy.py_string("Content", 2, 4)
+            lambda { @policy.table([["a", "b"]], 1, 5) }.should raise_error(FeatureSyntaxError)
+          end
 
-        it "should allow table to follow a step" do
-          @policy.step("Given", "something", 3)
-          lambda { @policy.table([["a", "b"]], 1, 4) }.should_not raise_error(FeatureSyntaxError)
+          it "should allow py_string to follow a step" do
+            lambda { @policy.py_string("Content", 4, 2) }.should_not raise_error(FeatureSyntaxError)
+          end
+
+          it "should allow table to follow a step" do
+            lambda { @policy.table([["a", "b"]], 1, 4) }.should_not raise_error(FeatureSyntaxError)
+          end
         end
       end
       

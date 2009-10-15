@@ -30,7 +30,10 @@ Feature: Gherkin Feature parser/policy
 
         Scenario Outline: Imaginary Beings
           Given I have a <boring being>
-          When I transmogrify it
+          When I transmogrify it with the incantation:
+          \"\"\"
+          ALAKAZAM!
+          \"\"\"
           Then I should have an <exciting being>
 
           Examples:
@@ -132,10 +135,11 @@ Feature: Gherkin Feature parser/policy
             \"\"\"
  
             # Body of the scenario outline starts below
-            Given <something> # Steps start the body of the scenario outline
+            Given <something> 
             And something <else>
  
-            Examples: # The real examples table
+            # The real examples table
+            Examples: 
             | something | else |
             | orange | apple |
       """
