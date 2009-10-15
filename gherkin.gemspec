@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
-  s.date = %q{2009-10-01}
+  s.date = %q{2009-10-15}
   s.description = %q{A fast Gherkin parser in Ragel}
   s.email = %q{cukes@googlegroups.com}
   s.extra_rdoc_files = [
@@ -75,6 +75,10 @@ Gem::Specification.new do |s|
      "lib/gherkin/parser/parser_zh-TW.rb",
      "lib/gherkin/parser/table.rb",
      "lib/gherkin/syntax_policy/feature_policy.rb",
+     "lib/gherkin/syntax_policy/feature_policy_state.rb",
+     "lib/gherkin/syntax_policy/feature_state.rb",
+     "lib/gherkin/syntax_policy/scenario_outline_state.rb",
+     "lib/gherkin/syntax_policy/scenario_state.rb",
      "ragel/i18n/.gitignore",
      "ragel/parser.c.rl.erb",
      "ragel/parser.rb.rl.erb",
@@ -89,8 +93,8 @@ Gem::Specification.new do |s|
      "spec/gherkin/gherkin_parser/simple_with_comments.feature",
      "spec/gherkin/gherkin_parser/simple_with_tags.feature",
      "spec/gherkin/i18n_spec.rb",
-     "spec/gherkin/multiline_step_args_spec.rb",
      "spec/gherkin/parser_spec.rb",
+     "spec/gherkin/pystring_spec.rb",
      "spec/gherkin/sexp_recorder.rb",
      "spec/gherkin/table_spec.rb",
      "spec/gherkin/tags_spec.rb",
@@ -120,13 +124,13 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{Fast Gherkin parser}
   s.test_files = [
-    "spec/gherkin/feature_policy_spec.rb",
-     "spec/gherkin/i18n_spec.rb",
-     "spec/gherkin/multiline_step_args_spec.rb",
-     "spec/gherkin/parser_spec.rb",
+    "spec/gherkin/parser_spec.rb",
      "spec/gherkin/sexp_recorder.rb",
      "spec/gherkin/table_spec.rb",
+     "spec/gherkin/feature_policy_spec.rb",
+     "spec/gherkin/pystring_spec.rb",
      "spec/gherkin/tags_spec.rb",
+     "spec/gherkin/i18n_spec.rb",
      "spec/spec_helper.rb"
   ]
 
