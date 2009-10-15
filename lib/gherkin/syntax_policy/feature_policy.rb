@@ -28,38 +28,32 @@ module Gherkin
       end
 
       def scenario(*args)
-        if @current.scenario
-          @current = @states[:scenario] # Switch states if allowed
-        end
-
-        if @current.send(:scenario)
-          @listener.send(:scenario, *args)
-        else
-          error([:scenario] + args)
-        end
+        change_state(:scenario)
+        dispatch(:scenario, *args)
       end
 
       def scenario_outline(*args)
-        if @current.scenario_outline
-          @current = @states[:scenario_outline]
-        end
-
-        if @current.send(:scenario_outline)
-          @listener.send(:scenario_outline, *args)
-        else
-          error([:scenario] + args)
-        end
+        change_state(:scenario_outline)
+        dispatch(:scenario_outline, *args)
       end
 
       def method_missing(meth, *args)
-        if @current.respond_to?(meth)
-          if @current.send(meth)
-           @listener.send(meth, *args)
-          else
-            error([meth] + args)
-          end
+        @current.respond_to?(meth) ? dispatch(meth, *args) : super
+      end
+      
+      private 
+      
+      def change_state(state)
+        if @current.send(state)
+          @current = @states[state]
+        end
+      end
+      
+      def dispatch(event, *args)
+        if @current.send(event)
+          @listener.send(event, *args)
         else
-          super
+          error([event] + args)
         end
       end
     end
