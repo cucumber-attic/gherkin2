@@ -44,17 +44,15 @@ module Gherkin
       private 
       
       def change_state(state)
-        if @current.send(state)
-          @current = @states[state]
-        end
+        (@current = @states[state]) if event_allowed?(state)
       end
       
       def dispatch(event, *args)
-        if @current.send(event)
-          @listener.send(event, *args)
-        else
-          error([event] + args)
-        end
+        event_allowed?(event) ? @listener.send(event, *args) : error([event] + args)
+      end
+      
+      def event_allowed?(event)
+        @current.send(event)
       end
     end
   end
