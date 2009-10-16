@@ -4,7 +4,7 @@ module Gherkin
   module SyntaxPolicy
     class ScenarioOutlineState < FeaturePolicyState
       def initialize
-        @examples = false
+        @examples, @within_examples = false
         super
       end
 
@@ -19,7 +19,7 @@ module Gherkin
       def examples
         if @examples
           @step = false
-          true
+          @within_examples = true
         end
       end
 
@@ -33,9 +33,9 @@ module Gherkin
           @examples = true
         end
       end
-
+      
       def py_string
-        super unless @examples
+        super unless @within_examples
       end
     end
   end
