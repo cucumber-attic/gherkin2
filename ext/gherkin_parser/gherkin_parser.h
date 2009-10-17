@@ -8,11 +8,13 @@
 #endif
 
 
-typedef void (*action_cb)(void *listener, void *data, const char *at, size_t length);
+typedef void (*action_cb)(void *listener, void *data, const char *at, size_t length, int line);
 
 typedef struct parser {
   int cs;
   int content_len;
+  int line_number;
+  int current_line;
   size_t nread;
   size_t mark;
   size_t keyword_start;

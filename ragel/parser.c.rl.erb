@@ -61,7 +61,7 @@
   
   action store_comment_content {
     if(parser->store_comment_content != NULL) {
-      parser->store_comment_content(parser->listener, parser->data, PTR_TO(keyword_start), LEN(keyword_start);
+      parser->store_comment_content(parser->listener, parser->data, PTR_TO(keyword_start), LEN(keyword_start,fpc), parser->line_number);
     }
     printf("store_comment_content\n");
   }
@@ -75,6 +75,7 @@
   }
   
   action inc_line_number {
+    parser->line_number += 1;
     printf("inc_line_number\n");
   }
     
@@ -127,6 +128,7 @@ int parser_init(parser *parser) {
   parser->next_keyword_start = 0;
   parser->body_start = 0;
   parser->body_end = 0;
+  parser->line_number = 1;
   
   return(1);
 }

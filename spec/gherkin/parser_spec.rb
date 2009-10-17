@@ -6,7 +6,7 @@ module Gherkin
     describe "parsing" do
       before do
         @listener = Gherkin::SexpRecorder.new
-        @feature = Gherkin::Parser['en'].new(@listener)
+        @feature = Gherkin::Parser['C'].new(@listener)
       end
 
       def scan_file(file)

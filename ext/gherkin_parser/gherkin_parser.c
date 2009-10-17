@@ -16,14 +16,12 @@ static VALUE mParser;
 static VALUE cCParser; 
 static VALUE eCParserError;
 
-void store_comment_content(void *listener, void *data, const char *at, size_t length) 
+void store_comment_content(void *listener, void *data, const char *at, size_t length, int line) 
 { 
   VALUE val = Qnil;
 
   val = rb_str_new(at, length);
-  printf("OH HAI THERE"); 
-//  VALUE listener = rb_iv_get(listener, "@listener");
-  rb_funcall(listener, rb_intern("comment"), 2, val, 2);
+  rb_funcall(listener, rb_intern("comment"), 2, val, INT2FIX(line));
 }
   
 

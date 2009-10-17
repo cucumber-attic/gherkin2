@@ -20,4 +20,4 @@ Feature: C Parser
       Feature: Hello
       %_FEATURE_END_%
       """
-    Then there should be syntax errors on lines 1 and 2
+    Then there should be no syntax errors
