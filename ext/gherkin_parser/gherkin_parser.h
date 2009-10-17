@@ -20,8 +20,8 @@ typedef struct parser {
   size_t keyword_start;
   size_t keyword_end;
   size_t next_keyword_start;
-  size_t body_start;
-  size_t body_end;
+  size_t content_start;
+  size_t content_end;
   size_t field_len;
   size_t query_start;
 

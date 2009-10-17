@@ -16,7 +16,7 @@
   machine parser;
   
   action begin_content {
-		MARK(body_start, fpc);
+		MARK(content_start, fpc);
     parser->current_line = parser->line_number;
   }
   
@@ -37,7 +37,7 @@
   }
   
   action store_feature_content {
-    // printf("store_feature_content\n");
+    printf("store_feature_content\n");
   }
   
   action store_background_content {
@@ -62,7 +62,7 @@
   
   action store_comment_content {
     if(parser->store_comment_content != NULL) {
-      parser->store_comment_content(parser->listener, parser->data, PTR_TO(body_start), LEN(body_start,fpc), parser->line_number);
+      parser->store_comment_content(parser->listener, parser->data, PTR_TO(content_start), LEN(content_start,fpc), parser->line_number);
     }
     // printf("store_comment_content\n");
   }
@@ -70,7 +70,7 @@
   action store_tag_content {
     // printf("store_tag_content\n");
     if (parser->store_tag_content != NULL) {
-      parser->store_tag_content(parser->listener, parser->data, PTR_TO(body_start), LEN(body_start, fpc), parser->line_number);
+      parser->store_tag_content(parser->listener, parser->data, PTR_TO(content_start), LEN(content_start, fpc), parser->line_number);
     }
   }
   
@@ -94,12 +94,12 @@
   
   action end_keyword {
     MARK(keyword_end, fpc);
-    MARK(body_start, fpc + 1);
+    MARK(content_start, fpc + 1);
     // printf(" keyword found\n ");
   }
   
   action next_keyword_start {
-    MARK(body_end, fpc);
+    MARK(content_end, fpc);
     // printf("next_keyword_start\n");
   }
   
@@ -122,7 +122,8 @@ int parser_init(parser *parser) {
   int cs = 0;
   %% write init;
   parser->cs = cs;
-  parser->body_start = 0;
+  parser->content_start = 0;
+  parser->content_end = 0;
   parser->content_len = 0;
   parser->mark = 0;
   parser->nread = 0;
@@ -130,7 +131,6 @@ int parser_init(parser *parser) {
   parser->keyword_start = 0;
   parser->keyword_end = 0;
   parser->next_keyword_start = 0;
-  parser->body_end = 0;
   parser->line_number = 1;
   
   return(1);
@@ -157,7 +157,7 @@ size_t parser_scan(parser *parser, const char *buffer, size_t len, size_t off) {
   
   assert(p <= pe && "buffer overflow after parsing execute");
   assert(parser->nread <= len && "nread longer than length");
-  assert(parser->body_start <= len && "body starts after buffer end");
+  assert(parser->content_start <= len && "content starts after buffer end");
   assert(parser->mark < len && "mark is after buffer end");
   assert(parser->field_len <= len && "field has length longer than the whole buffer");
 //  assert(parser->field_start < len && "field starts after buffer end");
