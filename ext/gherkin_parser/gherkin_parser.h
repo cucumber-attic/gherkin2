@@ -8,7 +8,7 @@
 #endif
 
 
-typedef void (*action_cb)(void *listener, void *data, const char *at, size_t length, int line);
+typedef void (*listener_cb)(void *listener, void *data, const char *at, size_t length, int line);
 
 typedef struct parser {
   int cs;
@@ -28,9 +28,7 @@ typedef struct parser {
   void *listener;
   void *data;
 
-  action_cb store_comment_content;
-  
-
+  listener_cb store_comment_content;
 } parser;
 
 int parser_init(parser *psr);
