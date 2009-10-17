@@ -16,100 +16,99 @@
   machine parser;
   
   action begin_content {
-    printf("begin_content\n");
 		MARK(body_start, fpc);
     parser->current_line = parser->line_number;
   }
   
   action init_pystring {
-    printf("init_pystring\n");
+    // // printf("init_pystring\n");
   }
   
   action start_pystring {
-    printf("start_pystring\n");
+    // // printf("start_pystring\n");
   }
   
   action start_line {
-    printf("start_line\n");
+    // // printf("start_line\n");
   }
   
   action end_line {
-    printf("end_line\n");
+    // // printf("end_line\n");
   }
   
   action store_feature_content {
-    printf("store_feature_content\n");
+    // printf("store_feature_content\n");
   }
   
   action store_background_content {
-    printf("store_background_content\n");
+    // printf("store_background_content\n");
   }
   
   action store_scenario_content {
-    printf("store_scenario_content\n");
+    // printf("store_scenario_content\n");
   }
   
   action store_scenario_outline_content {
-    printf("store_scenario_outline_content\n");
+    // printf("store_scenario_outline_content\n");
   }
   
   action store_examples_content {
-    printf("store_examples_content\n");
+    // printf("store_examples_content\n");
   }
   
   action store_step_content {
-    printf("store_step_content\n");
+    // printf("store_step_content\n");
   }
   
   action store_comment_content {
     if(parser->store_comment_content != NULL) {
       parser->store_comment_content(parser->listener, parser->data, PTR_TO(body_start), LEN(body_start,fpc), parser->line_number);
     }
-    printf("store_comment_content\n");
+    // printf("store_comment_content\n");
   }
   
   action store_tag_content {
-    printf("store_tag_content\n");
+    // printf("store_tag_content\n");
     if (parser->store_tag_content != NULL) {
       parser->store_tag_content(parser->listener, parser->data, PTR_TO(body_start), LEN(body_start, fpc), parser->line_number);
     }
   }
   
   action store_pystring_content {
-    printf("store_pystring_content\n");
+    // printf("store_pystring_content\n");
   }
   
   action inc_line_number {
     parser->line_number += 1;
-    printf("inc_line_number\n");
+    // printf("inc_line_number\n");
   }
     
   action last_newline {
-    printf("last_newline\n");
+    // printf("last_newline\n");
   }
   
   action start_keyword {
     MARK(keyword_start, fpc);
-    printf("start_keyword\n");
+    // printf("start_keyword\n");
   }
   
   action end_keyword {
     MARK(keyword_end, fpc);
     MARK(body_start, fpc + 1);
-    printf(" keyword found\n ");
+    // printf(" keyword found\n ");
   }
   
   action next_keyword_start {
     MARK(body_end, fpc);
-    printf("next_keyword_start\n");
+    // printf("next_keyword_start\n");
   }
   
   action end_table {
-    //printf("end_table\n");
+    // printf("end_table\n");
   }
  
   action end_feature {
-    printf("end_feature\n");
+    // printf("end_feature\n");
   }
 
   include parser_common "parser_common.<%= i18n_language %>.rl";   
