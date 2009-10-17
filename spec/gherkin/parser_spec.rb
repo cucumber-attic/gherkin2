@@ -3,15 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 module Gherkin
   module Parser
-    describe "parsing" do
-      before do
-        @listener = Gherkin::SexpRecorder.new
-        @feature = Gherkin::Parser['C'].new(@listener)
-      end
-
-      def scan_file(file)
-        Gherkin::Parser['en'].new(@listener).scan(File.new(File.dirname(__FILE__) + "/gherkin_parser/" + file).read)
-      end
+    shared_examples_for "a Gherkin parser" do
 
       describe "Comments" do
         it "should parse a one line comment" do
