@@ -7,17 +7,27 @@
 #include <stddef.h>
 #endif
 
+
+typedef void (*action_cb)(void *listener, void *data, const char *at, size_t length);
+
 typedef struct parser {
   int cs;
-  size_t body_start;
   int content_len;
   size_t nread;
   size_t mark;
-  size_t field_start;
+  size_t keyword_start;
+  size_t keyword_end;
+  size_t next_keyword_start;
+  size_t body_start;
+  size_t body_end;
   size_t field_len;
   size_t query_start;
+
+  void *listener;
+  void *data;
+
+  action_cb store_comment_content;
   
-//  void *data; (I think this was storing the params hash.  Confusing because ragel uses data a lot
 
 } parser;
 

@@ -16,7 +16,19 @@ static VALUE mParser;
 static VALUE cCParser; 
 static VALUE eCParserError;
 
-void CParser_free(void *data) {
+void store_comment_content(void *listener, void *data, const char *at, size_t length) 
+{ 
+  VALUE val = Qnil;
+
+  val = rb_str_new(at, length);
+  printf("OH HAI THERE"); 
+//  VALUE listener = rb_iv_get(listener, "@listener");
+  rb_funcall(listener, rb_intern("comment"), 2, val, 2);
+}
+  
+
+void CParser_free(void *data) 
+{
   if(data) {
     free(data);
   }
@@ -26,6 +38,7 @@ VALUE CParser_alloc(VALUE klass)
 {
   VALUE obj;
   parser *psr = ALLOC_N(parser, 1);
+  psr->store_comment_content = store_comment_content;
   parser_init(psr);
 
   obj = Data_Wrap_Struct(klass, NULL, CParser_free, psr);
@@ -35,9 +48,11 @@ VALUE CParser_alloc(VALUE klass)
 
 VALUE CParser_init(VALUE self, VALUE listener)
 {
+  rb_iv_set(self, "@listener", listener);
   parser *psr = NULL;
   DATA_GET(self, parser, psr);
   parser_init(psr);
+  psr->listener = ROBJECT(listener);
 
   return self;
 }
