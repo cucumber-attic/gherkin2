@@ -32,6 +32,16 @@ void store_tag_content(void *listener, void *data, const char *at, size_t length
   rb_funcall(listener, rb_intern("tag"), 2, val, INT2FIX(line)); 
 } 
 
+void store_feature_content(void *listener, void *data, const char *at, size_t length, int current_line)
+{
+  VALUE con = Qnil, kw = Qnil;
+  con = rb_str_new(at, length);
+  rb_funcall(con, rb_intern("strip!"), 0);
+  // Fake keyword for Feature (English only right now)
+  kw = rb_str_new2("Feature");
+  rb_funcall(listener, rb_intern("feature"), 3, kw, con, INT2FIX(current_line)); 
+}
+
 void CParser_free(void *data) 
 {
   if(data) {
@@ -45,6 +55,7 @@ VALUE CParser_alloc(VALUE klass)
   parser *psr = ALLOC_N(parser, 1);
   psr->store_comment_content = store_comment_content;
   psr->store_tag_content = store_tag_content;
+  psr->store_feature_content = store_feature_content;
   parser_init(psr);
 
   obj = Data_Wrap_Struct(klass, NULL, CParser_free, psr);

@@ -38,6 +38,9 @@
   
   action store_feature_content {
     printf("store_feature_content\n");
+    if (parser->store_feature_content != NULL) {
+			parser->store_feature_content(parser->listener, parser->data, PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
+    }
   }
   
   action store_background_content {
