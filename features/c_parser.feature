@@ -12,7 +12,6 @@ Feature: C Parser
       """
     Then there should be no syntax errors
   
-  @wip
   Scenario: Parsing a comment
     Given the following text is parsed:
       """

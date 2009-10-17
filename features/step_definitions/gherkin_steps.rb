@@ -12,7 +12,6 @@ Then "there should be no syntax errors" do
 end
 
 Then /^there should be a syntax error on (line \d+)$/ do |line|
-  puts listener.to_sexp
   listener.line(line).should include(:syntax_error, line)
 end
 
