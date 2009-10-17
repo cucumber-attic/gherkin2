@@ -23,7 +23,14 @@ void store_comment_content(void *listener, void *data, const char *at, size_t le
   val = rb_str_new(at, length);
   rb_funcall(listener, rb_intern("comment"), 2, val, INT2FIX(line));
 }
-  
+
+void store_tag_content(void *listener, void *data, const char *at, size_t length, int line)
+{
+  VALUE val = Qnil;
+
+  val = rb_str_new(at, length);
+  rb_funcall(listener, rb_intern("tag"), 2, val, INT2FIX(line)); 
+} 
 
 void CParser_free(void *data) 
 {
@@ -37,6 +44,7 @@ VALUE CParser_alloc(VALUE klass)
   VALUE obj;
   parser *psr = ALLOC_N(parser, 1);
   psr->store_comment_content = store_comment_content;
+  psr->store_tag_content = store_tag_content;
   parser_init(psr);
 
   obj = Data_Wrap_Struct(klass, NULL, CParser_free, psr);

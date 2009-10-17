@@ -70,6 +70,9 @@
   
   action store_tag_content {
     printf("store_tag_content\n");
+    if (parser->store_tag_content != NULL) {
+      parser->store_tag_content(parser->listener, parser->data, PTR_TO(body_start), LEN(body_start, fpc), parser->line_number);
+    }
   }
   
   action store_pystring_content {

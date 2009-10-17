@@ -29,6 +29,7 @@ typedef struct parser {
   void *data;
 
   listener_cb store_comment_content;
+  listener_cb store_tag_content;
 } parser;
 
 int parser_init(parser *psr);
