@@ -1,85 +1,101 @@
+#include "gherkin_parser.h"
 #include <stdio.h>
+#include <assert.h>
+#include <stdlib.h>
+#include <ctype.h>
 #include <string.h>
-#include <ruby.h>
+
+
+#define LEN(AT, FPC) (FPC - buffer - parser->AT)
+#define MARK(M,FPC) (parser->M = (FPC) - buffer)
+
+/** Machine **/
 
 %%{
   machine parser;
   
+  action mark {MARK(mark, fpc); }
+  action start_field { MARK(field_start, fpc); }
+  action write_field { 
+    parser->field_len = LEN(field_start, fpc);
+  }
+
+  action start_value { MARK(mark, fpc); }
+
   action begin_content {
-    //printf("begin_content\n");
+    printf("begin_content\n");
   }
   
   action init_pystring {
-    //printf("init_pystring\n");
+    printf("init_pystring\n");
   }
   
   action start_pystring {
-    //printf("start_pystring\n");
+    printf("start_pystring\n");
   }
   
   action start_line {
-    //printf("start_line\n");
+    printf("start_line\n");
   }
   
   action end_line {
-    //printf("end_line\n");
+    printf("end_line\n");
   }
   
   action store_feature_content {
-    //printf("store_feature_content\n");
+    printf("store_feature_content\n");
   }
   
   action store_background_content {
-    //printf("store_background_content\n");
+    printf("store_background_content\n");
   }
   
   action store_scenario_content {
-    //printf("store_scenario_content\n");
+    printf("store_scenario_content\n");
   }
   
   action store_scenario_outline_content {
-    //printf("store_scenario_outline_content\n");
+    printf("store_scenario_outline_content\n");
   }
   
   action store_examples_content {
-    //printf("store_examples_content\n");
+    printf("store_examples_content\n");
   }
   
   action store_step_content {
-    //printf("store_step_content\n");
+    printf("store_step_content\n");
   }
   
   action store_comment_content {
-    //printf("store_comment_content\n");
+    printf("store_comment_content\n");
   }
   
   action store_tag_content {
-    //printf("store_tag_content\n");
-    rb_funcall(listener, rb_intern("tag"), 0);
+    printf("store_tag_content\n");
   }
   
   action store_pystring_content {
-    //printf("store_pystring_content\n");
+    printf("store_pystring_content\n");
   }
   
   action inc_line_number {
-    //printf("inc_line_number\n");
+    printf("inc_line_number\n");
   }
     
   action last_newline {
-    //printf("last_newline\n");
+    printf("last_newline\n");
   }
   
   action start_keyword {
-    //printf("start_keyword\n");
+    printf("start_keyword\n");
   }
   
   action end_keyword {
-    //printf("end_keyword\n");
+    printf("end_keyword\n");
   }
   
   action next_keyword_start {
-    //printf("next_keyword_start\n");
+    printf("next_keyword_start\n");
   }
   
   action end_table {
@@ -87,47 +103,78 @@
   }
  
   action end_feature {
-    //printf("end_feature\n");
+    printf("end_feature\n");
   }
-  
-  include parser_common "parser_common.<%= i18n_language %>.rl"; 
+
+  include parser_common "parser_common.<%= i18n_language %>.rl";   
+
 }%%
 
+/** Data **/
 %% write data;
 
-static VALUE mGherkin;
-static VALUE mParser;
-static VALUE cCParser;
-
-static VALUE CParser_init(VALUE self, VALUE listener)
-{
-  rb_iv_set(self, "@listener", listener);
-  return self;
+int parser_init(parser *parser) {
+  int cs = 0;
+  %% write init;
+  parser->cs = cs;
+  parser->body_start = 0;
+  parser->content_len = 0;
+  parser->mark = 0;
+  parser->nread = 0;
+  parser->field_len = 0;
+  parser->field_start = 0;
+  
+  return(1);
 }
 
-static VALUE CParser_scan(VALUE self, VALUE text)
-{
-  int cs;
-  char *p = RSTRING_PTR(text);
-  strcat(p, "\n%_FEATURE_END_%");
-  char *pe = p + strlen(p);
-  char *eof = pe;
+/** exec **/
+size_t parser_scan(parser *parser, const char *buffer, size_t len, size_t off) {
+  const char *p, *pe, *eof;
+  int cs = parser->cs;
+
+  assert(off <= len && "offset past end of buffer");
+
+  p = buffer+off;
+  pe = buffer+len;
+  eof = pe;
+
+  assert(*pe == '\0' && "pointer does not end on NUL");
+  assert(pe - p == len - off && "pointers aren't same distance");
+
+  %% write exec;
+
+  parser->cs = cs;
+  parser->nread += p - (buffer + off);
   
-  VALUE listener = rb_iv_get(self, "@listener");
-  
-  %%{
-    write init;
-    write exec;
-  }%%
-  
-  return Qnil;
+  assert(p <= pe && "buffer overflow after parsing execute");
+  assert(parser->nread <= len && "nread longer than length");
+  assert(parser->body_start <= len && "body starts after buffer end");
+  assert(parser->mark < len && "mark is after buffer end");
+  assert(parser->field_len <= len && "field has length longer than the whole buffer");
+  assert(parser->field_start < len && "field starts after buffer end");
+
+//  if(parser->body_start) {
+//    /* final \r\n combo encountered so stop right here??? */
+////    %%write eof;
+//    parser->nread++;
+//  }
+
+// Reset nread so that a new string can be scanned. ?
+//  There's more to be done than just resetting nread
+
+// re-init??? so we don't have to bother resetting between scans?
+//  parser->nread = 0;
+//  parser->cs = cs;
+//  parser->body_start = 0;
+//  parser->content_len = 0;
+//  parser->mark = 0;
+//  parser->nread = 0;
+//  parser->field_len = 0;
+//  parser->field_start = 0;
+
+  return(parser->nread);
 }
 
-void Init_gherkin_parser() {
-  mGherkin = rb_define_module("Gherkin");
-  mParser = rb_define_module_under(mGherkin, "Parser");
-  cCParser = rb_define_class_under(mParser, "CParser", rb_cObject);
-  
-  rb_define_method(cCParser, "initialize", CParser_init, 1);
-  rb_define_method(cCParser, "scan", CParser_scan, 1);
+int parser_has_error(parser *parser) {
+  return parser->cs == parser_error;
 }

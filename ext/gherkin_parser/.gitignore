@@ -1,5 +1,5 @@
 Makefile
 *.bundle
 *.log
-*.c
+parser_en.c
 *.o
