@@ -6,7 +6,7 @@ module Gherkin
     describe Table do
       before do
         @listener = Gherkin::SexpRecorder.new
-        @table = Table.new(@listener, 1)
+        @table = Gherkin::Parser['en'].new(@listener)
       end
     
       tables = {

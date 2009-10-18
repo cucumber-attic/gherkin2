@@ -102,10 +102,33 @@ module Gherkin
         action next_keyword_start {
           @next_keyword_start = p
         }
+
+        action start_table {
+          p = p - 1
+          @rows = []
+          @table_start_line = @line
+        }
+
+        action start_row {
+          current_row = []
+        }
+ 
+        action store_cell_content {
+          con = data[@content_start...p].pack("c*").strip
+          current_row << con
+        }
+
+        action store_row {
+          @rows << current_row
+        }
+
+        action store_table {
+          if @rows.size != 0
+            @listener.table(@rows, @current_line)
+          end 
+        }
  
         action end_table {
-          table_to_parse = '|' + data[@content_start...p].pack("c*").strip
-          Gherkin::Parser::Table.new(@listener, @current_line).scan(table_to_parse)
           p = p - 1
         }
 
