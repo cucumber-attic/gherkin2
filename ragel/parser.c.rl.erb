@@ -14,32 +14,31 @@
 
 %%{
   machine parser;
-  
+ 
   action begin_content {
 		MARK(content_start, fpc);
     parser->current_line = parser->line_number;
   }
   
   action init_pystring {
-    // // printf("init_pystring\n");
+    // printf("init_pystring\n");
   }
   
   action start_pystring {
-    // // printf("start_pystring\n");
+    // printf("start_pystring\n");
   }
   
   action start_line {
-    // // printf("start_line\n");
+    // printf("start_line\n");
   }
   
   action end_line {
-    // // printf("end_line\n");
+    // printf("end_line\n");
   }
   
   action store_feature_content {
-   // printf("store_feature_content\n");
     if (parser->store_feature_content != NULL) {
-			parser->store_feature_content(parser->listener, parser->data, PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
+			parser->store_feature_content(parser->listener, parser->data, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
     }
   }
   
@@ -67,11 +66,9 @@
     if(parser->store_comment_content != NULL) {
       parser->store_comment_content(parser->listener, parser->data, PTR_TO(content_start), LEN(content_start,fpc), parser->line_number);
     }
-    // printf("store_comment_content\n");
   }
   
   action store_tag_content {
-    // printf("store_tag_content\n");
     if (parser->store_tag_content != NULL) {
       parser->store_tag_content(parser->listener, parser->data, PTR_TO(content_start), LEN(content_start, fpc), parser->line_number);
     }
@@ -83,21 +80,23 @@
   
   action inc_line_number {
     parser->line_number += 1;
-    // printf("inc_line_number\n");
   }
     
   action last_newline {
     // printf("last_newline\n");
   }
-  
+ 
   action start_keyword {
-    MARK(keyword_start, fpc);
-    // printf("start_keyword\n");
+    if(parser->mark == 0) {
+      MARK(mark, fpc);
+    }
   }
   
   action end_keyword {
     MARK(keyword_end, fpc);
+    MARK(keyword_start, PTR_TO(mark));
     MARK(content_start, fpc + 1);
+    parser->mark = 0;
     // printf(" keyword found\n ");
   }
   

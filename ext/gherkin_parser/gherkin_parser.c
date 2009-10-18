@@ -32,13 +32,15 @@ void store_tag_content(void *listener, void *data, const char *at, size_t length
   rb_funcall(listener, rb_intern("tag"), 2, val, INT2FIX(line)); 
 } 
 
-void store_feature_content(void *listener, void *data, const char *at, size_t length, int current_line)
+void store_feature_content(void *listener, void *data, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
+  kw = rb_str_new(keyword_at, keyword_length);
   con = rb_str_new(at, length);
   rb_funcall(con, rb_intern("strip!"), 0);
+  rb_funcall(kw, rb_intern("strip!"), 0);
+  rb_funcall(kw, rb_intern("chop!"), 0);
   // Fake keyword for Feature (English only right now)
-  kw = rb_str_new2("Feature");
   rb_funcall(listener, rb_intern("feature"), 3, kw, con, INT2FIX(current_line)); 
 }
 
