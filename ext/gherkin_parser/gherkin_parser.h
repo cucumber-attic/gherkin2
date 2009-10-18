@@ -32,6 +32,8 @@ typedef struct parser {
   listener_cb store_comment_content;
   listener_cb store_tag_content;
   long_listener_cb store_feature_content;
+  long_listener_cb store_scenario_content;
+  long_listener_cb store_step_content;
 } parser;
 
 int parser_init(parser *psr);

@@ -39,6 +39,10 @@
   action store_feature_content {
     if (parser->store_feature_content != NULL) {
 			parser->store_feature_content(parser->listener, parser->data, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
+      if(parser->content_end != 0) {
+        fpc = PTR_TO(content_end - 1);
+      }
+      parser->content_end = 0;
     }
   }
   
@@ -47,7 +51,13 @@
   }
   
   action store_scenario_content {
-    // printf("store_scenario_content\n");
+    if (parser->store_scenario_content != NULL) {
+			parser->store_scenario_content(parser->listener, parser->data, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
+      if(parser->content_end != 0) {
+        fpc = PTR_TO(content_end - 1);
+      }
+      parser->content_end = 0;
+    }
   }
   
   action store_scenario_outline_content {
@@ -59,7 +69,10 @@
   }
   
   action store_step_content {
-    // printf("store_step_content\n");
+    if (parser->store_step_content != NULL) {
+			parser->store_step_content(parser->listener, parser->data, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, fpc), parser->current_line);
+    }
+    printf("store step content\n");
   }
   
   action store_comment_content {
@@ -97,12 +110,10 @@
     MARK(keyword_start, PTR_TO(mark));
     MARK(content_start, fpc + 1);
     parser->mark = 0;
-    // printf(" keyword found\n ");
   }
   
   action next_keyword_start {
     MARK(content_end, fpc);
-    // printf("next_keyword_start\n");
   }
   
   action end_table {

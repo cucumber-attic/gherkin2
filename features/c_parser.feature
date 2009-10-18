@@ -8,7 +8,6 @@ Feature: C Parser
     Given the following text is parsed:
       """
       Feature: blah
-      %_FEATURE_END_%
       """
     Then there should be no syntax errors
   
@@ -17,6 +16,5 @@ Feature: C Parser
       """
       # A comment
       Feature: Hello
-      %_FEATURE_END_%
       """
     Then there should be no syntax errors

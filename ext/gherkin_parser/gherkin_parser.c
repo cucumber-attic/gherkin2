@@ -40,8 +40,30 @@ void store_feature_content(void *listener, void *data, const char *keyword_at, s
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("chop!"), 0);
-  // Fake keyword for Feature (English only right now)
   rb_funcall(listener, rb_intern("feature"), 3, kw, con, INT2FIX(current_line)); 
+}
+
+void store_scenario_content(void *listener, void *data, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+{
+  VALUE con = Qnil, kw = Qnil;
+  kw = rb_str_new(keyword_at, keyword_length);
+  con = rb_str_new(at, length);
+  // Need multiline strip for con here
+  rb_funcall(con, rb_intern("strip!"), 0);
+  rb_funcall(kw, rb_intern("strip!"), 0);
+  rb_funcall(kw, rb_intern("chop!"), 0);
+  rb_funcall(listener, rb_intern("scenario"), 3, kw, con, INT2FIX(current_line)); 
+}
+
+void store_step_content(void *listener, void *data, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+{
+  VALUE con = Qnil, kw = Qnil;
+  kw = rb_str_new(keyword_at, keyword_length);
+  con = rb_str_new(at, length);
+  // Need multiline strip for con here
+  rb_funcall(con, rb_intern("strip!"), 0);
+  rb_funcall(kw, rb_intern("strip!"), 0);
+  rb_funcall(listener, rb_intern("step"), 3, kw, con, INT2FIX(current_line)); 
 }
 
 void CParser_free(void *data) 
@@ -58,6 +80,8 @@ VALUE CParser_alloc(VALUE klass)
   psr->store_comment_content = store_comment_content;
   psr->store_tag_content = store_tag_content;
   psr->store_feature_content = store_feature_content;
+  psr->store_scenario_content = store_scenario_content;
+  psr->store_step_content = store_step_content;
   parser_init(psr);
 
   obj = Data_Wrap_Struct(klass, NULL, CParser_free, psr);
@@ -94,6 +118,7 @@ VALUE CParser_scan(VALUE self, VALUE data)
  
   DATA_GET(self, parser, psr);
 
+  rb_str_append(data, rb_str_new2("\n%_FEATURE_END_%"));
   dptr = RSTRING_PTR(data);
   dlen = RSTRING_LEN(data);
 
