@@ -47,7 +47,13 @@
   }
   
   action store_background_content {
-    // printf("store_background_content\n");
+    if (parser->store_background_content != NULL) {
+			parser->store_background_content(parser->listener, parser->data, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
+      if(parser->content_end != 0) {
+        fpc = PTR_TO(content_end - 1);
+      }
+      parser->content_end = 0;
+    }
   }
   
   action store_scenario_content {
@@ -61,18 +67,29 @@
   }
   
   action store_scenario_outline_content {
-    // printf("store_scenario_outline_content\n");
+    if (parser->store_scenario_outline_content != NULL) {
+			parser->store_scenario_outline_content(parser->listener, parser->data, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
+      if(parser->content_end != 0) {
+        fpc = PTR_TO(content_end - 1);
+      }
+      parser->content_end = 0;
+    }
   }
   
   action store_examples_content {
-    // printf("store_examples_content\n");
+    if (parser->store_examples_content != NULL) {
+			parser->store_examples_content(parser->listener, parser->data, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
+      if(parser->content_end != 0) {
+        fpc = PTR_TO(content_end - 1);
+      }
+      parser->content_end = 0;
+    }
   }
   
   action store_step_content {
     if (parser->store_step_content != NULL) {
 			parser->store_step_content(parser->listener, parser->data, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, fpc), parser->current_line);
     }
-    printf("store step content\n");
   }
   
   action store_comment_content {

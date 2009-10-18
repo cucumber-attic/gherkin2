@@ -55,6 +55,42 @@ void store_scenario_content(void *listener, void *data, const char *keyword_at, 
   rb_funcall(listener, rb_intern("scenario"), 3, kw, con, INT2FIX(current_line)); 
 }
 
+void store_scenario_outline_content(void *listener, void *data, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+{
+  VALUE con = Qnil, kw = Qnil;
+  kw = rb_str_new(keyword_at, keyword_length);
+  con = rb_str_new(at, length);
+  // Need multiline strip for con here
+  rb_funcall(con, rb_intern("strip!"), 0);
+  rb_funcall(kw, rb_intern("strip!"), 0);
+  rb_funcall(kw, rb_intern("chop!"), 0);
+  rb_funcall(listener, rb_intern("scenario_outline"), 3, kw, con, INT2FIX(current_line)); 
+}
+
+void store_background_content(void *listener, void *data, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+{
+  VALUE con = Qnil, kw = Qnil;
+  kw = rb_str_new(keyword_at, keyword_length);
+  con = rb_str_new(at, length);
+  // Need multiline strip for con here
+  rb_funcall(con, rb_intern("strip!"), 0);
+  rb_funcall(kw, rb_intern("strip!"), 0);
+  rb_funcall(kw, rb_intern("chop!"), 0);
+  rb_funcall(listener, rb_intern("background"), 3, kw, con, INT2FIX(current_line)); 
+}
+
+void store_examples_content(void *listener, void *data, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+{
+  VALUE con = Qnil, kw = Qnil;
+  kw = rb_str_new(keyword_at, keyword_length);
+  con = rb_str_new(at, length);
+  // Need multiline strip for con here
+  rb_funcall(con, rb_intern("strip!"), 0);
+  rb_funcall(kw, rb_intern("strip!"), 0);
+  rb_funcall(kw, rb_intern("chop!"), 0);
+  rb_funcall(listener, rb_intern("examples"), 3, kw, con, INT2FIX(current_line)); 
+}
+
 void store_step_content(void *listener, void *data, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
@@ -81,6 +117,9 @@ VALUE CParser_alloc(VALUE klass)
   psr->store_tag_content = store_tag_content;
   psr->store_feature_content = store_feature_content;
   psr->store_scenario_content = store_scenario_content;
+  psr->store_scenario_outline_content = store_scenario_outline_content;
+  psr->store_background_content = store_background_content;
+  psr->store_examples_content = store_examples_content;
   psr->store_step_content = store_step_content;
   parser_init(psr);
 
