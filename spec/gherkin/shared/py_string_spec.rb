@@ -20,17 +20,17 @@ Feature: some feature
     """
     Then bar
 EOS
-        @listener.should_receive(:py_string).with("      Hello\n    Goodbye", 4, 4)
+        @listener.should_receive(:py_string).with(4, "      Hello\n    Goodbye", 4)
         @feature.scan(str)
       end
 
       it "should parse a simple py_string" do
-        @listener.should_receive(:py_string).with("I am a py_string", 1, 0)
+        @listener.should_receive(:py_string).with(0, "I am a py_string", 1)
         @feature.scan ps("I am a py_string")
       end
 
       it "should parse an empty py_string" do
-        @listener.should_receive(:py_string).with("", 4, 0)
+        @listener.should_receive(:py_string).with(0, "", 4)
         @feature.scan("Feature: Hi\nScenario: Hi\nGiven a step\n\"\"\"\n\"\"\"")
       end
 
@@ -41,24 +41,24 @@ py_string = <<EOS
 
 """
 EOS
-        @listener.should_receive(:py_string).with("", 1, 0)
+        @listener.should_receive(:py_string).with(0, "", 1)
         @feature.scan(py_string)
       end
       
       it "should parse content separated by two newlines" do
         @feature.scan ps("A\n\nB")
         @listener.to_sexp.should == [
-          [:py_string, "A\n\nB", 1, 0],
+          [:py_string, 0, "A\n\nB", 1],
         ]
       end
       
       it "should parse a multiline string" do
-        @listener.should_receive(:py_string).with("A\nB\nC\nD", 1, 0)
+        @listener.should_receive(:py_string).with(0, "A\nB\nC\nD", 1)
         @feature.scan ps("A\nB\nC\nD")
       end
             
       it "should ignore unescaped quotes inside the string delimeters" do
-        @listener.should_receive(:py_string).with("What does \"this\" mean?", 1, 0)
+        @listener.should_receive(:py_string).with(0, "What does \"this\" mean?", 1)
         @feature.scan ps('What does "this" mean?')
       end
       
@@ -69,12 +69,12 @@ str = <<EOS
  Line two
     """
 EOS
-        @listener.should_receive(:py_string).with("      Line one\n Line two", 1, 4)
+        @listener.should_receive(:py_string).with(4, "      Line one\n Line two", 1)
         @feature.scan(str)
       end
             
       it "should preserve tabs within the content" do
-        @listener.should_receive(:py_string).with("I have\tsome tabs\nInside\t\tthe content", 1, 0)
+        @listener.should_receive(:py_string).with(0, "I have\tsome tabs\nInside\t\tthe content", 1)
         @feature.scan ps("I have\tsome tabs\nInside\t\tthe content")
       end
   
@@ -93,7 +93,7 @@ Feature: Sample
 
 EOS
         
-        @listener.should_receive(:py_string).with(py_string, 1, 0)
+        @listener.should_receive(:py_string).with(0, py_string, 1)
         @feature.scan ps(py_string)
       end
     end

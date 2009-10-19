@@ -79,7 +79,7 @@ module Gherkin
         }
  
         action store_pystring_content {
-          @listener.py_string(@lines.join("\n"), @current_line, @start_col) 
+          @listener.py_string(@start_col, @lines.join("\n"), @current_line) 
         }
  
         action inc_line_number {
