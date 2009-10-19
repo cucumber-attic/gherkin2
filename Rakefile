@@ -28,3 +28,6 @@ end
 Dir['tasks/**/*.rake'].each { |rake| load rake }
 
 task :default => [:spec, :cucumber]
+
+desc "Run all C parser specs and features"
+task :c_parser => ["spec:c_parser", "cucumber:c_parser"]
