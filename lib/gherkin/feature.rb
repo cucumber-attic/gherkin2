@@ -3,10 +3,25 @@ require 'forwardable'
 
 module Gherkin
   # Parses the Cucumber Feature format
-  # Sends events to the listener as they are received
-  #   <insert event list here>
-  # ParsingError will be raised if the parser itself cannot continue
-  # Syntax error if the text to scan is well formed, but syntactically incorrect
+  #
+  # Calls methods on the listener corresponding to events as they happen. All keywords are the
+  # I18N names for the event ("Feature" for English, "Egenskap" for Norwegian, etc).
+  #
+  #   feature(keyword, content, line_number)
+  #   background(keyword, content, line_number)
+  #   scenario(keyword, content, line_number)
+  #   scenario_outline(keyword, content, line_number)
+  #   examples(keyword, content, line_number)
+  #   step(keyword, content, line_number)
+  #   comment(content, line_number)
+  #   tag(tag_name, line_number)
+  #   table(content_array, line_number)
+  #   py_string(content, line_number, start_column)
+  #   
+  # ParsingError will be raised if Gherkin cannot continue parsing input.
+  #
+  # SyntaxError will be raised if the text to scan is well formed, but syntactically incorrect:
+  #
   #   Gherkin::Feature.new('it', Listener.new) raises FeatureSyntaxError on error
   #   Gherkin::Feature.new('en', AstBuilder.new, :raise_on_error => false) sends #syntax_error message to listener
   class Feature
