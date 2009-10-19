@@ -16,6 +16,7 @@ module Gherkin
       it_should_behave_like "a Gherkin parser"
       it_should_behave_like "a Gherkin parser parsing tags"
       it_should_behave_like "a Gherkin parser parsing py_strings"
+      it_should_behave_like "a Gherkin parser parsing tables"
     end
   end
 end
