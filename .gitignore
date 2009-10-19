@@ -5,3 +5,4 @@ rdoc
 pkg
 *.dot
 *.png
+*.so

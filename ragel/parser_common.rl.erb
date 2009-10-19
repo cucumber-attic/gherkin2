@@ -30,9 +30,11 @@
   Tag = ( '@' [^@\r\n\t ]+ >begin_content ) %store_tag_content;
   Tags = space* (Tag space*)+ EOL+;
   
-  StartTable = space* '|';
-  EndTable = EOL space* ^('|' | space) >next_keyword_start;    
-  Table = StartTable %begin_content any+ :>> EndTable @end_table;
+  StartTable = space* '|' >start_table;
+  EndTable = EOL space* ^('|') >next_keyword_start;    
+  Cell = '|' (any - '|')* >begin_cell_content %store_cell_content;
+  Row = space* Cell* >start_row '|' :>> (space* EOL+ space*) %store_row;
+  Table = StartTable :>> Row+ %store_table <: EndTable?;
   
   StartPyString = '"""' >start_pystring space* EOL; 
   EndPyString = '"""';

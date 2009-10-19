@@ -1,17 +1,9 @@
 #encoding: utf-8
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 module Gherkin
   module Parser
-    describe "parsing" do
-      before do
-        @listener = Gherkin::SexpRecorder.new
-        @feature = Gherkin::Parser['en'].new(@listener)
-      end
-
-      def scan_file(file)
-        Gherkin::Parser['en'].new(@listener).scan(File.new(File.dirname(__FILE__) + "/gherkin_parser/" + file).read)
-      end
+    shared_examples_for "a Gherkin parser" do
 
       describe "Comments" do
         it "should parse a one line comment" do
@@ -242,7 +234,7 @@ Given I am a step
           @feature.scan("Given I have a string\n\"\"\"\nhello\nworld\n\"\"\"")
           @listener.to_sexp.should == [
             [:step, "Given", "I have a string", 1],
-            [:py_string, "hello\nworld", 2, 0]
+            [:py_string, 0, "hello\nworld", 2]
           ]
         end
       end
@@ -402,7 +394,7 @@ Given I am a step
             [:step, "Then", "I am happy", 36],
             [:scenario, "Scenario", "Hammerzeit", 38],
             [:step, "Given", "All work and no play", 39],
-            [:py_string, "      Makes Homer something something", 40, 6],
+            [:py_string, 6, "      Makes Homer something something", 40],
             [:step, "Then", "crazy", 43]
           ]
         end        

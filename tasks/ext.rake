@@ -1,4 +1,4 @@
-CLEAN.include %w(**/*.{o,bundle,jar,so,obj,pdb,lib,def,exp,log} ext/*/Makefile ext/*/*.c ext/*/conftest.dSYM)
+CLEAN.include %w(**/*.{o,bundle,jar,so,obj,pdb,lib,def,exp,log} ext/*/Makefile ext/*/gherkin_lexer.c.c ext/*/conftest.dSYM)
 WIN      = (RUBY_PLATFORM =~ /mswin|cygwin/)
 
 def ext_task(name)

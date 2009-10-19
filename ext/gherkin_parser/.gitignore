@@ -1,0 +1,5 @@
+Makefile
+*.bundle
+*.log
+parser_en.c
+*.o

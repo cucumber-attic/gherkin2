@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
-  s.date = %q{2009-10-15}
+  s.date = %q{2009-10-18}
   s.description = %q{A fast Gherkin parser in Ragel}
   s.email = %q{cukes@googlegroups.com}
   s.extra_rdoc_files = [
@@ -23,7 +23,11 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION.yml",
      "cucumber.yml",
+     "ext/gherkin_parser/.gitignore",
+     "ext/gherkin_parser/ext_help.h",
      "ext/gherkin_parser/extconf.rb",
+     "ext/gherkin_parser/gherkin_parser.c",
+     "ext/gherkin_parser/gherkin_parser.h",
      "features/c_parser.feature",
      "features/feature_policy.feature",
      "features/step_definitions/gherkin_steps.rb",
@@ -73,7 +77,6 @@ Gem::Specification.new do |s|
      "lib/gherkin/parser/parser_vi.rb",
      "lib/gherkin/parser/parser_zh-CN.rb",
      "lib/gherkin/parser/parser_zh-TW.rb",
-     "lib/gherkin/parser/table.rb",
      "lib/gherkin/syntax_policy/feature_policy.rb",
      "lib/gherkin/syntax_policy/feature_policy_state.rb",
      "lib/gherkin/syntax_policy/feature_state.rb",
@@ -83,8 +86,7 @@ Gem::Specification.new do |s|
      "ragel/parser.c.rl.erb",
      "ragel/parser.rb.rl.erb",
      "ragel/parser_common.rl.erb",
-     "ragel/table.rb.rl",
-     "ragel/table_common.rl",
+     "spec/gherkin/c_parser_spec.rb",
      "spec/gherkin/feature_policy_spec.rb",
      "spec/gherkin/gherkin_parser/complex.feature",
      "spec/gherkin/gherkin_parser/i18n_no.feature",
@@ -93,25 +95,17 @@ Gem::Specification.new do |s|
      "spec/gherkin/gherkin_parser/simple_with_comments.feature",
      "spec/gherkin/gherkin_parser/simple_with_tags.feature",
      "spec/gherkin/i18n_spec.rb",
-     "spec/gherkin/parser_spec.rb",
-     "spec/gherkin/pystring_spec.rb",
+     "spec/gherkin/rb_parser_spec.rb",
      "spec/gherkin/sexp_recorder.rb",
-     "spec/gherkin/table_spec.rb",
-     "spec/gherkin/tags_spec.rb",
+     "spec/gherkin/shared/parser_spec.rb",
+     "spec/gherkin/shared/py_string_spec.rb",
+     "spec/gherkin/shared/table_spec.rb",
+     "spec/gherkin/shared/tags_spec.rb",
      "spec/spec_helper.rb",
      "tasks/bench.rake",
      "tasks/bench/feature_builder.rb",
      "tasks/bench/generated/.gitignore",
      "tasks/bench/null_listener.rb",
-     "tasks/bench/tt/en_parser.rb",
-     "tasks/bench/tt/en_parser.tt",
-     "tasks/bench/tt/feature.rb",
-     "tasks/bench/tt/feature.tt",
-     "tasks/bench/tt/i18n.tt",
-     "tasks/bench/tt/natural_language.rb",
-     "tasks/bench/tt/table.rb",
-     "tasks/bench/tt/table.tt",
-     "tasks/bench/tt/treetop_ext.rb",
      "tasks/cucumber.rake",
      "tasks/ext.rake",
      "tasks/ragel.rake",
@@ -124,13 +118,15 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{Fast Gherkin parser}
   s.test_files = [
-    "spec/gherkin/parser_spec.rb",
-     "spec/gherkin/sexp_recorder.rb",
-     "spec/gherkin/table_spec.rb",
-     "spec/gherkin/feature_policy_spec.rb",
-     "spec/gherkin/pystring_spec.rb",
-     "spec/gherkin/tags_spec.rb",
+    "spec/gherkin/sexp_recorder.rb",
+     "spec/gherkin/c_parser_spec.rb",
      "spec/gherkin/i18n_spec.rb",
+     "spec/gherkin/shared/table_spec.rb",
+     "spec/gherkin/shared/tags_spec.rb",
+     "spec/gherkin/shared/parser_spec.rb",
+     "spec/gherkin/shared/py_string_spec.rb",
+     "spec/gherkin/rb_parser_spec.rb",
+     "spec/gherkin/feature_policy_spec.rb",
      "spec/spec_helper.rb"
   ]
 

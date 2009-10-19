@@ -79,7 +79,7 @@ module Gherkin
         }
  
         action store_pystring_content {
-          @listener.py_string(@lines.join("\n"), @current_line, @start_col) 
+          @listener.py_string(@start_col, @lines.join("\n"), @current_line) 
         }
  
         action inc_line_number {
@@ -102,10 +102,37 @@ module Gherkin
         action next_keyword_start {
           @next_keyword_start = p
         }
+
+        action start_table {
+          p = p - 1
+          @rows = []
+          @current_line = @line_number
+        }
+
+        action start_row {
+          current_row = []
+        }
+ 
+        action begin_cell_content {
+          @content_start = p
+        }
+
+        action store_cell_content {
+          con = data[@content_start...p].pack("c*").strip
+          current_row << con
+        }
+
+        action store_row {
+          @rows << current_row
+        }
+
+        action store_table {
+          if @rows.size != 0
+            @listener.table(@rows, @current_line)
+          end 
+        }
  
         action end_table {
-          table_to_parse = '|' + data[@content_start...p].pack("c*").strip
-          Gherkin::Parser::Table.new(@listener, @current_line).scan(table_to_parse)
           p = p - 1
         }
 
@@ -146,10 +173,8 @@ module Gherkin
       end
       
       def current_line_content(data, p)
-        rest = data[p..-1]
-        offset = data.length - rest.length
-        next_newline = rest.index(10) + offset
-        data[@last_newline..next_newline].pack("c*").strip
+        rest = data[@last_newline..-1]
+        rest[0..rest.index(10)||-1].pack("c*").strip
       end
     end
   end

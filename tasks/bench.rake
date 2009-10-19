@@ -73,9 +73,10 @@ class Benchmarker
   
   def report_all 
     Benchmark.bmbm do |x|
+      x.report("c_gherkin:") { run_c_gherkin }
+      x.report("rb_gherkin:") { run_rb_gherkin }
       x.report("cucumber:") { run_cucumber }
       x.report("tt:") { run_tt }
-      x.report("rb_gherkin:") { run_rb_gherkin }
     end
   end
   
@@ -90,20 +91,34 @@ class Benchmarker
   end
   
   def run_tt
-    require 'tt/en_parser'
-    parser = Cuke::Parser::I18n::EnParser.new 
-    @features.each do |feature|
-      res = parser.parse(IO.read(feature))
-      raise "Parsing error encountered in #{feature}" unless res
+    require 'cucumber'
+    # Using Cucumber's Treetop parser, but never calling #build to build the AST
+    parser = Cucumber::Parser::NaturalLanguage.new(nil, 'en').parser
+    @features.each do |file|
+      source = IO.read(file)
+      parse_tree = parser.parse(source)
+      if parse_tree.nil?
+        raise Cucumber::Parser::SyntaxError.new(parser, file, 0)
+      end
     end
   end
-  
+
   def run_rb_gherkin    
     require 'gherkin'
     require 'null_listener'
     listener = NullListener.new
     @features.each do |feature|
       parser = Gherkin::Feature.new('en', listener)
+      parser.scan(File.read(feature))
+    end
+  end
+
+  def run_c_gherkin    
+    require 'gherkin'
+    require 'null_listener'
+    listener = NullListener.new
+    @features.each do |feature|
+      parser = Gherkin::Feature.new('C', listener)
       parser.scan(File.read(feature))
     end
   end
@@ -139,6 +154,12 @@ namespace :bench do
   task :rb_gherkin do
     benchmarker = Benchmarker.new
     benchmarker.report("rb_gherkin")
+  end
+
+  desc "Benchmark the C Gherkin parser with the features in tasks/bench/generated"
+  task :c_gherkin do
+    benchmarker = Benchmarker.new
+    benchmarker.report("c_gherkin")
   end
 
   desc "Show basic statistics about the features in tasks/bench/generated"
