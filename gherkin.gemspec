@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
-  s.date = %q{2009-10-18}
+  s.date = %q{2009-10-19}
   s.description = %q{A fast Gherkin parser in Ragel}
   s.email = %q{cukes@googlegroups.com}
   s.extra_rdoc_files = [
@@ -73,10 +73,14 @@ Gem::Specification.new do |s|
      "lib/gherkin/parser/parser_ru.rb",
      "lib/gherkin/parser/parser_se.rb",
      "lib/gherkin/parser/parser_sk.rb",
+     "lib/gherkin/parser/parser_sr-Latn.rb",
+     "lib/gherkin/parser/parser_sr.rb",
+     "lib/gherkin/parser/parser_tr.rb",
      "lib/gherkin/parser/parser_uz.rb",
      "lib/gherkin/parser/parser_vi.rb",
      "lib/gherkin/parser/parser_zh-CN.rb",
      "lib/gherkin/parser/parser_zh-TW.rb",
+     "lib/gherkin/parser/table.rb",
      "lib/gherkin/syntax_policy/feature_policy.rb",
      "lib/gherkin/syntax_policy/feature_policy_state.rb",
      "lib/gherkin/syntax_policy/feature_state.rb",
