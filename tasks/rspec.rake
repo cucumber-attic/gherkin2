@@ -5,6 +5,7 @@ Spec::Rake::SpecTask.new(:spec) do |spec|
   spec.spec_opts << '--color'
   spec.spec_files = FileList['spec/**/*_spec.rb']
 end
+task :spec => [:check_dependencies, :clean, :compile]
 
 Spec::Rake::SpecTask.new(:rcov) do |spec|
   spec.libs << 'lib' << 'spec'
