@@ -1,5 +1,3 @@
-require 'gherkin/parser/table'
-
 module Gherkin
   module Parser
     I18nParserNotFound = Class.new(LoadError)
