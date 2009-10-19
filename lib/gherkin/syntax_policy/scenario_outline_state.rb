@@ -24,8 +24,15 @@ module Gherkin
       end
 
       def tag
-        @examples = false
+        @examples, @within_examples = false
         super
+      end
+
+      def table
+        if @multiline or @within_examples
+          @multiline = false
+          true
+        end
       end
 
       def step
@@ -33,7 +40,7 @@ module Gherkin
           @examples = true
         end
       end
-      
+
       def py_string
         super unless @within_examples
       end
