@@ -9,7 +9,7 @@ module Gherkin
       
       shared_examples_for "a section containing steps" do
         it "should not allow a py_string unless preceded by a step" do
-          lambda { @policy.py_string("Content", 2, 3) }.should raise_error(FeatureSyntaxError)
+          lambda { @policy.py_string(2, "Content", 3) }.should raise_error(FeatureSyntaxError)
         end
 
         it "should not allow a table unless preceded by a step" do
@@ -23,16 +23,16 @@ module Gherkin
 
           it "should not allow a py_string to follow a table" do
             @policy.table([["a", "b"]], 1, 4)
-            lambda { @policy.py_string("Content", 2, 5) }.should raise_error(FeatureSyntaxError) 
+            lambda { @policy.py_string(2, "Content", 5) }.should raise_error(FeatureSyntaxError) 
           end
 
           it "should not allow a table to follow a py_string" do
-            @policy.py_string("Content", 2, 4)
+            @policy.py_string(2, "Content", 4)
             lambda { @policy.table([["a", "b"]], 1, 5) }.should raise_error(FeatureSyntaxError)
           end
 
           it "should allow py_string to follow a step" do
-            lambda { @policy.py_string("Content", 4, 2) }.should_not raise_error(FeatureSyntaxError)
+            lambda { @policy.py_string(4, "Content", 2) }.should_not raise_error(FeatureSyntaxError)
           end
 
           it "should allow table to follow a step" do
