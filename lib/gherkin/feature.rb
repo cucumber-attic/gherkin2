@@ -16,7 +16,7 @@ module Gherkin
   #   comment(content, line_number)
   #   tag(tag_name, line_number)
   #   table(content_array, line_number)
-  #   py_string(content, line_number, start_column)
+  #   py_string(offset, content, line_number)
   #   
   # ParsingError will be raised if Gherkin cannot continue parsing input.
   #
