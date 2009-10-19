@@ -96,6 +96,16 @@ EOS
         @listener.should_receive(:py_string).with(0, py_string, 1)
         @feature.scan ps(py_string)
       end
+ 
+      it "should allow whitespace after the closing py_string delimiter" do
+str = <<EOS
+    """
+      Line one
+    """           
+EOS
+        @listener.should_receive(:py_string).with(4, "      Line one", 1)
+        @feature.scan(str)
+      end
     end
   end
 end
