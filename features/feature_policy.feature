@@ -145,7 +145,7 @@ Feature: Gherkin Feature parser/policy
       """
       Then there should be no syntax errors
 
-  Scenario: Scenario Outlines
+  Scenario: Scenario Outline with multiple Example groups
     Given the following text is parsed:
       """
       Feature: Outline Sample
@@ -165,5 +165,41 @@ Feature: Gherkin Feature parser/policy
           Examples: Only passing
             |  state   | other_state |
             | passing  | passing |
+      """
+    Then there should be no syntax errors
+
+  Scenario: Multiple Scenario Outlines with multiline outline steps
+    Given the following text is parsed:
+      """
+      Feature: Test
+        Scenario Outline: with step tables
+          Given I have the following fruits in my pantry
+            |    name     | quantity |
+            | cucumbers   |    10    |
+            | strawberrys |    5     |
+            | apricots    |    7     |
+
+          When I eat <number> <fruits> from the pantry
+          Then I should have <left> <fruits> in the pantry
+
+          Examples:
+            | number |   fruits   | left |
+            |   2    | cucumbers  |  8   |
+            |   4    | strawberrys|  1   |
+            |   2    | apricots   |  5   |
+
+        Scenario Outline: placeholder in a multiline string
+          Given my shopping list
+            \"\"\"
+              Must buy some <fruits>
+            \"\"\"
+          Then my shopping list should equal
+            \"\"\"
+              Must buy some cucumbers
+            \"\"\"
+    
+          Examples:
+            |  fruits   |
+            | cucumbers |
       """
     Then there should be no syntax errors
