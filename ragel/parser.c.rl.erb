@@ -31,10 +31,8 @@
  
   action store_pystring_content {
     if (parser->store_pystring_content != NULL) {
-// FIXME: one of these two ways compares the index, and one compares the pointer value
-//  I need to think about it.
-//      if (parser->content_start < parser->final_newline) {
-      if (PTR_TO(content_start) < PTR_TO(final_newline)) {
+      int len = LEN(content_start, PTR_TO(final_newline));
+      if (len >= 0) { // not an empty pystring
         parser->store_pystring_content(parser->listener, parser->data, parser->start_col, PTR_TO(content_start), LEN(content_start, PTR_TO(final_newline)), parser->current_line); 
       }
       else { // Empty pystring
