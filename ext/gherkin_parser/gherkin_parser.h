@@ -10,12 +10,14 @@
 
 typedef void (*listener_cb)(void *listener, void *data, const char *at, size_t length, int line);
 typedef void (*listener_long_cb)(void *listener, void *data, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int line);
+typedef void (*listener_pystring_cb)(void *listener, void *data, int start_col, const char *at, size_t length, int line);
 
 typedef struct parser {
   int cs;
   int content_len;
   int line_number;
   int current_line;
+  int start_col;
   size_t nread;
   size_t mark;
   size_t keyword_start;
@@ -25,6 +27,8 @@ typedef struct parser {
   size_t content_end;
   size_t field_len;
   size_t query_start;
+  size_t last_newline;
+  size_t final_newline;
 
   void *listener;
   void *data;
@@ -37,6 +41,7 @@ typedef struct parser {
   listener_long_cb store_background_content;
   listener_long_cb store_examples_content;
   listener_long_cb store_step_content;
+  listener_pystring_cb store_pystring_content;
 } parser;
 
 int parser_init(parser *psr);

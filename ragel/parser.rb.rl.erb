@@ -17,7 +17,6 @@ module Gherkin
         action start_pystring {
           @current_line = @line_number
           @start_col = p - @last_newline
-          start = p + 4
         }
         
         action begin_pystring_content {

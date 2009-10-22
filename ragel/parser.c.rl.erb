@@ -24,22 +24,25 @@
     MARK(content_start, fpc);
   }
 
-  action init_pystring {
-    // printf("init_pystring\n");
-  }
-  
   action start_pystring {
-    // printf("start_pystring\n");
+    parser->current_line = parser->line_number;
+    parser->start_col = fpc - buffer - parser->last_newline;
   }
-  
-  action start_line {
-    // printf("start_line\n");
-  }
-  
-  action end_line {
-    // printf("end_line\n");
-  }
-  
+ 
+  action store_pystring_content {
+    if (parser->store_pystring_content != NULL) {
+// FIXME: one of these two ways compares the index, and one compares the pointer value
+//  I need to think about it.
+//      if (parser->content_start < parser->final_newline) {
+      if (PTR_TO(content_start) < PTR_TO(final_newline)) {
+        parser->store_pystring_content(parser->listener, parser->data, parser->start_col, PTR_TO(content_start), LEN(content_start, PTR_TO(final_newline)), parser->current_line); 
+      }
+      else { // Empty pystring
+        parser->store_pystring_content(parser->listener, parser->data, parser->start_col, PTR_TO(content_start), 0, parser->current_line); 
+      } 
+    }
+  } 
+ 
   action store_feature_content {
     if (parser->store_feature_content != NULL) {
 			parser->store_feature_content(parser->listener, parser->data, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
@@ -108,16 +111,13 @@
     }
   }
   
-  action store_pystring_content {
-    // printf("store_pystring_content\n");
-  }
-  
   action inc_line_number {
     parser->line_number += 1;
+    MARK(final_newline, fpc);
   }
     
   action last_newline {
-    // printf("last_newline\n");
+    MARK(last_newline, fpc + 1);
   }
  
   action start_keyword {
@@ -184,6 +184,9 @@ int parser_init(parser *parser) {
   parser->keyword_end = 0;
   parser->next_keyword_start = 0;
   parser->line_number = 1;
+  parser->last_newline = 0;
+  parser->final_newline = 0;
+  parser->start_col = 0;
   
   return(1);
 }

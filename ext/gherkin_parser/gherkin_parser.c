@@ -102,6 +102,13 @@ void store_step_content(void *listener, void *data, const char *keyword_at, size
   rb_funcall(listener, rb_intern("step"), 3, kw, con, INT2FIX(current_line)); 
 }
 
+void store_pystring_content(void *listener, void *data, int start_col, const char *at, size_t length, int current_line)
+{
+  VALUE con = Qnil;
+  con = rb_str_new(at, length);
+  rb_funcall(listener, rb_intern("py_string"), 3, INT2FIX(start_col), con, INT2FIX(current_line));
+}
+
 void CParser_free(void *data) 
 {
   if(data) {
@@ -121,6 +128,7 @@ VALUE CParser_alloc(VALUE klass)
   psr->store_background_content = store_background_content;
   psr->store_examples_content = store_examples_content;
   psr->store_step_content = store_step_content;
+  psr->store_pystring_content = store_pystring_content;
   parser_init(psr);
 
   obj = Data_Wrap_Struct(klass, NULL, CParser_free, psr);
