@@ -14,23 +14,19 @@ module Gherkin
           @current_line = @line_number
         }
 
-        action init_pystring {
-          @lines = []
-        }
-
         action start_pystring {
           @current_line = @line_number
           @start_col = p - @last_newline
           start = p + 4
         }
-
-        action start_line {
-          line_start = p
+        
+        action begin_pystring_content {
+          @content_start = p
         }
 
-        action end_line {
-          line = data[line_start...p].pack("c*")
-          @lines << line
+        action store_pystring_content {
+          con = data[@content_start...@next_keyword_start-1].pack("c*").sub(/(\r?\n)?( )*\Z/, '')
+          @listener.py_string(@start_col, con, @current_line) 
         }
  
         action store_feature_content {          
@@ -76,10 +72,6 @@ module Gherkin
         action store_tag_content {
           con = data[@content_start...p].pack("c*").strip
           @listener.tag(con, @current_line)
-        }
- 
-        action store_pystring_content {
-          @listener.py_string(@start_col, @lines.join("\n"), @current_line) 
         }
  
         action inc_line_number {

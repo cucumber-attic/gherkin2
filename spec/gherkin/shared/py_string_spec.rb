@@ -34,14 +34,15 @@ EOS
         @feature.scan("Feature: Hi\nScenario: Hi\nGiven a step\n\"\"\"\n\"\"\"")
       end
 
-      it "should treat a string containing only newlines as an empty string" do
+      it "should treat a string containing only newlines as only newlines" do
 py_string = <<EOS
 """
 
 
+
 """
 EOS
-        @listener.should_receive(:py_string).with(0, "", 1)
+        @listener.should_receive(:py_string).with(0, "\n\n", 1)
         @feature.scan(py_string)
       end
       

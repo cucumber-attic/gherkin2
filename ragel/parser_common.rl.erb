@@ -36,10 +36,9 @@
   Row = space* Cell* >start_row '|' :>> (space* EOL+ space*) %store_row;
   Table = StartTable :>> Row+ %store_table <: EndTable?;
   
-  StartPyString = '"""' >start_pystring space* EOL; 
-  EndPyString = '"""';
-  PyStringLine = (any - EOL)* >start_line %end_line EOL;
-  PyString = space* StartPyString %init_pystring PyStringLine* space* :>> EndPyString %store_pystring_content space* EOL+;
+  StartPyString = '"""' >start_pystring space* :>> EOL; 
+  EndPyString = (space* '"""') >next_keyword_start; 
+  PyString = space* StartPyString %begin_pystring_content (^EOL | EOL)* :>> EndPyString %store_pystring_content space* EOL+;
   
   Tokens = (space | EOL)* (Tags | Comment | FeatureHeading | BackgroundHeading | ScenarioHeading | ScenarioOutlineHeading | ExamplesHeading | Step | Table | PyString)* (space | EOL)* EOF;
 
