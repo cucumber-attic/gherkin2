@@ -20,6 +20,10 @@
     parser->current_line = parser->line_number;
   }
   
+  action begin_pystring_content {
+    MARK(content_start, fpc);
+  }
+
   action init_pystring {
     // printf("init_pystring\n");
   }
