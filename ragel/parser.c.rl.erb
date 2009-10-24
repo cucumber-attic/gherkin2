@@ -33,17 +33,17 @@
     if (parser->store_pystring_content != NULL) {
       int len = LEN(content_start, PTR_TO(final_newline));
       if (len >= 0) { // not an empty pystring
-        parser->store_pystring_content(parser->listener, parser->data, parser->start_col, PTR_TO(content_start), LEN(content_start, PTR_TO(final_newline)), parser->current_line); 
+        parser->store_pystring_content(parser->listener, parser->start_col, PTR_TO(content_start), LEN(content_start, PTR_TO(final_newline)), parser->current_line); 
       }
       else { // Empty pystring
-        parser->store_pystring_content(parser->listener, parser->data, parser->start_col, PTR_TO(content_start), 0, parser->current_line); 
+        parser->store_pystring_content(parser->listener, parser->start_col, PTR_TO(content_start), 0, parser->current_line); 
       } 
     }
   } 
  
   action store_feature_content {
     if (parser->store_feature_content != NULL) {
-			parser->store_feature_content(parser->listener, parser->data, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
+			parser->store_feature_content(parser->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
       if(parser->content_end != 0) {
         fpc = PTR_TO(content_end - 1);
       }
@@ -53,7 +53,7 @@
   
   action store_background_content {
     if (parser->store_background_content != NULL) {
-			parser->store_background_content(parser->listener, parser->data, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
+			parser->store_background_content(parser->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
       if(parser->content_end != 0) {
         fpc = PTR_TO(content_end - 1);
       }
@@ -63,7 +63,7 @@
   
   action store_scenario_content {
     if (parser->store_scenario_content != NULL) {
-			parser->store_scenario_content(parser->listener, parser->data, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
+			parser->store_scenario_content(parser->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
       if(parser->content_end != 0) {
         fpc = PTR_TO(content_end - 1);
       }
@@ -73,7 +73,7 @@
   
   action store_scenario_outline_content {
     if (parser->store_scenario_outline_content != NULL) {
-			parser->store_scenario_outline_content(parser->listener, parser->data, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
+			parser->store_scenario_outline_content(parser->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
       if(parser->content_end != 0) {
         fpc = PTR_TO(content_end - 1);
       }
@@ -83,7 +83,7 @@
   
   action store_examples_content {
     if (parser->store_examples_content != NULL) {
-			parser->store_examples_content(parser->listener, parser->data, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
+			parser->store_examples_content(parser->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), parser->current_line);
       if(parser->content_end != 0) {
         fpc = PTR_TO(content_end - 1);
       }
@@ -93,19 +93,19 @@
   
   action store_step_content {
     if (parser->store_step_content != NULL) {
-			parser->store_step_content(parser->listener, parser->data, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, fpc), parser->current_line);
+			parser->store_step_content(parser->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, fpc), parser->current_line);
     }
   }
   
   action store_comment_content {
     if(parser->store_comment_content != NULL) {
-      parser->store_comment_content(parser->listener, parser->data, PTR_TO(content_start), LEN(content_start,fpc), parser->line_number);
+      parser->store_comment_content(parser->listener, PTR_TO(content_start), LEN(content_start,fpc), parser->line_number);
     }
   }
   
   action store_tag_content {
     if (parser->store_tag_content != NULL) {
-      parser->store_tag_content(parser->listener, parser->data, PTR_TO(content_start), LEN(content_start, fpc), parser->line_number);
+      parser->store_tag_content(parser->listener, PTR_TO(content_start), LEN(content_start, fpc), parser->line_number);
     }
   }
   
@@ -158,7 +158,15 @@
   }
  
   action end_feature {
-    // printf("end_feature\n");
+    if (cs < parser_first_final) {
+      if (parser->raise_parser_error != NULL) {
+        if (LEN(last_newline, PTR_TO(final_newline)) > 0) {
+          parser->raise_parser_error(parser->listener, PTR_TO(last_newline), 0, parser->line_number);   // LEN(last_newline, PTR_TO(final_newline)), parser->line_number);
+        } else {
+           // There will be many cases where last_newline and/or final_newline aren't set when we end up in an error state...what then? 
+        }
+      }
+    }
   }
 
   include parser_common "parser_common.<%= i18n_language %>.rl";   

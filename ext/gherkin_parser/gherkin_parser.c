@@ -14,9 +14,9 @@
 static VALUE mGherkin;
 static VALUE mParser;
 static VALUE cCParser; 
-static VALUE eCParserError;
+static VALUE eParserError;
 
-void store_comment_content(void *listener, void *data, const char *at, size_t length, int line) 
+void store_comment_content(void *listener, const char *at, size_t length, int line) 
 { 
   VALUE val = Qnil;
 
@@ -24,7 +24,7 @@ void store_comment_content(void *listener, void *data, const char *at, size_t le
   rb_funcall(listener, rb_intern("comment"), 2, val, INT2FIX(line));
 }
 
-void store_tag_content(void *listener, void *data, const char *at, size_t length, int line)
+void store_tag_content(void *listener, const char *at, size_t length, int line)
 {
   VALUE val = Qnil;
 
@@ -32,7 +32,15 @@ void store_tag_content(void *listener, void *data, const char *at, size_t length
   rb_funcall(listener, rb_intern("tag"), 2, val, INT2FIX(line)); 
 } 
 
-void store_feature_content(void *listener, void *data, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+void raise_parser_error(void *listener, const char *at, size_t length, int line)
+{ 
+  VALUE val = Qnil;
+  
+  val = rb_str_new(at, length);
+  rb_raise(eParserError, INT2FIX(line), val);
+}
+
+void store_feature_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
@@ -43,7 +51,7 @@ void store_feature_content(void *listener, void *data, const char *keyword_at, s
   rb_funcall(listener, rb_intern("feature"), 3, kw, con, INT2FIX(current_line)); 
 }
 
-void store_scenario_content(void *listener, void *data, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+void store_scenario_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
@@ -55,7 +63,7 @@ void store_scenario_content(void *listener, void *data, const char *keyword_at, 
   rb_funcall(listener, rb_intern("scenario"), 3, kw, con, INT2FIX(current_line)); 
 }
 
-void store_scenario_outline_content(void *listener, void *data, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+void store_scenario_outline_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
@@ -67,7 +75,7 @@ void store_scenario_outline_content(void *listener, void *data, const char *keyw
   rb_funcall(listener, rb_intern("scenario_outline"), 3, kw, con, INT2FIX(current_line)); 
 }
 
-void store_background_content(void *listener, void *data, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+void store_background_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
@@ -79,7 +87,7 @@ void store_background_content(void *listener, void *data, const char *keyword_at
   rb_funcall(listener, rb_intern("background"), 3, kw, con, INT2FIX(current_line)); 
 }
 
-void store_examples_content(void *listener, void *data, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+void store_examples_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
@@ -91,7 +99,7 @@ void store_examples_content(void *listener, void *data, const char *keyword_at, 
   rb_funcall(listener, rb_intern("examples"), 3, kw, con, INT2FIX(current_line)); 
 }
 
-void store_step_content(void *listener, void *data, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+void store_step_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
@@ -102,7 +110,7 @@ void store_step_content(void *listener, void *data, const char *keyword_at, size
   rb_funcall(listener, rb_intern("step"), 3, kw, con, INT2FIX(current_line)); 
 }
 
-void store_pystring_content(void *listener, void *data, int start_col, const char *at, size_t length, int current_line)
+void store_pystring_content(void *listener, int start_col, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil;
   con = rb_str_new(at, length);
@@ -129,6 +137,7 @@ VALUE CParser_alloc(VALUE klass)
   psr->store_examples_content = store_examples_content;
   psr->store_step_content = store_step_content;
   psr->store_pystring_content = store_pystring_content;
+  psr->raise_parser_error = raise_parser_error;
   parser_init(psr);
 
   obj = Data_Wrap_Struct(klass, NULL, CParser_free, psr);
@@ -171,12 +180,12 @@ VALUE CParser_scan(VALUE self, VALUE data)
 
   // from is always 0.  if dlen = 0, 
   if(dlen == 0) { 
-    rb_raise(eCParserError, "No content to parse.");
+    rb_raise(eParserError, 0, "No content to parse.");
   } else {
     parser_scan(psr, dptr, dlen, from);
 
     if(parser_has_error(psr)) {
-      rb_raise(eCParserError, "Invalid format, parsing fails.");
+      rb_raise(eParserError, 0, "Invalid format, parsing fails.");
     } else {
       return INT2FIX(parser_nread(psr));
     }
@@ -203,9 +212,6 @@ void Init_gherkin_parser()
 {
   mGherkin = rb_define_module("Gherkin");
   mParser = rb_define_module_under(mGherkin, "Parser");
-  
-  eCParserError = rb_define_class_under(mParser, "GherkinCParserError", rb_eIOError);
-
   cCParser = rb_define_class_under(mParser, "CParser", rb_cObject);
   rb_define_alloc_func(cCParser, CParser_alloc);
   rb_define_method(cCParser, "initialize", CParser_init,1);
@@ -213,4 +219,9 @@ void Init_gherkin_parser()
   rb_define_method(cCParser, "scan", CParser_scan,1);
   rb_define_method(cCParser, "error?", CParser_has_error,0);
   rb_define_method(cCParser, "nread", CParser_nread,0);
+  
+  eParserError = rb_const_get(mParser, rb_intern("ParsingError"));
+  // This gets the correct error class, but is segfaulting when it's called.
+  // To confirm, send 1 less argument in raise_parser_error, or change the name to FrodoError.
+
 }
