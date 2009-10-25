@@ -3,3 +3,4 @@ Makefile
 *.log
 parser_en.c
 *.o
+*dSYM/
