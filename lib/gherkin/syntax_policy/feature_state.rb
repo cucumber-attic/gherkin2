@@ -1,8 +1,8 @@
-require 'gherkin/syntax_policy/feature_policy_state'
+require 'gherkin/syntax_policy/state'
 
 module Gherkin
   module SyntaxPolicy
-    class FeatureState < FeaturePolicyState
+    class FeatureState < State
       def initialize
         @feature, @background = false
         super

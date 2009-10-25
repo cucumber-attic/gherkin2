@@ -1,8 +1,8 @@
-require 'gherkin/syntax_policy/feature_policy_state'
+require 'gherkin/syntax_policy/state'
 
 module Gherkin
   module SyntaxPolicy
-    class ScenarioOutlineState < FeaturePolicyState
+    class ScenarioOutlineState < State
       def initialize
         @examples, @within_examples = false
         super
