@@ -136,6 +136,7 @@
   }
 
   action start_table {
+    p = p - 1;
   }
   
   action begin_cell_content {
@@ -155,6 +156,7 @@
 
   action end_table {
     // printf("end_table\n");
+    p = p - 1;
   }
  
   action end_feature {
