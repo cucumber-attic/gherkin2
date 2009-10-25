@@ -160,16 +160,18 @@
   }
  
   action end_feature {
-//
-//  We need to swap out the first \r?\n after last_newline with a \0
-//
     if (cs < parser_first_final) {
       if (parser->raise_parser_error != NULL) {
-//        if (LEN(last_newline, PTR_TO(final_newline)) > 0) {
-          parser->raise_parser_error(parser->listener, PTR_TO(last_newline), 5, 5); //parser->line_number);
-//        } else {
-           // There will be cases where last_newline and/or final_newline aren't set when we end up in an error state...what then? 
-//        }
+        int count = 0;
+        char newstr[LEN(last_newline, eof)]; 
+        for(count = 0; count < LEN(last_newline, eof); count++) {
+          if((PTR_TO(last_newline))[count] == 10) {
+            newstr[count] = '\0'; // terminate new string at first newline found
+          } else {
+            newstr[count] = PTR_TO(last_newline)[count];
+          }
+        }
+        parser->raise_parser_error(parser->listener, newstr, 5, parser->line_number);
       }
     }
   }
