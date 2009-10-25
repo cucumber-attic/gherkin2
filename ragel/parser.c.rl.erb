@@ -158,14 +158,16 @@
   }
  
   action end_feature {
+//
+//  We need to swap out the first \r?\n after last_newline with a \0
+//
     if (cs < parser_first_final) {
       if (parser->raise_parser_error != NULL) {
-        if (LEN(last_newline, PTR_TO(final_newline)) > 0) {
-// Uncommenting the following line raises the appropriate error in Ruby, but also causes seg faults :(
-//          parser->raise_parser_error(parser->listener, PTR_TO(last_newline), 0, parser->line_number);   // LEN(last_newline, PTR_TO(final_newline)), parser->line_number);
-        } else {
-           // There will be many cases where last_newline and/or final_newline aren't set when we end up in an error state...what then? 
-        }
+//        if (LEN(last_newline, PTR_TO(final_newline)) > 0) {
+          parser->raise_parser_error(parser->listener, PTR_TO(last_newline), 5, 5); //parser->line_number);
+//        } else {
+           // There will be cases where last_newline and/or final_newline aren't set when we end up in an error state...what then? 
+//        }
       }
     }
   }

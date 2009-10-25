@@ -14,7 +14,7 @@
 static VALUE mGherkin;
 static VALUE mParser;
 static VALUE cCParser; 
-static VALUE eParserError;
+static VALUE rb_eGherkinParserError;
 
 void store_comment_content(void *listener, const char *at, size_t length, int line) 
 { 
@@ -34,10 +34,7 @@ void store_tag_content(void *listener, const char *at, size_t length, int line)
 
 void raise_parser_error(void *listener, const char *at, size_t length, int line)
 { 
-  VALUE val = Qnil;
-  
-  val = rb_str_new(at, length);
-  rb_raise(eParserError, INT2FIX(line), val);
+  rb_raise(rb_eGherkinParserError, "Parsing error on line %d: '%s'.", line, at); //, INT2FIX(line));
 }
 
 void store_feature_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
@@ -180,12 +177,12 @@ VALUE CParser_scan(VALUE self, VALUE data)
 
   // from is always 0.  if dlen = 0, 
   if(dlen == 0) { 
-    rb_raise(eParserError, 0, "No content to parse.");
+    rb_raise(rb_eGherkinParserError, 0, "No content to parse.");
   } else {
     parser_scan(psr, dptr, dlen, from);
 
     if(parser_has_error(psr)) {
-      rb_raise(eParserError, 0, "Invalid format, parsing fails.");
+      rb_raise(rb_eGherkinParserError, 0, "Invalid format, parsing fails.");
     } else {
       return INT2FIX(parser_nread(psr));
     }
@@ -220,8 +217,5 @@ void Init_gherkin_parser()
   rb_define_method(cCParser, "error?", CParser_has_error,0);
   rb_define_method(cCParser, "nread", CParser_nread,0);
   
-  eParserError = rb_const_get(mParser, rb_intern("ParsingError"));
-  // This gets the correct error class, but is segfaulting when it's called.
-  // To confirm, send 1 less argument in raise_parser_error, or change the name to FrodoError.
-
+  rb_eGherkinParserError = rb_const_get(mParser, rb_intern("ParsingError"));
 }

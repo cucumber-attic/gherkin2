@@ -130,7 +130,7 @@ module Gherkin
         action end_feature {
           if cs < parser_first_final
             content = current_line_content(data, p)
-            raise ParsingError.new(@line_number, content)
+            raise ParsingError.new("Parsing error on line %d: '%s'." % [@line_number, content])
           end
         }
 
