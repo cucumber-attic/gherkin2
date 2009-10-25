@@ -114,6 +114,11 @@ void store_pystring_content(void *listener, int start_col, const char *at, size_
   rb_funcall(listener, rb_intern("py_string"), 3, INT2FIX(start_col), con, INT2FIX(current_line));
 }
 
+void store_table(void *listener, int current_line)
+{
+  rb_funcall(listener, rb_intern("table"), 2, rb_ary_new(), INT2FIX(current_line));
+}
+
 void CParser_free(void *data) 
 {
   if(data) {
@@ -135,6 +140,7 @@ VALUE CParser_alloc(VALUE klass)
   psr->store_step_content = store_step_content;
   psr->store_pystring_content = store_pystring_content;
   psr->raise_parser_error = raise_parser_error;
+  psr->store_table = store_table;
   parser_init(psr);
 
   obj = Data_Wrap_Struct(klass, NULL, CParser_free, psr);

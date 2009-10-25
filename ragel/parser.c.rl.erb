@@ -137,6 +137,7 @@
 
   action start_table {
     p = p - 1;
+    parser->current_line = parser->line_number;
   }
   
   action begin_cell_content {
@@ -152,6 +153,9 @@
   }
 
   action store_table {
+    if (parser->store_table != NULL) {
+      parser->store_table(parser->listener, parser->current_line);
+    }
   }
 
   action end_table {
