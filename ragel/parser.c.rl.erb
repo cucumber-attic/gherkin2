@@ -171,6 +171,7 @@
         for(count = 0; count < LEN(last_newline, eof); count++) {
           if((PTR_TO(last_newline))[count] == 10) {
             newstr[count] = '\0'; // terminate new string at first newline found
+            break;
           } else {
             newstr[count] = PTR_TO(last_newline)[count];
           }
