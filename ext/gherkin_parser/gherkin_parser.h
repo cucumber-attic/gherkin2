@@ -20,7 +20,6 @@ typedef struct parser {
   int line_number;
   int current_line;
   int start_col;
-  size_t nread;
   size_t mark;
   size_t keyword_start;
   size_t keyword_end;
@@ -49,9 +48,7 @@ typedef struct parser {
 } parser;
 
 int parser_init(parser *psr);
-size_t parser_scan(parser *psr, const char *data, size_t len, size_t off);
+size_t parser_scan(parser *psr, const char *data, size_t len);
 int parser_has_error(parser *psr);
-
-#define parser_nread(psr) (psr)->nread
 
 #endif

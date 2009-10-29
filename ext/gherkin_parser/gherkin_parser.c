@@ -171,7 +171,6 @@ VALUE CParser_reset(VALUE self)
 VALUE CParser_scan(VALUE self, VALUE data)
 {
   parser *psr = NULL;
-  int from = 0;
   char *dptr = NULL;
   long dlen = 0;
  
@@ -185,12 +184,12 @@ VALUE CParser_scan(VALUE self, VALUE data)
   if(dlen == 0) { 
     rb_raise(rb_eGherkinParserError, 0, "No content to parse.");
   } else {
-    parser_scan(psr, dptr, dlen, from);
+    parser_scan(psr, dptr, dlen);
 
     if(parser_has_error(psr)) {
       rb_raise(rb_eGherkinParserError, 0, "Invalid format, parsing fails.");
     } else {
-      return INT2FIX(parser_nread(psr));
+      return 1;
     }
   }
 }
@@ -203,14 +202,6 @@ VALUE CParser_has_error(VALUE self)
   return parser_has_error(psr) ? Qtrue : Qfalse;
 }
 
-VALUE CParser_nread(VALUE self)
-{
-  parser *psr = NULL;
-  DATA_GET(self, parser, psr);
-  
-  return INT2FIX(psr->nread);
-}
-
 void Init_gherkin_parser()
 {
   mGherkin = rb_define_module("Gherkin");
@@ -221,7 +212,6 @@ void Init_gherkin_parser()
   rb_define_method(cCParser, "reset", CParser_reset,0);
   rb_define_method(cCParser, "scan", CParser_scan,1);
   rb_define_method(cCParser, "error?", CParser_has_error,0);
-  rb_define_method(cCParser, "nread", CParser_nread,0);
   
   rb_eGherkinParserError = rb_const_get(mParser, rb_intern("ParsingError"));
 }

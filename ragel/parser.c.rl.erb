@@ -167,14 +167,21 @@
     if (cs < parser_first_final) {
       if (parser->raise_parser_error != NULL) {
         int count = 0;
+        int newstr_count = 0;
         char newstr[LEN(last_newline, eof)]; 
         for(count = 0; count < LEN(last_newline, eof); count++) {
           if((PTR_TO(last_newline))[count] == 10) {
-            newstr[count] = '\0'; // terminate new string at first newline found
+            newstr[newstr_count] = '\0'; // terminate new string at first newline found
             break;
           } else {
-            newstr[count] = PTR_TO(last_newline)[count];
+            if ((PTR_TO(last_newline))[count] == '%') {
+              newstr[newstr_count++] = PTR_TO(last_newline)[count];
+              newstr[newstr_count] = PTR_TO(last_newline)[count];
+            } else {
+              newstr[newstr_count] = PTR_TO(last_newline)[count];
+            }
           }
+          newstr_count++;
         }
         parser->raise_parser_error(parser->listener, newstr, 5, parser->line_number);
       }
@@ -196,7 +203,6 @@ int parser_init(parser *parser) {
   parser->content_end = 0;
   parser->content_len = 0;
   parser->mark = 0;
-  parser->nread = 0;
   parser->field_len = 0;
   parser->keyword_start = 0;
   parser->keyword_end = 0;
@@ -210,26 +216,22 @@ int parser_init(parser *parser) {
 }
 
 /** exec **/
-size_t parser_scan(parser *parser, const char *buffer, size_t len, size_t off) {
+size_t parser_scan(parser *parser, const char *buffer, size_t len) {
   const char *p, *pe, *eof;
   int cs = parser->cs;
 
-  assert(off <= len && "offset past end of buffer");
-
-  p = buffer+off;
+  p = buffer;
   pe = buffer+len;
   eof = pe;
 
   assert(*pe == '\0' && "pointer does not end on NUL");
-  assert(pe - p == len - off && "pointers aren't same distance");
+  assert(pe - p == len && "pointers aren't same distance");
 
   %% write exec;
 
   parser->cs = cs;
-  parser->nread += p - (buffer + off);
   
   assert(p <= pe && "buffer overflow after parsing execute");
-  assert(parser->nread <= len && "nread longer than length");
   assert(parser->content_start <= len && "content starts after buffer end");
   assert(parser->mark < len && "mark is after buffer end");
   assert(parser->field_len <= len && "field has length longer than the whole buffer");
