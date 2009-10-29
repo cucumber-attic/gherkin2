@@ -21,7 +21,7 @@ void store_comment_content(void *listener, const char *at, size_t length, int li
   VALUE val = Qnil;
 
   val = rb_str_new(at, length);
-  rb_funcall(listener, rb_intern("comment"), 2, val, INT2FIX(line));
+  rb_funcall((VALUE)listener, rb_intern("comment"), 2, val, INT2FIX(line));
 }
 
 void store_tag_content(void *listener, const char *at, size_t length, int line)
@@ -29,7 +29,7 @@ void store_tag_content(void *listener, const char *at, size_t length, int line)
   VALUE val = Qnil;
 
   val = rb_str_new(at, length);
-  rb_funcall(listener, rb_intern("tag"), 2, val, INT2FIX(line)); 
+  rb_funcall((VALUE)listener, rb_intern("tag"), 2, val, INT2FIX(line)); 
 } 
 
 void raise_parser_error(void *listener, const char *at, int line)
@@ -45,7 +45,7 @@ void store_feature_content(void *listener, const char *keyword_at, size_t keywor
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("chop!"), 0);
-  rb_funcall(listener, rb_intern("feature"), 3, kw, con, INT2FIX(current_line)); 
+  rb_funcall((VALUE)listener, rb_intern("feature"), 3, kw, con, INT2FIX(current_line)); 
 }
 
 void store_scenario_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
@@ -57,7 +57,7 @@ void store_scenario_content(void *listener, const char *keyword_at, size_t keywo
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("chop!"), 0);
-  rb_funcall(listener, rb_intern("scenario"), 3, kw, con, INT2FIX(current_line)); 
+  rb_funcall((VALUE)listener, rb_intern("scenario"), 3, kw, con, INT2FIX(current_line)); 
 }
 
 void store_scenario_outline_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
@@ -69,7 +69,7 @@ void store_scenario_outline_content(void *listener, const char *keyword_at, size
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("chop!"), 0);
-  rb_funcall(listener, rb_intern("scenario_outline"), 3, kw, con, INT2FIX(current_line)); 
+  rb_funcall((VALUE)listener, rb_intern("scenario_outline"), 3, kw, con, INT2FIX(current_line)); 
 }
 
 void store_background_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
@@ -81,7 +81,7 @@ void store_background_content(void *listener, const char *keyword_at, size_t key
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("chop!"), 0);
-  rb_funcall(listener, rb_intern("background"), 3, kw, con, INT2FIX(current_line)); 
+  rb_funcall((VALUE)listener, rb_intern("background"), 3, kw, con, INT2FIX(current_line)); 
 }
 
 void store_examples_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
@@ -93,7 +93,7 @@ void store_examples_content(void *listener, const char *keyword_at, size_t keywo
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("chop!"), 0);
-  rb_funcall(listener, rb_intern("examples"), 3, kw, con, INT2FIX(current_line)); 
+  rb_funcall((VALUE)listener, rb_intern("examples"), 3, kw, con, INT2FIX(current_line)); 
 }
 
 void store_step_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
@@ -104,19 +104,19 @@ void store_step_content(void *listener, const char *keyword_at, size_t keyword_l
   // Need multiline strip for con here
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
-  rb_funcall(listener, rb_intern("step"), 3, kw, con, INT2FIX(current_line)); 
+  rb_funcall((VALUE)listener, rb_intern("step"), 3, kw, con, INT2FIX(current_line)); 
 }
 
 void store_pystring_content(void *listener, int start_col, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil;
   con = rb_str_new(at, length);
-  rb_funcall(listener, rb_intern("py_string"), 3, INT2FIX(start_col), con, INT2FIX(current_line));
+  rb_funcall((VALUE)listener, rb_intern("py_string"), 3, INT2FIX(start_col), con, INT2FIX(current_line));
 }
 
 void store_table(void *listener, int current_line)
 {
-  rb_funcall(listener, rb_intern("table"), 2, rb_ary_new(), INT2FIX(current_line));
+  rb_funcall((VALUE)listener, rb_intern("table"), 2, rb_ary_new(), INT2FIX(current_line));
 }
 
 void CParser_free(void *data) 
