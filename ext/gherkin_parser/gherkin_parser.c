@@ -32,7 +32,7 @@ void store_tag_content(void *listener, const char *at, size_t length, int line)
   rb_funcall(listener, rb_intern("tag"), 2, val, INT2FIX(line)); 
 } 
 
-void raise_parser_error(void *listener, const char *at, size_t length, int line)
+void raise_parser_error(void *listener, const char *at, int line)
 { 
   rb_raise(rb_eGherkinParserError, "Parsing error on line %d: '%s'.", line, at); //, INT2FIX(line));
 }

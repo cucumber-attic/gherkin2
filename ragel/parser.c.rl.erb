@@ -168,22 +168,34 @@
       if (parser->raise_parser_error != NULL) {
         int count = 0;
         int newstr_count = 0;
-        char newstr[LEN(last_newline, eof)]; 
-        for(count = 0; count < LEN(last_newline, eof); count++) {
-          if((PTR_TO(last_newline))[count] == 10) {
+        size_t len;
+        const char *buff;
+        if (parser->last_newline != 0) {
+          len = LEN(last_newline, eof);
+          buff = PTR_TO(last_newline);
+        } else {
+          len = strlen(buffer);
+          buff = buffer;
+        }
+        char newstr[len]; 
+        for(count = 0; count < len; count++) {
+          if(buff[count] == 10) {
             newstr[newstr_count] = '\0'; // terminate new string at first newline found
             break;
           } else {
-            if ((PTR_TO(last_newline))[count] == '%') {
-              newstr[newstr_count++] = PTR_TO(last_newline)[count];
-              newstr[newstr_count] = PTR_TO(last_newline)[count];
+            if (buff[count] == '%') {
+              newstr[newstr_count++] = buff[count];
+              newstr[newstr_count] = buff[count];
             } else {
-              newstr[newstr_count] = PTR_TO(last_newline)[count];
+              newstr[newstr_count] = buff[count];
             }
           }
           newstr_count++;
         }
-        parser->raise_parser_error(parser->listener, newstr, 5, parser->line_number);
+        int line = parser->line_number;
+        parser_init(parser); // Otherwise you can't scan again with the same parser
+                             // calling after raising doesn't do the trick.
+        parser->raise_parser_error(parser->listener, newstr, line);
       }
     }
   }

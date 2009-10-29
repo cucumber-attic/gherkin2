@@ -9,6 +9,7 @@
 
 
 typedef void (*listener_cb)(void *listener, const char *at, size_t length, int line);
+typedef void (*listener_error_cb)(void *listener, const char *at, int line);
 typedef void (*listener_long_cb)(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int line);
 typedef void (*listener_pystring_cb)(void *listener, int start_col, const char *at, size_t length, int line);
 
@@ -36,7 +37,7 @@ typedef struct parser {
 
   listener_cb store_comment_content;
   listener_cb store_tag_content;
-  listener_cb raise_parser_error;
+  listener_error_cb raise_parser_error;
   listener_long_cb store_feature_content;
   listener_long_cb store_scenario_content;
   listener_long_cb store_scenario_outline_content;
