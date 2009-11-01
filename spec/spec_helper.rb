@@ -10,5 +10,4 @@ require 'spec/gherkin/shared/py_string_spec'
 require 'spec/gherkin/shared/table_spec'
 
 Spec::Runner.configure do |config|
-  
 end

@@ -1,6 +1,7 @@
 require 'gherkin/syntax_policy/feature_state'
 require 'gherkin/syntax_policy/scenario_state'
 require 'gherkin/syntax_policy/scenario_outline_state'
+require 'gherkin/syntax_policy/examples_state'
 
 module Gherkin
   module SyntaxPolicy
@@ -19,7 +20,10 @@ module Gherkin
       
       def initialize(listener, raise_on_error=true)
         @listener, @raise_on_error = listener, raise_on_error
-        @states = { :feature => FeatureState.new, :scenario => ScenarioState.new, :scenario_outline => ScenarioOutlineState.new }
+        @states = { 
+          :feature => FeatureState.new, :scenario => ScenarioState.new, 
+          :scenario_outline => ScenarioOutlineState.new, :examples => ExamplesState.new 
+        }
         @current = @states[:feature]
       end
             
@@ -35,6 +39,11 @@ module Gherkin
       def scenario_outline(*args)
         change_state(:scenario_outline)
         dispatch(:scenario_outline, *args)
+      end
+      
+      def examples(*args)
+        change_state(:examples)
+        dispatch(:examples, *args)
       end
 
       def method_missing(meth, *args)

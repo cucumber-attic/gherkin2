@@ -1,6 +1,6 @@
 module Gherkin
   module SyntaxPolicy
-    class FeaturePolicyState
+    class State
       def initialize
         @step, @multiline = false
       end
