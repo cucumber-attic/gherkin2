@@ -31,27 +31,6 @@ module Gherkin
           @state.should_not allow(event)
         end
       end
-    end
-  
-    describe "Example state" do
-      before do
-        @state = ScenarioOutlineState.new
-        @state.scenario_outline
-        @state.step
-        @state.examples
-      end
-    
-      it "should allow tables, examples, scenarios, scenario outlines, comments and tags" do
-        [:table, :examples, :tag, :comment, :scenario, :scenario_outline].each do |event|
-          @state.should allow(event)
-        end
-      end
-    
-      it "should not allow steps, py_strings, features or backgrounds" do
-        [:step, :py_string, :feature, :background].each do |event|
-          @state.should_not allow(event)
-        end
-      end
-    end
+    end  
   end
 end
