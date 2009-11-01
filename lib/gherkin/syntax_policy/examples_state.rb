@@ -13,8 +13,7 @@ module Gherkin
       end
       
       def scenario_outline
-        @examples = false
-        @step = true
+        true
       end
       
       def examples
