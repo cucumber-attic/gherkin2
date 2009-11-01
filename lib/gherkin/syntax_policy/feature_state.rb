@@ -27,7 +27,7 @@ module Gherkin
       
       def scenario_outline
         @feature
-      end
+      end      
     end
   end
 end
