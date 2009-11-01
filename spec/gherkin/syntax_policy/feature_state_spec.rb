@@ -9,9 +9,9 @@ module Gherkin
       end
       
       context "before keyword" do      
-        it "should allow tags and comments" do
-          [:comment, :tag].each do |event|
-            @state.should allow(event)            
+        it "should allow tags, comments and feature" do
+          [:comment, :tag, :feature].each do |event|
+            @state.should allow(event)
           end
         end
               

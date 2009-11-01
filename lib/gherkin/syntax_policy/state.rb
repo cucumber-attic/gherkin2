@@ -53,6 +53,15 @@ module Gherkin
       def comment
         true
       end
+      
+      def expected
+        allowed = lambda do |meth| 
+          state = self.dup
+          state.send(meth)
+        end
+        events = public_methods(false).map { |meth| meth.to_sym } # Some Rubies return strings
+        (events.select { |meth| allowed[meth] } + [:tag, :comment]).uniq
+      end
     end
   end
 end
