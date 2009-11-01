@@ -4,7 +4,7 @@ module Gherkin
   module SyntaxPolicy
     class ScenarioOutlineState < State
       def initialize
-        @examples, @within_examples = false
+        @examples = false
         super
       end
 
@@ -13,24 +13,24 @@ module Gherkin
       end
       
       def scenario_outline
-        @examples, @within_examples = false
+        @examples = false
         @step = true
       end
       
       def examples
         if @examples
           @step = false
-          @within_examples = true
+          true
         end
       end
 
       def tag
-        @examples, @within_examples = false
+        @examples = false
         super
       end
 
       def table
-        if @multiline or @within_examples
+        if @multiline
           @multiline = false
           true
         end
@@ -40,10 +40,6 @@ module Gherkin
         if super
           @examples = true
         end
-      end
-
-      def py_string
-        super unless @within_examples
       end
     end
   end
