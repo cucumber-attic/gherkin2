@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
-  s.date = %q{2009-10-22}
+  s.date = %q{2009-11-01}
   s.description = %q{A fast Gherkin parser in Ragel}
   s.email = %q{cukes@googlegroups.com}
   s.extra_rdoc_files = [
@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
      "ext/gherkin_parser/extconf.rb",
      "ext/gherkin_parser/gherkin_parser.c",
      "ext/gherkin_parser/gherkin_parser.h",
+     "features/c_feature_policy.feature",
      "features/c_parser.feature",
      "features/feature_policy.feature",
      "features/step_definitions/gherkin_steps.rb",
@@ -81,17 +82,17 @@ Gem::Specification.new do |s|
      "lib/gherkin/parser/parser_zh-CN.rb",
      "lib/gherkin/parser/parser_zh-TW.rb",
      "lib/gherkin/parser/table.rb",
+     "lib/gherkin/syntax_policy/examples_state.rb",
      "lib/gherkin/syntax_policy/feature_policy.rb",
-     "lib/gherkin/syntax_policy/feature_policy_state.rb",
      "lib/gherkin/syntax_policy/feature_state.rb",
      "lib/gherkin/syntax_policy/scenario_outline_state.rb",
      "lib/gherkin/syntax_policy/scenario_state.rb",
+     "lib/gherkin/syntax_policy/state.rb",
      "ragel/i18n/.gitignore",
      "ragel/parser.c.rl.erb",
      "ragel/parser.rb.rl.erb",
      "ragel/parser_common.rl.erb",
      "spec/gherkin/c_parser_spec.rb",
-     "spec/gherkin/feature_policy_spec.rb",
      "spec/gherkin/gherkin_parser/complex.feature",
      "spec/gherkin/gherkin_parser/i18n_no.feature",
      "spec/gherkin/gherkin_parser/i18n_zh-CN.feature",
@@ -105,6 +106,13 @@ Gem::Specification.new do |s|
      "spec/gherkin/shared/py_string_spec.rb",
      "spec/gherkin/shared/table_spec.rb",
      "spec/gherkin/shared/tags_spec.rb",
+     "spec/gherkin/syntax_policy/examples_state_spec.rb",
+     "spec/gherkin/syntax_policy/feature_policy_spec.rb",
+     "spec/gherkin/syntax_policy/feature_state_spec.rb",
+     "spec/gherkin/syntax_policy/scenario_outline_state_spec.rb",
+     "spec/gherkin/syntax_policy/scenario_spec.rb",
+     "spec/gherkin/syntax_policy/spec_helper.rb",
+     "spec/gherkin/syntax_policy/steps_spec.rb",
      "spec/spec_helper.rb",
      "tasks/bench.rake",
      "tasks/bench/feature_builder.rb",
@@ -122,15 +130,21 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{Fast Gherkin parser}
   s.test_files = [
-    "spec/gherkin/sexp_recorder.rb",
-     "spec/gherkin/c_parser_spec.rb",
+    "spec/gherkin/c_parser_spec.rb",
      "spec/gherkin/i18n_spec.rb",
-     "spec/gherkin/shared/table_spec.rb",
-     "spec/gherkin/shared/tags_spec.rb",
+     "spec/gherkin/rb_parser_spec.rb",
+     "spec/gherkin/sexp_recorder.rb",
      "spec/gherkin/shared/parser_spec.rb",
      "spec/gherkin/shared/py_string_spec.rb",
-     "spec/gherkin/rb_parser_spec.rb",
-     "spec/gherkin/feature_policy_spec.rb",
+     "spec/gherkin/shared/table_spec.rb",
+     "spec/gherkin/shared/tags_spec.rb",
+     "spec/gherkin/syntax_policy/examples_state_spec.rb",
+     "spec/gherkin/syntax_policy/feature_policy_spec.rb",
+     "spec/gherkin/syntax_policy/feature_state_spec.rb",
+     "spec/gherkin/syntax_policy/scenario_outline_state_spec.rb",
+     "spec/gherkin/syntax_policy/scenario_spec.rb",
+     "spec/gherkin/syntax_policy/spec_helper.rb",
+     "spec/gherkin/syntax_policy/steps_spec.rb",
      "spec/spec_helper.rb"
   ]
 
