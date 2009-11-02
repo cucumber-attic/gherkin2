@@ -1,6 +1,6 @@
 module Gherkin
   module SyntaxPolicy
-    class State
+    class State      
       def initialize
         @step, @multiline = false
       end
@@ -54,14 +54,18 @@ module Gherkin
         true
       end
       
-      def expected
-        allowed = lambda do |meth| 
-          state = self.dup
-          state.send(meth)
-        end
-        events = public_methods(false).map { |meth| meth.to_sym } # Some Rubies return strings
-        (events.select { |meth| allowed[meth] } + [:tag, :comment]).uniq
+      def allows?(event)
+        lambda do |meth|
+          this = self.dup
+          this.send(meth)
+        end.call(event)
       end
+      
+      def expected
+        events = public_methods(false).map { |meth| meth.to_sym } # Some Rubies return strings
+        events.delete(:expected) # No infinite loops, kthxbye
+        (events.select { |meth| allows?(meth) } + [:tag, :comment]).uniq
+      end      
     end
   end
 end

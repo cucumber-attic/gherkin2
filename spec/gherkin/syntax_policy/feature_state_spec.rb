@@ -11,12 +11,14 @@ module Gherkin
       context "before keyword" do      
         it "should allow tags, comments and feature" do
           [:comment, :tag, :feature].each do |event|
+            @state.expected.should include(event)
             @state.should allow(event)
           end
         end
               
         it "should not allow anything else" do
           [:background, :scenario, :scenario_outline, :examples, :step, :table, :py_string].each do |event|
+            @state.expected.should_not include(event)
             @state.should_not allow(event)
           end
         end
@@ -29,12 +31,14 @@ module Gherkin
         
         it "should allow background, scenario, scenario outline, tags and comments" do
           [:background, :scenario, :scenario_outline, :tag, :comment].each do |event|
+            @state.expected.should include(event)
             @state.should allow(event)
           end
         end
       
         it "should not step, table, py_string or examples" do
           [:step, :table, :py_string, :examples].each do |event|
+            @state.expected.should_not include(event)
             @state.should_not allow(event)
           end
         end
@@ -59,6 +63,7 @@ module Gherkin
           
           it "should allow background, scenario, or scenario outline" do
             [:background, :scenario, :scenario_outline].each do |event|
+              @state.expected.should include(event)
               @state.should allow(event)
             end
           end          
@@ -74,12 +79,14 @@ module Gherkin
           
           it "should allows steps, scenarios, scenario outlines, comments and tags" do
             [:step, :scenario, :scenario_outline, :comment, :tag].each do |event|
+              @state.expected.should include(event)
               @state.should allow(event)
             end
           end
 
           it "should not allow features or examples" do
             [:feature, :examples].each do |event|
+              @state.expected.should_not include(event)
               @state.should_not allow(event)
             end
           end
