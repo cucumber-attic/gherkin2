@@ -7,13 +7,11 @@ module Gherkin
   module SyntaxPolicy
 
     class FeatureSyntaxError < SyntaxError
-      attr_reader :keyword, :content, :line
-      
-      def initialize(event, keyword, content, line, *args)
-        @event, @keyword, @content, @line = event, keyword, content, line
-        message = "Syntax error on line #{@line}: '#{@keyword}: #{@content}'. "
-        message += "Received #{@event} when expecting one of: #{args.last.join(' ')}."
-        super message
+      attr_reader :event, :line, :expected
+
+      def initialize(event, line, expected)
+        @event, @line, @expected = event, line, expected
+        super "Syntax error on line #{@line}. Found #{@event} when expecting one of: #{@expected.join(' ')}."
       end
     end
     
@@ -30,7 +28,7 @@ module Gherkin
       end
             
       def error(args)
-        @raise_on_error ? raise(FeatureSyntaxError.new(*args + [@current.expected])) : @listener.syntax_error(*args)
+        @raise_on_error ? raise(FeatureSyntaxError.new(args.first, args.last, @current.expected)) : @listener.syntax_error(*args)
       end
 
       def scenario(*args)
