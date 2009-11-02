@@ -1,6 +1,9 @@
 module Gherkin
   module SyntaxPolicy
     class State      
+      EVENTS = [:feature, :background, :scenario, :scenario_outline, :examples,
+                :step, :table, :py_string, :tag, :comment]
+
       def initialize
         @step, @multiline = false
       end
@@ -62,9 +65,7 @@ module Gherkin
       end
       
       def expected
-        events = public_methods(false).map { |meth| meth.to_sym } # Some Rubies return strings
-        events.delete(:expected) # No infinite loops, kthxbye
-        (events.select { |meth| allows?(meth) } + [:tag, :comment]).uniq
+        (EVENTS.select { |meth| allows?(meth) }).uniq
       end      
     end
   end

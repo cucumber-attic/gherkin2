@@ -11,7 +11,9 @@ module Gherkin
       
       def initialize(event, keyword, content, line, *args)
         @event, @keyword, @content, @line = event, keyword, content, line
-        super "Syntax error on line #{@line}: '#{@keyword}: #{@content}'."
+        message = "Syntax error on line #{@line}: '#{@keyword}: #{@content}'. "
+        message += "Received #{@event} when expecting one of: #{args.last.join(' ')}."
+        super message
       end
     end
     
@@ -28,7 +30,7 @@ module Gherkin
       end
             
       def error(args)
-        @raise_on_error ? raise(FeatureSyntaxError.new(*args)) : @listener.syntax_error(*args)
+        @raise_on_error ? raise(FeatureSyntaxError.new(*args + [@current.expected])) : @listener.syntax_error(*args)
       end
 
       def scenario(*args)

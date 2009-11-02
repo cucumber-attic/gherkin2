@@ -13,12 +13,14 @@ module Gherkin
       
       it "should allow step, comment and tag" do
         [:step, :comment, :tag].each do |event|
+          @state.expected.should include(event)
           @state.should allow(event)
         end
       end
       
       it "should not allow feature, background or examples" do
         [:feature, :background, :examples].each do |event|
+          @state.expected.should_not include(event)
           @state.should_not allow(event)
         end
       end

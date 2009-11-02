@@ -13,6 +13,7 @@ module Gherkin
     
       it "should allow step, comment, tag, scenario or scenario outline" do
         [:step, :comment, :tag, :scenario, :scenario_outline].each do |event|
+          @state.expected.should include(event)
           @state.should allow(event)
         end
       end
@@ -28,6 +29,7 @@ module Gherkin
   
       it "should not allow feature or background" do
         [:feature, :background].each do |event|
+          @state.expected.should_not include(event)
           @state.should_not allow(event)
         end
       end

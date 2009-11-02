@@ -20,7 +20,7 @@ module Gherkin
       it "should give helpful error messages" do
         lambda { 
           @policy.scenario("Scenario", "My pet scenario", 12) 
-        }.should raise_error(FeatureSyntaxError, "Syntax error on line 12: 'Scenario: My pet scenario'.")
+        }.should raise_error(FeatureSyntaxError, /Syntax error on line 12: 'Scenario: My pet scenario'. Received scenario when expecting one of/)
       end
           
       it "should delegate events to the listener" do
