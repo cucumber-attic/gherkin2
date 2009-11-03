@@ -2,8 +2,8 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 module Gherkin
-  module SyntaxPolicy
-    describe "Example state" do
+  module States
+    describe ExamplesState do
       before do
         @state = ExamplesState.new
         @state.examples

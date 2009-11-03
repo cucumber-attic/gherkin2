@@ -1,8 +1,8 @@
-require 'gherkin/syntax_policy/state'
+require 'gherkin/states/state'
 
 module Gherkin
-  module SyntaxPolicy
-    class ScenarioOutlineState < State
+  module States
+    class ExamplesState < State
       def initialize
         @examples = false
         super
@@ -13,11 +13,11 @@ module Gherkin
       end
       
       def scenario_outline
-        @step = true
+        true
       end
       
       def examples
-        @examples
+        @examples = true
       end
 
       def tag
@@ -25,10 +25,8 @@ module Gherkin
         super
       end
 
-      def step
-        if super
-          @examples = true
-        end
+      def table
+        @examples
       end
     end
   end

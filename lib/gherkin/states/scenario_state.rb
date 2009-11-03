@@ -1,7 +1,7 @@
-require 'gherkin/syntax_policy/state'
+require 'gherkin/states/state'
 
 module Gherkin
-  module SyntaxPolicy
+  module States
     class ScenarioState < State
       def scenario
         @step = true

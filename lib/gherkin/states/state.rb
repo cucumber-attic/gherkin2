@@ -1,5 +1,5 @@
 module Gherkin
-  module SyntaxPolicy
+  module States
     class State      
       EVENTS = [:feature, :background, :scenario, :scenario_outline, :examples,
                 :step, :table, :py_string, :tag, :comment]

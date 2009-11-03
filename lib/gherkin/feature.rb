@@ -1,4 +1,4 @@
-require 'gherkin/syntax_policy/feature_policy'
+require 'gherkin/feature_policy'
 require 'forwardable'
 
 module Gherkin
@@ -29,7 +29,7 @@ module Gherkin
 
     def initialize(i18n_lang, listener, args={})
       args = { :raise_on_error => true }.merge(args)
-      @policy = SyntaxPolicy::FeaturePolicy.new(listener, args[:raise_on_error])
+      @policy = FeaturePolicy.new(listener, args[:raise_on_error])
       @parser = Parser[i18n_lang].new(@policy)
     end
 
