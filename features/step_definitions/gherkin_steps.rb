@@ -1,6 +1,6 @@
-Given /^an? (\w+)-language feature parser$/ do |lang_name|
+Given /^an? (\w+)-language (\w+) parser$/ do |lang_name, parser|
   i18n_lang = code_from_lang_name(lang_name)
-  load_feature_parser(i18n_lang)
+  load_parser(i18n_lang, parser)
 end
 
 Given "the following text is parsed:" do |text|

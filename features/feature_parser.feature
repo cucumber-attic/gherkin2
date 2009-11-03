@@ -1,4 +1,4 @@
-Feature: Gherkin Feature parser/policy
+Feature: Gherkin Feature parser
   In order to make it easy to control the Gherkin syntax
   As a Gherkin developer bent on Gherkin world-domination
   I want a feature parser that uses a feature policy to

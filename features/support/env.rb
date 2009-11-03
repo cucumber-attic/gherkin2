@@ -32,6 +32,11 @@ class GherkinWorld
     @parser = Gherkin::Feature.new(i18n_lang, listener, :raise_on_error => false)
   end
   
+  def load_parser(i18n_lang, parser)
+    klass = Gherkin.const_get(parser.capitalize)
+    @parser = klass.new(i18n_lang, listener, :raise_on_error => false)
+  end
+  
   def code_from_lang_name(name)
     i18n = YAML.load_file(File.dirname(__FILE__) + "/../../lib/gherkin/i18n.yml")
     i18n["C"] = { "name" => "C" } # XXX HACK XXX Make it easy to retrieve the C parser
