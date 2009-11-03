@@ -65,7 +65,7 @@ module Gherkin
       end
       
       def expected
-        (EVENTS.select { |meth| allows?(meth) }).uniq
+        EVENTS.select { |meth| allows?(meth) }
       end      
     end
   end
