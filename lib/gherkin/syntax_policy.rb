@@ -1,4 +1,5 @@
 require 'gherkin/states'
+require 'forwardable'
 
 module Gherkin
   class GherkinSyntaxError < SyntaxError
@@ -11,12 +12,18 @@ module Gherkin
   end
   
   class SyntaxPolicy
+    extend Forwardable
     include States
     attr_writer :raise_on_error
     
-    def initialize(listener, raise_on_error=true)
-      @listener, @raise_on_error = listener, raise_on_error
-      @current = State.new
+    def_delegators :@parser, :scan
+    
+    def initialize(i18n_lang, listener, args={})
+      args = { :raise_on_error => true }.merge(args)
+      @raise_on_error = args[:raise_on_error]
+      @listener       = listener
+      @parser         = Parser[i18n_lang].new(self)
+      @current        = State.new
     end
 
     def error(args)

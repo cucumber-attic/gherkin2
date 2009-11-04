@@ -1,10 +1,10 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 module Gherkin
-  describe FeaturePolicy do
+  describe SyntaxPolicy do
     before do
       @listener = mock('listener')
-      @policy = FeaturePolicy.new(@listener)
+      @policy = SyntaxPolicy.new('en', @listener)
     end
     
     it "should raise errors by default" do
@@ -23,8 +23,8 @@ module Gherkin
     end
         
     it "should delegate events to the listener" do
-      @listener.should_receive(:feature).with("Feature", "Content", 1)
-      @policy.feature("Feature", "Content", 1)
+      @listener.should_receive(:comment).with("# Content", 1)
+      @policy.comment("# Content", 1)
     end
           
     it "by default should not delegate when there is an error" do
