@@ -13,7 +13,7 @@ module Gherkin
       tables.each do |text, expected|
         it "should parse #{text}" do
           @listener.should_receive(:table).with(expected, 1)
-          @feature.scan(text)
+          @feature.scan(text.dup)
         end
       end
       

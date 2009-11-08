@@ -136,25 +136,38 @@
   }
 
   action start_table {
-    p = p - 1;
-    parser->current_line = parser->line_number;
+    if (parser->initialize_table != NULL) {
+      p = p - 1;
+      parser->current_line = parser->line_number;
+      parser->initialize_table(parser);
+    }
   }
   
   action begin_cell_content {
+		MARK(content_start, fpc);
   }
 
   action store_cell_content {
+    if (parser->add_cell_to_current_row != NULL) {
+      parser->add_cell_to_current_row(parser, PTR_TO(content_start), LEN(content_start, fpc)); 
+    }
   }
 
   action start_row {
+    if (parser->new_row != NULL) {
+      parser->new_row(parser);
+    }
   }  
 
   action store_row {
+    if (parser->end_row != NULL) {
+      parser->end_row(parser);
+    }
   }
 
   action store_table {
     if (parser->store_table != NULL) {
-      parser->store_table(parser->listener, parser->current_line);
+      parser->store_table(parser->listener, parser->table,  parser->current_line);
     }
   }
 

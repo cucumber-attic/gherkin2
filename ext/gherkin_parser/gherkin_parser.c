@@ -114,9 +114,41 @@ void store_pystring_content(void *listener, int start_col, const char *at, size_
   rb_funcall((VALUE)listener, rb_intern("py_string"), 3, INT2FIX(start_col), con, INT2FIX(current_line));
 }
 
-void store_table(void *listener, int current_line)
+void initialize_table(parser *psr)
 {
-  rb_funcall((VALUE)listener, rb_intern("table"), 2, rb_ary_new(), INT2FIX(current_line));
+  VALUE table, row;
+  table = rb_ary_new();
+  row = rb_ary_new();
+  psr->table = RARRAY(table);
+  psr->row = RARRAY(row);
+}
+
+void add_cell_to_current_row(parser *psr, const char *at, size_t length)
+{
+  VALUE con = Qnil;
+  con = rb_str_new(at, length);
+  rb_funcall(con, rb_intern("strip!"), 0);
+
+  rb_ary_push(psr->row, con);
+}
+
+void new_row(parser *psr)
+{
+  VALUE row;
+  row = rb_ary_new();
+  psr->row = row;
+}
+
+void end_row(parser *psr)
+{
+  rb_ary_push(psr->table, psr->row);
+}
+
+void store_table(void *listener, void *table, int current_line)
+{
+  rb_funcall((VALUE)listener, rb_intern("table"), 2, table, INT2FIX(current_line));
+  VALUE new_table;
+  new_table = rb_ary_new;
 }
 
 void CParser_free(void *data) 
@@ -141,6 +173,10 @@ VALUE CParser_alloc(VALUE klass)
   psr->store_pystring_content = store_pystring_content;
   psr->raise_parser_error = raise_parser_error;
   psr->store_table = store_table;
+  psr->initialize_table = initialize_table;
+  psr->add_cell_to_current_row = add_cell_to_current_row;
+  psr->new_row = new_row;
+  psr->end_row = end_row;
   parser_init(psr);
 
   obj = Data_Wrap_Struct(klass, NULL, CParser_free, psr);
@@ -155,6 +191,11 @@ VALUE CParser_init(VALUE self, VALUE listener)
   DATA_GET(self, parser, psr);
   parser_init(psr);
   psr->listener = ROBJECT(listener);
+  VALUE table, row;
+  table = rb_ary_new();
+  row = rb_ary_new();
+  psr->table = RARRAY(table);
+  psr->row = RARRAY(row);
 
   return self;
 }
