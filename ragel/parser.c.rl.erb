@@ -171,11 +171,6 @@
     }
   }
 
-  action end_table {
-    // printf("end_table\n");
-    p = p - 1;
-  }
- 
   action end_feature {
     if (cs < parser_first_final) {
       if (parser->raise_parser_error != NULL) {
