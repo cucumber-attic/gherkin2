@@ -14,7 +14,6 @@ typedef void (*listener_long_cb)(void *listener, const char *keyword_at, size_t 
 typedef void (*listener_pystring_cb)(void *listener, int start_col, const char *at, size_t length, int line);
 typedef void (*listener_table_cb)(void *listener, void *table, int line);
 typedef void (*ruby_table_cb)(void *parser);
-//typedef void (*ruby_table_cell_cb)(void *row, const char *at, size_t length);
 typedef void (*ruby_table_cell_cb)(void *parser, const char *at, size_t length);
 
 typedef struct parser {

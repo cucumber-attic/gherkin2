@@ -129,26 +129,24 @@ void add_cell_to_current_row(parser *psr, const char *at, size_t length)
   con = rb_str_new(at, length);
   rb_funcall(con, rb_intern("strip!"), 0);
 
-  rb_ary_push(psr->row, con);
+  rb_ary_push((VALUE)psr->row, con);
 }
 
 void new_row(parser *psr)
 {
-  VALUE row;
-  row = rb_ary_new();
+  VALUE row = rb_ary_new();
   psr->row = row;
 }
 
 void end_row(parser *psr)
 {
-  rb_ary_push(psr->table, psr->row);
+  rb_ary_push((VALUE)psr->table, (VALUE)psr->row);
 }
 
 void store_table(void *listener, void *table, int current_line)
 {
   rb_funcall((VALUE)listener, rb_intern("table"), 2, table, INT2FIX(current_line));
   VALUE new_table;
-  new_table = rb_ary_new;
 }
 
 void CParser_free(void *data) 
