@@ -2,6 +2,7 @@
 #define gherkin_parser_h
 
 #include <sys/types.h>
+#include "ruby.h"
 
 #if defined(_WIN32)
 #include <stddef.h>
@@ -59,5 +60,6 @@ typedef struct parser {
 int parser_init(parser *psr);
 size_t parser_scan(parser *psr, const char *data, size_t len);
 int parser_has_error(parser *psr);
+VALUE multiline_strip(VALUE text);
 
 #endif

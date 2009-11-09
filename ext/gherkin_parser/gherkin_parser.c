@@ -54,6 +54,7 @@ void store_scenario_content(void *listener, const char *keyword_at, size_t keywo
   kw = rb_str_new(keyword_at, keyword_length);
   con = rb_str_new(at, length);
   // Need multiline strip for con here
+  con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("chop!"), 0);
@@ -149,6 +150,18 @@ void store_table(void *listener, void *table, int current_line)
   rb_funcall((VALUE)listener, rb_intern("table"), 2, table, INT2FIX(current_line));
   VALUE new_table;
   new_table = rb_ary_new;
+}
+
+VALUE multiline_strip(VALUE text)
+{
+  // def multiline_strip(text)
+  //   text.split("\n").map{|s| s.strip}.join("\n").strip
+  // end
+  
+  VALUE tmp;
+  tmp = rb_str_split(text, "\n");
+  
+  return text;
 }
 
 void CParser_free(void *data) 
@@ -249,10 +262,10 @@ void Init_gherkin_parser()
   mParser = rb_define_module_under(mGherkin, "Parser");
   cCParser = rb_define_class_under(mParser, "CParser", rb_cObject);
   rb_define_alloc_func(cCParser, CParser_alloc);
-  rb_define_method(cCParser, "initialize", CParser_init,1);
-  rb_define_method(cCParser, "reset", CParser_reset,0);
-  rb_define_method(cCParser, "scan", CParser_scan,1);
-  rb_define_method(cCParser, "error?", CParser_has_error,0);
+  rb_define_method(cCParser, "initialize", CParser_init, 1);
+  rb_define_method(cCParser, "reset", CParser_reset, 0);
+  rb_define_method(cCParser, "scan", CParser_scan, 1);
+  rb_define_method(cCParser, "error?", CParser_has_error, 0);
   
   rb_eGherkinParserError = rb_const_get(mParser, rb_intern("ParsingError"));
 }
