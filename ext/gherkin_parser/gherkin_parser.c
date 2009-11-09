@@ -116,6 +116,8 @@ void store_pystring_content(void *listener, int start_col, const char *at, size_
 
 void initialize_table(parser *psr)
 {
+//    rb_ary_clear((VALUE)psr->table);
+//    rb_ary_clear((VALUE)psr->row);
   VALUE table, row;
   table = rb_ary_new();
   row = rb_ary_new();
@@ -136,10 +138,12 @@ void new_row(parser *psr)
 {
   VALUE row = rb_ary_new();
   psr->row = row;
+//    rb_ary_clear((VALUE)psr->row);
 }
 
 void end_row(parser *psr)
 {
+//  rb_ary_push((VALUE)psr->table, rb_ary_dup((VALUE)psr->row));
   rb_ary_push((VALUE)psr->table, (VALUE)psr->row);
 }
 
