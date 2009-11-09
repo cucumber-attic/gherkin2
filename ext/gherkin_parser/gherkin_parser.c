@@ -52,7 +52,7 @@ void store_tag_content(void *listener, const char *at, size_t length, int line)
 
 void raise_parser_error(void *listener, const char *at, int line)
 { 
-  rb_raise(rb_eGherkinParserError, "Parsing error on line %d: '%s'.", line, at); //, INT2FIX(line));
+  rb_raise(rb_eGherkinParserError, "Parsing error on line %d: '%s'.", line, at);
 }
 
 void store_feature_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
@@ -71,7 +71,6 @@ void store_scenario_content(void *listener, const char *keyword_at, size_t keywo
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
   con = rb_str_new(at, length);
-  // Need multiline strip for con here
   con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
@@ -84,7 +83,6 @@ void store_scenario_outline_content(void *listener, const char *keyword_at, size
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
   con = rb_str_new(at, length);
-  // Need multiline strip for con here
   con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
@@ -97,7 +95,6 @@ void store_background_content(void *listener, const char *keyword_at, size_t key
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
   con = rb_str_new(at, length);
-  // Need multiline strip for con here
   con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
@@ -110,7 +107,6 @@ void store_examples_content(void *listener, const char *keyword_at, size_t keywo
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
   con = rb_str_new(at, length);
-  // Need multiline strip for con here
   con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
@@ -123,7 +119,6 @@ void store_step_content(void *listener, const char *keyword_at, size_t keyword_l
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
   con = rb_str_new(at, length);
-  // Need multiline strip for con here
   con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
@@ -160,7 +155,7 @@ void add_cell_to_current_row(parser *psr, const char *at, size_t length)
 void new_row(parser *psr)
 {
   VALUE row = rb_ary_new();
-  psr->row = row;
+  psr->row = RARRAY(row);
 //    rb_ary_clear((VALUE)psr->row);
 }
 
@@ -173,7 +168,6 @@ void end_row(parser *psr)
 void store_table(void *listener, void *table, int current_line)
 {
   rb_funcall((VALUE)listener, rb_intern("table"), 2, table, INT2FIX(current_line));
-  VALUE new_table;
 }
 
 void CParser_free(void *data) 
@@ -198,10 +192,10 @@ VALUE CParser_alloc(VALUE klass)
   psr->store_pystring_content = store_pystring_content;
   psr->raise_parser_error = raise_parser_error;
   psr->store_table = store_table;
-  psr->initialize_table = (void *)&initialize_table;
-  psr->add_cell_to_current_row = (void *)&add_cell_to_current_row;
-  psr->new_row = (void *)&new_row;
-  psr->end_row = (void *)&end_row;
+  psr->initialize_table = (void *)initialize_table;
+  psr->add_cell_to_current_row = (void *)add_cell_to_current_row;
+  psr->new_row = (void *)new_row;
+  psr->end_row = (void *)end_row;
   parser_init(psr);
 
   obj = Data_Wrap_Struct(klass, NULL, CParser_free, psr);
@@ -246,7 +240,6 @@ VALUE CParser_scan(VALUE self, VALUE data)
   dptr = RSTRING_PTR(data);
   dlen = RSTRING_LEN(data);
 
-  // from is always 0.  if dlen = 0, 
   if(dlen == 0) { 
     rb_raise(rb_eGherkinParserError, 0, "No content to parse.");
   } else {
