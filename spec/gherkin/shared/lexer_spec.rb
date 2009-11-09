@@ -7,12 +7,12 @@ module Gherkin
 
       describe "Comments" do
         it "should parse a one line comment" do
-          @feature.scan("# My comment\n")
+          @lexer.scan("# My comment\n")
           @listener.to_sexp.should == [[:comment, "# My comment", 1]]
         end
 
         it "should parse a multiline comment" do
-          @feature.scan("# Hello\n\n# World\n")
+          @lexer.scan("# Hello\n\n# World\n")
           @listener.to_sexp.should == [
             [:comment, "# Hello", 1],
             [:comment, "# World", 3]
@@ -20,7 +20,7 @@ module Gherkin
         end
 
         it "should not consume comments as part of a multiline name" do
-          @feature.scan("Scenario: test\n#hello\n Scenario: another")
+          @lexer.scan("Scenario: test\n#hello\n Scenario: another")
           @listener.to_sexp.should == [
             [:scenario, "Scenario", "test", 1],
             [:comment, "#hello", 2],
@@ -29,7 +29,7 @@ module Gherkin
         end
 
         it "should allow empty comment lines" do 
-          @feature.scan("#\n   # A comment\n   #\n")
+          @lexer.scan("#\n   # A comment\n   #\n")
           @listener.to_sexp.should == [
             [:comment, "#", 1],
             [:comment, "# A comment", 2],
@@ -39,14 +39,14 @@ module Gherkin
         
         it "should not allow comments within the Feature description" do
           lambda { 
-            @feature.scan("Feature: something\nAs a something\n# Comment\nI want something") 
+            @lexer.scan("Feature: something\nAs a something\n# Comment\nI want something") 
             }.should raise_error(ParsingError)
         end
       end
 
       describe "Tags" do
         it "should not take the tags as part of a multiline name feature element" do
-          @feature.scan("Feature: hi\n Scenario: test\n\n@hello\n Scenario: another")
+          @lexer.scan("Feature: hi\n Scenario: test\n\n@hello\n Scenario: another")
           @listener.to_sexp.should == [
             [:feature, "Feature", "hi", 1],
             [:scenario, "Scenario", "test", 2],
@@ -58,7 +58,7 @@ module Gherkin
 
       describe "Background" do
         it "should allow an empty background description" do
-          @feature.scan("Background:\nGiven I am a step\n")
+          @lexer.scan("Background:\nGiven I am a step\n")
           @listener.to_sexp.should == [
             [:background, "Background", "", 1],
             [:step, "Given", "I am a step", 2]
@@ -66,14 +66,14 @@ module Gherkin
         end
         
         it "should allow multiline names ending at eof" do
-          @feature.scan("Background: I have several\n   Lines to look at\n None starting with Given")
+          @lexer.scan("Background: I have several\n   Lines to look at\n None starting with Given")
           @listener.to_sexp.should == [
             [:background, "Background", "I have several\nLines to look at\nNone starting with Given", 1]
           ]
         end
          
         it "should allow multiline names" do
-          @feature.scan(%{Feature: Hi
+          @lexer.scan(%{Feature: Hi
 Background: It is my ambition to say 
             in ten sentences
             what others say 
@@ -89,14 +89,14 @@ Given I am a step})
 
       describe "Scenarios" do
         it "should be parsed" do
-          @feature.scan("Scenario: Hello\n")
+          @lexer.scan("Scenario: Hello\n")
           @listener.to_sexp.should == [
             [:scenario, "Scenario", "Hello", 1]
           ]
         end
  
         it "should allow whitespace lines after the Scenario line" do
-          @feature.scan(%{Scenario: bar
+          @lexer.scan(%{Scenario: bar
 
                           Given baz
                           })
@@ -107,7 +107,7 @@ Given I am a step})
         end
         
         it "should allow multiline names" do
-          @feature.scan(%{Scenario: It is my ambition to say
+          @lexer.scan(%{Scenario: It is my ambition to say
                           in ten sentences
                           what others say 
                           in a whole book.
@@ -120,14 +120,14 @@ Given I am a step})
         end
 
         it "should allow multiline names ending at eof" do
-          @feature.scan("Scenario: I have several\n       Lines to look at\n None starting with Given")
+          @lexer.scan("Scenario: I have several\n       Lines to look at\n None starting with Given")
           @listener.to_sexp.should == [
             [:scenario, "Scenario", "I have several\nLines to look at\nNone starting with Given", 1]
           ]
         end
   
         it "should ignore gherkin keywords embedded in other words" do
-          @feature.scan(%{Scenario: I have a Button
+          @lexer.scan(%{Scenario: I have a Button
           Buttons are great
   Given I have some
   But I might not because I am a Charles Dickens character
@@ -140,7 +140,7 @@ Given I am a step})
         end
         
         it "should allow step names in Scenario descriptions" do
-          @feature.scan(%{Scenario: When I have when in scenario
+          @lexer.scan(%{Scenario: When I have when in scenario
           I should be fine
 Given I am a step
 })
@@ -153,7 +153,7 @@ Given I am a step
 
       describe "Scenario Outlines" do
         it "should be parsed" do
-          @feature.scan(%{Scenario Outline: Hello
+          @lexer.scan(%{Scenario Outline: Hello
                           Given a <what> cucumber
                           Examples:
                           |what|
@@ -168,7 +168,7 @@ Given I am a step
         end
 
         it "should parse with no steps or examples" do
-          @feature.scan(%{Scenario Outline: Hello
+          @lexer.scan(%{Scenario Outline: Hello
 
                           Scenario: My Scenario
                           })
@@ -179,7 +179,7 @@ Given I am a step
         end
 
         it "should allow multiline names" do
-          @feature.scan(%{Scenario Outline: It is my ambition to say 
+          @lexer.scan(%{Scenario Outline: It is my ambition to say 
                           in ten sentences
                           what others say 
                           in a whole book.
@@ -195,7 +195,7 @@ Given I am a step
 
       describe "Examples" do
         it "should be parsed" do
-          @feature.scan(%{Examples:
+          @lexer.scan(%{Examples:
                           |x|y|
                           |5|6|
                           })
@@ -206,7 +206,7 @@ Given I am a step
         end
         
         it "should parse multiline example names" do
-          @feature.scan(%{Examples: I'm a multiline name
+          @lexer.scan(%{Examples: I'm a multiline name
                           and I'm ok
                           f'real
                           |x|
@@ -221,7 +221,7 @@ Given I am a step
       
       describe "Steps" do
         it "should parse steps with inline table" do
-          @feature.scan(%{Given I have a table 
+          @lexer.scan(%{Given I have a table 
                           |a|b|
                           })
           @listener.to_sexp.should == [
@@ -231,7 +231,7 @@ Given I am a step
         end
         
         it "should parse steps with inline py_string" do
-          @feature.scan("Given I have a string\n\"\"\"\nhello\nworld\n\"\"\"")
+          @lexer.scan("Given I have a string\n\"\"\"\nhello\nworld\n\"\"\"")
           @listener.to_sexp.should == [
             [:step, "Given", "I have a string", 1],
             [:py_string, 0, "hello\nworld", 2]
@@ -241,7 +241,7 @@ Given I am a step
             
       describe "A single feature, single scenario, single step" do
         it "should find the feature, scenario, and step" do
-          @feature.scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n")
+          @lexer.scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n")
           @listener.to_sexp.should == [
             [:feature, "Feature", "Feature Text", 1],
             [:scenario, "Scenario", "Reading a Scenario", 2],
@@ -252,7 +252,7 @@ Given I am a step
 
       describe "A feature ending in whitespace" do
         it "should not raise an error when whitespace follows the Feature, Scenario, and Steps" do
-          @feature.scan("Feature: Feature Text\n Scenario: Reading a Scenario\n    Given there is a step\n    ")
+          @lexer.scan("Feature: Feature Text\n Scenario: Reading a Scenario\n    Given there is a step\n    ")
           @listener.to_sexp.should == [
             [:feature, "Feature", "Feature Text", 1],
             [:scenario, "Scenario", "Reading a Scenario", 2],
@@ -264,7 +264,7 @@ Given I am a step
       describe "A single feature, single scenario, three steps" do
         
         it "should find the feature, scenario, and three steps" do
-          @feature.scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n    And another step\n   And a third step\n")
+          @lexer.scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n    And another step\n   And a third step\n")
           @listener.to_sexp.should == [
             [:feature, "Feature", "Feature Text", 1],
             [:scenario, "Scenario", "Reading a Scenario", 2],
@@ -277,26 +277,26 @@ Given I am a step
 
       describe "A single feature with no scenario" do
         it "should find the feature" do
-          @feature.scan("Feature: Feature Text\n")
+          @lexer.scan("Feature: Feature Text\n")
           @listener.to_sexp.should == [[:feature, "Feature", "Feature Text", 1]]
         end
 
         it "should parse a one line feature with no newline" do
-          @feature.scan("Feature: hi")
+          @lexer.scan("Feature: hi")
           @listener.to_sexp.should == [[:feature, "Feature", "hi", 1]]
         end
       end
       
       describe "A multi-line feature with no scenario" do
         it "should find the feature" do
-          @feature.scan("Feature: Feature Text\n  And some more text")
+          @lexer.scan("Feature: Feature Text\n  And some more text")
           @listener.to_sexp.should == [[:feature, "Feature", "Feature Text\n  And some more text", 1]]
         end
       end
 
       describe "A feature with a scenario but no steps" do
         it "should find the feature and scenario" do
-          @feature.scan("Feature: Feature Text\nScenario: Reading a Scenario\n")
+          @lexer.scan("Feature: Feature Text\nScenario: Reading a Scenario\n")
           @listener.to_sexp.should == [
             [:feature, "Feature", "Feature Text", 1],
             [:scenario, "Scenario", "Reading a Scenario", 2]
@@ -306,7 +306,7 @@ Given I am a step
 
       describe "A feature with two scenarios" do
         it "should find the feature and two scenarios" do
-          @feature.scan("Feature: Feature Text\nScenario: Reading a Scenario\n  Given a step\n\nScenario: A second scenario\n Given another step\n")
+          @lexer.scan("Feature: Feature Text\nScenario: Reading a Scenario\n  Given a step\n\nScenario: A second scenario\n Given another step\n")
           @listener.to_sexp.should == [
             [:feature, "Feature", "Feature Text", 1],
             [:scenario, "Scenario", "Reading a Scenario", 2],
@@ -317,7 +317,7 @@ Given I am a step
         end
         
         it "should find the feature and two scenarios without indentation" do
-          @feature.scan("Feature: Feature Text\nScenario: Reading a Scenario\nGiven a step\nScenario: A second scenario\nGiven another step\n")
+          @lexer.scan("Feature: Feature Text\nScenario: Reading a Scenario\nGiven a step\nScenario: A second scenario\nGiven another step\n")
           @listener.to_sexp.should == [
             [:feature, "Feature", "Feature Text", 1],
             [:scenario, "Scenario", "Reading a Scenario", 2],
@@ -405,13 +405,13 @@ Given I am a step
           ["Some text\nFeature: Hi", 
             "Feature: Hi\nBackground:\nGiven something\nScenario A scenario",
             "Scenario: My scenario\nGiven foo\nAand bar\nScenario: another one\nGiven blah"].each do |text|
-              lambda { @feature.scan(text) }.should raise_error(ParsingError)
+              lambda { @lexer.scan(text) }.should raise_error(ParsingError)
           end
         end
         
         it "should include the line number and context of the error" do
           lambda {
-            @feature.scan("Feature: hello\nScenario: My scenario\nGiven foo\nAand blah\nHmmm wrong\nThen something something")
+            @lexer.scan("Feature: hello\nScenario: My scenario\nGiven foo\nAand blah\nHmmm wrong\nThen something something")
           }.should raise_error(ParsingError, "Parsing error on line 4: 'Aand blah'.")
         end
       end

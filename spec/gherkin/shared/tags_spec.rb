@@ -3,47 +3,47 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 module Gherkin
   module Lexer
-    shared_examples_for "a Gherkin lexer parsing tags" do
+    shared_examples_for "a Gherkin lexer lexing tags" do
       it "should parse a single tag" do
         @listener.should_receive(:tag).with("dog", 1)
-        @feature.scan("@dog\n")
+        @lexer.scan("@dog\n")
       end
   
       it "should parse multiple tags" do
         @listener.should_receive(:tag).twice
-        @feature.scan("@dog @cat\n")
+        @lexer.scan("@dog @cat\n")
       end
   
       it "should parse UTF-8 tags" do
         @listener.should_receive(:tag).with("シナリオテンプレート", 1)
-        @feature.scan("@シナリオテンプレート\n")
+        @lexer.scan("@シナリオテンプレート\n")
       end
         
       it "should parse mixed tags" do
         @listener.should_receive(:tag).with("wip", 1).ordered
         @listener.should_receive(:tag).with("Значения", 1).ordered
-        @feature.scan("@wip @Значения\n")
+        @lexer.scan("@wip @Значения\n")
       end
   
       it "should parse wacky identifiers" do
         @listener.should_receive(:tag).exactly(4).times
-        @feature.scan("@BJ-x98.77 @BJ-z12.33 @O_o" "@#not_a_comment\n")
+        @lexer.scan("@BJ-x98.77 @BJ-z12.33 @O_o" "@#not_a_comment\n")
       end
 
       # TODO: Ask on ML for opinions about this one
       it "should parse tags without spaces between them?" do
         @listener.should_receive(:tag).twice
-        @feature.scan("@one@two\n")
+        @lexer.scan("@one@two\n")
       end
     
       it "should not parse tags beginning with two @@ signs" do
         @listener.should_not_receive(:tag)
-        lambda { @feature.scan("@@test\n") }.should raise_error(ParsingError)
+        lambda { @lexer.scan("@@test\n") }.should raise_error(ParsingError)
       end
     
       it "should not parse a lone @ sign" do
         @listener.should_not_receive(:tag)
-        lambda { @feature.scan("@\n") }.should raise_error(ParsingError)
+        lambda { @lexer.scan("@\n") }.should raise_error(ParsingError)
       end
     end
   end

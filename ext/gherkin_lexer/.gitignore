@@ -1,6 +1,6 @@
 Makefile
 *.bundle
 *.log
-parser_en.c
+en.c
 *.o
 *dSYM/

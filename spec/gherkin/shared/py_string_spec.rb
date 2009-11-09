@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 module Gherkin
   module Lexer
-    shared_examples_for "a Gherkin lexer parsing py_strings" do
+    shared_examples_for "a Gherkin lexer lexing py_strings" do
             
       def ps(content)
         '"""%s"""' % ("\n" + content + "\n")
@@ -21,17 +21,17 @@ Feature: some feature
     Then bar
 EOS
         @listener.should_receive(:py_string).with(4, "      Hello\n    Goodbye", 4)
-        @feature.scan(str)
+        @lexer.scan(str)
       end
 
       it "should parse a simple py_string" do
         @listener.should_receive(:py_string).with(0, "I am a py_string", 1)
-        @feature.scan ps("I am a py_string")
+        @lexer.scan ps("I am a py_string")
       end
 
       it "should parse an empty py_string" do
         @listener.should_receive(:py_string).with(0, "", 4)
-        @feature.scan("Feature: Hi\nScenario: Hi\nGiven a step\n\"\"\"\n\"\"\"")
+        @lexer.scan("Feature: Hi\nScenario: Hi\nGiven a step\n\"\"\"\n\"\"\"")
       end
 
       it "should treat a string containing only newlines as only newlines" do
@@ -43,11 +43,11 @@ py_string = <<EOS
 """
 EOS
         @listener.should_receive(:py_string).with(0, "\n\n", 1)
-        @feature.scan(py_string)
+        @lexer.scan(py_string)
       end
       
       it "should parse content separated by two newlines" do
-        @feature.scan ps("A\n\nB")
+        @lexer.scan ps("A\n\nB")
         @listener.to_sexp.should == [
           [:py_string, 0, "A\n\nB", 1],
         ]
@@ -55,12 +55,12 @@ EOS
       
       it "should parse a multiline string" do
         @listener.should_receive(:py_string).with(0, "A\nB\nC\nD", 1)
-        @feature.scan ps("A\nB\nC\nD")
+        @lexer.scan ps("A\nB\nC\nD")
       end
             
       it "should ignore unescaped quotes inside the string delimeters" do
         @listener.should_receive(:py_string).with(0, "What does \"this\" mean?", 1)
-        @feature.scan ps('What does "this" mean?')
+        @lexer.scan ps('What does "this" mean?')
       end
       
       it "should preserve whitespace within the triple quotes" do
@@ -71,12 +71,12 @@ str = <<EOS
     """
 EOS
         @listener.should_receive(:py_string).with(4, "      Line one\n Line two", 1)
-        @feature.scan(str)
+        @lexer.scan(str)
       end
             
       it "should preserve tabs within the content" do
         @listener.should_receive(:py_string).with(0, "I have\tsome tabs\nInside\t\tthe content", 1)
-        @feature.scan ps("I have\tsome tabs\nInside\t\tthe content")
+        @lexer.scan ps("I have\tsome tabs\nInside\t\tthe content")
       end
   
       it "should handle complex py_strings" do
@@ -95,7 +95,7 @@ Feature: Sample
 EOS
         
         @listener.should_receive(:py_string).with(0, py_string, 1)
-        @feature.scan ps(py_string)
+        @lexer.scan ps(py_string)
       end
  
       it "should allow whitespace after the closing py_string delimiter" do
@@ -105,7 +105,7 @@ str = <<EOS
     """           
 EOS
         @listener.should_receive(:py_string).with(4, "      Line one", 1)
-        @feature.scan(str)
+        @lexer.scan(str)
       end
     end
   end

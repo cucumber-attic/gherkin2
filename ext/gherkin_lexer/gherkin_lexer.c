@@ -206,7 +206,7 @@ void Init_gherkin_lexer()
 {
   mGherkin = rb_define_module("Gherkin");
   mLexer = rb_define_module_under(mGherkin, "Lexer");
-  cCLexer = rb_define_class_under(mLexer, "CLexer", rb_cObject);
+  cCLexer = rb_define_class_under(mLexer, "C", rb_cObject);
   rb_define_alloc_func(cCLexer, CLexer_alloc);
   rb_define_method(cCLexer, "initialize", CLexer_init,1);
   rb_define_method(cCLexer, "reset", CLexer_reset,0);
