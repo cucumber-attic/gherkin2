@@ -90,7 +90,7 @@ module Gherkin
       it "should raise ParsingError for rows that aren't closed" do
         lambda { 
           @feature.scan("|| oh hello \n") 
-        }.should raise_error(ParsingError, "Parsing error on line 1: '|| oh hello'.")
+        }.should raise_error(ParsingError, /Parsing error on line 1: '|| oh hello/)
       end
     end
   end
