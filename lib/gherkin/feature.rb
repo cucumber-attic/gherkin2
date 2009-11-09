@@ -1,4 +1,4 @@
-require 'gherkin/syntax_policy'
+require 'gherkin/parser'
 
 module Gherkin
   # Parses the Cucumber Feature format
@@ -23,7 +23,7 @@ module Gherkin
   #
   #   Gherkin::Feature.new('it', Listener.new) raises FeatureSyntaxError on error
   #   Gherkin::Feature.new('en', AstBuilder.new, :raise_on_error => false) sends #syntax_error message to listener
-  class Feature < SyntaxPolicy    
+  class Feature < Parser    
     def initialize(i18n_lang, listener, args={})
       super
       @states = { 
@@ -32,12 +32,12 @@ module Gherkin
       }
       @current = @states[:feature]
     end
-    
+
     def scenario(*args)
       change_state(:scenario)
       dispatch(:scenario, *args)
     end
-
+    
     def scenario_outline(*args)
       change_state(:scenario_outline)
       dispatch(:scenario_outline, *args)

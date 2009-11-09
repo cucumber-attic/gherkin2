@@ -1,10 +1,10 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 module Gherkin
-  describe SyntaxPolicy do
+  describe Parser do
     before do
       @listener = mock('listener')
-      @policy = SyntaxPolicy.new('en', @listener)
+      @policy = Parser.new('en', @listener)
     end
     
     it "should raise errors by default" do

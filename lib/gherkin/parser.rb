@@ -11,7 +11,7 @@ module Gherkin
     end
   end
   
-  class SyntaxPolicy
+  class Parser
     extend Forwardable
     include States
     attr_writer :raise_on_error

@@ -1,7 +1,7 @@
-require 'gherkin/syntax_policy'
+require 'gherkin/parser'
 
 module Gherkin
-  class Steps < SyntaxPolicy    
+  class Steps < Parser    
     def initialize(i18n_lang, listener, args={})
       super
       @current = StepsState.new
