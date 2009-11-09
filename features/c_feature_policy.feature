@@ -1,9 +1,9 @@
 @c_lexer
-Feature: Gherkin Feature lexer/policy
+Feature: Gherkin Feature lexer/parser
   In order to make it easy to control the Gherkin syntax
   As a Gherkin developer bent on Gherkin world-domination
-  I want a feature lexer that uses a feature policy to
-    make all the syntax decisions for me
+  I want a feature lexer that uses a feature parser to
+  make all the syntax decisions for me
 
   Background:
     Given a C-language feature lexer

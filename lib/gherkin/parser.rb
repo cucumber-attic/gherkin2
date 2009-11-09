@@ -22,7 +22,7 @@ module Gherkin
       args = { :raise_on_error => true }.merge(args)
       @raise_on_error = args[:raise_on_error]
       @listener       = listener
-      @lexer         = Lexer[i18n_lang].new(self)
+      @lexer          = Lexer[i18n_lang].new(self)
       @current        = State.new
     end
 
