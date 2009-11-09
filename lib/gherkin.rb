@@ -1,9 +1,9 @@
-require 'gherkin/lexer'
+require 'gherkin/lexer' # TODO: Later we'll do this only as a fallback solution when Java/C is not available (unlikely)
 require 'gherkin/feature'
 require 'gherkin/steps'
 
-begin
-  # The C lexer, begin/rescue is temporary so we don't need to have it built to test
-  require 'gherkin_lexer'
-rescue LoadError
+if defined?(JRUBY_VERSION)
+  require 'gherkin/java_lexer'
+else
+  require 'gherkin/c_lexer'
 end

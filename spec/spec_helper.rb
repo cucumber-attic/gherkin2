@@ -2,6 +2,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'gherkin'
 require 'gherkin/sexp_recorder'
+require 'rubygems'
 require 'spec'
 require 'spec/autorun'
 require 'spec/gherkin/shared/lexer_spec'
