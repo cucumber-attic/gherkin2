@@ -2,7 +2,6 @@
 #define gherkin_parser_h
 
 #include <sys/types.h>
-#include "ruby.h"
 
 #if defined(_WIN32)
 #include <stddef.h>
