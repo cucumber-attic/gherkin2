@@ -1,11 +1,11 @@
-Feature: Gherkin Feature parser
+Feature: Gherkin Feature lexer
   In order to make it easy to control the Gherkin syntax
   As a Gherkin developer bent on Gherkin world-domination
-  I want a feature parser that uses a feature policy to
+  I want a feature lexer that uses a feature policy to
     make all the syntax decisions for me
 
   Background:
-    Given an English-language feature parser
+    Given an English-language feature lexer
 
   Scenario: Correctly formed feature
     Given the following text is parsed:

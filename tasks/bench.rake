@@ -65,9 +65,9 @@ class Benchmarker
     @features = Dir[GENERATED_FEATURES + "/**/*feature"]
   end
   
-  def report(parser)
+  def report(lexer)
     Benchmark.bm do |x|
-      x.report("#{parser}:") { send :"run_#{parser}" }
+      x.report("#{lexer}:") { send :"run_#{lexer}" }
     end
   end
   
@@ -92,13 +92,13 @@ class Benchmarker
   
   def run_tt
     require 'cucumber'
-    # Using Cucumber's Treetop parser, but never calling #build to build the AST
-    parser = Cucumber::Parser::NaturalLanguage.new(nil, 'en').parser
+    # Using Cucumber's Treetop lexer, but never calling #build to build the AST
+    lexer = Cucumber::Lexer::NaturalLanguage.new(nil, 'en').lexer
     @features.each do |file|
       source = IO.read(file)
-      parse_tree = parser.parse(source)
+      parse_tree = lexer.parse(source)
       if parse_tree.nil?
-        raise Cucumber::Parser::SyntaxError.new(parser, file, 0)
+        raise Cucumber::Lexer::SyntaxError.new(lexer, file, 0)
       end
     end
   end
@@ -108,8 +108,8 @@ class Benchmarker
     require 'null_listener'
     listener = NullListener.new
     @features.each do |feature|
-      parser = Gherkin::Feature.new('en', listener)
-      parser.scan(File.read(feature))
+      lexer = Gherkin::Feature.new('en', listener)
+      lexer.scan(File.read(feature))
     end
   end
 
@@ -118,8 +118,8 @@ class Benchmarker
     require 'null_listener'
     listener = NullListener.new
     @features.each do |feature|
-      parser = Gherkin::Feature.new('C', listener)
-      parser.scan(File.read(feature))
+      lexer = Gherkin::Feature.new('C', listener)
+      lexer.scan(File.read(feature))
     end
   end
 end
@@ -144,19 +144,19 @@ namespace :bench do
     benchmarker.report("cucumber")
   end
   
-  desc "Benchmark the Treetop parser with the features in tasks/bench/generated"
+  desc "Benchmark the Treetop lexer with the features in tasks/bench/generated"
   task :tt do
     benchmarker = Benchmarker.new
     benchmarker.report("tt")
   end
 
-  desc "Benchmark the Ruby Gherkin parser with the features in tasks/bench/generated"
+  desc "Benchmark the Ruby Gherkin lexer with the features in tasks/bench/generated"
   task :rb_gherkin do
     benchmarker = Benchmarker.new
     benchmarker.report("rb_gherkin")
   end
 
-  desc "Benchmark the C Gherkin parser with the features in tasks/bench/generated"
+  desc "Benchmark the C Gherkin lexer with the features in tasks/bench/generated"
   task :c_gherkin do
     benchmarker = Benchmarker.new
     benchmarker.report("c_gherkin")

@@ -16,13 +16,13 @@ module Gherkin
     include States
     attr_writer :raise_on_error
     
-    def_delegators :@parser, :scan
+    def_delegators :@lexer, :scan
     
     def initialize(i18n_lang, listener, args={})
       args = { :raise_on_error => true }.merge(args)
       @raise_on_error = args[:raise_on_error]
       @listener       = listener
-      @parser         = Parser[i18n_lang].new(self)
+      @lexer         = Lexer[i18n_lang].new(self)
       @current        = State.new
     end
 

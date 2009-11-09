@@ -2,8 +2,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 module Gherkin
-  module Parser
-    shared_examples_for "a Gherkin parser parsing tags" do
+  module Lexer
+    shared_examples_for "a Gherkin lexer parsing tags" do
       it "should parse a single tag" do
         @listener.should_receive(:tag).with("dog", 1)
         @feature.scan("@dog\n")

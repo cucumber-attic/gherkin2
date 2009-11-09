@@ -1,10 +1,10 @@
-Feature: Gherkin Steps parser
+Feature: Gherkin Steps lexer
   In order to save time and make my features clearer
   As a Cucumber developer
-  I want a steps parser to make writing compound steps easier
+  I want a steps lexer to make writing compound steps easier
 
   Background:
-    Given an English-language steps parser
+    Given an English-language steps lexer
     
   Scenario: Parsing steps
     Given the following text is parsed:
@@ -24,7 +24,7 @@ Feature: Gherkin Steps parser
       """
     Then there should be no syntax errors
     
-  Scenario: Trying to parse a full feature with the step parser
+  Scenario: Trying to parse a full feature with the step lexer
     Given the following text is parsed:
       """
       Feature: A Feature

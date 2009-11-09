@@ -7,13 +7,13 @@ class RagelCompiler
     
     @target = target
     @flag, @output_dir = case
-      when @target == "rb" then ["-R", "lib/gherkin/parser"]
-      when @target == "c" then ["-C", "ext/gherkin_parser"]
+      when @target == "rb" then ["-R", "lib/gherkin/lexer"]
+      when @target == "c" then ["-C", "ext/gherkin_lexer"]
     end
 
     @i18n_languages = YAML.load_file(File.dirname(__FILE__) + '/../lib/gherkin/i18n.yml')
-    @common_tmpl = ERB.new(IO.read(File.dirname(__FILE__) + '/../ragel/parser_common.rl.erb'))
-    @actions_tmpl = ERB.new(IO.read(File.dirname(__FILE__) + "/../ragel/parser.#{@target}.rl.erb"))
+    @common_tmpl = ERB.new(IO.read(File.dirname(__FILE__) + '/../ragel/lexer_common.rl.erb'))
+    @actions_tmpl = ERB.new(IO.read(File.dirname(__FILE__) + "/../ragel/lexer.#{@target}.rl.erb"))
   end
 
   def compile_all
@@ -25,13 +25,13 @@ class RagelCompiler
   def compile(i18n_language)
     FileUtils.mkdir(RL_OUTPUT_DIR) unless File.exist?(RL_OUTPUT_DIR)
     
-    common_path = RL_OUTPUT_DIR + "/parser_common.#{i18n_language}.rl"
-    actions_path = RL_OUTPUT_DIR + "/parser_#{i18n_language}.#{@target}.rl"
+    common_path = RL_OUTPUT_DIR + "/lexer_common.#{i18n_language}.rl"
+    actions_path = RL_OUTPUT_DIR + "/#{i18n_language}.#{@target}.rl"
     
     generate_common(i18n_language, common_path)
     generate_actions(i18n_language, actions_path)
     
-    sh "ragel #{@flag} #{actions_path} -o #{@output_dir}/parser_#{i18n_language}.#{@target}"
+    sh "ragel #{@flag} #{actions_path} -o #{@output_dir}/#{i18n_language}.#{@target}"
   end
   
   def generate_common(i18n_language, path)
@@ -41,7 +41,7 @@ class RagelCompiler
   end
   
   def generate_actions(i18n_language, path)
-    i18n_parser_class_name = i18n_language.gsub(/[\s-]/, '').capitalize + "Parser"
+    i18n_lexer_class_name = i18n_language.gsub(/[\s-]/, '').capitalize
     impl = @actions_tmpl.result(binding)
     write impl, path
   end
@@ -70,7 +70,7 @@ namespace :ragel do
   task :rb => :i18n_rb_en do
     Dir["ragel/*.rb.rl"].each do |rl|
       basename = File.basename(rl[0..-4])
-      sh "ragel -R #{rl} -o lib/gherkin/parser/#{basename}"
+      sh "ragel -R #{rl} -o lib/gherkin/lexer/#{basename}"
     end
   end
 
@@ -78,17 +78,17 @@ namespace :ragel do
   task :c do
     Dir["ragel/*.c.rl"].each do |rl|
       basename = File.basename(rl[0..-4])
-      sh "ragel -C #{rl} -o ext/gherkin_parser/#{basename}" 
+      sh "ragel -C #{rl} -o ext/gherkin_lexer/#{basename}" 
     end
     RagelCompiler.new("c").compile('en')
   end
 
-  desc "Generate all i18n Ruby parsers"
+  desc "Generate all i18n Ruby lexers"
   task :i18n_rb do
     RagelCompiler.new("rb").compile_all
   end
 
-  desc "Generate Ruby English language parser"
+  desc "Generate Ruby English language lexer"
   task :i18n_rb_en do
     RagelCompiler.new("rb").compile('en')
   end

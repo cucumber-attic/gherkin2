@@ -2,19 +2,19 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 module Gherkin
-  module Parser
+  module Lexer
     describe "i18n parsing" do
       before do
         @listener = Gherkin::SexpRecorder.new
       end
 
-      def scan_file(parser, file)
-        parser.scan(File.new(File.dirname(__FILE__) + "/gherkin_parser/" + file).read)
+      def scan_file(lexer, file)
+        lexer.scan(File.new(File.dirname(__FILE__) + "/fixtures/" + file).read)
       end
 
-      it "should recognize keywords in the language of the parser" do
-        parser = Gherkin::Parser['no'].new(@listener)
-        scan_file(parser, "i18n_no.feature")
+      it "should recognize keywords in the language of the lexer" do
+        lexer = Gherkin::Lexer['no'].new(@listener)
+        scan_file(lexer, "i18n_no.feature")
         @listener.to_sexp.should == [
           [:feature, "Egenskap", "i18n support", 1], 
           [:scenario, "Scenario", "Parsing many languages", 3], 
@@ -25,8 +25,8 @@ module Gherkin
       end
 
       it "should parse languages without a space after keywords" do
-        parser = Gherkin::Parser['zh-CN'].new(@listener)
-        scan_file(parser, "i18n_zh-CN.feature")
+        lexer = Gherkin::Lexer['zh-CN'].new(@listener)
+        scan_file(lexer, "i18n_zh-CN.feature")
         @listener.to_sexp.should == [
           [:feature, "功能", "加法", 1],
           [:scenario, "场景", "两个数相加", 3],

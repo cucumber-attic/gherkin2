@@ -1,5 +1,5 @@
-#ifndef gherkin_parser_h
-#define gherkin_parser_h
+#ifndef gherkin_lexer_h
+#define gherkin_lexer_h
 
 #include <sys/types.h>
 
@@ -15,7 +15,7 @@ typedef void (*listener_pystring_cb)(void *listener, int start_col, const char *
 
 typedef void (*listener_table_cb)(void *listener, int line);
 
-typedef struct parser {
+typedef struct lexer {
   int cs;
   int content_len;
   int line_number;
@@ -37,7 +37,7 @@ typedef struct parser {
 
   listener_cb store_comment_content;
   listener_cb store_tag_content;
-  listener_error_cb raise_parser_error;
+  listener_error_cb raise_lexer_error;
   listener_long_cb store_feature_content;
   listener_long_cb store_scenario_content;
   listener_long_cb store_scenario_outline_content;
@@ -46,10 +46,10 @@ typedef struct parser {
   listener_long_cb store_step_content;
   listener_pystring_cb store_pystring_content;
   listener_table_cb store_table;
-} parser;
+} lexer;
 
-int parser_init(parser *psr);
-size_t parser_scan(parser *psr, const char *data, size_t len);
-int parser_has_error(parser *psr);
+int lexer_init(lexer *psr);
+size_t lexer_scan(lexer *psr, const char *data, size_t len);
+int lexer_has_error(lexer *psr);
 
 #endif

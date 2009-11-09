@@ -2,8 +2,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 module Gherkin
-  module Parser
-    shared_examples_for "a Gherkin parser parsing py_strings" do
+  module Lexer
+    shared_examples_for "a Gherkin lexer parsing py_strings" do
             
       def ps(content)
         '"""%s"""' % ("\n" + content + "\n")

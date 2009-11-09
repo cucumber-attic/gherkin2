@@ -1,8 +1,8 @@
-@c_parser
-Feature: C Parser
+@c_lexer
+Feature: C Lexer
 
   Background:
-    Given a C-language feature parser
+    Given a C-language feature lexer
 
   Scenario: Parsing an empty feature
     Given the following text is parsed:

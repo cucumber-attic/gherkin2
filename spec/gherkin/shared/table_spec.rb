@@ -2,8 +2,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 module Gherkin
-  module Parser
-    shared_examples_for "a Gherkin parser parsing tables" do
+  module Lexer
+    shared_examples_for "a Gherkin lexer parsing tables" do
       tables = {
         "|a|b|\n"        => [%w{a b}],
         "|a|b|c|\n"      => [%w{a b c}],
@@ -34,7 +34,7 @@ module Gherkin
       
       it "should allow utf-8" do
         #  Fails in 1.9.1! 
-        #  'Gherkin::Parser::Table should allow utf-8 with using == to evaluate' FAILED 
+        #  'Gherkin::Lexer::Table should allow utf-8 with using == to evaluate' FAILED 
         #    expected: [[:table, [["ůﻚ", "2"]], 1]],
         #         got: [[:table, [["\xC5\xAF\xEF\xBB\x9A", "2"]], 1]] (using ==)
         #  BUT, simply running:

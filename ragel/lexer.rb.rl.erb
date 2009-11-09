@@ -1,13 +1,13 @@
 module Gherkin
-  module Parser
-    class <%= i18n_parser_class_name %> #:nodoc:
+  module Lexer
+    class <%= i18n_lexer_class_name %> #:nodoc:
       %%{
         # patterns:
         # * data[start...end].pack("c*").strip_of_some_sort
         # * changing the end point of the range according to next_keyword_start
         # * methods taking the machine state because Ragel doesn't seem to know about ivars
  
-        machine parser;
+        machine lexer;
  
         action begin_content {
           @content_start = p
@@ -128,13 +128,13 @@ module Gherkin
         }
 
         action end_feature {
-          if cs < parser_first_final
+          if cs < lexer_first_final
             content = current_line_content(data, p)
             raise ParsingError.new("Parsing error on line %d: '%s'." % [@line_number, content])
           end
         }
 
-        include parser_common "parser_common.<%= i18n_language %>.rl"; 
+        include lexer_common "lexer_common.<%= i18n_language %>.rl"; 
       }%%
  
       def initialize(listener)

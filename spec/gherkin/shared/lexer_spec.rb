@@ -2,8 +2,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 module Gherkin
-  module Parser
-    shared_examples_for "a Gherkin parser" do
+  module Lexer
+    shared_examples_for "a Gherkin lexer" do
 
       describe "Comments" do
         it "should parse a one line comment" do

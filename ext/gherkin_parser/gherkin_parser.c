@@ -2,7 +2,7 @@
 #include "ext_help.h"
 #include <assert.h>
 #include <string.h>
-#include "gherkin_parser.h"
+#include "gherkin_lexer.h"
 
 #ifndef RSTRING_PTR
 #define RSTRING_PTR(s) (RSTRING(s)->ptr)
@@ -12,9 +12,9 @@
 #endif
 
 static VALUE mGherkin;
-static VALUE mParser;
-static VALUE cCParser; 
-static VALUE rb_eGherkinParserError;
+static VALUE mLexer;
+static VALUE cCLexer; 
+static VALUE rb_eGherkinLexerError;
 
 void store_comment_content(void *listener, const char *at, size_t length, int line) 
 { 
@@ -32,9 +32,9 @@ void store_tag_content(void *listener, const char *at, size_t length, int line)
   rb_funcall((VALUE)listener, rb_intern("tag"), 2, val, INT2FIX(line)); 
 } 
 
-void raise_parser_error(void *listener, const char *at, int line)
+void raise_lexer_error(void *listener, const char *at, int line)
 { 
-  rb_raise(rb_eGherkinParserError, "Parsing error on line %d: '%s'.", line, at); //, INT2FIX(line));
+  rb_raise(rb_eGherkinLexerError, "Parsing error on line %d: '%s'.", line, at); //, INT2FIX(line));
 }
 
 void store_feature_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
@@ -119,17 +119,17 @@ void store_table(void *listener, int current_line)
   rb_funcall((VALUE)listener, rb_intern("table"), 2, rb_ary_new(), INT2FIX(current_line));
 }
 
-void CParser_free(void *data) 
+void CLexer_free(void *data) 
 {
   if(data) {
     free(data);
   }
 }
 
-VALUE CParser_alloc(VALUE klass)
+VALUE CLexer_alloc(VALUE klass)
 {
   VALUE obj;
-  parser *psr = ALLOC_N(parser, 1);
+  lexer *psr = ALLOC_N(lexer, 1);
   psr->store_comment_content = store_comment_content;
   psr->store_tag_content = store_tag_content;
   psr->store_feature_content = store_feature_content;
@@ -139,42 +139,42 @@ VALUE CParser_alloc(VALUE klass)
   psr->store_examples_content = store_examples_content;
   psr->store_step_content = store_step_content;
   psr->store_pystring_content = store_pystring_content;
-  psr->raise_parser_error = raise_parser_error;
+  psr->raise_lexer_error = raise_lexer_error;
   psr->store_table = store_table;
-  parser_init(psr);
+  lexer_init(psr);
 
-  obj = Data_Wrap_Struct(klass, NULL, CParser_free, psr);
+  obj = Data_Wrap_Struct(klass, NULL, CLexer_free, psr);
 
   return obj;
 }
 
-VALUE CParser_init(VALUE self, VALUE listener)
+VALUE CLexer_init(VALUE self, VALUE listener)
 {
   rb_iv_set(self, "@listener", listener);
-  parser *psr = NULL;
-  DATA_GET(self, parser, psr);
-  parser_init(psr);
+  lexer *psr = NULL;
+  DATA_GET(self, lexer, psr);
+  lexer_init(psr);
   psr->listener = ROBJECT(listener);
 
   return self;
 }
 
-VALUE CParser_reset(VALUE self)
+VALUE CLexer_reset(VALUE self)
 {
-  parser *psr = NULL;
-  DATA_GET(self, parser, psr);
-  parser_init(psr);
+  lexer *psr = NULL;
+  DATA_GET(self, lexer, psr);
+  lexer_init(psr);
  
   return Qnil;
 }
 
-VALUE CParser_scan(VALUE self, VALUE data)
+VALUE CLexer_scan(VALUE self, VALUE data)
 {
-  parser *psr = NULL;
+  lexer *psr = NULL;
   char *dptr = NULL;
   long dlen = 0;
  
-  DATA_GET(self, parser, psr);
+  DATA_GET(self, lexer, psr);
 
   rb_str_append(data, rb_str_new2("\n%_FEATURE_END_%"));
   dptr = RSTRING_PTR(data);
@@ -182,36 +182,36 @@ VALUE CParser_scan(VALUE self, VALUE data)
 
   // from is always 0.  if dlen = 0, 
   if(dlen == 0) { 
-    rb_raise(rb_eGherkinParserError, 0, "No content to parse.");
+    rb_raise(rb_eGherkinLexerError, 0, "No content to parse.");
   } else {
-    parser_scan(psr, dptr, dlen);
+    lexer_scan(psr, dptr, dlen);
 
-    if(parser_has_error(psr)) {
-      rb_raise(rb_eGherkinParserError, 0, "Invalid format, parsing fails.");
+    if(lexer_has_error(psr)) {
+      rb_raise(rb_eGherkinLexerError, 0, "Invalid format, parsing fails.");
     } else {
       return 1;
     }
   }
 }
 
-VALUE CParser_has_error(VALUE self)
+VALUE CLexer_has_error(VALUE self)
 {
-  parser *psr = NULL;
-  DATA_GET(self, parser, psr);
+  lexer *psr = NULL;
+  DATA_GET(self, lexer, psr);
   
-  return parser_has_error(psr) ? Qtrue : Qfalse;
+  return lexer_has_error(psr) ? Qtrue : Qfalse;
 }
 
-void Init_gherkin_parser()
+void Init_gherkin_lexer()
 {
   mGherkin = rb_define_module("Gherkin");
-  mParser = rb_define_module_under(mGherkin, "Parser");
-  cCParser = rb_define_class_under(mParser, "CParser", rb_cObject);
-  rb_define_alloc_func(cCParser, CParser_alloc);
-  rb_define_method(cCParser, "initialize", CParser_init,1);
-  rb_define_method(cCParser, "reset", CParser_reset,0);
-  rb_define_method(cCParser, "scan", CParser_scan,1);
-  rb_define_method(cCParser, "error?", CParser_has_error,0);
+  mLexer = rb_define_module_under(mGherkin, "Lexer");
+  cCLexer = rb_define_class_under(mLexer, "CLexer", rb_cObject);
+  rb_define_alloc_func(cCLexer, CLexer_alloc);
+  rb_define_method(cCLexer, "initialize", CLexer_init,1);
+  rb_define_method(cCLexer, "reset", CLexer_reset,0);
+  rb_define_method(cCLexer, "scan", CLexer_scan,1);
+  rb_define_method(cCLexer, "error?", CLexer_has_error,0);
   
-  rb_eGherkinParserError = rb_const_get(mParser, rb_intern("ParsingError"));
+  rb_eGherkinLexerError = rb_const_get(mLexer, rb_intern("ParsingError"));
 }

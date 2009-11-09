@@ -8,5 +8,5 @@ Rake::RDocTask.new do |rdoc|
   rdoc.title = "Gherkin #{version}"
   rdoc.rdoc_files.include('README.rdoc')
   rdoc.rdoc_files.include('lib/**/*.rb')
-  rdoc.rdoc_files.exclude('lib/gherkin/parser')
+  rdoc.rdoc_files.exclude('lib/gherkin/lexer')
 end

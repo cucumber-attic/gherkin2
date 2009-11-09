@@ -1,11 +1,11 @@
 = Gherkin
 
-Fast Gherkin parser based on Ragel. 
+Fast Gherkin lexer based on Ragel. 
 
 Gherkin is the language that has evolved out of the Cucumber project. Cucumber currently uses
 Treetop, which is too slow for larger projects.
 
-This project will *not* include code to build an AST. Instead, this parser will have an API
+This project will *not* include code to build an AST. Instead, this lexer will have an API
 that makes it possible to plug in a builder that can build an AST.
 
 == Notes
@@ -24,7 +24,7 @@ The final version will use C for MRI and Java for JRuby.
 == Note on Patches/Pull Requests
  
 * Fork the project.
-* Run rake ragel:i18n_rb to generate all the I18N parsers
+* Run rake ragel:i18n_rb to generate all the I18N lexers
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
   future version unintentionally.

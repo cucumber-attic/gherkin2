@@ -1,0 +1,260 @@
+#include "gherkin_lexer.h"
+#include <stdio.h>
+#include <assert.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+
+
+#define LEN(AT, FPC) (FPC - buffer - lexer->AT)
+#define MARK(M,FPC) (lexer->M = (FPC) - buffer)
+#define PTR_TO(F) (buffer + lexer->F)
+
+/** Machine **/
+
+%%{
+  machine lexer;
+ 
+  action begin_content {
+		MARK(content_start, fpc);
+    lexer->current_line = lexer->line_number;
+  }
+  
+  action begin_pystring_content {
+    MARK(content_start, fpc);
+  }
+
+  action start_pystring {
+    lexer->current_line = lexer->line_number;
+    lexer->start_col = fpc - buffer - lexer->last_newline;
+  }
+ 
+  action store_pystring_content {
+    if (lexer->store_pystring_content != NULL) {
+      int len = LEN(content_start, PTR_TO(final_newline));
+      if (len >= 0) { // not an empty pystring
+        lexer->store_pystring_content(lexer->listener, lexer->start_col, PTR_TO(content_start), LEN(content_start, PTR_TO(final_newline)), lexer->current_line); 
+      }
+      else { // Empty pystring
+        lexer->store_pystring_content(lexer->listener, lexer->start_col, PTR_TO(content_start), 0, lexer->current_line); 
+      } 
+    }
+  } 
+ 
+  action store_feature_content {
+    if (lexer->store_feature_content != NULL) {
+			lexer->store_feature_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+      if(lexer->content_end != 0) {
+        fpc = PTR_TO(content_end - 1);
+      }
+      lexer->content_end = 0;
+    }
+  }
+  
+  action store_background_content {
+    if (lexer->store_background_content != NULL) {
+			lexer->store_background_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+      if(lexer->content_end != 0) {
+        fpc = PTR_TO(content_end - 1);
+      }
+      lexer->content_end = 0;
+    }
+  }
+  
+  action store_scenario_content {
+    if (lexer->store_scenario_content != NULL) {
+			lexer->store_scenario_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+      if(lexer->content_end != 0) {
+        fpc = PTR_TO(content_end - 1);
+      }
+      lexer->content_end = 0;
+    }
+  }
+  
+  action store_scenario_outline_content {
+    if (lexer->store_scenario_outline_content != NULL) {
+			lexer->store_scenario_outline_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+      if(lexer->content_end != 0) {
+        fpc = PTR_TO(content_end - 1);
+      }
+      lexer->content_end = 0;
+    }
+  }
+  
+  action store_examples_content {
+    if (lexer->store_examples_content != NULL) {
+			lexer->store_examples_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+      if(lexer->content_end != 0) {
+        fpc = PTR_TO(content_end - 1);
+      }
+      lexer->content_end = 0;
+    }
+  }
+  
+  action store_step_content {
+    if (lexer->store_step_content != NULL) {
+			lexer->store_step_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, fpc), lexer->current_line);
+    }
+  }
+  
+  action store_comment_content {
+    if(lexer->store_comment_content != NULL) {
+      lexer->store_comment_content(lexer->listener, PTR_TO(content_start), LEN(content_start,fpc), lexer->line_number);
+    }
+  }
+  
+  action store_tag_content {
+    if (lexer->store_tag_content != NULL) {
+      lexer->store_tag_content(lexer->listener, PTR_TO(content_start), LEN(content_start, fpc), lexer->line_number);
+    }
+  }
+  
+  action inc_line_number {
+    lexer->line_number += 1;
+    MARK(final_newline, fpc);
+  }
+    
+  action last_newline {
+    MARK(last_newline, fpc + 1);
+  }
+ 
+  action start_keyword {
+    if(lexer->mark == 0) {
+      MARK(mark, fpc);
+    }
+  }
+  
+  action end_keyword {
+    MARK(keyword_end, fpc);
+    MARK(keyword_start, PTR_TO(mark));
+    MARK(content_start, fpc + 1);
+    lexer->mark = 0;
+  }
+  
+  action next_keyword_start {
+    MARK(content_end, fpc);
+  }
+
+  action start_table {
+    p = p - 1;
+    lexer->current_line = lexer->line_number;
+  }
+  
+  action begin_cell_content {
+  }
+
+  action store_cell_content {
+  }
+
+  action start_row {
+  }  
+
+  action store_row {
+  }
+
+  action store_table {
+    if (lexer->store_table != NULL) {
+      lexer->store_table(lexer->listener, lexer->current_line);
+    }
+  }
+
+  action end_table {
+    // printf("end_table\n");
+    p = p - 1;
+  }
+ 
+  action end_feature {
+    if (cs < lexer_first_final) {
+      if (lexer->raise_lexer_error != NULL) {
+        int count = 0;
+        int newstr_count = 0;
+        size_t len;
+        const char *buff;
+        if (lexer->last_newline != 0) {
+          len = LEN(last_newline, eof);
+          buff = PTR_TO(last_newline);
+        } else {
+          len = strlen(buffer);
+          buff = buffer;
+        }
+        char newstr[len]; 
+        for(count = 0; count < len; count++) {
+          if(buff[count] == 10) {
+            newstr[newstr_count] = '\0'; // terminate new string at first newline found
+            break;
+          } else {
+            if (buff[count] == '%') {
+              newstr[newstr_count++] = buff[count];
+              newstr[newstr_count] = buff[count];
+            } else {
+              newstr[newstr_count] = buff[count];
+            }
+          }
+          newstr_count++;
+        }
+        int line = lexer->line_number;
+        lexer_init(lexer); // Otherwise you can't scan again with the same lexer
+                             // calling after raising doesn't do the trick.
+        lexer->raise_lexer_error(lexer->listener, newstr, line);
+      }
+    }
+  }
+
+  include lexer_common "lexer_common.<%= i18n_language %>.rl";   
+
+}%%
+
+/** Data **/
+%% write data;
+
+int lexer_init(lexer *lexer) {
+  int cs = 0;
+  %% write init;
+  lexer->cs = cs;
+  lexer->content_start = 0;
+  lexer->content_end = 0;
+  lexer->content_len = 0;
+  lexer->mark = 0;
+  lexer->field_len = 0;
+  lexer->keyword_start = 0;
+  lexer->keyword_end = 0;
+  lexer->next_keyword_start = 0;
+  lexer->line_number = 1;
+  lexer->last_newline = 0;
+  lexer->final_newline = 0;
+  lexer->start_col = 0;
+  
+  return(1);
+}
+
+/** exec **/
+size_t lexer_scan(lexer *lexer, const char *buffer, size_t len) {
+  const char *p, *pe, *eof;
+  int cs = lexer->cs;
+
+  p = buffer;
+  pe = buffer+len;
+  eof = pe;
+
+  assert(*pe == '\0' && "pointer does not end on NUL");
+  assert(pe - p == len && "pointers aren't same distance");
+
+  %% write exec;
+
+  lexer->cs = cs;
+  
+  assert(p <= pe && "buffer overflow after parsing execute");
+  assert(lexer->content_start <= len && "content starts after buffer end");
+  assert(lexer->mark < len && "mark is after buffer end");
+  assert(lexer->field_len <= len && "field has length longer than the whole buffer");
+//  assert(lexer->field_start < len && "field starts after buffer end");
+
+// Reset lexer (by re-initializing the whole thing) 
+  lexer_init(lexer);
+  
+  return(lexer_has_error(lexer));
+}
+
+int lexer_has_error(lexer *lexer) {
+  return lexer->cs == lexer_error;
+}

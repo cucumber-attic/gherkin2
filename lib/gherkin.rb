@@ -1,9 +1,9 @@
-require 'gherkin/parser'
+require 'gherkin/lexer'
 require 'gherkin/feature'
 require 'gherkin/steps'
 
 begin
-  # The C parser, begin/rescue is temporary so we don't need to have it built to test
-  require 'gherkin_parser'
+  # The C lexer, begin/rescue is temporary so we don't need to have it built to test
+  require 'gherkin_lexer'
 rescue LoadError
 end
