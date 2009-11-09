@@ -16,6 +16,24 @@ static VALUE mParser;
 static VALUE cCParser; 
 static VALUE rb_eGherkinParserError;
 
+static VALUE strip_i(VALUE str, VALUE ary)
+{
+  rb_funcall(str, rb_intern("strip!"), 0);
+  rb_ary_push(ary, str);
+  
+  return Qnil;
+}
+
+static VALUE multiline_strip(VALUE text)
+{
+  VALUE map = rb_ary_new();
+  VALUE split = rb_str_split(text, "\n");
+  
+  rb_iterate(rb_each, split, strip_i, map);
+  
+  return rb_ary_join(split, rb_str_new2("\n"));
+}
+
 void store_comment_content(void *listener, const char *at, size_t length, int line) 
 { 
   VALUE val = Qnil;
@@ -67,6 +85,7 @@ void store_scenario_outline_content(void *listener, const char *keyword_at, size
   kw = rb_str_new(keyword_at, keyword_length);
   con = rb_str_new(at, length);
   // Need multiline strip for con here
+  con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("chop!"), 0);
@@ -79,6 +98,7 @@ void store_background_content(void *listener, const char *keyword_at, size_t key
   kw = rb_str_new(keyword_at, keyword_length);
   con = rb_str_new(at, length);
   // Need multiline strip for con here
+  con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("chop!"), 0);
@@ -91,6 +111,7 @@ void store_examples_content(void *listener, const char *keyword_at, size_t keywo
   kw = rb_str_new(keyword_at, keyword_length);
   con = rb_str_new(at, length);
   // Need multiline strip for con here
+  con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("chop!"), 0);
@@ -103,6 +124,7 @@ void store_step_content(void *listener, const char *keyword_at, size_t keyword_l
   kw = rb_str_new(keyword_at, keyword_length);
   con = rb_str_new(at, length);
   // Need multiline strip for con here
+  con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall((VALUE)listener, rb_intern("step"), 3, kw, con, INT2FIX(current_line)); 
@@ -150,18 +172,6 @@ void store_table(void *listener, void *table, int current_line)
   rb_funcall((VALUE)listener, rb_intern("table"), 2, table, INT2FIX(current_line));
   VALUE new_table;
   new_table = rb_ary_new;
-}
-
-VALUE multiline_strip(VALUE text)
-{
-  // def multiline_strip(text)
-  //   text.split("\n").map{|s| s.strip}.join("\n").strip
-  // end
-  
-  VALUE tmp;
-  tmp = rb_str_split(text, "\n");
-  
-  return text;
 }
 
 void CParser_free(void *data) 
