@@ -198,10 +198,10 @@ VALUE CParser_alloc(VALUE klass)
   psr->store_pystring_content = store_pystring_content;
   psr->raise_parser_error = raise_parser_error;
   psr->store_table = store_table;
-  psr->initialize_table = initialize_table;
-  psr->add_cell_to_current_row = add_cell_to_current_row;
-  psr->new_row = new_row;
-  psr->end_row = end_row;
+  psr->initialize_table = (void *)&initialize_table;
+  psr->add_cell_to_current_row = (void *)&add_cell_to_current_row;
+  psr->new_row = (void *)&new_row;
+  psr->end_row = (void *)&end_row;
   parser_init(psr);
 
   obj = Data_Wrap_Struct(klass, NULL, CParser_free, psr);
