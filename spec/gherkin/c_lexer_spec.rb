@@ -6,7 +6,7 @@ module Gherkin
     describe "C Lexer" do
       before do
         @listener = Gherkin::SexpRecorder.new
-        @lexer = Gherkin::Lexer['C'].new(@listener)
+        @lexer = Gherkin::Lexer::CLexer.new(@listener)
       end
 
       def scan_file(file)

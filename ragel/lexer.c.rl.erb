@@ -136,33 +136,41 @@
   }
 
   action start_table {
-    p = p - 1;
-    lexer->current_line = lexer->line_number;
+    if (lexer->initialize_table != NULL) {
+      p = p - 1;
+      lexer->current_line = lexer->line_number;
+      lexer->initialize_table(lexer);
+    }
   }
   
   action begin_cell_content {
+		MARK(content_start, fpc);
   }
 
   action store_cell_content {
+    if (lexer->add_cell_to_current_row != NULL) {
+      lexer->add_cell_to_current_row(lexer, PTR_TO(content_start), LEN(content_start, fpc)); 
+    }
   }
 
   action start_row {
+    if (lexer->new_row != NULL) {
+      lexer->new_row(lexer);
+    }
   }  
 
   action store_row {
+    if (lexer->end_row != NULL) {
+      lexer->end_row(lexer);
+    }
   }
 
   action store_table {
     if (lexer->store_table != NULL) {
-      lexer->store_table(lexer->listener, lexer->current_line);
+      lexer->store_table(lexer->listener, lexer->table,  lexer->current_line);
     }
   }
 
-  action end_table {
-    // printf("end_table\n");
-    p = p - 1;
-  }
- 
   action end_feature {
     if (cs < lexer_first_final) {
       if (lexer->raise_lexer_error != NULL) {

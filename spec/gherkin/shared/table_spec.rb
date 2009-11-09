@@ -13,7 +13,7 @@ module Gherkin
       tables.each do |text, expected|
         it "should parse #{text}" do
           @listener.should_receive(:table).with(expected, 1)
-          @lexer.scan(text)
+          @lexer.scan(text.dup)
         end
       end
       
@@ -90,7 +90,7 @@ module Gherkin
       it "should raise ParsingError for rows that aren't closed" do
         lambda { 
           @lexer.scan("|| oh hello \n") 
-        }.should raise_error(ParsingError, "Parsing error on line 1: '|| oh hello'.")
+        }.should raise_error(ParsingError, /Parsing error on line 1: '|| oh hello/)
       end
     end
   end

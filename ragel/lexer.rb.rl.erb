@@ -123,10 +123,6 @@ module Gherkin
           end 
         }
  
-        action end_table {
-          p = p - 1
-        }
-
         action end_feature {
           if cs < lexer_first_final
             content = current_line_content(data, p)
