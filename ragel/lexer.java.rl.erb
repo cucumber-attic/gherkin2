@@ -1,0 +1,113 @@
+package gherkin.lexer;
+
+import gherkin.Lexer;
+import gherkin.Listener;
+
+public class <%= i18n_lexer_class_name %> implements Lexer {
+  %%{
+    machine lexer;
+
+    action begin_content {
+      contentStart = p;
+      currentLine = lineNumber;
+    }
+
+    action start_pystring {
+      currentLine = lineNumber;
+    }
+    
+    action begin_pystring_content {
+      contentStart = p;
+    }
+
+    action store_pystring_content {
+    }
+
+    action store_feature_content {          
+    }
+
+    action store_background_content {
+    }
+
+    action store_scenario_content {
+    }
+
+    action store_scenario_outline_content {
+    }
+
+    action store_examples_content {
+    }
+
+    action store_step_content {
+    }
+
+    action store_comment_content {
+    }
+
+    action store_tag_content {
+      listener.tag(input.substring(contentStart, p), currentLine);
+    }
+
+    action inc_line_number {
+      currentLine++;
+    }
+
+    action last_newline {
+    }
+
+    action start_keyword {
+    }
+
+    action end_keyword {
+    }
+
+    action next_keyword_start {
+    }
+
+    action start_table {
+      currentLine = lineNumber;
+    }
+
+    action start_row {
+    }
+
+    action begin_cell_content {
+      contentStart = p;
+    }
+
+    action store_cell_content {
+    }
+
+    action store_row {
+    }
+
+    action store_table {
+    }
+
+    action end_feature {
+    }
+
+    include lexer_common "lexer_common.<%= i18n_language %>.rl"; 
+  }%%
+
+    private final Listener listener;
+
+    public <%= i18n_lexer_class_name %>(Listener listener) {
+        this.listener = listener;
+    }
+
+    %% write data noerror;
+
+    public void scan(CharSequence inputSequence) {
+        String input = inputSequence.toString();
+        char[] data = input.toCharArray();
+        int cs, p = 0, pe = data.length;
+        int eof = p;
+        int contentStart = 0;
+        int currentLine = 1;
+        int lineNumber = 1;
+
+        %% write init;
+        %% write exec;
+    }
+}
