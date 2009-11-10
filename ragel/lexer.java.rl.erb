@@ -1,0 +1,184 @@
+package gherkin.lexer;
+
+import java.util.List;
+import java.util.ArrayList;
+import gherkin.Lexer;
+import gherkin.Listener;
+import gherkin.ParseException;
+
+public class <%= i18n_lexer_class_name %> implements Lexer {
+  %%{
+    machine lexer;
+
+    action begin_content {
+      contentStart = p;
+      currentLine = lineNumber;
+    }
+
+    action start_pystring {
+      currentLine = lineNumber;
+      startCol = p - lastNewline;
+    }
+    
+    action begin_pystring_content {
+      contentStart = p;
+    }
+
+    action store_pystring_content {
+      String con = input.substring(contentStart, nextKeywordStart-1).replaceFirst("(\\r?\\n)?( )*\\Z", "");
+      listener.py_string(startCol, con, currentLine);
+    }
+
+    action store_feature_content {
+      String con = keywordContent(input, p, eof, nextKeywordStart, contentStart).trim();
+      listener.feature(keyword, con, currentLine);
+      if(nextKeywordStart != -1) p = nextKeywordStart - 1;
+      nextKeywordStart = -1;
+    }
+
+    action store_background_content {
+      String con = multilineStrip(keywordContent(input, p, eof, nextKeywordStart, contentStart));
+      listener.background(keyword, con, currentLine);
+      if(nextKeywordStart != -1) p = nextKeywordStart - 1;
+      nextKeywordStart = -1;
+    }
+
+    action store_scenario_content {
+      String con = multilineStrip(keywordContent(input, p, eof, nextKeywordStart, contentStart));
+      listener.scenario(keyword, con, currentLine);
+      if(nextKeywordStart != -1) p = nextKeywordStart - 1;
+      nextKeywordStart = -1;
+    }
+
+    action store_scenario_outline_content {
+      String con = multilineStrip(keywordContent(input, p, eof, nextKeywordStart, contentStart));
+      listener.scenario_outline(keyword, con, currentLine);
+      if(nextKeywordStart != -1) p = nextKeywordStart - 1;
+      nextKeywordStart = -1;
+    }
+
+    action store_examples_content {
+      String con = multilineStrip(keywordContent(input, p, eof, nextKeywordStart, contentStart));
+      listener.examples(keyword, con, currentLine);
+      if(nextKeywordStart != -1) p = nextKeywordStart - 1;
+      nextKeywordStart = -1;
+    }
+
+    action store_step_content {
+      listener.step(keyword, input.substring(contentStart, p).trim(), currentLine);
+    }
+
+    action store_comment_content {
+      listener.comment(input.substring(contentStart, p).trim(), lineNumber);
+    }
+
+    action store_tag_content {
+      listener.tag(input.substring(contentStart, p).trim(), currentLine);
+    }
+
+    action inc_line_number {
+      lineNumber++;
+    }
+
+    action last_newline {
+      lastNewline = p + 1;
+    }
+
+    action start_keyword {
+      if(keywordStart == -1) keywordStart = p;
+    }
+
+    action end_keyword {
+      keyword = input.substring(keywordStart, p).replaceFirst(":$","").trim();
+      keywordStart = -1;
+    }
+
+    action next_keyword_start {
+      nextKeywordStart = p;
+    }
+
+    action start_table {
+      p = p - 1;
+      rows = new ArrayList<List<String>>();
+      currentLine = lineNumber;
+    }
+
+    action start_row {
+      currentRow = new ArrayList<String>();
+    }
+
+    action begin_cell_content {
+      contentStart = p;
+    }
+
+    action store_cell_content {
+      currentRow.add(input.substring(contentStart, p).trim());
+    }
+
+    action store_row {
+      rows.add(currentRow);
+    }
+
+    action store_table {
+      if(!rows.isEmpty()) {
+        listener.table(rows, currentLine);
+      }
+    }
+
+    action end_feature {
+      if(cs < lexer_first_final) {
+        String content = currentLineContent(input, lastNewline);
+        throw new ParseException("Parsing error on line " + lineNumber + ": '" + content + "'.");
+      }
+    }
+
+    include lexer_common "lexer_common.<%= i18n_language %>.rl"; 
+  }%%
+
+    private final Listener listener;
+
+    public <%= i18n_lexer_class_name %>(Listener listener) {
+        this.listener = listener;
+    }
+
+    %% write data noerror;
+
+    public void scan(CharSequence inputSequence) {
+        String input = inputSequence.toString() + "\n%_FEATURE_END_%";
+        char[] data = input.toCharArray();
+        int cs, p = 0, pe = data.length;
+        int eof = pe;
+
+        int lineNumber = 1;
+        int lastNewline = 0;
+
+        int contentStart = -1;
+        int currentLine = -1;
+        int startCol = -1;
+        int nextKeywordStart = -1;
+        int keywordStart = -1;
+        String keyword = null;
+        List<List<String>> rows = null;
+        List<String> currentRow = null;
+
+        %% write init;
+        %% write exec;
+    }
+
+    private String keywordContent(String input, int p, int eof, int nextKeywordStart, int contentStart) {
+      int endPoint = (nextKeywordStart == -1 || (p == eof)) ? p : nextKeywordStart;
+      return input.substring(contentStart, endPoint);
+    }
+
+    private String multilineStrip(String text) {
+        StringBuffer result = new StringBuffer();
+        for(String s : text.split("\n")) {
+            result.append(s.trim()).append("\n");
+        }
+        return result.toString().trim();
+    }
+
+    private String currentLineContent(String input, int lastNewline) {
+      return input.substring(lastNewline).trim();
+    }
+}

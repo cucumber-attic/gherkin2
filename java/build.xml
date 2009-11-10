@@ -1,0 +1,14 @@
+<project name="Gherkin" default="jar" basedir=".">
+  <target name="compile" description="Compile">
+    <mkdir dir="${basedir}/target/classes"/>
+    <javac srcdir="src" destdir="target/classes" />
+  </target>
+
+  <target name="jar" description="Jar" depends="compile">
+    <jar destfile="${basedir}/../lib/gherkin_lexer.jar" basedir="${basedir}/target/classes"/>
+  </target>
+
+  <target name="clean" description="Delete all generated artifacts">
+    <delete dir="${basedir}/target"/>
+  </target>
+</project>

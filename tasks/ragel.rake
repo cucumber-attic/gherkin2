@@ -6,9 +6,10 @@ class RagelCompiler
     require 'erb'
     
     @target = target
-    @flag, @output_dir = case
-      when @target == "rb" then ["-R", "lib/gherkin/lexer"]
-      when @target == "c" then ["-C", "ext/gherkin_lexer"]
+    @flag, @output_dir, @filename_proc = case
+      when @target == "rb"   then ["-R", "lib/gherkin/lexer", lambda{|name| name}]
+      when @target == "c"    then ["-C", "ext/gherkin_lexer", lambda{|name| name}]
+      when @target == "java" then ["-J", "java/src/gherkin/lexer", lambda{|name| name.capitalize}]
     end
 
     @i18n_languages = YAML.load_file(File.dirname(__FILE__) + '/../lib/gherkin/i18n.yml')
@@ -31,7 +32,7 @@ class RagelCompiler
     generate_common(i18n_language, common_path)
     generate_actions(i18n_language, actions_path)
     
-    sh "ragel #{@flag} #{actions_path} -o #{@output_dir}/#{i18n_language}.#{@target}"
+    sh "ragel #{@flag} #{actions_path} -o #{@output_dir}/#{@filename_proc.call(i18n_language)}.#{@target}"
   end
   
   def generate_common(i18n_language, path)
@@ -91,6 +92,11 @@ namespace :ragel do
   desc "Generate Ruby English language lexer"
   task :i18n_rb_en do
     RagelCompiler.new("rb").compile('en')
+  end
+
+  desc "Generate Java English language lexer"
+  task :i18n_java_en do
+    RagelCompiler.new("java").compile('en')
   end
 
   desc "Generate a dot file of the Ragel state machine"
