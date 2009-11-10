@@ -27,8 +27,12 @@ class GherkinWorld
     @listener = Gherkin::SexpRecorder.new
   end
 
-  def load_parser(i18n_lang, lexer)
-    @parser = Gherkin.const_get(lexer.capitalize).new(i18n_lang, @listener, :raise_on_error => false)
+  def load_parser(i18n_lang, lexer_name)
+    if defined?(JRUBY_VERSION)
+      @parser = Gherkin::JavaLexer['en'].new(Java::Gherkin::Parser.new(@listener, false))
+    else
+      @parser = Gherkin.const_get(lexer_name.capitalize).new(i18n_lang, @listener, :raise_on_error => false)
+    end
   end
 
   def code_from_lang_name(name)

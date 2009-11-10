@@ -4,7 +4,7 @@ WIN      = (RUBY_PLATFORM =~ /mswin|cygwin/)
 if(defined?(JRUBY_VERSION))
 
 def ext_task(name)
-  task :compile => 'ragel:i18n_java' do
+  task :compile do
     sh("ant -f java/build.xml")
   end
 end

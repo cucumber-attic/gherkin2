@@ -3,12 +3,11 @@ if defined?(JRUBY_VERSION)
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 module Gherkin
-  module Lexer
+  module JavaLexer
     describe "Java Lexer" do
       before do
         @listener = Gherkin::SexpRecorder.new
         c = Gherkin::JavaLexer['en']
-        p c
         @lexer = c.new(@listener)
       end
 
