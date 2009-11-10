@@ -13,8 +13,8 @@ typedef void (*listener_error_cb)(void *listener, const char *at, int line);
 typedef void (*listener_long_cb)(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int line);
 typedef void (*listener_pystring_cb)(void *listener, int start_col, const char *at, size_t length, int line);
 typedef void (*listener_table_cb)(void *listener, void *table, int line);
-typedef void (*ruby_table_cb)(void *parser);
-typedef void (*ruby_table_cell_cb)(void *parser, const char *at, size_t length);
+typedef void (*ruby_table_cb)(void *lexer);
+typedef void (*ruby_table_cell_cb)(void *lexer, const char *at, size_t length);
 
 typedef struct lexer {
   int cs;
@@ -55,8 +55,8 @@ typedef struct lexer {
   ruby_table_cell_cb add_cell_to_current_row;
 } lexer;
 
-int lexer_init(lexer *psr);
-size_t lexer_scan(lexer *psr, const char *data, size_t len);
-int lexer_has_error(lexer *psr);
+int lexer_init(lexer *lxr);
+size_t lexer_scan(lexer *lxr, const char *data, size_t len);
+int lexer_has_error(lexer *lxr);
 
 #endif
