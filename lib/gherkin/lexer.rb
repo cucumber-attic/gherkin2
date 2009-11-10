@@ -6,8 +6,12 @@ module Gherkin
     end
     
     def self.[](i18n_language)
+      # HACK HACK
+      # We need to use a different factory instead - outside
+      return defined?(JRUBY_VERSION) ? Gherkin::JavaLexer['en'] : Gherkin::Lexer::CLexer if i18n_language == "Native"
+
       begin
-        require "gherkin/lexer/#{i18n_language}" unless i18n_language == 'C' # XXX HACK XXX: Make it easy to fetch the C lexer for the time being
+        require "gherkin/lexer/#{i18n_language}"
       rescue LoadError
         raise I18nLexerNotFound, "No lexer was found for #{i18n_language}. Supported languages are listed in gherkin/i18n.yml."
       end

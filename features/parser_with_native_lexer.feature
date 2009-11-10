@@ -1,4 +1,4 @@
-@c_lexer
+@native_lexer
 Feature: Gherkin Feature lexer/parser
   In order to make it easy to control the Gherkin syntax
   As a Gherkin developer bent on Gherkin world-domination
@@ -6,10 +6,10 @@ Feature: Gherkin Feature lexer/parser
   make all the syntax decisions for me
 
   Background:
-    Given a C-language feature lexer
+    Given a Native-language feature lexer
 
   Scenario: Correctly formed feature
-    Given the following text is parsed:
+    When the following text is parsed:
       """
       # Apologies to Bill Watterson
       @cardboard_box @wip
@@ -63,7 +63,7 @@ Feature: Gherkin Feature lexer/parser
    Then there should be no syntax errors
    
   Scenario: Keyword before feature
-    Given the following text is parsed:
+    When the following text is parsed:
       """
       Scenario: Bullying my way to the head of the line
         Given I am a big bully of a scenario
@@ -74,7 +74,7 @@ Feature: Gherkin Feature lexer/parser
     Then there should be syntax errors on lines 1 through 3
 
   Scenario: Tag ends background and scenario
-    Given the following text is parsed:
+    When the following text is parsed:
       """
       Feature: test feature
         Background:
@@ -93,7 +93,7 @@ Feature: Gherkin Feature lexer/parser
     Then there should be syntax errors on lines 5, 10 and 12
       
   Scenario: Tables
-    Given the following text is parsed:
+    When the following text is parsed:
       """
       Feature: Antiques Roadshow
       Scenario Outline: Table
@@ -116,7 +116,7 @@ Feature: Gherkin Feature lexer/parser
     Then there should be syntax errors on lines 10 and 17
 
   Scenario: Multiline keyword descriptions
-    Given the following text is parsed:
+    When the following text is parsed:
       """
         Feature: Documentation is fun
           Scenario Outline: With lots of docs
@@ -147,7 +147,7 @@ Feature: Gherkin Feature lexer/parser
       Then there should be no syntax errors
 
   Scenario: Scenario Outline with multiple Example groups
-    Given the following text is parsed:
+    When the following text is parsed:
       """
       Feature: Outline Sample
 
@@ -170,7 +170,7 @@ Feature: Gherkin Feature lexer/parser
     Then there should be no syntax errors
 
   Scenario: Multiple Scenario Outlines with multiline outline steps
-    Given the following text is parsed:
+    When the following text is parsed:
       """
       Feature: Test
         Scenario Outline: with step tables

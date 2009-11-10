@@ -9,7 +9,7 @@ class RagelCompiler
     @flag, @output_dir, @filename_proc = case
       when @target == "rb"   then ["-R", "lib/gherkin/lexer", lambda{|name| name}]
       when @target == "c"    then ["-C", "ext/gherkin_lexer", lambda{|name| name}]
-      when @target == "java" then ["-J", "java/src/gherkin/lexer", lambda{|name| name.capitalize}]
+      when @target == "java" then ["-J", "java/src/gherkin/lexer", lambda{|name| name.gsub(/[\s-]/, '').capitalize}]
     end
 
     @i18n_languages = YAML.load_file(File.dirname(__FILE__) + '/../lib/gherkin/i18n.yml')
@@ -77,10 +77,6 @@ namespace :ragel do
 
   desc "Generate C from the Ragel rule files"
   task :c do
-    Dir["ragel/*.c.rl"].each do |rl|
-      basename = File.basename(rl[0..-4])
-      sh "ragel -C #{rl} -o ext/gherkin_lexer/#{basename}" 
-    end
     RagelCompiler.new("c").compile('en')
   end
 
@@ -94,9 +90,9 @@ namespace :ragel do
     RagelCompiler.new("rb").compile('en')
   end
 
-  desc "Generate Java English language lexer"
-  task :i18n_java_en do
-    RagelCompiler.new("java").compile('en')
+  desc "Generate all i18n Java lexers"
+  task :i18n_java do
+    RagelCompiler.new("java").compile_all
   end
 
   desc "Generate a dot file of the Ragel state machine"

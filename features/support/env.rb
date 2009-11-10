@@ -22,25 +22,20 @@ end
 
 class GherkinWorld
   include TransformHelpers
-  attr_reader :listener, :lexer
   
   def initialize
     @listener = Gherkin::SexpRecorder.new
   end
 
-  def load_feature_lexer(i18n_lang)
-    @lexer = Gherkin::Feature.new(i18n_lang, listener, :raise_on_error => false)
+  def load_parser(i18n_lang, lexer)
+    @parser = Gherkin.const_get(lexer.capitalize).new(i18n_lang, @listener, :raise_on_error => false)
   end
-  
-  def load_lexer(i18n_lang, lexer)
-    klass = Gherkin.const_get(lexer.capitalize)
-    @lexer = klass.new(i18n_lang, listener, :raise_on_error => false)
-  end
-  
+
   def code_from_lang_name(name)
     i18n = YAML.load_file(File.dirname(__FILE__) + "/../../lib/gherkin/i18n.yml")
-    i18n["C"] = { "name" => "C" } # XXX HACK XXX Make it easy to retrieve the C lexer
-    i18n.find { |_, v| v["name"] == name }[0]
+    i18n["Native"] = { "name" => "Native" } # XXX HACK XXX Make it easy to retrieve the native lexer
+    code = i18n.find { |_, v| v["name"] == name }
+    code[0]
   end
 end
 

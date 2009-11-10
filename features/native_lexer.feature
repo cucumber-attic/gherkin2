@@ -1,8 +1,8 @@
-@c_lexer
-Feature: C Lexer
+@native_lexer
+Feature: Native (C/Java) Lexer
 
   Background:
-    Given a C-language feature lexer
+    Given a Native-language feature lexer
 
   Scenario: Parsing an empty feature
     Given the following text is parsed:
