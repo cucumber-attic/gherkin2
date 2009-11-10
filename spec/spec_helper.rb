@@ -12,3 +12,13 @@ require 'spec/gherkin/shared/table_spec'
 
 Spec::Runner.configure do |config|
 end
+
+# Allows comparison of Java List with Ruby Array (tables)
+Spec::Matchers.define :t do |expected|
+  match do |table|
+    def table.inspect
+      "t " + self.map{|row| row.map{|cell| cell}}.inspect
+    end
+    table.map{|row| row.map{|cell| cell}}.should == expected
+  end
+end
