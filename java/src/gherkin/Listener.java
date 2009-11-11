@@ -11,6 +11,6 @@ public interface Listener {
     void scenario_outline(String keyword, String name, int line);
     void examples(String keyword, String name, int line);
     void step(String keyword, String name, int line);
-    void comment(String content, int number);
-    void table(List<List<String>> rows, int currentLine);
+    void comment(String content, int line);
+    void table(List<List<String>> rows, int line);
 }

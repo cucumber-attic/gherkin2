@@ -12,9 +12,9 @@ namespace :cucumber do
     t.rcov_opts = %w{--exclude spec\/}
   end
 
-  Cucumber::Rake::Task.new(:c_lexer, "Run @c_lexer Cucumber features") do |t|
-    t.cucumber_opts = "--profile c_lexer"
+  Cucumber::Rake::Task.new(:native_lexer, "Run Native lexer Cucumber features") do |t|
+    t.cucumber_opts = "--profile native_lexer"
   end
-  task :c_lexer => [:check_dependencies, :clean, :compile]
+  task :native_lexer => [:check_dependencies, :clean, :compile]
 end
 

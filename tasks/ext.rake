@@ -1,6 +1,16 @@
 CLEAN.include %w(**/*.{o,bundle,jar,so,obj,pdb,lib,def,exp,log} ext/*/Makefile ext/*/gherkin_lexer.c.c ext/*/conftest.dSYM)
 WIN      = (RUBY_PLATFORM =~ /mswin|cygwin/)
 
+if(defined?(JRUBY_VERSION))
+
+def ext_task(name)
+  task :compile do
+    sh("ant -f java/build.xml")
+  end
+end
+
+else # NOT JRUBY
+
 def ext_task(name)
   ext_dir    = "ext/#{name}"
   ext_bundle = "#{ext_dir}/#{name}.#{Config::CONFIG['DLEXT']}"
@@ -27,9 +37,10 @@ def ext_task(name)
     cp ext_bundle, 'lib/'
   end
 end
+end
 
 ext_task :gherkin_lexer
   
-desc "Compile the C extensions"
+desc "Compile the Native extensions"
 task :compile
 task :package => :compile
