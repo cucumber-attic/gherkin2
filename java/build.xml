@@ -5,7 +5,10 @@
   </target>
 
   <target name="jar" description="Jar" depends="compile">
-    <jar destfile="${basedir}/../lib/gherkin_lexer.jar" basedir="${basedir}/target/classes"/>
+    <jar destfile="${basedir}/../lib/gherkin_lexer.jar">
+      <fileset dir="${basedir}/target/classes" />
+      <fileset dir="${basedir}/../lib" includes="gherkin/parser/*.txt" />
+    </jar>
   </target>
 
   <target name="clean" description="Delete all generated artifacts">

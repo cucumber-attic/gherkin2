@@ -2,9 +2,7 @@ package gherkin;
 
 import gherkin.lexer.En;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Parser implements Listener {
@@ -14,19 +12,21 @@ public class Parser implements Listener {
     private String state;
     private Listener listener;
     private boolean throwOnError;
+    private final String machinePath;
 
     public Parser(Listener listener) {
         this(listener, true);
     }
 
     public Parser(Listener listener, boolean throwOnError) {
-        this(listener, throwOnError, "root");
+        this(listener, throwOnError, "/gherkin/parser/root.txt");
     }
 
-    public Parser(Listener listener, boolean throwOnError, String initialState) {
+    public Parser(Listener listener, boolean throwOnError, String machinePath) {
         this.listener = listener;
         this.throwOnError = throwOnError;
-        this.state = initialState;
+        this.machinePath = machinePath;
+        this.state = "root";
         initializeMachine();
     }
 
@@ -67,60 +67,63 @@ public class Parser implements Listener {
             }
         };
         Lexer l = new En(stateMachineReader);
-        l.scan(readFileAsString("/Users/aslakhellesoy/scm/gherkin/parser.txt"));
-
-        initStates();
-        initEvents();
+        try {
+            l.scan(readResourceAsString(machinePath));
+            initStates();
+            initEvents();
+        } catch (Exception e) {
+            throw new RuntimeException("Couldn't read " + machinePath, e);
+        }
     }
 
     public void tag(String name, int line) {
-        if(event("tag", line))
-        listener.tag(name, line);
+        if (event("tag", line))
+            listener.tag(name, line);
     }
 
     public void py_string(int startCol, String string, int line) {
-        if(event("py_string", line))
-        listener.py_string(startCol, string, line);
+        if (event("py_string", line))
+            listener.py_string(startCol, string, line);
     }
 
     public void feature(String keyword, String name, int line) {
-        if(event("feature", line))
-        listener.feature(keyword, name, line);
+        if (event("feature", line))
+            listener.feature(keyword, name, line);
     }
 
     public void background(String keyword, String name, int line) {
-        if(event("background", line))
-        listener.background(keyword, name, line);
+        if (event("background", line))
+            listener.background(keyword, name, line);
     }
 
     public void scenario(String keyword, String name, int line) {
-        if(event("scenario", line))
-        listener.scenario(keyword, name, line);
+        if (event("scenario", line))
+            listener.scenario(keyword, name, line);
     }
 
     public void scenario_outline(String keyword, String name, int line) {
-        if(event("scenario_outline", line))
-        listener.scenario_outline(keyword, name, line);
+        if (event("scenario_outline", line))
+            listener.scenario_outline(keyword, name, line);
     }
 
     public void examples(String keyword, String name, int line) {
-        if(event("examples", line))
-        listener.examples(keyword, name, line);
+        if (event("examples", line))
+            listener.examples(keyword, name, line);
     }
 
     public void step(String keyword, String name, int line) {
-        if(event("step", line))
-        listener.step(keyword, name, line);
+        if (event("step", line))
+            listener.step(keyword, name, line);
     }
 
     public void comment(String content, int line) {
-        if(event("comment", line))
-        listener.comment(content, line);
+        if (event("comment", line))
+            listener.comment(content, line);
     }
 
     public void table(List<List<String>> rows, int line) {
-        if(event("table", line))
-        listener.table(rows, line);
+        if (event("table", line))
+            listener.table(rows, line);
     }
 
     public void syntax_error(String name, String event, List<String> strings, int line) {
@@ -201,15 +204,18 @@ public class Parser implements Listener {
         return sb.toString();
     }
 
-    private static String readFileAsString(String filePath) {
-        byte[] buffer = new byte[(int) new File(filePath).length()];
-        FileInputStream f = null;
-        try {
-            f = new FileInputStream(filePath);
-            f.read(buffer);
-            return new String(buffer);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private static String readResourceAsString(String filePath) throws IOException {
+        Reader machine = new InputStreamReader(Parser.class.getResourceAsStream(filePath));
+
+        final char[] buffer = new char[0x10000];
+        StringBuilder out = new StringBuilder();
+        int read = 0;
+        do {
+            read = machine.read(buffer, 0, buffer.length);
+            if (read > 0) {
+                out.append(buffer, 0, read);
+            }
+        } while (read >= 0);
+        return out.toString();
     }
 }
