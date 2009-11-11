@@ -19,14 +19,14 @@ public class Parser implements Listener {
     }
 
     public Parser(Listener listener, boolean throwOnError) {
-        this(listener, throwOnError, "/gherkin/parser/root.txt");
+        this(listener, throwOnError, "root");
     }
 
-    public Parser(Listener listener, boolean throwOnError, String machinePath) {
+    public Parser(Listener listener, boolean throwOnError, String state) {
         this.listener = listener;
         this.throwOnError = throwOnError;
-        this.machinePath = machinePath;
-        this.state = "root";
+        this.state = state;
+        this.machinePath = "/gherkin/parser/" + state + ".txt";
         initializeMachine();
     }
 
