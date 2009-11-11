@@ -3,7 +3,7 @@ require 'cucumber/rake/task'
 Cucumber::Rake::Task.new(:cucumber) do |t|
   t.cucumber_opts = "--profile default"
 end
-task :cucumber => [:check_dependencies, "ragel:rb"]
+task :cucumber => [:check_dependencies]
 
 namespace :cucumber do
   Cucumber::Rake::Task.new(:rcov, "Run Cucumber using RCov") do |t|

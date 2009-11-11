@@ -5,7 +5,7 @@ Spec::Rake::SpecTask.new(:spec) do |spec|
   spec.spec_opts << '--color'
   spec.spec_files = FileList['spec/**/*_spec.rb'].exclude("c_lexer_spec.rb")
 end
-task :spec => [:check_dependencies, "ragel:rb"]
+task :spec => [:check_dependencies]
 
 Spec::Rake::SpecTask.new(:rcov) do |spec|
   spec.libs << 'lib' << 'spec'

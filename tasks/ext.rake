@@ -4,7 +4,8 @@ WIN      = (RUBY_PLATFORM =~ /mswin|cygwin/)
 if(defined?(JRUBY_VERSION))
 
 def ext_task(name)
-  task :compile do
+  desc "Compile the Native Java extensions"
+  task :compile => ['ragel:java'] do
     sh("ant -f java/build.xml")
   end
 end
@@ -24,6 +25,8 @@ def ext_task(name)
   ]
   
   task "compile:#{name}" => ["#{ext_dir}/Makefile", ext_bundle]
+
+  desc "Compile the Native C extensions"
   task :compile => ['ragel:c', "compile:#{name}"]
   
   file "#{ext_dir}/Makefile" => ["#{ext_dir}/extconf.rb"] do
@@ -41,6 +44,4 @@ end
 
 ext_task :gherkin_lexer
   
-desc "Compile the Native extensions"
-task :compile
 task :package => :compile

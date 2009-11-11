@@ -67,31 +67,18 @@ class RagelCompiler
 end
 
 namespace :ragel do
-  desc "Generate Ruby from the Ragel rule files"
-  task :rb => :i18n_rb_en do
-    Dir["ragel/*.rb.rl"].each do |rl|
-      basename = File.basename(rl[0..-4])
-      sh "ragel -R #{rl} -o lib/gherkin/lexer/#{basename}"
-    end
-  end
-
-  desc "Generate C from the Ragel rule files"
+  desc "Generate i18n sources for C lexers (TODO: Do it for all)"
   task :c do
     RagelCompiler.new("c").compile('en')
   end
 
-  desc "Generate all i18n Ruby lexers"
-  task :i18n_rb do
+  desc "Generate i18n sources for Ruby lexers"
+  task :rb do
     RagelCompiler.new("rb").compile_all
   end
 
-  desc "Generate Ruby English language lexer"
-  task :i18n_rb_en do
-    RagelCompiler.new("rb").compile('en')
-  end
-
-  desc "Generate all i18n Java lexers"
-  task :i18n_java do
+  desc "Generate i18n sources for Java lexers"
+  task :java do
     RagelCompiler.new("java").compile_all
   end
 

@@ -1,4 +1,5 @@
 require 'gherkin/states'
+require 'gherkin/lexer'
 require 'forwardable'
 
 module Gherkin
