@@ -2,14 +2,14 @@
 Feature: Native (C/Java) Lexer
 
   Background:
-    Given a Native-language feature lexer
+    Given a Native-language root parser
 
   Scenario: Parsing an empty feature
     Given the following text is parsed:
       """
       Feature: blah
       """
-    Then there should be no syntax errors
+    Then there should be no parse errors
   
   Scenario: Parsing a comment
     Given the following text is parsed:
@@ -17,4 +17,4 @@ Feature: Native (C/Java) Lexer
       # A comment
       Feature: Hello
       """
-    Then there should be no syntax errors
+    Then there should be no parse errors

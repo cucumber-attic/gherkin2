@@ -40,7 +40,7 @@ module Gherkin
         it "should not allow comments within the Feature description" do
           lambda { 
             @lexer.scan("Feature: something\nAs a something\n# Comment\nI want something") 
-            }.should raise_error(/Parsing error on line 4/)
+            }.should raise_error(/Lexing error on line 4/)
         end
       end
 
@@ -401,18 +401,18 @@ Given I am a step
       end
 
       describe "errors" do
-        it "should raise a parsing error if an unparseable token is found" do
+        it "should raise a Lexing error if an unparseable token is found" do
           ["Some text\nFeature: Hi", 
             "Feature: Hi\nBackground:\nGiven something\nScenario A scenario",
             "Scenario: My scenario\nGiven foo\nAand bar\nScenario: another one\nGiven blah"].each do |text|
-              lambda { @lexer.scan(text) }.should raise_error(/Parsing error on line/)
+              lambda { @lexer.scan(text) }.should raise_error(/Lexing error on line/)
           end
         end
         
         it "should include the line number and context of the error" do
           lambda {
             @lexer.scan("Feature: hello\nScenario: My scenario\nGiven foo\nAand blah\nHmmm wrong\nThen something something")
-          }.should raise_error(/Parsing error on line 4/)
+          }.should raise_error(/Lexing error on line 4/)
         end
       end
     end

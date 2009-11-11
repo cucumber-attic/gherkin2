@@ -2,7 +2,7 @@ module Gherkin
   module Lexer
     I18nLexerNotFound = Class.new(LoadError)
 
-    class ParsingError < StandardError
+    class LexingError < StandardError
     end
     
     def self.[](i18n_language)

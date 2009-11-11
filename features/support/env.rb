@@ -29,9 +29,9 @@ class GherkinWorld
 
   def load_parser(i18n_lang, lexer_name)
     if defined?(JRUBY_VERSION)
-      @parser = Gherkin::JavaLexer['en'].new(Java::Gherkin::Parser.new(@listener, false))
+      @parser = Gherkin::JavaLexer['en'].new(Java::Gherkin::Parser.new(@listener, false, lexer_name))
     else
-      @parser = Gherkin.const_get(lexer_name.capitalize).new(i18n_lang, @listener, :raise_on_error => false)
+      @parser = Gherkin.const_get(lexer_name.capitalize).new(i18n_lang, @listener, false)
     end
   end
 

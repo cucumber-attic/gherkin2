@@ -1,10 +1,10 @@
-Feature: Gherkin Steps lexer
+Feature: Gherkin Steps parser
   In order to save time and make my features clearer
   As a Cucumber developer
-  I want a steps lexer to make writing compound steps easier
+  I want a steps parser to make writing compound steps easier
 
   Background:
-    Given an English-language steps lexer
+    Given an English-language steps parser
     
   Scenario: Parsing steps
     Given the following text is parsed:
@@ -22,9 +22,9 @@ Feature: Gherkin Steps lexer
         | one | two | three  |
         | foo | bar | #{arg} |
       """
-    Then there should be no syntax errors
+    Then there should be no parse errors
     
-  Scenario: Trying to parse a full feature with the step lexer
+  Scenario: Trying to parse a full feature with the step parser
     Given the following text is parsed:
       """
       Feature: A Feature
@@ -33,7 +33,7 @@ Feature: Gherkin Steps lexer
           When I execute this step
           Then something should happen
       """
-    Then there should be syntax errors on lines 1 and 2
+    Then there should be parse errors on lines 1 and 2
     
   Scenario: Tags
     Given the following text is parsed:
@@ -43,4 +43,4 @@ Feature: Gherkin Steps lexer
       When I trip
       Then I should sign up for dancing lessons
       """
-    Then there should be a syntax error on line 1
+    Then there should be a parse error on line 1

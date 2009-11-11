@@ -6,7 +6,7 @@ Feature: Gherkin Feature lexer/parser
   make all the syntax decisions for me
 
   Background:
-    Given a Native-language feature lexer
+    Given a Native-language root parser
 
   Scenario: Correctly formed feature
     When the following text is parsed:
@@ -60,7 +60,7 @@ Feature: Gherkin Feature lexer/parser
           When I read it
           Then I should be amused
       """
-   Then there should be no syntax errors
+   Then there should be no parse errors
    
   Scenario: Keyword before feature
     When the following text is parsed:
@@ -71,7 +71,7 @@ Feature: Gherkin Feature lexer/parser
       
       Feature: Too timid to stand up for myself
       """
-    Then there should be syntax errors on lines 1 through 3
+    Then there should be parse errors on lines 1 through 3
 
   Scenario: Tag ends background and scenario
     When the following text is parsed:
@@ -90,7 +90,7 @@ Feature: Gherkin Feature lexer/parser
         And this is a horrible idea
         Then it shouldn't work
       """
-    Then there should be syntax errors on lines 5, 10 and 12
+    Then there should be parse errors on lines 5, 10 and 12
       
   Scenario: Tables
     When the following text is parsed:
@@ -113,7 +113,7 @@ Feature: Gherkin Feature lexer/parser
         @tag
         | aaa | bbb |
       """
-    Then there should be syntax errors on lines 10 and 17
+    Then there should be parse errors on lines 10 and 17
 
   Scenario: Multiline keyword descriptions
     When the following text is parsed:
@@ -144,7 +144,7 @@ Feature: Gherkin Feature lexer/parser
             | something | else |
             | orange | apple |
       """
-      Then there should be no syntax errors
+      Then there should be no parse errors
 
   Scenario: Scenario Outline with multiple Example groups
     When the following text is parsed:
@@ -167,7 +167,7 @@ Feature: Gherkin Feature lexer/parser
             |  state   | other_state |
             | passing  | passing |
       """
-    Then there should be no syntax errors
+    Then there should be no parse errors
 
   Scenario: Multiple Scenario Outlines with multiline outline steps
     When the following text is parsed:
@@ -203,4 +203,4 @@ Feature: Gherkin Feature lexer/parser
             |  fruits   |
             | cucumbers |
       """
-    Then there should be no syntax errors
+    Then there should be no parse errors

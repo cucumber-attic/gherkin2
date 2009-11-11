@@ -52,7 +52,7 @@ void store_tag_content(void *listener, const char *at, size_t length, int line)
 
 void raise_lexer_error(void *listener, const char *at, int line)
 { 
-  rb_raise(rb_eGherkinLexerError, "Parsing error on line %d: '%s'.", line, at);
+  rb_raise(rb_eGherkinLexerError, "Lexing error on line %d: '%s'.", line, at);
 }
 
 void store_feature_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
@@ -272,5 +272,5 @@ void Init_gherkin_lexer()
   rb_define_method(cCLexer, "scan", CLexer_scan, 1);
   rb_define_method(cCLexer, "error?", CLexer_has_error, 0);
   
-  rb_eGherkinLexerError = rb_const_get(mLexer, rb_intern("ParsingError"));
+  rb_eGherkinLexerError = rb_const_get(mLexer, rb_intern("LexingError"));
 }

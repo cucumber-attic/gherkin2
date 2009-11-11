@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import gherkin.Lexer;
 import gherkin.Listener;
-import gherkin.ParseException;
+import gherkin.LexingError;
 
 public class <%= i18n_lexer_class_name %> implements Lexer {
   %%{
@@ -128,7 +128,7 @@ public class <%= i18n_lexer_class_name %> implements Lexer {
     action end_feature {
       if(cs < lexer_first_final) {
         String content = currentLineContent(input, lastNewline);
-        throw new ParseException("Parsing error on line " + lineNumber + ": '" + content + "'.");
+        throw new LexingError("Lexing error on line " + lineNumber + ": '" + content + "'.");
       }
     }
 

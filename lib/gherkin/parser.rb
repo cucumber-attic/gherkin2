@@ -2,32 +2,30 @@ require 'gherkin/states'
 require 'forwardable'
 
 module Gherkin
-  class GherkinSyntaxError < SyntaxError
+  class ParseError < ::SyntaxError
     attr_reader :event, :line, :expected
 
     def initialize(event, line, expected)
       @event, @line, @expected = event, line, expected
-      super "Syntax error on line #{@line}. Found #{@event} when expecting one of: #{@expected.join(' ')}."
+      super "Parse error on line #{@line}. Found #{@event} when expecting one of: #{@expected.join(', ')}."
     end
   end
   
   class Parser
     extend Forwardable
     include States
-    attr_writer :raise_on_error
     
     def_delegators :@lexer, :scan
     
-    def initialize(i18n_lang, listener, args={})
-      args = { :raise_on_error => true }.merge(args)
-      @raise_on_error = args[:raise_on_error]
+    def initialize(i18n_lang, listener, raise_on_error=true)
+      @raise_on_error = raise_on_error
       @listener       = listener
       @lexer          = Lexer[i18n_lang].new(self)
       @current        = State.new
     end
 
     def error(args)
-      @raise_on_error ? raise(GherkinSyntaxError.new(args.first, args.last, @current.expected)) : @listener.syntax_error(*args)
+      @raise_on_error ? raise(ParseError.new(args.first, args.last, @current.expected)) : @listener.syntax_error(*args)
     end
     
     def method_missing(meth, *args)

@@ -87,7 +87,7 @@ module Gherkin
         @lexer.scan("  \t| \t   abc\t| \t123\t \t\t| \t\t   \t \t\n  ")
       end
       
-      it "should raise ParsingError for rows that aren't closed" do
+      it "should raise LexingError for rows that aren't closed" do
         lambda { 
           @lexer.scan("|| oh hello \n") 
         }.should raise_error(/Parsing error on line 1: '|| oh hello/)

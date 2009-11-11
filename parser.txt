@@ -1,0 +1,13 @@
+ |                  | feature  | background | scenario | scenario_outline | examples | step       | table          | py_string  | comment | tag  |
+ | root             | feature  | E          | E        | E                | E        | E          | E              | E          | -       | -    |
+ | feature          | E        | background | scenario | scenario_outline | E        | E          | E              | E          | -       | -    |
+ | step             | E        | E          | scenario | scenario_outline | examples | step       | step           | step       | -       | -    |
+ | background       | E        | E          | scenario | scenario_outline | E        | step       | E              | E          | -       | -    |
+ | scenario         | E        | E          | scenario | scenario_outline | E        | step       | E              | E          | -       | -    |
+ | scenario_outline | E        | E          | E        | E                | E        | step       | E              | E          | -       | -    |
+ | examples         | E        | E          | E        | E                | E        | E          | examples_table | E          | -       | -    |
+ | examples_table   | E        | E          | scenario | scenario_outline | examples | E          | E              | E          | -       | -    |
+ | -tag             | -tag     | E          | -tag     | -tag             | -tag     | E          | E              | E          | E       | -tag |
+ | -comment         | -comment | -comment   | -comment | -comment         | -comment | -comment   | -comment       | -comment   | -tag    | -tag |
+ | steps            | E        | E          | E        | E                | E        | steps_step | E              | E          | E       | E    |
+ | steps_step       | E        | E          | E        | E                | E        | steps_step | steps_step     | steps_step | E       | E    |

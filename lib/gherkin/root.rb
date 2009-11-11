@@ -17,13 +17,13 @@ module Gherkin
   #   table(rows, line_number)
   #   py_string(offset, content, line_number)
   #   
-  # ParsingError will be raised if Gherkin cannot continue parsing input.
+  # LexingError will be raised if Gherkin cannot continue parsing input.
   #
-  # GherkinSyntaxError will be raised if the text to scan is well formed, but syntactically incorrect:
+  # SyntaxError will be raised if the text to scan is well formed, but syntactically incorrect:
   #
   #   Gherkin::Feature.new('it', Listener.new) raises FeatureSyntaxError on error
-  #   Gherkin::Feature.new('en', AstBuilder.new, :raise_on_error => false) sends #syntax_error message to listener
-  class Feature < Parser    
+  #   Gherkin::Feature.new('en', AstBuilder.new, false) sends #syntax_error message to listener
+  class Root < Parser    
     def initialize(i18n_lang, listener, args={})
       super
       @states = { 

@@ -126,7 +126,7 @@ module Gherkin
         action end_feature {
           if cs < lexer_first_final
             content = current_line_content(data, p)
-            raise ParsingError.new("Parsing error on line %d: '%s'." % [@line_number, content])
+            raise LexingError.new("Lexing error on line %d: '%s'." % [@line_number, content])
           end
         }
 

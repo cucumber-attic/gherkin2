@@ -65,7 +65,7 @@ module Gherkin
       end
       
       def expected
-        EVENTS.select { |meth| allows?(meth) }
+        EVENTS.select { |meth| allows?(meth) }.sort {|a,b| a.to_s <=> b.to_s}
       end      
     end
   end
