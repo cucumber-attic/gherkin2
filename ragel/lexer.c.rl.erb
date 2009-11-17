@@ -50,9 +50,7 @@ typedef struct lexer_state {
   size_t last_newline;
   size_t final_newline;
 
-  VALUE listener;
-  VALUE rows;
-  VALUE current_row;
+  VALUE listener; // Possible memory leak, but Valgrind doesn't seem to detect it
 
   listener_cb store_comment_content;
   listener_cb store_tag_content;
@@ -199,8 +197,8 @@ static VALUE rb_eGherkinLexerError;
   action start_table {
     p = p - 1;
     lexer->current_line = lexer->line_number;
-    rb_ary_clear(lexer->rows);
-    rb_ary_clear(lexer->current_row);
+    rb_ary_clear(rows);
+    rb_ary_clear(current_row);
   }
   
   action begin_cell_content {
@@ -212,19 +210,19 @@ static VALUE rb_eGherkinLexerError;
     con = rb_str_new(PTR_TO(content_start), LEN(content_start, p));
     rb_funcall(con, rb_intern("strip!"), 0);
 
-    rb_ary_push(lexer->current_row, con);
+    rb_ary_push(current_row, con);
   }
 
   action start_row {
-    lexer->current_row = rb_ary_new();    
+    current_row = rb_ary_new();
   }  
 
   action store_row {
-    rb_ary_push(lexer->rows, lexer->current_row);
+    rb_ary_push(rows, current_row);
   }
 
   action store_table {
-    rb_funcall(lexer->listener, rb_intern("table"), 2, lexer->rows, INT2FIX(lexer->current_line));
+    rb_funcall(lexer->listener, rb_intern("table"), 2, rows, INT2FIX(lexer->current_line));
   }
 
   action end_feature {
@@ -410,8 +408,6 @@ static void lexer_init(lexer_state *lexer) {
   lexer->last_newline = 0;
   lexer->final_newline = 0;
   lexer->start_col = 0;
-  lexer->rows = rb_ary_new();
-  lexer->current_row = rb_ary_new();
 }
 
 static VALUE CLexer_alloc(VALUE klass)
@@ -461,6 +457,9 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
   } else {
     const char *p, *pe, *eof;
     int cs = lexer->cs;
+    
+    VALUE rows = rb_ary_new();
+    VALUE current_row = rb_ary_new();
     
     p = data;
     pe = data + len;
