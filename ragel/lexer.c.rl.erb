@@ -1,10 +1,5 @@
-#include <stdio.h>
 #include <assert.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
 #include <ruby.h>
-#include <sys/types.h>
 
 #if defined(_WIN32)
 #include <stddef.h>
@@ -29,7 +24,6 @@
 #define PTR_TO(P) (data + lexer->P)
 
 typedef struct lexer_state {
-  int cs;
   int content_len;
   int line_number;
   int current_line;
@@ -354,9 +348,6 @@ static void store_pystring_content(VALUE listener, int start_col, const char *at
 }
 
 static void lexer_init(lexer_state *lexer) {
-  int cs = 0;
-  %% write init;
-  lexer->cs = cs;
   lexer->content_start = 0;
   lexer->content_end = 0;
   lexer->content_len = 0;
@@ -406,7 +397,7 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
     rb_raise(rb_eGherkinLexerError, 0, "No content to parse.");
   } else {
     const char *p, *pe, *eof;
-    int cs = lexer->cs;
+    int cs = 0;
     
     VALUE listener = rb_iv_get(self, "@listener");
     VALUE rows = rb_ary_new();
@@ -419,6 +410,7 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
     assert(*pe == '\0' && "pointer does not end on NULL");
     assert(pe - p == len && "pointers aren't same distance");
     
+    %% write init;
     %% write exec;
     
     assert(p <= pe && "data overflow after parsing execute");
@@ -429,7 +421,7 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
     // Reset lexer by re-initializing the whole thing
     lexer_init(lexer);
 
-    if (lexer->cs == lexer_error) {
+    if (cs == lexer_error) {
       rb_raise(rb_eGherkinLexerError, 0, "Invalid format, parsing fails.");
     } else {
       return Qtrue;
