@@ -29,10 +29,10 @@ typedef void (*listener_error_cb)(void *listener, const char *at, int line);
 typedef void (*listener_long_cb)(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int line);
 typedef void (*listener_pystring_cb)(void *listener, int start_col, const char *at, size_t length, int line);
 typedef void (*listener_table_cb)(void *listener, void *table, int line);
-typedef void (*ruby_table_cb)(void *lexer);
-typedef void (*ruby_table_cell_cb)(void *lexer, const char *at, size_t length);
+typedef void (*ruby_table_cb)(void *lexer_state);
+typedef void (*ruby_table_cell_cb)(void *lexer_state, const char *at, size_t length);
 
-typedef struct lexer {
+typedef struct lexer_state {
   int cs;
   int content_len;
   int line_number;
@@ -69,7 +69,7 @@ typedef struct lexer {
   ruby_table_cb new_row;
   ruby_table_cb end_row;
   ruby_table_cell_cb add_cell_to_current_row;
-} lexer;
+} lexer_state;
 
 static VALUE mGherkin;
 static VALUE mLexer;
@@ -397,7 +397,7 @@ static void store_pystring_content(void *listener, int start_col, const char *at
   rb_funcall((VALUE)listener, rb_intern("py_string"), 3, INT2FIX(start_col), con, INT2FIX(current_line));
 }
 
-static void initialize_table(lexer *lxr)
+static void initialize_table(lexer_state *lxr)
 {
   VALUE table, row;
   table = rb_ary_new();
@@ -406,7 +406,7 @@ static void initialize_table(lexer *lxr)
   lxr->row = RARRAY(row);
 }
 
-static void add_cell_to_current_row(lexer *lxr, const char *at, size_t length)
+static void add_cell_to_current_row(lexer_state *lxr, const char *at, size_t length)
 {
   VALUE con = Qnil;
   con = rb_str_new(at, length);
@@ -415,13 +415,13 @@ static void add_cell_to_current_row(lexer *lxr, const char *at, size_t length)
   rb_ary_push((VALUE)lxr->row, con);
 }
 
-static void new_row(lexer *lxr)
+static void new_row(lexer_state *lxr)
 {
   VALUE row = rb_ary_new();
   lxr->row = RARRAY(row);
 }
 
-static void end_row(lexer *lxr)
+static void end_row(lexer_state *lxr)
 {
   rb_ary_push((VALUE)lxr->table, (VALUE)lxr->row);
 }
@@ -438,7 +438,7 @@ static void CLexer_free(void *data)
   }
 }
 
-static int lexer_init(lexer *lexer) {
+static int lexer_init(lexer_state *lexer) {
   int cs = 0;
   %% write init;
   lexer->cs = cs;
@@ -461,7 +461,7 @@ static int lexer_init(lexer *lexer) {
 static VALUE CLexer_alloc(VALUE klass)
 {
   VALUE obj;
-  lexer *lxr = ALLOC_N(lexer, 1);
+  lexer_state *lxr = ALLOC_N(lexer_state, 1);
   lxr->store_comment_content = store_comment_content;
   lxr->store_tag_content = store_tag_content;
   lxr->store_feature_content = store_feature_content;
@@ -484,16 +484,12 @@ static VALUE CLexer_alloc(VALUE klass)
   return obj;
 }
 
-static int lexer_has_error(lexer *lexer) {
-  return lexer->cs == lexer_error;
-}
-
 static VALUE CLexer_init(VALUE self, VALUE listener)
 {
   rb_iv_set(self, "@listener", listener);
   
-  lexer *lxr = NULL;
-  DATA_GET(self, lexer, lxr);
+  lexer_state *lxr = NULL;
+  DATA_GET(self, lexer_state, lxr);
   lexer_init(lxr);
   lxr->listener = ROBJECT(listener);
   
@@ -507,51 +503,48 @@ static VALUE CLexer_init(VALUE self, VALUE listener)
   return self;
 }
 
-/** exec **/
-static size_t lexer_scan(lexer *lexer, const char *data, size_t len) {
-  const char *p, *pe, *eof;
-  int cs = lexer->cs;
-
-  p = data;
-  pe = data + len;
-  eof = pe;
-
-  assert(*pe == '\0' && "pointer does not end on NULL");
-  assert(pe - p == len && "pointers aren't same distance");
-
-  %% write exec;
-
-  lexer->cs = cs;
-  
-  assert(p <= pe && "data overflow after parsing execute");
-  assert(lexer->content_start <= len && "content starts after data end");
-  assert(lexer->mark < len && "mark is after data end");
-  assert(lexer->field_len <= len && "field has length longer than the whole data");
-
-  // Reset lexer by re-initializing the whole thing
-  lexer_init(lexer);
-  
-  return(lexer_has_error(lexer));
-}
-
 static VALUE CLexer_scan(VALUE self, VALUE input)
 {
-  lexer *lxr = NULL;
-  DATA_GET(self, lexer, lxr);
+  lexer_state *lexer = NULL;
+  DATA_GET(self, lexer_state, lexer);
 
   rb_str_append(input, rb_str_new2("\n%_FEATURE_END_%"));
   char *data = RSTRING_PTR(input);
-  long dlen = RSTRING_LEN(input);
+  long len = RSTRING_LEN(input);
  
-  if (dlen == 0) { 
+  if (len == 0) { 
     rb_raise(rb_eGherkinLexerError, 0, "No content to parse.");
   } else {
-    lexer_scan(lxr, data, dlen);
+    const char *p, *pe, *eof;
+    int cs = lexer->cs;
+    
+    p = data;
+    pe = data + len;
+    eof = pe;
+    
+    assert(*pe == '\0' && "pointer does not end on NULL");
+    assert(pe - p == len && "pointers aren't same distance");
+    
+    %% write exec;
+    
+    lexer->cs = cs;
+    
+    assert(p <= pe && "data overflow after parsing execute");
+    assert(lexer->content_start <= len && "content starts after data end");
+    assert(lexer->mark < len && "mark is after data end");
+    assert(lexer->field_len <= len && "field has length longer than the whole data");
+    
+    // Reset lexer by re-initializing the whole thing
+    lexer_init(lexer);
 
-    if (lexer_has_error(lxr)) {
+    // static int lexer_has_error(lexer_state *lexer) {
+    //   return lexer->cs == lexer_error;
+    // }
+
+    if (lexer-cs == lexer_error) {
       rb_raise(rb_eGherkinLexerError, 0, "Invalid format, parsing fails.");
     } else {
-      return 1;
+      return Qtrue;
     }
   }
 }
