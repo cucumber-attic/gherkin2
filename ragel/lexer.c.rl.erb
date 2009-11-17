@@ -54,7 +54,6 @@ typedef struct lexer_state {
   size_t final_newline;
 
   void *listener;
-  void *data;
   void *table;
   void *row;
 
@@ -437,7 +436,7 @@ static void store_table(void *listener, void *table, int current_line)
 
 static void CLexer_free(void *data) 
 {
-  if(data) {
+  if (data) {
     free(data);
   }
 }
