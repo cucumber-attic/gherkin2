@@ -494,9 +494,7 @@ static VALUE CLexer_init(VALUE self, VALUE listener)
   lexer_init(lxr);
   lxr->listener = ROBJECT(listener);
   
-  VALUE table, row;
-  table = rb_ary_new();
-  row = rb_ary_new();
+  VALUE table = rb_ary_new(), row = rb_ary_new();
   
   lxr->table = RARRAY(table);
   lxr->row = RARRAY(row);
@@ -527,8 +525,6 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
     assert(pe - p == len && "pointers aren't same distance");
     
     %% write exec;
-    
-    lexer->cs = cs;
     
     assert(p <= pe && "data overflow after parsing execute");
     assert(lexer->content_start <= len && "content starts after data end");
