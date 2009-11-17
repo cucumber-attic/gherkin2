@@ -32,9 +32,6 @@ typedef void (*listener_cb)(void *listener, const char *at, size_t length, int l
 typedef void (*listener_error_cb)(void *listener, const char *at, int line);
 typedef void (*listener_long_cb)(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int line);
 typedef void (*listener_pystring_cb)(void *listener, int start_col, const char *at, size_t length, int line);
-typedef void (*listener_table_cb)(void *listener, void *table, int line);
-typedef void (*ruby_table_cb)(void *lexer_state);
-typedef void (*ruby_table_cell_cb)(void *lexer_state, const char *at, size_t length);
 
 typedef struct lexer_state {
   int cs;
@@ -54,8 +51,8 @@ typedef struct lexer_state {
   size_t final_newline;
 
   void *listener;
-  void *table;
-  void *row;
+  void *rows;
+  void *current_row;
 
   listener_cb store_comment_content;
   listener_cb store_tag_content;
@@ -67,11 +64,6 @@ typedef struct lexer_state {
   listener_long_cb store_examples_content;
   listener_long_cb store_step_content;
   listener_pystring_cb store_pystring_content;
-  listener_table_cb store_table;
-  ruby_table_cb initialize_table;
-  ruby_table_cb new_row;
-  ruby_table_cb end_row;
-  ruby_table_cell_cb add_cell_to_current_row;
 } lexer_state;
 
 static VALUE mGherkin;
@@ -205,11 +197,11 @@ static VALUE rb_eGherkinLexerError;
   }
 
   action start_table {
-    if (lexer->initialize_table != NULL) {
-      p = p - 1;
-      lexer->current_line = lexer->line_number;
-      lexer->initialize_table(lexer);
-    }
+    p = p - 1;
+    lexer->current_line = lexer->line_number;
+    VALUE rows = rb_ary_new(), current_row = rb_ary_new();
+    lexer->rows = RARRAY(rows);
+    lexer->current_row = RARRAY(current_row);
   }
   
   action begin_cell_content {
@@ -217,27 +209,23 @@ static VALUE rb_eGherkinLexerError;
   }
 
   action store_cell_content {
-    if (lexer->add_cell_to_current_row != NULL) {
-      lexer->add_cell_to_current_row(lexer, PTR_TO(content_start), LEN(content_start, p)); 
-    }
+    VALUE con = Qnil;
+    con = rb_str_new(PTR_TO(content_start), LEN(content_start, p));
+    rb_funcall(con, rb_intern("strip!"), 0);
+
+    rb_ary_push((VALUE)lexer->current_row, con);
   }
 
   action start_row {
-    if (lexer->new_row != NULL) {
-      lexer->new_row(lexer);
-    }
+    lexer->current_row = RARRAY(rb_ary_new());    
   }  
 
   action store_row {
-    if (lexer->end_row != NULL) {
-      lexer->end_row(lexer);
-    }
+    rb_ary_push((VALUE)lexer->rows, (VALUE)lexer->current_row);
   }
 
   action store_table {
-    if (lexer->store_table != NULL) {
-      lexer->store_table(lexer->listener, lexer->table,  lexer->current_line);
-    }
+    rb_funcall((VALUE)lexer->listener, rb_intern("table"), 2, lexer->rows, INT2FIX(lexer->current_line));
   }
 
   action end_feature {
@@ -400,40 +388,6 @@ static void store_pystring_content(void *listener, int start_col, const char *at
   rb_funcall((VALUE)listener, rb_intern("py_string"), 3, INT2FIX(start_col), con, INT2FIX(current_line));
 }
 
-static void initialize_table(lexer_state *lxr)
-{
-  VALUE table, row;
-  table = rb_ary_new();
-  row = rb_ary_new();
-  lxr->table = RARRAY(table);
-  lxr->row = RARRAY(row);
-}
-
-static void add_cell_to_current_row(lexer_state *lxr, const char *at, size_t length)
-{
-  VALUE con = Qnil;
-  con = rb_str_new(at, length);
-  rb_funcall(con, rb_intern("strip!"), 0);
-
-  rb_ary_push((VALUE)lxr->row, con);
-}
-
-static void new_row(lexer_state *lxr)
-{
-  VALUE row = rb_ary_new();
-  lxr->row = RARRAY(row);
-}
-
-static void end_row(lexer_state *lxr)
-{
-  rb_ary_push((VALUE)lxr->table, (VALUE)lxr->row);
-}
-
-static void store_table(void *listener, void *table, int current_line)
-{
-  rb_funcall((VALUE)listener, rb_intern("table"), 2, table, INT2FIX(current_line));
-}
-
 static void CLexer_free(void *data) 
 {
   if (data) {
@@ -473,11 +427,6 @@ static VALUE CLexer_alloc(VALUE klass)
   lxr->store_step_content = store_step_content;
   lxr->store_pystring_content = store_pystring_content;
   lxr->raise_lexer_error = raise_lexer_error;
-  lxr->store_table = store_table;
-  lxr->initialize_table = (void *)initialize_table;
-  lxr->add_cell_to_current_row = (void *)add_cell_to_current_row;
-  lxr->new_row = (void *)new_row;
-  lxr->end_row = (void *)end_row;
   lexer_init(lxr);
 
   obj = Data_Wrap_Struct(klass, NULL, CLexer_free, lxr);
@@ -494,10 +443,10 @@ static VALUE CLexer_init(VALUE self, VALUE listener)
   lexer_init(lxr);
   lxr->listener = ROBJECT(listener);
   
-  VALUE table = rb_ary_new(), row = rb_ary_new();
-  
-  lxr->table = RARRAY(table);
-  lxr->row = RARRAY(row);
+  // VALUE table = rb_ary_new(), row = rb_ary_new();
+  // 
+  // lxr->table = RARRAY(table);
+  // lxr->row = RARRAY(row);
 
   return self;
 }
