@@ -18,8 +18,12 @@
 #define RSTRING_LEN(s) (RSTRING(s)->len)
 #endif
 
-#define RAISE_NOT_NULL(T) if (T == NULL) rb_raise(rb_eArgError, "NULL found for " # T " when shouldn't be.");
-#define DATA_GET(FROM, TYPE, NAME) Data_Get_Struct(FROM, TYPE, NAME); RAISE_NOT_NULL(NAME);
+#define DATA_GET(FROM, TYPE, NAME) \
+  Data_Get_Struct(FROM, TYPE, NAME); \ 
+  if (NAME == NULL) { \
+    rb_raise(rb_eArgError, "NULL found for " # NAME " when it shouldn't be."); \
+  }
+
 #define LEN(AT, P) (P - data - lexer->AT)
 #define MARK(M, P) (lexer->M = (P) - data)
 #define PTR_TO(P) (data + lexer->P)
@@ -438,7 +442,7 @@ static void CLexer_free(void *data)
   }
 }
 
-static int lexer_init(lexer_state *lexer) {
+static void lexer_init(lexer_state *lexer) {
   int cs = 0;
   %% write init;
   lexer->cs = cs;
@@ -454,14 +458,12 @@ static int lexer_init(lexer_state *lexer) {
   lexer->last_newline = 0;
   lexer->final_newline = 0;
   lexer->start_col = 0;
-  
-  return(1);
 }
 
 static VALUE CLexer_alloc(VALUE klass)
 {
   VALUE obj;
-  lexer_state *lxr = ALLOC_N(lexer_state, 1);
+  lexer_state *lxr = ALLOC(lexer_state);
   lxr->store_comment_content = store_comment_content;
   lxr->store_tag_content = store_tag_content;
   lxr->store_feature_content = store_feature_content;
