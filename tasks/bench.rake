@@ -118,7 +118,6 @@ class Benchmarker
     require 'null_listener'
     listener = NullListener.new
     @features.each_with_index do |feature, idx|
-      puts "Parsing ##{idx}: #{feature}"
       lexer = Gherkin::Feature.new('Native', listener)
       lexer.scan(File.read(feature))
     end
