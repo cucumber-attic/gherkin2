@@ -273,59 +273,54 @@ static void raise_lexer_error(VALUE listener, const char *at, int line)
 static void store_feature_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
-  kw = rb_str_new(keyword_at, keyword_length);
+  kw = rb_str_new(keyword_at, keyword_length - 1);
   con = rb_str_new(at, length);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
-  rb_funcall(kw, rb_intern("chop!"), 0);
   rb_funcall(listener, rb_intern("feature"), 3, kw, con, INT2FIX(current_line)); 
 }
 
 static void store_scenario_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
-  kw = rb_str_new(keyword_at, keyword_length);
+  kw = rb_str_new(keyword_at, keyword_length - 1);
   con = rb_str_new(at, length);
   con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
-  rb_funcall(kw, rb_intern("chop!"), 0);
   rb_funcall(listener, rb_intern("scenario"), 3, kw, con, INT2FIX(current_line)); 
 }
 
 static void store_scenario_outline_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
-  kw = rb_str_new(keyword_at, keyword_length);
+  kw = rb_str_new(keyword_at, keyword_length - 1);
   con = rb_str_new(at, length);
   con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
-  rb_funcall(kw, rb_intern("chop!"), 0);
   rb_funcall(listener, rb_intern("scenario_outline"), 3, kw, con, INT2FIX(current_line)); 
 }
 
 static void store_background_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
-  kw = rb_str_new(keyword_at, keyword_length);
+  kw = rb_str_new(keyword_at, keyword_length - 1);
   con = rb_str_new(at, length);
   con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
-  rb_funcall(kw, rb_intern("chop!"), 0);
   rb_funcall(listener, rb_intern("background"), 3, kw, con, INT2FIX(current_line)); 
 }
 
 static void store_examples_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
-  kw = rb_str_new(keyword_at, keyword_length);
+  kw = rb_str_new(keyword_at, keyword_length - 1);
   con = rb_str_new(at, length);
   con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
-  rb_funcall(kw, rb_intern("chop!"), 0);
   rb_funcall(listener, rb_intern("examples"), 3, kw, con, INT2FIX(current_line)); 
 }
 
