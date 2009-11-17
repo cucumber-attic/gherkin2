@@ -96,34 +96,19 @@ static VALUE rb_eGherkinLexerError;
   }
   
   action store_background_content {
-    STORE_KW_CON(background);
+    STORE_KW_CON(background)
   }
   
   action store_scenario_content {
-		store_scenario_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
-
-    if (lexer->content_end != 0) {
-      p = PTR_TO(content_end - 1);
-    }
-    lexer->content_end = 0;
+    STORE_KW_CON(scenario)
   }
   
   action store_scenario_outline_content {
-		store_scenario_outline_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
-
-    if (lexer->content_end != 0) {
-      p = PTR_TO(content_end - 1);
-    }
-    lexer->content_end = 0;
+    STORE_KW_CON(scenario_outline)
   }
   
   action store_examples_content {
-		store_examples_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
-
-    if (lexer->content_end != 0) {
-      p = PTR_TO(content_end - 1);
-    }
-    lexer->content_end = 0;
+    STORE_KW_CON(examples)
   }
   
   action store_step_content {
@@ -290,7 +275,7 @@ static void store_feature_content(VALUE listener, const char *keyword_at, size_t
   rb_funcall(listener, rb_intern("feature"), 3, kw, con, INT2FIX(current_line)); 
 }
 
-static void store_scenario_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+static void store_kw_content(VALUE listener, const char * event, const char * keyword_at, size_t keyword_length, const char * at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
@@ -299,28 +284,6 @@ static void store_scenario_content(VALUE listener, const char *keyword_at, size_
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(listener, rb_intern("scenario"), 3, kw, con, INT2FIX(current_line)); 
-}
-
-static void store_scenario_outline_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
-{
-  VALUE con = Qnil, kw = Qnil;
-  kw = rb_str_new(keyword_at, keyword_length);
-  con = rb_str_new(at, length);
-  con = multiline_strip(con);
-  rb_funcall(con, rb_intern("strip!"), 0);
-  rb_funcall(kw, rb_intern("strip!"), 0);
-  rb_funcall(listener, rb_intern("scenario_outline"), 3, kw, con, INT2FIX(current_line)); 
-}
-
-static void store_examples_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
-{
-  VALUE con = Qnil, kw = Qnil;
-  kw = rb_str_new(keyword_at, keyword_length);
-  con = rb_str_new(at, length);
-  con = multiline_strip(con);
-  rb_funcall(con, rb_intern("strip!"), 0);
-  rb_funcall(kw, rb_intern("strip!"), 0);
-  rb_funcall(listener, rb_intern("examples"), 3, kw, con, INT2FIX(current_line)); 
 }
 
 static void store_step_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
