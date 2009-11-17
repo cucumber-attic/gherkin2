@@ -19,7 +19,7 @@
 #endif
 
 #define DATA_GET(FROM, TYPE, NAME) \
-  Data_Get_Struct(FROM, TYPE, NAME); \ 
+  Data_Get_Struct(FROM, TYPE, NAME); \
   if (NAME == NULL) { \
     rb_raise(rb_eArgError, "NULL found for " # NAME " when it shouldn't be."); \
   }
@@ -28,10 +28,10 @@
 #define MARK(M, P) (lexer->M = (P) - data)
 #define PTR_TO(P) (data + lexer->P)
 
-typedef void (*listener_cb)(void *listener, const char *at, size_t length, int line);
-typedef void (*listener_error_cb)(void *listener, const char *at, int line);
-typedef void (*listener_long_cb)(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int line);
-typedef void (*listener_pystring_cb)(void *listener, int start_col, const char *at, size_t length, int line);
+typedef void (*listener_cb)(VALUE listener, const char *at, size_t length, int line);
+typedef void (*listener_error_cb)(VALUE listener, const char *at, int line);
+typedef void (*listener_long_cb)(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int line);
+typedef void (*listener_pystring_cb)(VALUE listener, int start_col, const char *at, size_t length, int line);
 
 typedef struct lexer_state {
   int cs;
@@ -50,9 +50,9 @@ typedef struct lexer_state {
   size_t last_newline;
   size_t final_newline;
 
-  void *listener;
-  void *rows;
-  void *current_row;
+  VALUE listener;
+  VALUE rows;
+  VALUE current_row;
 
   listener_cb store_comment_content;
   listener_cb store_tag_content;
@@ -68,7 +68,7 @@ typedef struct lexer_state {
 
 static VALUE mGherkin;
 static VALUE mLexer;
-static VALUE cCLexer; 
+static VALUE cCLexer;
 static VALUE rb_eGherkinLexerError;
 
 /** Machine **/
@@ -199,9 +199,8 @@ static VALUE rb_eGherkinLexerError;
   action start_table {
     p = p - 1;
     lexer->current_line = lexer->line_number;
-    VALUE rows = rb_ary_new(), current_row = rb_ary_new();
-    lexer->rows = RARRAY(rows);
-    lexer->current_row = RARRAY(current_row);
+    rb_ary_clear(lexer->rows);
+    rb_ary_clear(lexer->current_row);
   }
   
   action begin_cell_content {
@@ -213,19 +212,19 @@ static VALUE rb_eGherkinLexerError;
     con = rb_str_new(PTR_TO(content_start), LEN(content_start, p));
     rb_funcall(con, rb_intern("strip!"), 0);
 
-    rb_ary_push((VALUE)lexer->current_row, con);
+    rb_ary_push(lexer->current_row, con);
   }
 
   action start_row {
-    lexer->current_row = RARRAY(rb_ary_new());    
+    lexer->current_row = rb_ary_new();    
   }  
 
   action store_row {
-    rb_ary_push((VALUE)lexer->rows, (VALUE)lexer->current_row);
+    rb_ary_push(lexer->rows, lexer->current_row);
   }
 
   action store_table {
-    rb_funcall((VALUE)lexer->listener, rb_intern("table"), 2, lexer->rows, INT2FIX(lexer->current_line));
+    rb_funcall(lexer->listener, rb_intern("table"), 2, lexer->rows, INT2FIX(lexer->current_line));
   }
 
   action end_feature {
@@ -290,28 +289,28 @@ static VALUE multiline_strip(VALUE text)
   return rb_ary_join(split, rb_str_new2("\n"));
 }
 
-static void store_comment_content(void *listener, const char *at, size_t length, int line) 
+static void store_comment_content(VALUE listener, const char *at, size_t length, int line) 
 { 
   VALUE val = Qnil;
 
   val = rb_str_new(at, length);
-  rb_funcall((VALUE)listener, rb_intern("comment"), 2, val, INT2FIX(line));
+  rb_funcall(listener, rb_intern("comment"), 2, val, INT2FIX(line));
 }
 
-static void store_tag_content(void *listener, const char *at, size_t length, int line)
+static void store_tag_content(VALUE listener, const char *at, size_t length, int line)
 {
   VALUE val = Qnil;
 
   val = rb_str_new(at, length);
-  rb_funcall((VALUE)listener, rb_intern("tag"), 2, val, INT2FIX(line)); 
+  rb_funcall(listener, rb_intern("tag"), 2, val, INT2FIX(line)); 
 } 
 
-static void raise_lexer_error(void *listener, const char *at, int line)
+static void raise_lexer_error(VALUE listener, const char *at, int line)
 { 
   rb_raise(rb_eGherkinLexerError, "Parsing error on line %d: '%s'.", line, at);
 }
 
-static void store_feature_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+static void store_feature_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
@@ -319,10 +318,10 @@ static void store_feature_content(void *listener, const char *keyword_at, size_t
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("chop!"), 0);
-  rb_funcall((VALUE)listener, rb_intern("feature"), 3, kw, con, INT2FIX(current_line)); 
+  rb_funcall(listener, rb_intern("feature"), 3, kw, con, INT2FIX(current_line)); 
 }
 
-static void store_scenario_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+static void store_scenario_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
@@ -331,10 +330,10 @@ static void store_scenario_content(void *listener, const char *keyword_at, size_
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("chop!"), 0);
-  rb_funcall((VALUE)listener, rb_intern("scenario"), 3, kw, con, INT2FIX(current_line)); 
+  rb_funcall(listener, rb_intern("scenario"), 3, kw, con, INT2FIX(current_line)); 
 }
 
-static void store_scenario_outline_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+static void store_scenario_outline_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
@@ -343,10 +342,10 @@ static void store_scenario_outline_content(void *listener, const char *keyword_a
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("chop!"), 0);
-  rb_funcall((VALUE)listener, rb_intern("scenario_outline"), 3, kw, con, INT2FIX(current_line)); 
+  rb_funcall(listener, rb_intern("scenario_outline"), 3, kw, con, INT2FIX(current_line)); 
 }
 
-static void store_background_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+static void store_background_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
@@ -355,10 +354,10 @@ static void store_background_content(void *listener, const char *keyword_at, siz
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("chop!"), 0);
-  rb_funcall((VALUE)listener, rb_intern("background"), 3, kw, con, INT2FIX(current_line)); 
+  rb_funcall(listener, rb_intern("background"), 3, kw, con, INT2FIX(current_line)); 
 }
 
-static void store_examples_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+static void store_examples_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
@@ -367,10 +366,10 @@ static void store_examples_content(void *listener, const char *keyword_at, size_
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("chop!"), 0);
-  rb_funcall((VALUE)listener, rb_intern("examples"), 3, kw, con, INT2FIX(current_line)); 
+  rb_funcall(listener, rb_intern("examples"), 3, kw, con, INT2FIX(current_line)); 
 }
 
-static void store_step_content(void *listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+static void store_step_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
@@ -378,14 +377,14 @@ static void store_step_content(void *listener, const char *keyword_at, size_t ke
   con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
-  rb_funcall((VALUE)listener, rb_intern("step"), 3, kw, con, INT2FIX(current_line)); 
+  rb_funcall(listener, rb_intern("step"), 3, kw, con, INT2FIX(current_line)); 
 }
 
-static void store_pystring_content(void *listener, int start_col, const char *at, size_t length, int current_line)
+static void store_pystring_content(VALUE listener, int start_col, const char *at, size_t length, int current_line)
 {
   VALUE con = Qnil;
   con = rb_str_new(at, length);
-  rb_funcall((VALUE)listener, rb_intern("py_string"), 3, INT2FIX(start_col), con, INT2FIX(current_line));
+  rb_funcall(listener, rb_intern("py_string"), 3, INT2FIX(start_col), con, INT2FIX(current_line));
 }
 
 static void CLexer_free(void *data) 
@@ -411,6 +410,8 @@ static void lexer_init(lexer_state *lexer) {
   lexer->last_newline = 0;
   lexer->final_newline = 0;
   lexer->start_col = 0;
+  lexer->rows = rb_ary_new();
+  lexer->current_row = rb_ary_new();
 }
 
 static VALUE CLexer_alloc(VALUE klass)
@@ -441,13 +442,8 @@ static VALUE CLexer_init(VALUE self, VALUE listener)
   lexer_state *lxr = NULL;
   DATA_GET(self, lexer_state, lxr);
   lexer_init(lxr);
-  lxr->listener = ROBJECT(listener);
+  lxr->listener = listener;
   
-  // VALUE table = rb_ary_new(), row = rb_ary_new();
-  // 
-  // lxr->table = RARRAY(table);
-  // lxr->row = RARRAY(row);
-
   return self;
 }
 
