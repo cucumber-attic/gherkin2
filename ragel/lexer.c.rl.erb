@@ -97,6 +97,7 @@ static VALUE rb_eGherkinLexerError;
  
   action store_feature_content {
 	  lexer->store_feature_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+
     if(lexer->content_end != 0) {
       p = PTR_TO(content_end - 1);
     }
@@ -105,6 +106,7 @@ static VALUE rb_eGherkinLexerError;
   
   action store_background_content {
 		lexer->store_background_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+
     if(lexer->content_end != 0) {
       p = PTR_TO(content_end - 1);
     }
@@ -113,6 +115,7 @@ static VALUE rb_eGherkinLexerError;
   
   action store_scenario_content {
 		lexer->store_scenario_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+
     if(lexer->content_end != 0) {
       p = PTR_TO(content_end - 1);
     }
@@ -121,6 +124,7 @@ static VALUE rb_eGherkinLexerError;
   
   action store_scenario_outline_content {
 		lexer->store_scenario_outline_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+
     if(lexer->content_end != 0) {
       p = PTR_TO(content_end - 1);
     }
@@ -129,6 +133,7 @@ static VALUE rb_eGherkinLexerError;
   
   action store_examples_content {
 		lexer->store_examples_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+
     if (lexer->content_end != 0) {
       p = PTR_TO(content_end - 1);
     }
@@ -364,13 +369,6 @@ static void store_pystring_content(VALUE listener, int start_col, const char *at
   rb_funcall(listener, rb_intern("py_string"), 3, INT2FIX(start_col), con, INT2FIX(current_line));
 }
 
-static void CLexer_free(void *data) 
-{
-  if (data) {
-    free(data);
-  }
-}
-
 static void lexer_init(lexer_state *lexer) {
   int cs = 0;
   %% write init;
@@ -405,7 +403,7 @@ static VALUE CLexer_alloc(VALUE klass)
   lxr->raise_lexer_error = raise_lexer_error;
   lexer_init(lxr);
 
-  obj = Data_Wrap_Struct(klass, NULL, CLexer_free, lxr);
+  obj = Data_Wrap_Struct(klass, NULL, -1, lxr);
 
   return obj;
 }
