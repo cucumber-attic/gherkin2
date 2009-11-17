@@ -28,11 +28,6 @@
 #define MARK(M, P) (lexer->M = (P) - data)
 #define PTR_TO(P) (data + lexer->P)
 
-typedef void (*listener_cb)(VALUE listener, const char *at, size_t length, int line);
-typedef void (*listener_error_cb)(VALUE listener, const char *at, int line);
-typedef void (*listener_long_cb)(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int line);
-typedef void (*listener_pystring_cb)(VALUE listener, int start_col, const char *at, size_t length, int line);
-
 typedef struct lexer_state {
   int cs;
   int content_len;
@@ -49,17 +44,6 @@ typedef struct lexer_state {
   size_t query_start;
   size_t last_newline;
   size_t final_newline;
-
-  listener_cb store_comment_content;
-  listener_cb store_tag_content;
-  listener_error_cb raise_lexer_error;
-  listener_long_cb store_feature_content;
-  listener_long_cb store_scenario_content;
-  listener_long_cb store_scenario_outline_content;
-  listener_long_cb store_background_content;
-  listener_long_cb store_examples_content;
-  listener_long_cb store_step_content;
-  listener_pystring_cb store_pystring_content;
 } lexer_state;
 
 static VALUE mGherkin;
@@ -89,14 +73,14 @@ static VALUE rb_eGherkinLexerError;
   action store_pystring_content {
     int len = LEN(content_start, PTR_TO(final_newline));
     if (len >= 0) { 
-      lexer->store_pystring_content(listener, lexer->start_col, PTR_TO(content_start), len, lexer->current_line); 
+      store_pystring_content(listener, lexer->start_col, PTR_TO(content_start), len, lexer->current_line); 
     } else { // Empty pystring
-      lexer->store_pystring_content(listener, lexer->start_col, PTR_TO(content_start), 0, lexer->current_line); 
+      store_pystring_content(listener, lexer->start_col, PTR_TO(content_start), 0, lexer->current_line); 
     } 
   } 
  
   action store_feature_content {
-	  lexer->store_feature_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+	  store_feature_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
 
     if(lexer->content_end != 0) {
       p = PTR_TO(content_end - 1);
@@ -105,7 +89,7 @@ static VALUE rb_eGherkinLexerError;
   }
   
   action store_background_content {
-		lexer->store_background_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+		store_background_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
 
     if(lexer->content_end != 0) {
       p = PTR_TO(content_end - 1);
@@ -114,7 +98,7 @@ static VALUE rb_eGherkinLexerError;
   }
   
   action store_scenario_content {
-		lexer->store_scenario_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+		store_scenario_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
 
     if(lexer->content_end != 0) {
       p = PTR_TO(content_end - 1);
@@ -123,7 +107,7 @@ static VALUE rb_eGherkinLexerError;
   }
   
   action store_scenario_outline_content {
-		lexer->store_scenario_outline_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+		store_scenario_outline_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
 
     if(lexer->content_end != 0) {
       p = PTR_TO(content_end - 1);
@@ -132,7 +116,7 @@ static VALUE rb_eGherkinLexerError;
   }
   
   action store_examples_content {
-		lexer->store_examples_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+		store_examples_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
 
     if (lexer->content_end != 0) {
       p = PTR_TO(content_end - 1);
@@ -141,15 +125,15 @@ static VALUE rb_eGherkinLexerError;
   }
   
   action store_step_content {
-	  lexer->store_step_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, p), lexer->current_line);
+	  store_step_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, p), lexer->current_line);
   }
   
   action store_comment_content {
-    lexer->store_comment_content(listener, PTR_TO(content_start), LEN(content_start, p), lexer->line_number);
+    store_comment_content(listener, PTR_TO(content_start), LEN(content_start, p), lexer->line_number);
   }
   
   action store_tag_content {
-    lexer->store_tag_content(listener, PTR_TO(content_start), LEN(content_start, p), lexer->line_number);
+    store_tag_content(listener, PTR_TO(content_start), LEN(content_start, p), lexer->line_number);
   }
   
   action inc_line_number {
@@ -211,7 +195,7 @@ static VALUE rb_eGherkinLexerError;
 
   action end_feature {
     if (cs < lexer_first_final) {
-      if (lexer->raise_lexer_error != NULL) {
+      if (raise_lexer_error != NULL) {
         int count = 0;
         int newstr_count = 0;
         size_t len;
@@ -241,7 +225,7 @@ static VALUE rb_eGherkinLexerError;
         int line = lexer->line_number;
         lexer_init(lexer); // Otherwise you can't scan again with the same lexer
                              // calling after raising doesn't do the trick.
-        lexer->raise_lexer_error(listener, newstr, line);
+        raise_lexer_error(listener, newstr, line);
       }
     }
   }
@@ -391,16 +375,6 @@ static VALUE CLexer_alloc(VALUE klass)
 {
   VALUE obj;
   lexer_state *lxr = ALLOC(lexer_state);
-  lxr->store_comment_content = store_comment_content;
-  lxr->store_tag_content = store_tag_content;
-  lxr->store_feature_content = store_feature_content;
-  lxr->store_scenario_content = store_scenario_content;
-  lxr->store_scenario_outline_content = store_scenario_outline_content;
-  lxr->store_background_content = store_background_content;
-  lxr->store_examples_content = store_examples_content;
-  lxr->store_step_content = store_step_content;
-  lxr->store_pystring_content = store_pystring_content;
-  lxr->raise_lexer_error = raise_lexer_error;
   lexer_init(lxr);
 
   obj = Data_Wrap_Struct(klass, NULL, -1, lxr);
