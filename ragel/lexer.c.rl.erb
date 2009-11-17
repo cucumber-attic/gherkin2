@@ -89,83 +89,64 @@ static VALUE rb_eGherkinLexerError;
   }
  
   action store_pystring_content {
-    if (lexer->store_pystring_content != NULL) {
-      int len = LEN(content_start, PTR_TO(final_newline));
-      if (len >= 0) { // not an empty pystring
-        lexer->store_pystring_content(lexer->listener, lexer->start_col, PTR_TO(content_start), LEN(content_start, PTR_TO(final_newline)), lexer->current_line); 
-      }
-      else { // Empty pystring
-        lexer->store_pystring_content(lexer->listener, lexer->start_col, PTR_TO(content_start), 0, lexer->current_line); 
-      } 
-    }
+    int len = LEN(content_start, PTR_TO(final_newline));
+    if (len >= 0) { 
+      lexer->store_pystring_content(lexer->listener, lexer->start_col, PTR_TO(content_start), LEN(content_start, PTR_TO(final_newline)), lexer->current_line); 
+    } else { // Empty pystring
+      lexer->store_pystring_content(lexer->listener, lexer->start_col, PTR_TO(content_start), 0, lexer->current_line); 
+    } 
   } 
  
   action store_feature_content {
-    if (lexer->store_feature_content != NULL) {
-			lexer->store_feature_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
-      if(lexer->content_end != 0) {
-        p = PTR_TO(content_end - 1);
-      }
-      lexer->content_end = 0;
+	  lexer->store_feature_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+    if(lexer->content_end != 0) {
+      p = PTR_TO(content_end - 1);
     }
+    lexer->content_end = 0;
   }
   
   action store_background_content {
-    if (lexer->store_background_content != NULL) {
-			lexer->store_background_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
-      if(lexer->content_end != 0) {
-        p = PTR_TO(content_end - 1);
-      }
-      lexer->content_end = 0;
+		lexer->store_background_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+    if(lexer->content_end != 0) {
+      p = PTR_TO(content_end - 1);
     }
+    lexer->content_end = 0;
   }
   
   action store_scenario_content {
-    if (lexer->store_scenario_content != NULL) {
-			lexer->store_scenario_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
-      if(lexer->content_end != 0) {
-        p = PTR_TO(content_end - 1);
-      }
-      lexer->content_end = 0;
+		lexer->store_scenario_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+    if(lexer->content_end != 0) {
+      p = PTR_TO(content_end - 1);
     }
+    lexer->content_end = 0;
   }
   
   action store_scenario_outline_content {
-    if (lexer->store_scenario_outline_content != NULL) {
-			lexer->store_scenario_outline_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
-      if(lexer->content_end != 0) {
-        p = PTR_TO(content_end - 1);
-      }
-      lexer->content_end = 0;
+		lexer->store_scenario_outline_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+    if(lexer->content_end != 0) {
+      p = PTR_TO(content_end - 1);
     }
+    lexer->content_end = 0;
   }
   
   action store_examples_content {
-    if (lexer->store_examples_content != NULL) {
-			lexer->store_examples_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
-      if(lexer->content_end != 0) {
-        p = PTR_TO(content_end - 1);
-      }
-      lexer->content_end = 0;
+		lexer->store_examples_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+    if (lexer->content_end != 0) {
+      p = PTR_TO(content_end - 1);
     }
+    lexer->content_end = 0;
   }
   
   action store_step_content {
-    if (lexer->store_step_content != NULL) {
-			lexer->store_step_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, p), lexer->current_line);
-    }
+	  lexer->store_step_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, p), lexer->current_line);
   }
   
   action store_comment_content {
-    if(lexer->store_comment_content != NULL) {
-      lexer->store_comment_content(lexer->listener, PTR_TO(content_start), LEN(content_start, p), lexer->line_number);
-    }
+    lexer->store_comment_content(lexer->listener, PTR_TO(content_start), LEN(content_start, p), lexer->line_number);
   }
   
   action store_tag_content {
-    if (lexer->store_tag_content != NULL) {
-      lexer->store_tag_content(lexer->listener, PTR_TO(content_start), LEN(content_start, p), lexer->line_number);
-    }
+    lexer->store_tag_content(lexer->listener, PTR_TO(content_start), LEN(content_start, p), lexer->line_number);
   }
   
   action inc_line_number {
