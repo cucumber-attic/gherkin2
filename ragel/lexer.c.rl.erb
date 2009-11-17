@@ -537,11 +537,7 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
     // Reset lexer by re-initializing the whole thing
     lexer_init(lexer);
 
-    // static int lexer_has_error(lexer_state *lexer) {
-    //   return lexer->cs == lexer_error;
-    // }
-
-    if (lexer-cs == lexer_error) {
+    if (lexer->cs == lexer_error) {
       rb_raise(rb_eGherkinLexerError, 0, "Invalid format, parsing fails.");
     } else {
       return Qtrue;
