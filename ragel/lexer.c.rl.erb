@@ -151,7 +151,7 @@ static VALUE rb_eGherkinLexerError;
   }
   
   action store_step_content {
-	  store_step_content(listener, 
+	  store_kw_content(listener, "step",
 	    PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)),
 	    PTR_TO(content_start), LEN(content_start, p), 
 	    lexer->current_line);
@@ -310,8 +310,7 @@ static void
 store_attr(VALUE listener, const char * attr_type,
            const char * at, size_t length, int line)
 {
-  VALUE val = Qnil;
-  val = rb_str_new(at, length);
+  VALUE val = rb_str_new(at, length);
   rb_funcall(listener, rb_intern(attr_type), 2, val, INT2FIX(line));
 }
 
@@ -327,17 +326,6 @@ store_kw_content(VALUE listener, const char * event_name,
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(listener, rb_intern(event_name), 3, kw, con, INT2FIX(current_line)); 
-}
-
-static void store_step_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
-{
-  VALUE con = Qnil, kw = Qnil;
-  kw = rb_str_new(keyword_at, keyword_length);
-  con = rb_str_new(at, length);
-  con = multiline_strip(con);
-  rb_funcall(con, rb_intern("strip!"), 0);
-  rb_funcall(kw, rb_intern("strip!"), 0);
-  rb_funcall(listener, rb_intern("step"), 3, kw, con, INT2FIX(current_line)); 
 }
 
 static void store_pystring_content(VALUE listener, int start_col, const char *at, size_t length, int current_line)
