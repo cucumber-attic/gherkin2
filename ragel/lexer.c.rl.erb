@@ -18,25 +18,6 @@
   if (NAME == NULL) { \
     rb_raise(rb_eArgError, "NULL found for " # NAME " when it shouldn't be."); \
   }
-
-#define LEN(AT, P) (P - data - lexer->AT)
-#define MARK(M, P) (lexer->M = (P) - data)
-#define PTR_TO(P) (data + lexer->P)
-
-#define STORE_KW_CON(EVENT) \
-    VALUE con = Qnil, kw = Qnil; \
-    kw = rb_str_new(PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1))); \
-    con = rb_str_new(PTR_TO(content_start), LEN(content_start, PTR_TO(content_end))); \
-    con = multiline_strip(con); \
-    rb_funcall(con, rb_intern("strip!"), 0); \
-    rb_funcall(kw, rb_intern("strip!"), 0); \
-    rb_funcall(listener, rb_intern(#EVENT), 3, kw, con, INT2FIX(lexer->current_line));
-
-#define SET_CONTENT_END \
-    if (lexer->content_end != 0) { \
-      p = PTR_TO(content_end - 1); \
-    } \
-    lexer->content_end = 0;
  
 typedef struct lexer_state {
   int content_len;
@@ -60,7 +41,24 @@ static VALUE mLexer;
 static VALUE cCLexer;
 static VALUE rb_eGherkinLexerError;
 
-/** Machine **/
+#define LEN(AT, P) (P - data - lexer->AT)
+#define MARK(M, P) (lexer->M = (P) - data)
+#define PTR_TO(P) (data + lexer->P)
+
+#define STORE_KW_END_CON(EVENT) \
+  store_kw_con(listener, # EVENT, \
+    PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), \
+    PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), \
+    lexer->current_line); \
+    if (lexer->content_end != 0) { \
+      p = PTR_TO(content_end - 1); \
+    } \
+    lexer->content_end = 0;
+
+#define STORE_ATTR(ATTR) \
+    store_attr(listener, # ATTR, \
+      PTR_TO(content_start), LEN(content_start, p), \
+      lexer->line_number);
 
 %%{
   machine lexer;
@@ -94,78 +92,42 @@ static VALUE rb_eGherkinLexerError;
 	    PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), 
 	    lexer->current_line);
 
-    SET_CONTENT_END
+    if (lexer->content_end != 0) {
+      p = PTR_TO(content_end - 1);
+    }
+    
+    lexer->content_end = 0;
   }
   
   action store_background_content {
-    store_kw_con(listener, "background", 
-      PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), 
-      PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), 
-      lexer->current_line);
-    
-    if (lexer->content_end != 0) { 
-      p = PTR_TO(content_end - 1); 
-    } 
-    
-    lexer->content_end = 0;  
+    STORE_KW_END_CON(background)
   }
   
   action store_scenario_content {
-    store_kw_con(listener, "scenario", 
-      PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), 
-      PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), 
-      lexer->current_line);
-    
-    if (lexer->content_end != 0) { 
-      p = PTR_TO(content_end - 1); 
-    } 
-    
-    lexer->content_end = 0;
+    STORE_KW_END_CON(scenario)
   }
   
   action store_scenario_outline_content {
-    store_kw_con(listener, "scenario_outline", 
-      PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), 
-      PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), 
-      lexer->current_line);
-    
-    if (lexer->content_end != 0) { 
-      p = PTR_TO(content_end - 1); 
-    } 
-    
-    lexer->content_end = 0;
+    STORE_KW_END_CON(scenario_outline)
   }
   
   action store_examples_content {
-    store_kw_con(listener, "examples", 
-      PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), 
-      PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), 
-      lexer->current_line);
-    
-    if (lexer->content_end != 0) { 
-      p = PTR_TO(content_end - 1); 
-    } 
-    
-    lexer->content_end = 0;
+    STORE_KW_END_CON(examples)
   }
   
   action store_step_content {
-	  store_kw_con(listener, "step",
-	    PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)),
-	    PTR_TO(content_start), LEN(content_start, p), 
-	    lexer->current_line);
+    store_kw_con(listener, "step",
+      PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)),
+      PTR_TO(content_start), LEN(content_start, p), 
+      lexer->current_line);
   }
   
   action store_comment_content {
-    store_attr(listener, "comment",
-      PTR_TO(content_start), LEN(content_start, p), 
-      lexer->line_number);
+    STORE_ATTR(comment)
   }
   
   action store_tag_content {
-    store_attr(listener, "tag",
-      PTR_TO(content_start), LEN(content_start, p), 
-      lexer->line_number);
+    STORE_ATTR(tag)
   }
   
   action inc_line_number {
