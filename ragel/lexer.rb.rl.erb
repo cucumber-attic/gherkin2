@@ -29,7 +29,7 @@ module Gherkin
         }
  
         action store_feature_content {
-          store_keyword_content(:feature, data, p, eof) { |con| con.strip }
+          store_keyword_content(:feature, data, p, eof) { |con| multiline_strip(con) }
           p = @next_keyword_start - 1 if @next_keyword_start          
           @next_keyword_start = nil
         }
