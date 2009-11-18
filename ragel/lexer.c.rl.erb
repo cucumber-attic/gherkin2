@@ -87,7 +87,10 @@ static VALUE rb_eGherkinLexerError;
   } 
  
   action store_feature_content {
-	  store_feature_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
+	  store_feature_content(listener, 
+	    PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), 
+	    PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), 
+	    lexer->current_line);
 
     if (lexer->content_end != 0) {
       p = PTR_TO(content_end - 1);
@@ -96,31 +99,74 @@ static VALUE rb_eGherkinLexerError;
   }
   
   action store_background_content {
-    STORE_KW_CON(background)
+    store_kw_content(listener, "background", 
+      PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), 
+      PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), 
+      lexer->current_line);
+    
+    if (lexer->content_end != 0) { 
+      p = PTR_TO(content_end - 1); 
+    } 
+    
+    lexer->content_end = 0;  
   }
   
   action store_scenario_content {
-    STORE_KW_CON(scenario)
+    store_kw_content(listener, "scenario", 
+      PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), 
+      PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), 
+      lexer->current_line);
+    
+    if (lexer->content_end != 0) { 
+      p = PTR_TO(content_end - 1); 
+    } 
+    
+    lexer->content_end = 0;
   }
   
   action store_scenario_outline_content {
-    STORE_KW_CON(scenario_outline)
+    store_kw_content(listener, "scenario_outline", 
+      PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), 
+      PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), 
+      lexer->current_line);
+    
+    if (lexer->content_end != 0) { 
+      p = PTR_TO(content_end - 1); 
+    } 
+    
+    lexer->content_end = 0;
   }
   
   action store_examples_content {
-    STORE_KW_CON(examples)
+    store_kw_content(listener, "examples", 
+      PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), 
+      PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), 
+      lexer->current_line);
+    
+    if (lexer->content_end != 0) { 
+      p = PTR_TO(content_end - 1); 
+    } 
+    
+    lexer->content_end = 0;
   }
   
   action store_step_content {
-	  store_step_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, p), lexer->current_line);
+	  store_step_content(listener, 
+	    PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)),
+	    PTR_TO(content_start), LEN(content_start, p), 
+	    lexer->current_line);
   }
   
   action store_comment_content {
-    store_comment_content(listener, PTR_TO(content_start), LEN(content_start, p), lexer->line_number);
+    store_attr(listener, "comment",
+      PTR_TO(content_start), LEN(content_start, p), 
+      lexer->line_number);
   }
   
   action store_tag_content {
-    store_tag_content(listener, PTR_TO(content_start), LEN(content_start, p), lexer->line_number);
+    store_attr(listener, "tag",
+      PTR_TO(content_start), LEN(content_start, p), 
+      lexer->line_number);
   }
   
   action inc_line_number {
@@ -244,21 +290,6 @@ static VALUE multiline_strip(VALUE text)
   return rb_ary_join(split, rb_str_new2("\n"));
 }
 
-static void store_comment_content(VALUE listener, const char *at, size_t length, int line) 
-{ 
-  VALUE val = Qnil;
-
-  val = rb_str_new(at, length);
-  rb_funcall(listener, rb_intern("comment"), 2, val, INT2FIX(line));
-}
-
-static void store_tag_content(VALUE listener, const char *at, size_t length, int line)
-{
-  VALUE val = Qnil;
-
-  val = rb_str_new(at, length);
-  rb_funcall(listener, rb_intern("tag"), 2, val, INT2FIX(line)); 
-} 
 
 static void raise_lexer_error(VALUE listener, const char *at, int line)
 { 
@@ -275,7 +306,19 @@ static void store_feature_content(VALUE listener, const char *keyword_at, size_t
   rb_funcall(listener, rb_intern("feature"), 3, kw, con, INT2FIX(current_line)); 
 }
 
-static void store_kw_content(VALUE listener, const char * keyword_at, size_t keyword_length, const char * at, size_t length, int current_line)
+static void 
+store_attr(VALUE listener, const char * attr_type,
+           const char * at, size_t length, int line)
+{
+  VALUE val = Qnil;
+  val = rb_str_new(at, length);
+  rb_funcall(listener, rb_intern(attr_type), 2, val, INT2FIX(line));
+}
+
+static void 
+store_kw_content(VALUE listener, const char * event_name, 
+                 const char * keyword_at, size_t keyword_length, 
+                 const char * at, size_t length, int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
@@ -283,7 +326,7 @@ static void store_kw_content(VALUE listener, const char * keyword_at, size_t key
   con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
-  rb_funcall(listener, rb_intern("scenario"), 3, kw, con, INT2FIX(current_line)); 
+  rb_funcall(listener, rb_intern(event_name), 3, kw, con, INT2FIX(current_line)); 
 }
 
 static void store_step_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
