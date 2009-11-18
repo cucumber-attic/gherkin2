@@ -80,8 +80,7 @@ static VALUE rb_eGherkinLexerError;
   action store_pystring_content {
     int len = LEN(content_start, PTR_TO(final_newline));
 
-    if (len < 0)
-      len = 0;
+    if (len < 0) len = 0;
 
     store_pystring_content(listener, lexer->start_col, PTR_TO(content_start), len, lexer->current_line);
   } 
