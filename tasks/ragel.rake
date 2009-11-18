@@ -54,8 +54,8 @@ class RagelCompiler
     
     all_keywords.each { |kw| i18n[kw] = i18n[kw].split("|") }
     delimited_keywords.each { |kw| i18n[kw].map! { |v| v += ':'} }
-    bare_keywords.each { |kw| i18n[kw].map! { |v| v += ' '} } if i18n['space_after_keyword']
-    all_keywords.each { |kw| i18n[kw] = "('" + i18n[kw].join("' | '") + "')" }    
+    bare_keywords.each { |kw| i18n[kw].map! { |v| (v + ' ').sub(/< $/,'')} }
+    all_keywords.each { |kw| i18n[kw] = '("' + i18n[kw].join('" | "') + '")' }    
     i18n
   end
 

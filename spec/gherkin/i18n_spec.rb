@@ -36,6 +36,22 @@ module Gherkin
           [:step, "那么", "我应该在屏幕上看到的结果是13", 7]
         ] 
       end
+
+      it "should parse languages with spaces after some keywords but not others" do
+        lexer = Gherkin::Lexer['fr'].new(@listener)
+        scan_file(lexer, "i18n_fr.feature")
+        @listener.to_sexp.should == [
+          [:feature, "Fonctionnalité", "Addition", 1],
+          [:scenario_outline, "Plan du scénario", "Addition de produits dérivés", 2],
+          [:step, "Soit", "une calculatrice", 3],
+          [:step, "Etant donné", "qu'on tape <a>", 4],
+          [:step, "Et", "qu'on tape <b>", 5],
+          [:step, "Lorsqu'", "on tape additionner", 6],
+          [:step, "Alors", "le résultat doit être <somme>", 7],
+          [:examples, "Exemples", "", 9],
+          [:table, [["a","b","somme"],["2","2","4"],["2","3","5"]], 10]
+        ]
+      end
     end
   end
 end
