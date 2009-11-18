@@ -233,7 +233,8 @@ static VALUE rb_eGherkinLexerError;
 /** Data **/
 %% write data;
 
-static VALUE strip_i(VALUE str, VALUE ary)
+static VALUE 
+strip_i(VALUE str, VALUE ary)
 {
   rb_funcall(str, rb_intern("strip!"), 0);
   rb_ary_push(ary, str);
@@ -241,7 +242,8 @@ static VALUE strip_i(VALUE str, VALUE ary)
   return Qnil;
 }
 
-static VALUE multiline_strip(VALUE text)
+static VALUE 
+multiline_strip(VALUE text)
 {
   VALUE map = rb_ary_new();
   VALUE split = rb_str_split(text, "\n");
@@ -251,34 +253,26 @@ static VALUE multiline_strip(VALUE text)
   return rb_ary_join(split, rb_str_new2("\n"));
 }
 
-
-static void raise_lexer_error(VALUE listener, const char *at, int line)
-{ 
-  rb_raise(rb_eGherkinLexerError, "Parsing error on line %d: '%s'.", line, at);
-}
-
-static void store_feature_content(VALUE listener, const char *keyword_at, size_t keyword_length, const char *at, size_t length, int current_line)
+static void 
+store_feature_content(VALUE listener, 
+                      const char * keyword_at, size_t keyword_length, 
+                      const char * at,         size_t length, 
+                      int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
   con = rb_str_new(at, length);
+  // con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(listener, rb_intern("feature"), 3, kw, con, INT2FIX(current_line)); 
 }
 
 static void 
-store_attr(VALUE listener, const char * attr_type,
-           const char * at, size_t length, int line)
-{
-  VALUE val = rb_str_new(at, length);
-  rb_funcall(listener, rb_intern(attr_type), 2, val, INT2FIX(line));
-}
-
-static void 
 store_kw_con(VALUE listener, const char * event_name, 
              const char * keyword_at, size_t keyword_length, 
-             const char * at, size_t length, int current_line)
+             const char * at,         size_t length, 
+             int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = rb_str_new(keyword_at, keyword_length);
@@ -289,11 +283,30 @@ store_kw_con(VALUE listener, const char * event_name,
   rb_funcall(listener, rb_intern(event_name), 3, kw, con, INT2FIX(current_line)); 
 }
 
-static void store_pystring_content(VALUE listener, int start_col, const char *at, size_t length, int current_line)
+static void 
+store_attr(VALUE listener, const char * attr_type,
+           const char * at, size_t length, 
+           int line)
+{
+  VALUE val = rb_str_new(at, length);
+  rb_funcall(listener, rb_intern(attr_type), 2, val, INT2FIX(line));
+}
+
+static void 
+store_pystring_content(VALUE listener, 
+          int start_col, 
+          const char *at, size_t length, 
+          int current_line)
 {
   VALUE con = Qnil;
   con = rb_str_new(at, length);
   rb_funcall(listener, rb_intern("py_string"), 3, INT2FIX(start_col), con, INT2FIX(current_line));
+}
+
+static void 
+raise_lexer_error(VALUE listener, const char * at, int line)
+{ 
+  rb_raise(rb_eGherkinLexerError, "Parsing error on line %d: '%s'.", line, at);
 }
 
 static void lexer_init(lexer_state *lexer) {
