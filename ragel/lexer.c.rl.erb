@@ -67,9 +67,8 @@ static VALUE rb_eGherkinLexerError;
   action store_pystring_content {
     int len = LEN(content_start, PTR_TO(final_newline));
 
-    if (len < 0) {
+    if (len < 0)
       len = 0;
-    }
 
     store_pystring_content(listener, lexer->start_col, PTR_TO(content_start), len, lexer->current_line);
   } 
@@ -77,7 +76,7 @@ static VALUE rb_eGherkinLexerError;
   action store_feature_content {
 	  store_feature_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
 
-    if(lexer->content_end != 0) {
+    if (lexer->content_end != 0) {
       p = PTR_TO(content_end - 1);
     }
     lexer->content_end = 0;
@@ -86,7 +85,7 @@ static VALUE rb_eGherkinLexerError;
   action store_background_content {
 		store_background_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
 
-    if(lexer->content_end != 0) {
+    if (lexer->content_end != 0) {
       p = PTR_TO(content_end - 1);
     }
     lexer->content_end = 0;
@@ -95,7 +94,7 @@ static VALUE rb_eGherkinLexerError;
   action store_scenario_content {
 		store_scenario_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
 
-    if(lexer->content_end != 0) {
+    if (lexer->content_end != 0) {
       p = PTR_TO(content_end - 1);
     }
     lexer->content_end = 0;
@@ -104,7 +103,7 @@ static VALUE rb_eGherkinLexerError;
   action store_scenario_outline_content {
 		store_scenario_outline_content(listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
 
-    if(lexer->content_end != 0) {
+    if (lexer->content_end != 0) {
       p = PTR_TO(content_end - 1);
     }
     lexer->content_end = 0;
@@ -141,7 +140,7 @@ static VALUE rb_eGherkinLexerError;
   }
  
   action start_keyword {
-    if(lexer->mark == 0) {
+    if (lexer->mark == 0) {
       MARK(mark, p);
     }
   }
@@ -202,8 +201,10 @@ static VALUE rb_eGherkinLexerError;
           len = strlen(data);
           buff = data;
         }
+
         char newstr[len]; 
-        for(count = 0; count < len; count++) {
+
+        for (count = 0; count < len; count++) {
           if(buff[count] == 10) {
             newstr[newstr_count] = '\0'; // terminate new string at first newline found
             break;
@@ -217,9 +218,9 @@ static VALUE rb_eGherkinLexerError;
           }
           newstr_count++;
         }
+
         int line = lexer->line_number;
-        lexer_init(lexer); // Otherwise you can't scan again with the same lexer
-                             // calling after raising doesn't do the trick.
+        lexer_init(lexer); // Re-initialize so we can scan again with the same lexer
         raise_lexer_error(listener, newstr, line);
       }
     }
