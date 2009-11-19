@@ -1,179 +1,185 @@
-#include "gherkin_lexer.h"
-#include <stdio.h>
 #include <assert.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
+#include <ruby.h>
 
+#if defined(_WIN32)
+#include <stddef.h>
+#endif
 
-#define LEN(AT, FPC) (FPC - buffer - lexer->AT)
-#define MARK(M,FPC) (lexer->M = (FPC) - buffer)
-#define PTR_TO(F) (buffer + lexer->F)
+#ifndef RSTRING_PTR
+#define RSTRING_PTR(s) (RSTRING(s)->ptr)
+#endif
 
-/** Machine **/
+#ifndef RSTRING_LEN
+#define RSTRING_LEN(s) (RSTRING(s)->len)
+#endif
+
+#define DATA_GET(FROM, TYPE, NAME) \
+  Data_Get_Struct(FROM, TYPE, NAME); \
+  if (NAME == NULL) { \
+    rb_raise(rb_eArgError, "NULL found for " # NAME " when it shouldn't be."); \
+  }
+ 
+typedef struct lexer_state {
+  int content_len;
+  int line_number;
+  int current_line;
+  int start_col;
+  size_t mark;
+  size_t keyword_start;
+  size_t keyword_end;
+  size_t next_keyword_start;
+  size_t content_start;
+  size_t content_end;
+  size_t field_len;
+  size_t query_start;
+  size_t last_newline;
+  size_t final_newline;
+} lexer_state;
+
+static VALUE mGherkin;
+static VALUE mLexer;
+static VALUE cCLexer;
+static VALUE rb_eGherkinLexerError;
+
+#define LEN(AT, P) (P - data - lexer->AT)
+#define MARK(M, P) (lexer->M = (P) - data)
+#define PTR_TO(P) (data + lexer->P)
+
+#define STORE_KW_END_CON(EVENT) \
+  store_kw_con(listener, # EVENT, \
+    PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), \
+    PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), \
+    lexer->current_line); \
+    if (lexer->content_end != 0) { \
+      p = PTR_TO(content_end - 1); \
+    } \
+    lexer->content_end = 0;
+
+#define STORE_ATTR(ATTR) \
+    store_attr(listener, # ATTR, \
+      PTR_TO(content_start), LEN(content_start, p), \
+      lexer->line_number);
 
 %%{
   machine lexer;
  
   action begin_content {
-		MARK(content_start, fpc);
+		MARK(content_start, p);
     lexer->current_line = lexer->line_number;
   }
   
   action begin_pystring_content {
-    MARK(content_start, fpc);
+    MARK(content_start, p);
   }
 
   action start_pystring {
     lexer->current_line = lexer->line_number;
-    lexer->start_col = fpc - buffer - lexer->last_newline;
+    lexer->start_col = p - data - lexer->last_newline;
   }
  
   action store_pystring_content {
-    if (lexer->store_pystring_content != NULL) {
-      int len = LEN(content_start, PTR_TO(final_newline));
-      if (len >= 0) { // not an empty pystring
-        lexer->store_pystring_content(lexer->listener, lexer->start_col, PTR_TO(content_start), LEN(content_start, PTR_TO(final_newline)), lexer->current_line); 
-      }
-      else { // Empty pystring
-        lexer->store_pystring_content(lexer->listener, lexer->start_col, PTR_TO(content_start), 0, lexer->current_line); 
-      } 
-    }
+    int len = LEN(content_start, PTR_TO(final_newline));
+
+    if (len < 0) len = 0;
+
+    store_pystring_content(listener, lexer->start_col, PTR_TO(content_start), len, lexer->current_line);
   } 
  
   action store_feature_content {
-    if (lexer->store_feature_content != NULL) {
-			lexer->store_feature_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
-      if(lexer->content_end != 0) {
-        fpc = PTR_TO(content_end - 1);
-      }
-      lexer->content_end = 0;
-    }
+    STORE_KW_END_CON(feature)
   }
   
   action store_background_content {
-    if (lexer->store_background_content != NULL) {
-			lexer->store_background_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
-      if(lexer->content_end != 0) {
-        fpc = PTR_TO(content_end - 1);
-      }
-      lexer->content_end = 0;
-    }
+    STORE_KW_END_CON(background)
   }
   
   action store_scenario_content {
-    if (lexer->store_scenario_content != NULL) {
-			lexer->store_scenario_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
-      if(lexer->content_end != 0) {
-        fpc = PTR_TO(content_end - 1);
-      }
-      lexer->content_end = 0;
-    }
+    STORE_KW_END_CON(scenario)
   }
   
   action store_scenario_outline_content {
-    if (lexer->store_scenario_outline_content != NULL) {
-			lexer->store_scenario_outline_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
-      if(lexer->content_end != 0) {
-        fpc = PTR_TO(content_end - 1);
-      }
-      lexer->content_end = 0;
-    }
+    STORE_KW_END_CON(scenario_outline)
   }
   
   action store_examples_content {
-    if (lexer->store_examples_content != NULL) {
-			lexer->store_examples_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), lexer->current_line);
-      if(lexer->content_end != 0) {
-        fpc = PTR_TO(content_end - 1);
-      }
-      lexer->content_end = 0;
-    }
+    STORE_KW_END_CON(examples)
   }
   
   action store_step_content {
-    if (lexer->store_step_content != NULL) {
-			lexer->store_step_content(lexer->listener, PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)), PTR_TO(content_start), LEN(content_start, fpc), lexer->current_line);
-    }
+    store_kw_con(listener, "step",
+      PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)),
+      PTR_TO(content_start), LEN(content_start, p), 
+      lexer->current_line);
   }
   
   action store_comment_content {
-    if(lexer->store_comment_content != NULL) {
-      lexer->store_comment_content(lexer->listener, PTR_TO(content_start), LEN(content_start,fpc), lexer->line_number);
-    }
+    STORE_ATTR(comment)
   }
   
   action store_tag_content {
-    if (lexer->store_tag_content != NULL) {
-      lexer->store_tag_content(lexer->listener, PTR_TO(content_start), LEN(content_start, fpc), lexer->line_number);
-    }
+    STORE_ATTR(tag)
   }
   
   action inc_line_number {
     lexer->line_number += 1;
-    MARK(final_newline, fpc);
+    MARK(final_newline, p);
   }
     
   action last_newline {
-    MARK(last_newline, fpc + 1);
+    MARK(last_newline, p + 1);
   }
  
   action start_keyword {
-    if(lexer->mark == 0) {
-      MARK(mark, fpc);
+    if (lexer->mark == 0) {
+      MARK(mark, p);
     }
   }
   
   action end_keyword {
-    MARK(keyword_end, fpc);
+    MARK(keyword_end, p);
     MARK(keyword_start, PTR_TO(mark));
-    MARK(content_start, fpc + 1);
+    MARK(content_start, p + 1);
     lexer->mark = 0;
   }
   
   action next_keyword_start {
-    MARK(content_end, fpc);
+    MARK(content_end, p);
   }
 
   action start_table {
-    if (lexer->initialize_table != NULL) {
-      p = p - 1;
-      lexer->current_line = lexer->line_number;
-      lexer->initialize_table(lexer);
-    }
+    p = p - 1;
+    lexer->current_line = lexer->line_number;
+    rb_ary_clear(rows);
+    rb_ary_clear(current_row);
   }
   
   action begin_cell_content {
-		MARK(content_start, fpc);
+		MARK(content_start, p);
   }
 
   action store_cell_content {
-    if (lexer->add_cell_to_current_row != NULL) {
-      lexer->add_cell_to_current_row(lexer, PTR_TO(content_start), LEN(content_start, fpc)); 
-    }
+    VALUE con = Qnil;
+    con = rb_str_new(PTR_TO(content_start), LEN(content_start, p));
+    rb_funcall(con, rb_intern("strip!"), 0);
+
+    rb_ary_push(current_row, con);
   }
 
   action start_row {
-    if (lexer->new_row != NULL) {
-      lexer->new_row(lexer);
-    }
+    current_row = rb_ary_new();
   }  
 
   action store_row {
-    if (lexer->end_row != NULL) {
-      lexer->end_row(lexer);
-    }
+    rb_ary_push(rows, current_row);
   }
 
   action store_table {
-    if (lexer->store_table != NULL) {
-      lexer->store_table(lexer->listener, lexer->table,  lexer->current_line);
-    }
+    rb_funcall(listener, rb_intern("table"), 2, rows, INT2FIX(lexer->current_line));
   }
 
   action end_feature {
     if (cs < lexer_first_final) {
-      if (lexer->raise_lexer_error != NULL) {
+      if (raise_lexer_error != NULL) {
         int count = 0;
         int newstr_count = 0;
         size_t len;
@@ -182,11 +188,13 @@
           len = LEN(last_newline, eof);
           buff = PTR_TO(last_newline);
         } else {
-          len = strlen(buffer);
-          buff = buffer;
+          len = strlen(data);
+          buff = data;
         }
+
         char newstr[len]; 
-        for(count = 0; count < len; count++) {
+
+        for (count = 0; count < len; count++) {
           if(buff[count] == 10) {
             newstr[newstr_count] = '\0'; // terminate new string at first newline found
             break;
@@ -200,10 +208,10 @@
           }
           newstr_count++;
         }
+
         int line = lexer->line_number;
-        lexer_init(lexer); // Otherwise you can't scan again with the same lexer
-                             // calling after raising doesn't do the trick.
-        lexer->raise_lexer_error(lexer->listener, newstr, line);
+        lexer_init(lexer); // Re-initialize so we can scan again with the same lexer
+        raise_lexer_error(listener, newstr, line);
       }
     }
   }
@@ -215,10 +223,68 @@
 /** Data **/
 %% write data;
 
-int lexer_init(lexer *lexer) {
-  int cs = 0;
-  %% write init;
-  lexer->cs = cs;
+static VALUE 
+strip_i(VALUE str, VALUE ary)
+{
+  rb_funcall(str, rb_intern("strip!"), 0);
+  rb_ary_push(ary, str);
+  
+  return Qnil;
+}
+
+static VALUE 
+multiline_strip(VALUE text)
+{
+  VALUE map = rb_ary_new();
+  VALUE split = rb_str_split(text, "\n");
+  
+  rb_iterate(rb_each, split, strip_i, map);
+  
+  return rb_ary_join(split, rb_str_new2("\n"));
+}
+
+static void 
+store_kw_con(VALUE listener, const char * event_name, 
+             const char * keyword_at, size_t keyword_length, 
+             const char * at,         size_t length, 
+             int current_line)
+{
+  VALUE con = Qnil, kw = Qnil;
+  kw = rb_str_new(keyword_at, keyword_length);
+  con = rb_str_new(at, length);
+  con = multiline_strip(con);
+  rb_funcall(con, rb_intern("strip!"), 0);
+  rb_funcall(kw, rb_intern("strip!"), 0);
+  rb_funcall(listener, rb_intern(event_name), 3, kw, con, INT2FIX(current_line)); 
+}
+
+static void 
+store_attr(VALUE listener, const char * attr_type,
+           const char * at, size_t length, 
+           int line)
+{
+  VALUE val = rb_str_new(at, length);
+  rb_funcall(listener, rb_intern(attr_type), 2, val, INT2FIX(line));
+}
+
+static void 
+store_pystring_content(VALUE listener, 
+          int start_col, 
+          const char *at, size_t length, 
+          int current_line)
+{
+  VALUE con = Qnil;
+  con = rb_str_new(at, length);
+  rb_funcall(listener, rb_intern("py_string"), 3, INT2FIX(start_col), con, INT2FIX(current_line));
+}
+
+static void 
+raise_lexer_error(VALUE listener, const char * at, int line)
+{ 
+  rb_raise(rb_eGherkinLexerError, "Parsing error on line %d: '%s'.", line, at);
+}
+
+static void lexer_init(lexer_state *lexer) {
   lexer->content_start = 0;
   lexer->content_end = 0;
   lexer->content_len = 0;
@@ -231,38 +297,82 @@ int lexer_init(lexer *lexer) {
   lexer->last_newline = 0;
   lexer->final_newline = 0;
   lexer->start_col = 0;
-  
-  return(1);
 }
 
-/** exec **/
-size_t lexer_scan(lexer *lexer, const char *buffer, size_t len) {
-  const char *p, *pe, *eof;
-  int cs = lexer->cs;
+static VALUE CLexer_alloc(VALUE klass)
+{
+  VALUE obj;
+  lexer_state *lxr = ALLOC(lexer_state);
+  lexer_init(lxr);
 
-  p = buffer;
-  pe = buffer+len;
-  eof = pe;
+  obj = Data_Wrap_Struct(klass, NULL, -1, lxr);
 
-  assert(*pe == '\0' && "pointer does not end on NUL");
-  assert(pe - p == len && "pointers aren't same distance");
-
-  %% write exec;
-
-  lexer->cs = cs;
-  
-  assert(p <= pe && "buffer overflow after parsing execute");
-  assert(lexer->content_start <= len && "content starts after buffer end");
-  assert(lexer->mark < len && "mark is after buffer end");
-  assert(lexer->field_len <= len && "field has length longer than the whole buffer");
-//  assert(lexer->field_start < len && "field starts after buffer end");
-
-// Reset lexer (by re-initializing the whole thing) 
-  lexer_init(lexer);
-  
-  return(lexer_has_error(lexer));
+  return obj;
 }
 
-int lexer_has_error(lexer *lexer) {
-  return lexer->cs == lexer_error;
+static VALUE CLexer_init(VALUE self, VALUE listener)
+{
+  rb_iv_set(self, "@listener", listener);
+  
+  lexer_state *lxr = NULL;
+  DATA_GET(self, lexer_state, lxr);
+  lexer_init(lxr);
+  
+  return self;
+}
+
+static VALUE CLexer_scan(VALUE self, VALUE input)
+{
+  lexer_state *lexer = NULL;
+  DATA_GET(self, lexer_state, lexer);
+
+  rb_str_append(input, rb_str_new2("\n%_FEATURE_END_%"));
+  char *data = RSTRING_PTR(input);
+  long len = RSTRING_LEN(input);
+ 
+  if (len == 0) { 
+    rb_raise(rb_eGherkinLexerError, 0, "No content to parse.");
+  } else {
+    const char *p, *pe, *eof;
+    int cs = 0;
+    
+    VALUE listener = rb_iv_get(self, "@listener");
+    VALUE rows = rb_ary_new();
+    VALUE current_row = rb_ary_new();
+    
+    p = data;
+    pe = data + len;
+    eof = pe;
+    
+    assert(*pe == '\0' && "pointer does not end on NULL");
+    assert(pe - p == len && "pointers aren't same distance");
+    
+    %% write init;
+    %% write exec;
+    
+    assert(p <= pe && "data overflow after parsing execute");
+    assert(lexer->content_start <= len && "content starts after data end");
+    assert(lexer->mark < len && "mark is after data end");
+    assert(lexer->field_len <= len && "field has length longer than the whole data");
+    
+    // Reset lexer by re-initializing the whole thing
+    lexer_init(lexer);
+
+    if (cs == lexer_error) {
+      rb_raise(rb_eGherkinLexerError, 0, "Invalid format, parsing fails.");
+    } else {
+      return Qtrue;
+    }
+  }
+}
+
+void Init_gherkin_lexer()
+{
+  mGherkin = rb_define_module("Gherkin");
+  mLexer = rb_define_module_under(mGherkin, "Lexer");
+  rb_eGherkinLexerError = rb_const_get(mLexer, rb_intern("ParsingError"));
+  cCLexer = rb_define_class_under(mLexer, "CLexer", rb_cObject);
+  rb_define_alloc_func(cCLexer, CLexer_alloc);
+  rb_define_method(cCLexer, "initialize", CLexer_init, 1);
+  rb_define_method(cCLexer, "scan", CLexer_scan, 1);
 }

@@ -290,7 +290,7 @@ Given I am a step
       describe "A multi-line feature with no scenario" do
         it "should find the feature" do
           @lexer.scan("Feature: Feature Text\n  And some more text")
-          @listener.to_sexp.should == [[:feature, "Feature", "Feature Text\n  And some more text", 1]]
+          @listener.to_sexp.should == [[:feature, "Feature", "Feature Text\nAnd some more text", 1]]
         end
       end
 
@@ -371,7 +371,7 @@ Given I am a step
             [:tag, "tag1", 2],
             [:tag, "tag2", 2],
             [:comment, "#Comment on line 3", 3],
-            [:feature, "Feature", "Feature Text\n  In order to test multiline forms\n  As a ragel writer\n  I need to check for complex combinations", 4],
+            [:feature, "Feature", "Feature Text\nIn order to test multiline forms\nAs a ragel writer\nI need to check for complex combinations", 4],
             [:comment, "#Comment on line 9", 9],
             [:comment, "#Comment on line 11", 11],
             [:background, "Background", "", 13],
