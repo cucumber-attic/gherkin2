@@ -1,13 +1,6 @@
-Given /^an? (\w+)-language feature parser$/ do |lang_name|
-  i18n_lang = code_from_lang_name(lang_name)
-  parser = Gherkin::Parser.new(@listener, false, 'root')
-  @lexer = Gherkin::Lexer[i18n_lang].new(parser)
-end
-
-Given /^an? (\w+)-language steps parser$/ do |lang_name|
-  i18n_lang = code_from_lang_name(lang_name)
-  parser = Gherkin::Parser.new(@listener, false, 'steps')
-  @lexer = Gherkin::Lexer[i18n_lang].new(parser)
+Given /^a "([^\"]*)", "([^\"]*)" "([^\"]*)" parser$/ do |i18n_language, programming_language, parser_name|
+  parser = Gherkin::Parser.new(@listener, false, parser_name)
+  @lexer = Gherkin::Lexer.send(programming_language)[i18n_language].new(parser)
 end
 
 Given "the following text is parsed:" do |text|

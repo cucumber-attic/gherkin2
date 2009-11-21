@@ -13,7 +13,7 @@ module Gherkin
       end
 
       it "should recognize keywords in the language of the lexer" do
-        lexer = Gherkin::Lexer['no'].new(@listener)
+        lexer = Gherkin::Lexer.rb['no'].new(@listener)
         scan_file(lexer, "i18n_no.feature")
         @listener.to_sexp.should == [
           [:feature, "Egenskap", "i18n support", 1], 
@@ -25,7 +25,7 @@ module Gherkin
       end
 
       it "should parse languages without a space after keywords" do
-        lexer = Gherkin::Lexer['zh-CN'].new(@listener)
+        lexer = Gherkin::Lexer.rb['zh-CN'].new(@listener)
         scan_file(lexer, "i18n_zh-CN.feature")
         @listener.to_sexp.should == [
           [:feature, "功能", "加法", 1],
@@ -38,7 +38,7 @@ module Gherkin
       end
 
       it "should parse languages with spaces after some keywords but not others" do
-        lexer = Gherkin::Lexer['fr'].new(@listener)
+        lexer = Gherkin::Lexer.rb['fr'].new(@listener)
         scan_file(lexer, "i18n_fr.feature")
         @listener.to_sexp.should == [
           [:feature, "Fonctionnalité", "Addition", 1],

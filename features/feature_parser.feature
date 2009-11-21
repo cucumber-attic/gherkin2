@@ -5,7 +5,7 @@ Feature: Gherkin Feature lexer
     make all the syntax decisions for me
 
   Background:
-    Given an English-language feature parser
+    Given a "en", "rb" "root" parser
 
   Scenario: Correctly formed feature
     Given the following text is parsed:

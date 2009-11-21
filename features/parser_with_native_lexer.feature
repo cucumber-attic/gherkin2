@@ -1,4 +1,3 @@
-@native_lexer
 Feature: Gherkin Feature lexer/parser
   In order to make it easy to control the Gherkin syntax
   As a Gherkin developer bent on Gherkin world-domination
@@ -6,7 +5,7 @@ Feature: Gherkin Feature lexer/parser
   make all the syntax decisions for me
 
   Background:
-    Given a Native-language root parser
+    Given a "en", "c" "root" parser
 
   Scenario: Correctly formed feature
     When the following text is parsed:

@@ -28,6 +28,3 @@ end
 Dir['tasks/**/*.rake'].each { |rake| load rake }
 
 task :default => [:spec, :cucumber]
-
-desc "Run all C lexer specs and features"
-task :c_lexer => ["spec:c_lexer", "cucumber:native_lexer"]
