@@ -16,7 +16,7 @@ begin
     gem.add_development_dependency "cucumber"
     
     # Jeweler only includes files in git by default. Add the generated ones.
-    gem.files += FileList['lib/gherkin/lexer/*.rb']
+    gem.files += FileList['lib/gherkin/rb_lexer/*.rb']
     
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
@@ -30,4 +30,4 @@ Dir['tasks/**/*.rake'].each { |rake| load rake }
 task :default => [:spec, :cucumber]
 
 desc "Run all C lexer specs and features"
-task :c_lexer => ["spec:c_lexer", "cucumber:c_lexer"]
+task :c_lexer => ["spec:c_lexer", "cucumber:native_lexer"]

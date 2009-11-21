@@ -93,7 +93,7 @@ class Benchmarker
   def run_tt
     require 'cucumber'
     # Using Cucumber's Treetop lexer, but never calling #build to build the AST
-    lexer = Cucumber::Lexer::NaturalLanguage.new(nil, 'en').lexer
+    lexer = Cucumber::Parser::NaturalLanguage.new(nil, 'en').lexer
     @features.each do |file|
       source = IO.read(file)
       parse_tree = lexer.parse(source)
@@ -117,8 +117,8 @@ class Benchmarker
     require 'gherkin'
     require 'null_listener'
     listener = NullListener.new
-    @features.each do |feature|
-      lexer = Gherkin::Feature.new('C', listener)
+    @features.each_with_index do |feature, idx|
+      lexer = Gherkin::Feature.new('Native', listener)
       lexer.scan(File.read(feature))
     end
   end

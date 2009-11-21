@@ -1,10 +1,11 @@
-Given /^an? (\w+)-language (\w+) parser$/ do |lang_name, lexer|
+Given /^an? (\w+)-language feature parser$/ do |lang_name|
   i18n_lang = code_from_lang_name(lang_name)
-  load_parser(i18n_lang, lexer)
+  parser = Gherkin::Parser.new(@listener)
+  @lexer = Gherkin::Lexer[i18n_lang].new(parser)
 end
 
 Given "the following text is parsed:" do |text|
-  @parser.scan(text)
+  @lexer.scan(text)
 end
 
 Then "there should be no parse errors" do

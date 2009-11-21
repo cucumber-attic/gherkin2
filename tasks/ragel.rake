@@ -7,7 +7,7 @@ class RagelCompiler
     
     @target = target
     @flag, @output_dir, @filename_proc = case
-      when @target == "rb"   then ["-R", "lib/gherkin/lexer", lambda{|name| name}]
+      when @target == "rb"   then ["-R", "lib/gherkin/rb_lexer", lambda{|name| name}]
       when @target == "c"    then ["-C", "ext/gherkin_lexer", lambda{|name| name}]
       when @target == "java" then ["-J", "java/src/gherkin/lexer", lambda{|name| name.gsub(/[\s-]/, '').capitalize}]
     end
@@ -54,8 +54,8 @@ class RagelCompiler
     
     all_keywords.each { |kw| i18n[kw] = i18n[kw].split("|") }
     delimited_keywords.each { |kw| i18n[kw].map! { |v| v += ':'} }
-    bare_keywords.each { |kw| i18n[kw].map! { |v| v += ' '} } if i18n['space_after_keyword']
-    all_keywords.each { |kw| i18n[kw] = "('" + i18n[kw].join("' | '") + "')" }    
+    bare_keywords.each { |kw| i18n[kw].map! { |v| (v + ' ').sub(/< $/,'')} }
+    all_keywords.each { |kw| i18n[kw] = '("' + i18n[kw].join('" | "') + '")' }    
     i18n
   end
 

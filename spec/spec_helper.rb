@@ -11,20 +11,6 @@ require 'shared/tags_spec'
 require 'shared/py_string_spec'
 require 'shared/table_spec'
 
-module GherkinSpecHelper
-  def parser(listener, raise_on_error)
-    if defined?(JRUBY_VERSION)
-      Java::Gherkin::Parser.new(listener, raise_on_error)
-    else
-      Gherkin::Parser.new('en', listener, raise_on_error)
-    end
-  end
-end
-
-Spec::Runner.configure do |config|
-  config.include(GherkinSpecHelper)
-end
-
 # Allows comparison of Java List with Ruby Array (tables)
 Spec::Matchers.define :t do |expected|
   match do |table|

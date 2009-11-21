@@ -1,14 +1,10 @@
- |                  | feature  | background | scenario | scenario_outline | examples | step          | table          | py_string  | comment  | tag  |
- | root             | feature  | E          | E        | E                | E        | E             | E              | E          | -        | -    |
- | feature          | E        | background | scenario | scenario_outline | E        | E             | E              | E          | -        | -    |
- | multiline_arg    | E        | E          | scenario | scenario_outline | examples | E             | E              | step       | -        | -    |
- | step             | E        | E          | scenario | scenario_outline | examples | multiline_arg | multiline_arg  | step       | -        | -    |
- | background       | E        | E          | scenario | scenario_outline | E        | step          | E              | E          | -        | -    |
- | scenario         | E        | E          | scenario | scenario_outline | E        | step          | E              | E          | -        | -    |
- | scenario_outline | E        | E          | E        | E                | E        | step          | E              | E          | -        | -    |
- | examples         | E        | E          | E        | E                | E        | E             | examples_table | E          | -        | -    |
- | examples_table   | E        | E          | scenario | scenario_outline | examples | E             | E              | E          | -        | -    |
- | -tag             | -tag     | E          | -tag     | -tag             | -tag     | E             | E              | E          | E        | -tag |
- | -comment         | -comment | -comment   | -comment | -comment         | -comment | -comment      | -comment       | -comment   | -comment | -tag |
- | steps            | E        | E          | E        | E                | E        | steps_step    | E              | E          | E        | E    |
- | steps_step       | E        | E          | E        | E                | E        | steps_step    | steps_step     | steps_step | E        | E    |
+ |                  | feature | background | scenario | scenario_outline | examples | step          | table          | py_string | comment          | tag              |
+ | root             | feature | E          | E        | E                | E        | E             | E              | E         | machine(comment) | machine(comment) |
+ | feature          | E       | background | scenario | scenario_outline | E        | E             | E              | E         | machine(comment) | machine(comment) |
+ | multiline_arg    | E       | E          | scenario | scenario_outline | examples | E             | E              | step      | machine(comment) | machine(comment) |
+ | step             | E       | E          | scenario | scenario_outline | examples | multiline_arg | multiline_arg  | step      | machine(comment) | machine(comment) |
+ | background       | E       | E          | scenario | scenario_outline | E        | step          | E              | E         | machine(comment) | machine(comment) |
+ | scenario         | E       | E          | scenario | scenario_outline | E        | step          | E              | E         | machine(comment) | machine(comment) |
+ | scenario_outline | E       | E          | E        | E                | E        | step          | E              | E         | machine(comment) | machine(comment) |
+ | examples         | E       | E          | E        | E                | E        | E             | examples_table | E         | machine(comment) | machine(comment) |
+ | examples_table   | E       | E          | scenario | scenario_outline | examples | E             | E              | E         | machine(comment) | machine(comment) |

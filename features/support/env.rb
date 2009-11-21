@@ -27,14 +27,6 @@ class GherkinWorld
     @listener = Gherkin::SexpRecorder.new
   end
 
-  def load_parser(i18n_lang, lexer_name)
-    if defined?(JRUBY_VERSION)
-      @parser = Gherkin::JavaLexer['en'].new(Java::Gherkin::Parser.new(@listener, false, lexer_name))
-    else
-      @parser = Gherkin.const_get(lexer_name.capitalize).new(i18n_lang, @listener, false)
-    end
-  end
-
   def code_from_lang_name(name)
     i18n = YAML.load_file(File.dirname(__FILE__) + "/../../lib/gherkin/i18n.yml")
     i18n["Native"] = { "name" => "Native" } # XXX HACK XXX Make it easy to retrieve the native lexer

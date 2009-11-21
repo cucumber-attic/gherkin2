@@ -1,5 +1,5 @@
 module Gherkin
-  module Lexer
+  module RbLexer
     class <%= i18n_lexer_class_name %> #:nodoc:
       %%{
         # patterns:
@@ -29,7 +29,7 @@ module Gherkin
         }
  
         action store_feature_content {
-          store_keyword_content(:feature, data, p, eof) { |con| con.strip }
+          store_keyword_content(:feature, data, p, eof) { |con| multiline_strip(con) }
           p = @next_keyword_start - 1 if @next_keyword_start          
           @next_keyword_start = nil
         }
@@ -126,7 +126,7 @@ module Gherkin
         action end_feature {
           if cs < lexer_first_final
             content = current_line_content(data, p)
-            raise LexingError.new("Lexing error on line %d: '%s'." % [@line_number, content])
+            raise Lexer::LexingError.new(@line_number, content)
           end
         }
 

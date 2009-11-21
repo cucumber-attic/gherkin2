@@ -3,22 +3,27 @@ module Gherkin
     I18nLexerNotFound = Class.new(LoadError)
 
     class LexingError < StandardError
+      def initialize(line_number, content)
+        super("Lexing error on line %d: '%s'." % [line_number, content])
+      end
     end
     
-    def self.[](i18n_language)
-      # HACK HACK
-      # We need to use a different factory instead - outside
-      return defined?(JRUBY_VERSION) ? Gherkin::JavaLexer['en'] : Gherkin::Lexer::CLexer if i18n_language == "Native"
-
+    def self.[](i18n_lang)
       begin
-        require "gherkin/lexer/#{i18n_language}"
+        if i18n_lang == "Native"
+          # HACK HACK - only support for English for now
+          require 'gherkin/c_lexer'
+          CLexer
+        elsif defined?(JRUBY_VERSION)
+          require 'gherkin/java_lexer'
+          JavaLexer[i18n_lang]
+        else
+          require 'gherkin/rb_lexer'
+          RbLexer[i18n_lang]
+        end
       rescue LoadError
-        raise I18nLexerNotFound, "No lexer was found for #{i18n_language}. Supported languages are listed in gherkin/i18n.yml."
+        raise I18nLexerNotFound, "No lexer was found for #{i18n_lang}. Supported languages are listed in gherkin/i18n.yml."
       end
-
-      i18n_lexer_class_name = i18n_language.gsub(/[\s-]/, '').capitalize
-      lexer_class = const_get(i18n_lexer_class_name)
-      lexer_class
     end
   end
 end

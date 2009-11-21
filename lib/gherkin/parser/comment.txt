@@ -1,0 +1,3 @@
+ |         | feature | background | scenario | scenario_outline | examples | step    | table   | py_string | comment | tag |
+ | tag     | tag     | E          | tag      | tag              | tag      | E       | E       | E         | E       | tag |
+ | comment | comment | comment    | comment  | comment          | comment  | comment | comment | comment   | comment | tag |
