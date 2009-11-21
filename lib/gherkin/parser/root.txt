@@ -1,10 +1,9 @@
- |                  | feature | background | scenario | scenario_outline | examples | step          | table          | py_string | comment          | tag              |
- | root             | feature | E          | E        | E                | E        | E             | E              | E         | machine(comment) | machine(comment) |
- | feature          | E       | background | scenario | scenario_outline | E        | E             | E              | E         | machine(comment) | machine(comment) |
- | multiline_arg    | E       | E          | scenario | scenario_outline | examples | E             | E              | step      | machine(comment) | machine(comment) |
- | step             | E       | E          | scenario | scenario_outline | examples | multiline_arg | multiline_arg  | step      | machine(comment) | machine(comment) |
- | background       | E       | E          | scenario | scenario_outline | E        | step          | E              | E         | machine(comment) | machine(comment) |
- | scenario         | E       | E          | scenario | scenario_outline | E        | step          | E              | E         | machine(comment) | machine(comment) |
- | scenario_outline | E       | E          | E        | E                | E        | step          | E              | E         | machine(comment) | machine(comment) |
- | examples         | E       | E          | E        | E                | E        | E             | examples_table | E         | machine(comment) | machine(comment) |
- | examples_table   | E       | E          | scenario | scenario_outline | examples | E             | E              | E         | machine(comment) | machine(comment) |
+ |                  | feature | background | scenario | scenario_outline | examples | step | table          | py_string | comment    | tag        |
+ | root             | feature | E          | E        | E                | E        | E    | E              | E         | push(meta) | push(meta) |
+ | feature          | E       | background | scenario | scenario_outline | E        | E    | E              | E         | push(meta) | push(meta) |
+ | step             | E       | E          | scenario | scenario_outline | examples | step | step           | step      | push(meta) | push(meta) |
+ | background       | E       | E          | scenario | scenario_outline | E        | step | E              | E         | push(meta) | push(meta) |
+ | scenario         | E       | E          | scenario | scenario_outline | E        | step | E              | E         | push(meta) | push(meta) |
+ | scenario_outline | E       | E          | E        | E                | E        | step | E              | E         | push(meta) | push(meta) |
+ | examples         | E       | E          | E        | E                | E        | E    | examples_table | E         | push(meta) | push(meta) |
+ | examples_table   | E       | E          | scenario | scenario_outline | examples | E    | E              | E         | push(meta) | push(meta) |

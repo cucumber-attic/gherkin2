@@ -1,6 +1,12 @@
 Given /^an? (\w+)-language feature parser$/ do |lang_name|
   i18n_lang = code_from_lang_name(lang_name)
-  parser = Gherkin::Parser.new(@listener)
+  parser = Gherkin::Parser.new(@listener, false, 'root')
+  @lexer = Gherkin::Lexer[i18n_lang].new(parser)
+end
+
+Given /^an? (\w+)-language steps parser$/ do |lang_name|
+  i18n_lang = code_from_lang_name(lang_name)
+  parser = Gherkin::Parser.new(@listener, false, 'steps')
   @lexer = Gherkin::Lexer[i18n_lang].new(parser)
 end
 
