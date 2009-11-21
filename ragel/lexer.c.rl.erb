@@ -38,7 +38,8 @@ typedef struct lexer_state {
 
 static VALUE mGherkin;
 static VALUE mLexer;
-static VALUE cCLexer;
+static VALUE mCLexer;
+static VALUE cI18nLexer;
 static VALUE rb_eGherkinLexerError;
 
 #define LEN(AT, P) (P - data - lexer->AT)
@@ -281,7 +282,7 @@ store_pystring_content(VALUE listener,
 static void 
 raise_lexer_error(VALUE listener, const char * at, int line)
 { 
-  rb_raise(rb_eGherkinLexerError, "Parsing error on line %d: '%s'.", line, at);
+  rb_raise(rb_eGherkinLexerError, "Lexing error on line %d: '%s'.", line, at);
 }
 
 static void lexer_init(lexer_state *lexer) {
@@ -331,7 +332,7 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
   long len = RSTRING_LEN(input);
  
   if (len == 0) { 
-    rb_raise(rb_eGherkinLexerError, 0, "No content to parse.");
+    rb_raise(rb_eGherkinLexerError, "No content to lex.");
   } else {
     const char *p, *pe, *eof;
     int cs = 0;
@@ -359,7 +360,7 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
     lexer_init(lexer);
 
     if (cs == lexer_error) {
-      rb_raise(rb_eGherkinLexerError, 0, "Invalid format, parsing fails.");
+      rb_raise(rb_eGherkinLexerError, "Invalid format, lexing fails.");
     } else {
       return Qtrue;
     }
@@ -369,10 +370,12 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
 void Init_gherkin_lexer()
 {
   mGherkin = rb_define_module("Gherkin");
-  mLexer = rb_define_module_under(mGherkin, "Lexer");
-  rb_eGherkinLexerError = rb_const_get(mLexer, rb_intern("ParsingError"));
-  cCLexer = rb_define_class_under(mLexer, "CLexer", rb_cObject);
-  rb_define_alloc_func(cCLexer, CLexer_alloc);
-  rb_define_method(cCLexer, "initialize", CLexer_init, 1);
-  rb_define_method(cCLexer, "scan", CLexer_scan, 1);
+  mLexer = rb_const_get(mGherkin, rb_intern("Lexer"));
+  rb_eGherkinLexerError = rb_const_get(mLexer, rb_intern("LexingError"));
+
+  mCLexer = rb_define_module_under(mGherkin, "CLexer");
+  cI18nLexer = rb_define_class_under(mCLexer, "En", rb_cObject);
+  rb_define_alloc_func(cI18nLexer, CLexer_alloc);
+  rb_define_method(cI18nLexer, "initialize", CLexer_init, 1);
+  rb_define_method(cI18nLexer, "scan", CLexer_scan, 1);
 }

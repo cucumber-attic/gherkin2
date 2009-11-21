@@ -10,8 +10,4 @@
       <fileset dir="${basedir}/../lib" includes="gherkin/parser/*.txt" />
     </jar>
   </target>
-
-  <target name="clean" description="Delete all generated artifacts">
-    <delete dir="${basedir}/target"/>
-  </target>
 </project>

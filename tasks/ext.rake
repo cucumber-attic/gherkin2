@@ -1,4 +1,8 @@
-CLEAN.include %w(**/*.{o,bundle,jar,so,obj,pdb,lib,def,exp,log} ext/*/Makefile ext/*/gherkin_lexer.c.c ext/*/conftest.dSYM)
+CLEAN.include [
+  '**/*.{o,bundle,jar,so,obj,pdb,lib,def,exp,log}', 'ext/*/Makefile', 'ext/*/conftest.dSYM',
+  'java/target'
+]
+  
 WIN      = (RUBY_PLATFORM =~ /mswin|cygwin/)
 
 if(defined?(JRUBY_VERSION))

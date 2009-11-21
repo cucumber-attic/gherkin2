@@ -1,4 +1,11 @@
-class RagelCompiler 
+CLEAN.include [
+  'ragel/i18n/*.rl',
+  'lib/gherkin/rb_lexer/*.rb',
+  'ext/gherkin_lexer/*.c',
+  'java/src/gherkin/lexer/*.java',
+]
+
+class RagelCompiler
   RL_OUTPUT_DIR = File.dirname(__FILE__) + "/../ragel/i18n"
   
   def initialize(target)
@@ -86,13 +93,6 @@ namespace :ragel do
   task :dot do
     Dir["ragel/*.rb.rl"].each do |path|
       sh "ragel -V #{path} -o #{File.basename(path, '.rl')}.dot"
-    end
-  end
-
-  desc "Generate a png diagram of the Ragel state machine"
-  task :png => :dot do
-    Dir["*dot"].each do |path|
-      sh "dot -Tpng #{path} > #{File.basename(path, '.dot')}.png"
     end
   end
 end

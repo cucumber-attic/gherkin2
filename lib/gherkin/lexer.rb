@@ -1,13 +1,8 @@
 module Gherkin
   module Lexer
     I18nLexerNotFound = Class.new(LoadError)
+    LexingError = Class.new(StandardError)
 
-    class LexingError < StandardError
-      def initialize(line_number, content)
-        super("Lexing error on line %d: '%s'." % [line_number, content])
-      end
-    end
-    
     def self.[](i18n_lang)
       begin
         if i18n_lang == "Native"
