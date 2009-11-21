@@ -1,13 +1,55 @@
 module Gherkin
   class RbParser
-    class Machine
-      class StateMachineReader
-        attr_reader :rows
-        def table(rows, line_number)
-          @rows = rows
+    # Initialize the parser. +machine_name+ refers to a state machine table.
+    def initialize(listener, raise_on_error, machine_name)
+      @listener = listener
+      @raise_on_error = raise_on_error
+      @machines = []
+      push_machine(machine_name)
+    end
+
+    # Doesn't yet fall back to super
+    def method_missing(method, *args)
+      # TODO: Catch exception and call super
+      if(event(method.to_s, args[-1]))
+        @listener.send(method, *args)
+      end
+    end
+
+    def event(ev, line)
+      machine.event(ev, line) do |state, expected|
+        if @raise_on_error
+          raise ParseError.new(state, ev, expected, line)
+        else
+          @listener.syntax_error(state, ev, expected, line)
+          return false
         end
       end
+      true
+    end
 
+    def push_machine(name)
+      machine = Machine.new(self, name)
+      @machines.push(machine)
+    end
+
+    def pop_machine
+      @machines.pop
+    end
+
+    def machine
+      @machines[-1]
+    end
+
+    def expected
+      machine.expected
+    end
+
+    def force_state(state)
+      machine.instance_variable_set('@state', state)
+    end
+
+    class Machine
       def initialize(parser, name)
         @parser = parser
         @name = name
@@ -34,6 +76,11 @@ module Gherkin
         end
       end
 
+      def expected
+        allowed = @transitions[@state].find_all { |_, action| action != "E" }
+        allowed.collect { |state| state[0] }
+      end
+
       private
 
       def transitions(name)
@@ -53,49 +100,13 @@ module Gherkin
         state_machine_reader.rows
       end
 
-      def expected
-        allowed = @transitions[@state].find_all { |_, action| action != "E" }
-        allowed.collect { |state| state[0] }
-      end
-    end
-
-    # Initialize the parser. +machine_names+ must be an array of at least one String,
-    # where each string refers to a state machine table. The first one will be the
-    # current machine, and from each machine it is possible to transition to another machine.
-    def initialize(listener, raise_on_error, machine_name)
-      @listener = listener
-      @raise_on_error = raise_on_error
-      @machines = []
-      push_machine(machine_name)
-    end
-
-    # Doesn't yet fall back to super
-    def method_missing(method, *args)
-      # TODO: Catch exception and call super
-      if(event(method.to_s, args[-1]))
-        @listener.send(method, *args)
-      end
-    end
-
-    def push_machine(name)
-      machine = Machine.new(self, name)
-      @machines.push(machine)
-    end
-
-    def pop_machine
-      @machines.pop
-    end
-
-    def event(ev, line)
-      @machines[-1].event(ev, line) do |state, expected|
-        if @raise_on_error
-          raise ParseError.new(state, ev, expected, line)
-        else
-          @listener.syntax_error(state, ev, expected, line)
-          return false
+      class StateMachineReader
+        attr_reader :rows
+        def table(rows, line_number)
+          @rows = rows
         end
       end
-      true
+
     end
   end
 end

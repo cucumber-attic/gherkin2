@@ -45,3 +45,9 @@ Spec::Matchers.define :sym do |expected|
     expected.to_s == actual.to_s
   end
 end
+
+Spec::Matchers.define :allow do |event|
+  match do |parser|
+    parser.expected.index(event)
+  end  
+end
