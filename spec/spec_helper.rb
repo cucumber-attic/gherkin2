@@ -11,6 +11,16 @@ require 'shared/tags_spec'
 require 'shared/py_string_spec'
 require 'shared/table_spec'
 
+module GherkinSpecHelper
+  def scan_file(file)
+    @lexer.scan(File.new(File.dirname(__FILE__) + "/gherkin/fixtures/" + file).read)
+  end
+end
+
+Spec::Runner.configure do |c|
+  c.include(GherkinSpecHelper)
+end
+
 # Allows comparison of Java List with Ruby Array (tables)
 Spec::Matchers.define :t do |expected|
   match do |table|

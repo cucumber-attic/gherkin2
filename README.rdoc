@@ -8,6 +8,15 @@ Treetop, which is too slow for larger projects.
 This project will *not* include code to build an AST. Instead, this lexer will have an API
 that makes it possible to plug in a builder that can build an AST.
 
+== Testing
+
+rake ragel
+rake spec cucumber
+
+== Cleaning generated code
+
+rake clobber
+
 == Notes
 
 Ragel supports Ruby, but it's much slower than C. The ruby target will be used for development.

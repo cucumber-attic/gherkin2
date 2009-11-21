@@ -9,10 +9,6 @@ module Gherkin
         @lexer = Gherkin::Lexer['en'].new(@listener)
       end
 
-      def scan_file(file)
-        @lexer.scan(File.new(File.dirname(__FILE__) + "/fixtures/" + file).read)
-      end
-
       it_should_behave_like "a Gherkin lexer"
       it_should_behave_like "a Gherkin lexer lexing tags"
       it_should_behave_like "a Gherkin lexer lexing py_strings"

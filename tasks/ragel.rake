@@ -79,21 +79,16 @@ namespace :ragel do
     RagelCompiler.new("c").compile('en')
   end
 
-  desc "Generate i18n sources for Ruby lexers"
+  desc "Generate all i18n Ruby lexers"
   task :rb do
     RagelCompiler.new("rb").compile_all
   end
 
-  desc "Generate i18n sources for Java lexers"
+  desc "Generate all i18n Java lexers"
   task :java do
     RagelCompiler.new("java").compile_all
   end
-
-  desc "Generate a dot file of the Ragel state machine"
-  task :dot do
-    Dir["ragel/*.rb.rl"].each do |path|
-      sh "ragel -V #{path} -o #{File.basename(path, '.rl')}.dot"
-    end
-  end
 end
 
+desc "Generate all i18n lexers for all programming languages"
+task :ragel => ['ragel:c', 'ragel:rb', 'ragel:java']

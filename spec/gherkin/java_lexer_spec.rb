@@ -7,12 +7,7 @@ module Gherkin
     describe "Java Lexer" do
       before do
         @listener = Gherkin::SexpRecorder.new
-        c = Gherkin::JavaLexer['en']
-        @lexer = c.new(@listener)
-      end
-
-      def scan_file(file)
-        @lexer.scan(File.new(File.dirname(__FILE__) + "/fixtures/" + file).read)
+        @lexer = Gherkin::JavaLexer['en'].new(@listener)
       end
 
       it_should_behave_like "a Gherkin lexer"
