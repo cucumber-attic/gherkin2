@@ -17,6 +17,9 @@ begin
     
     # Jeweler only includes files in git by default. Add the generated ones.
     gem.files += FileList['lib/gherkin/rb_lexer/*.rb']
+
+    gem.files += FileList['ext/gherkin_lexer/*.{c,h}']
+    gem.extensions << 'ext/gherkin_lexer/extconf.rb'
     
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
