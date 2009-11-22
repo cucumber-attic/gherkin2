@@ -5,7 +5,7 @@
   </target>
 
   <target name="jar" description="Jar" depends="compile">
-    <jar destfile="${basedir}/../lib/gherkin_lexer.jar">
+    <jar destfile="${basedir}/../lib/gherkin.jar">
       <fileset dir="${basedir}/target/classes" />
       <fileset dir="${basedir}/../lib" includes="gherkin/parser/*.txt" />
     </jar>

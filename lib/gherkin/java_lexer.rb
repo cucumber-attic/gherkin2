@@ -1,4 +1,4 @@
-require 'gherkin_lexer'
+require 'gherkin.jar'
 
 module Gherkin
   module JavaLexer
