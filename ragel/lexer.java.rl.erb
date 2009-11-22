@@ -30,7 +30,7 @@ public class <%= i18n_lexer_class_name %> implements Lexer {
     }
 
     action store_feature_content {
-      String con = keywordContent(input, p, eof, nextKeywordStart, contentStart).trim();
+      String con = multilineStrip(keywordContent(input, p, eof, nextKeywordStart, contentStart).trim());
       listener.feature(keyword, con, currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
