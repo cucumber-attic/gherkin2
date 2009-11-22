@@ -5,7 +5,7 @@ Feature: Gherkin Feature lexer/parser
   make all the syntax decisions for me
 
   Background:
-    Given a "en", "c" "root" parser
+    Given a "en", "native" "root" parser
 
   Scenario: Correctly formed feature
     When the following text is parsed:

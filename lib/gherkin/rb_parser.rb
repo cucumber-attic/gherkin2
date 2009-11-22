@@ -29,8 +29,7 @@ module Gherkin
     end
 
     def push_machine(name)
-      machine = Machine.new(self, name)
-      @machines.push(machine)
+      @machines.push(Machine.new(self, name))
     end
 
     def pop_machine
@@ -53,12 +52,12 @@ module Gherkin
       def initialize(parser, name)
         @parser = parser
         @name = name
-        @transitions = transitions(name)
+        @transition_map = transition_map(name)
         @state = name
       end
 
       def event(ev, line)
-        states = @transitions[@state]
+        states = @transition_map[@state]
         raise "Unknown state: #{@state.inspect} for machine #{@name}" if states.nil?
         new_state = states[ev]
         case new_state
@@ -67,7 +66,7 @@ module Gherkin
         when /push\((.+)\)/
           @parser.push_machine($1)
           @parser.event(ev, line)
-        when /pop\(\)/
+        when "pop()"
           @parser.pop_machine()
           @parser.event(ev, line)
         else
@@ -77,14 +76,14 @@ module Gherkin
       end
 
       def expected
-        allowed = @transitions[@state].find_all { |_, action| action != "E" }
-        allowed.collect { |state| state[0] }
+        allowed = @transition_map[@state].find_all { |_, action| action != "E" }
+        allowed.collect { |state| state[0] }.sort
       end
 
       private
 
-      def transitions(name)
-        table = state_table(name)
+      def transition_map(name)
+        table = transition_table(name)
         events = table.shift[1..-1]
         table.inject({}) do |machine, actions|
           state = actions.shift
@@ -93,7 +92,7 @@ module Gherkin
         end
       end
 
-      def state_table(name)
+      def transition_table(name)
         state_machine_reader = StateMachineReader.new
         lexer = Gherkin::Lexer['en'].new(state_machine_reader)
         lexer.scan(File.read(File.dirname(__FILE__) + "/parser/#{name}.txt"))

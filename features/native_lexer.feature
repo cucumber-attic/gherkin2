@@ -1,7 +1,7 @@
 Feature: Native (C/Java) Lexer
 
   Background:
-    Given a "en", "c" "root" parser
+    Given a "en", "native" "root" parser
 
   Scenario: Parsing an empty feature
     Given the following text is parsed:

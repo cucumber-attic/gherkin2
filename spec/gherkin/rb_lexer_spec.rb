@@ -6,7 +6,7 @@ module Gherkin
     describe "Ruby Lexer" do
       before do
         @listener = Gherkin::SexpRecorder.new
-        @lexer = Gherkin::Lexer['en'].new(@listener)
+        @lexer = Gherkin::Lexer.rb['en'].new(@listener)
       end
 
       it_should_behave_like "a Gherkin lexer"

@@ -16,7 +16,7 @@ module Gherkin
     it "should raise helpful error messages by default" do
       lambda { 
         @parser.scenario("Scenario", "My pet scenario", 12) 
-      }.should raise_error(ParseError, "Parse error on line 12. Found scenario when expecting one of: comment, feature, tag. (Current state: root).")
+      }.should raise_error(/Parse error on line 12\. Found scenario when expecting one of: comment, feature, tag\. \(Current state: root\)\.$/)
     end
 
     it "should delegate an error message when raise on error is false" do

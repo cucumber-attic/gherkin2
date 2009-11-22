@@ -1,4 +1,5 @@
 #encoding: utf-8
+unless defined?(JRUBY_VERSION)
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require 'gherkin/c_lexer'
 
@@ -16,4 +17,5 @@ module Gherkin
       it_should_behave_like "a Gherkin lexer lexing tables"
     end
   end
+end
 end

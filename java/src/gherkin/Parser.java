@@ -1,18 +1,16 @@
 package gherkin;
 
-import gherkin.lexer.En;
+import gherkin.parser.StateMachineReader;
 
-import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Parser implements Listener {
-    private List<List<String>> transitionTable;
-    private Map<String, Integer> states = new HashMap<String, Integer>();
-    private Map<String, Integer> events = new HashMap<String, Integer>();
-    private String state;
+    List<Machine> machines = new ArrayList<Machine>();
+
     private Listener listener;
     private boolean throwOnError;
-    private final String machinePath;
 
     public Parser(Listener listener) {
         this(listener, true);
@@ -22,58 +20,18 @@ public class Parser implements Listener {
         this(listener, throwOnError, "root");
     }
 
-    public Parser(Listener listener, boolean throwOnError, String state) {
+    public Parser(Listener listener, boolean throwOnError, String machineName) {
         this.listener = listener;
         this.throwOnError = throwOnError;
-        this.state = state;
-        this.machinePath = "/gherkin/parser/" + state + ".txt";
-        initializeMachine();
+        pushMachine(machineName);
     }
 
-    private void initializeMachine() {
-        Listener stateMachineReader = new Listener() {
-            public void tag(String name, int line) {
-            }
+    private void pushMachine(String machineName) {
+        machines.add(new Machine(this, machineName));
+    }
 
-            public void comment(String content, int line) {
-            }
-
-            public void feature(String keyword, String name, int line) {
-            }
-
-            public void background(String keyword, String name, int line) {
-            }
-
-            public void scenario(String keyword, String name, int line) {
-            }
-
-            public void scenario_outline(String keyword, String name, int line) {
-            }
-
-            public void examples(String keyword, String name, int line) {
-            }
-
-            public void step(String keyword, String name, int line) {
-            }
-
-            public void py_string(int startCol, String string, int line) {
-            }
-
-            public void syntax_error(String name, String event, List<String> strings, int line) {
-            }
-
-            public void table(List<List<String>> rows, int line) {
-                transitionTable = rows;
-            }
-        };
-        Lexer l = new En(stateMachineReader);
-        try {
-            l.scan(readResourceAsString(machinePath));
-            initStates();
-            initEvents();
-        } catch (Exception e) {
-            throw new RuntimeException("Couldn't read " + machinePath, e);
-        }
+    private void popMachine() {
+        machines.remove(machines.size() - 1);
     }
 
     public void tag(String name, int line) {
@@ -129,93 +87,94 @@ public class Parser implements Listener {
     public void syntax_error(String name, String event, List<String> strings, int line) {
     }
 
-    private void initStates() {
-        int i = 0;
-        for (List<String> row : transitionTable) {
-            if (i > 0) {
-                states.put(row.get(0), i);
-            }
-            i++;
-        }
-    }
-
-    private void initEvents() {
-        int i = 0;
-        for (String event : transitionTable.get(0)) {
-            if (i > 0) {
-                events.put(event, i);
-            }
-            i++;
-        }
-    }
-
-    // Return false if there was a parse error.
     private boolean event(String event, int line) {
-        int row = stateIdx(state);
-        int col = eventIdx(event);
-        String newState = transitionTable.get(row).get(col);
-        if (newState.equals("E")) {
+        try {
+            machine().event(event, line);
+            return true;
+        } catch (ParseError e) {
             if (throwOnError) {
-                throw new ParseError("Parse error on line " + line + ". Found " + event + " when expecting one of: " + join(expected(), ", ") + ".");
+                throw e;
             } else {
-                listener.syntax_error(state, event, expected(), line);
+                listener.syntax_error(e.state(), event, e.expectedEvents(), line);
                 return false;
             }
-        } else if (newState.equals("-")) {
-        } else {
-            state = newState;
         }
-        return true;
     }
 
-    private List<String> expected() {
-        int row = stateIdx(state);
-        List<String> expected = new ArrayList<String>();
-        int i = -1;
-        for (String state : transitionTable.get(row)) {
-            i++;
-            if (i == 0) {
-                continue;
+    private Machine machine() {
+        return machines.get(machines.size() - 1);
+    }
+
+
+    private static class Machine {
+        private static final Pattern PUSH = Pattern.compile("push\\((.+)\\)");
+
+        private final Parser parser;
+        private final String name;
+        private String state;
+        private Map<String, Map<String, String>> transitionMap;
+
+        public Machine(Parser parser, String name) {
+            this.parser = parser;
+            this.name = name;
+            this.state = name;
+            this.transitionMap = transitionMap(name);
+        }
+
+        public void event(String event, int line) {
+            Map<String, String> states = transitionMap.get(state);
+            if (states == null) {
+                throw new RuntimeException("Unknown state: " + state + " for machine " + name);
             }
-            if (!state.equals("E")) {
-                expected.add(transitionTable.get(0).get(i));
+            String newState = states.get(event);
+            if (newState == null) {
+                throw new RuntimeException("Unknown transition: " + event + " among " + states + " for machine " + name + " in state " + state);
+            }
+            if ("E".equals(newState)) {
+                throw new ParseError(state, event, expectedEvents(), line);
+            } else {
+                Matcher push = PUSH.matcher(newState);
+                if (push.matches()) {
+                    parser.pushMachine(push.group(1));
+                    parser.event(event, line);
+                } else if ("pop()".equals(newState)) {
+                    parser.popMachine();
+                    parser.event(event, line);
+                } else {
+                    state = newState;
+                }
             }
         }
-        Collections.sort(expected);
-        return expected;
-    }
 
-    private int stateIdx(String state) {
-        return states.get(state);
-    }
-
-    private int eventIdx(String state) {
-        return events.get(state);
-    }
-
-    private static String join(List<String> strings, String separator) {
-        StringBuffer sb = new StringBuffer();
-        int i = 0;
-        for (String s : strings) {
-            if (i != 0) sb.append(separator);
-            sb.append(s);
-            i++;
-        }
-        return sb.toString();
-    }
-
-    private static String readResourceAsString(String filePath) throws IOException {
-        Reader machine = new InputStreamReader(Parser.class.getResourceAsStream(filePath));
-
-        final char[] buffer = new char[0x10000];
-        StringBuilder out = new StringBuilder();
-        int read = 0;
-        do {
-            read = machine.read(buffer, 0, buffer.length);
-            if (read > 0) {
-                out.append(buffer, 0, read);
+        private List<String> expectedEvents() {
+            List<String> result = new ArrayList<String>();
+            for (String event : transitionMap.get(state).keySet()) {
+                if (!transitionMap.get(state).get(event).equals("E")) {
+                    result.add(event);
+                }
             }
-        } while (read >= 0);
-        return out.toString();
+            Collections.sort(result);
+            return result;
+        }
+
+        private Map<String, Map<String, String>> transitionMap(String name) {
+            Map<String, Map<String, String>> result = new HashMap<String, Map<String, String>>();
+            List<List<String>> table = transitionTable(name);
+            List<String> events = table.get(0).subList(1, table.get(0).size());
+            for (List<String> actions : table.subList(1, table.size())) {
+                Map<String, String> transitions = new HashMap<String, String>();
+                int col = 1;
+                for (String event : events) {
+                    transitions.put(event, actions.get(col++));
+                }
+                String state = actions.get(0);
+                result.put(state, transitions);
+            }
+            return result;
+        }
+
+        private List<List<String>> transitionTable(String name) {
+            return new StateMachineReader(name).transitionTable();
+        }
     }
 }
