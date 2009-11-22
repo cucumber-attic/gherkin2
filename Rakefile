@@ -1,7 +1,11 @@
 # encoding: utf-8
+require 'rbconfig'
 require 'rubygems'
 require 'rake'
 require 'rake/clean'
+
+JRUBY   = defined?(JRUBY_VERSION)
+WINDOWS = Config::CONFIG['host_os'] =~ /mswin|mingw/
 
 begin
   require 'jeweler'
@@ -18,8 +22,16 @@ begin
     # Jeweler only includes files in git by default. Add the generated ones.
     gem.files += FileList['lib/gherkin/rb_lexer/*.rb']
 
-    gem.files += FileList['ext/gherkin_lexer/*.{c,h}']
-    gem.extensions << 'ext/gherkin_lexer/extconf.rb'
+    if(JRUBY)
+      gem.platform = Gem::Platform::CURRENT
+      gem.files += FileList['lib/gherkin.jar']
+    elsif(WINDOWS)
+      gem.platform = Gem::Platform::CURRENT
+      gem.files += FileList['lib/gherkin_lexer.dll']
+    else
+      gem.files += FileList['ext/gherkin_lexer/*.{c,h}']
+      gem.extensions << 'ext/gherkin_lexer/extconf.rb'
+    end
     
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end

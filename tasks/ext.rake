@@ -2,8 +2,6 @@ CLEAN.include [
   '**/*.{o,bundle,jar,so,obj,pdb,lib,def,exp,log}', 'ext/*/Makefile', 'ext/*/conftest.dSYM',
   'java/target'
 ]
-  
-WIN      = (RUBY_PLATFORM =~ /mswin|cygwin/)
 
 if(defined?(JRUBY_VERSION))
 
@@ -39,7 +37,7 @@ def ext_task(name)
 
   file ext_bundle => ext_files do
     cd ext_dir do
-      sh(WIN ? 'nmake' : 'make')
+      sh(WINDOWS ? 'nmake' : 'make')
     end
     cp ext_bundle, 'lib/'
   end
