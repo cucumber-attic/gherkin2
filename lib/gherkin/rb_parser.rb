@@ -82,7 +82,13 @@ module Gherkin
 
       private
 
+      @@transition_maps = {}
+
       def transition_map(name)
+        @@transition_maps[name] ||= build_transition_map(name)
+      end
+
+      def build_transition_map(name)
         table = transition_table(name)
         events = table.shift[1..-1]
         table.inject({}) do |machine, actions|

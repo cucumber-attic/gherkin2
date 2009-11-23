@@ -105,9 +105,9 @@ public class Parser implements Listener {
         return machines.get(machines.size() - 1);
     }
 
-
     private static class Machine {
         private static final Pattern PUSH = Pattern.compile("push\\((.+)\\)");
+        private static final Map<String, Map<String, Map<String, String>>> TRANSITION_MAPS = new HashMap<String, Map<String, Map<String, String>>>();
 
         private final Parser parser;
         private final String name;
@@ -158,10 +158,19 @@ public class Parser implements Listener {
         }
 
         private Map<String, Map<String, String>> transitionMap(String name) {
+            Map<String, Map<String, String>> map = TRANSITION_MAPS.get(name);
+            if(map == null) {
+                map = buildTransitionMap(name);
+                TRANSITION_MAPS.put(name, map);
+            }
+            return map;
+        }
+
+        private Map<String, Map<String, String>> buildTransitionMap(String name) {
             Map<String, Map<String, String>> result = new HashMap<String, Map<String, String>>();
-            List<List<String>> table = transitionTable(name);
-            List<String> events = table.get(0).subList(1, table.get(0).size());
-            for (List<String> actions : table.subList(1, table.size())) {
+            List<List<String>> transitionTable = new StateMachineReader(name).transitionTable();
+            List<String> events = transitionTable.get(0).subList(1, transitionTable.get(0).size());
+            for (List<String> actions : transitionTable.subList(1, transitionTable.size())) {
                 Map<String, String> transitions = new HashMap<String, String>();
                 int col = 1;
                 for (String event : events) {
@@ -171,10 +180,6 @@ public class Parser implements Listener {
                 result.put(state, transitions);
             }
             return result;
-        }
-
-        private List<List<String>> transitionTable(String name) {
-            return new StateMachineReader(name).transitionTable();
         }
     }
 }
