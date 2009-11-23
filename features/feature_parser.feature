@@ -1,3 +1,4 @@
+# language: en
 Feature: Gherkin Feature lexer
   In order to make it easy to control the Gherkin syntax
   As a Gherkin developer bent on Gherkin world-domination

@@ -16,6 +16,7 @@ begin
     gem.email = "cukes@googlegroups.com"
     gem.homepage = "http://github.com/aslakhellesoy/gherkin"
     gem.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
+    gem.executables = ["gherkin"]
     gem.add_development_dependency "rspec", "1.2.9"
     gem.add_development_dependency "cucumber"
     

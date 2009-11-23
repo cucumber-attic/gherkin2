@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+$:.unshift(File.dirname(__FILE__) + '/../lib') unless $:.include?(File.dirname(__FILE__) + '/../lib')
+
+require 'gherkin'
+require 'gherkin/tools/pretty_printer'
+
+listener = Gherkin::Tools::PrettyPrinter.new
+parser = Gherkin::Parser.new(listener, true)
+lexer = Gherkin::Lexer['en'].new(parser)
+lexer.scan(IO.read(ARGV[0]))
