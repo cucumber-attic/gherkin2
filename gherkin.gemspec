@@ -6,13 +6,14 @@
 Gem::Specification.new do |s|
   s.name = %q{gherkin}
   s.version = "0.0.2"
-  s.platform = %q{universal-java-1.5}
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
   s.date = %q{2009-11-23}
+  s.default_executable = %q{gherkin}
   s.description = %q{A fast Gherkin lexer in Ragel}
   s.email = %q{cukes@googlegroups.com}
+  s.executables = ["gherkin"]
   s.extensions = ["ext/gherkin_lexer/extconf.rb"]
   s.extra_rdoc_files = [
     "LICENSE",
@@ -24,8 +25,10 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION.yml",
+     "bin/gherkin",
      "cucumber.yml",
      "ext/gherkin_lexer/.gitignore",
+     "ext/gherkin_lexer/en.c",
      "ext/gherkin_lexer/extconf.rb",
      "features/feature_parser.feature",
      "features/native_lexer.feature",
@@ -45,9 +48,7 @@ Gem::Specification.new do |s|
      "java/src/gherkin/Parser.java",
      "java/src/gherkin/lexer/.gitignore",
      "java/src/gherkin/parser/StateMachineReader.java",
-     "java/test/gherkin/ParserTest.java",
      "lib/.gitignore",
-     "lib/gherkin.jar",
      "lib/gherkin.rb",
      "lib/gherkin/c_lexer.rb",
      "lib/gherkin/i18n.yml",
@@ -101,6 +102,7 @@ Gem::Specification.new do |s|
      "lib/gherkin/rb_lexer/zh-CN.rb",
      "lib/gherkin/rb_lexer/zh-TW.rb",
      "lib/gherkin/rb_parser.rb",
+     "lib/gherkin/tools/pretty_printer.rb",
      "ragel/i18n/.gitignore",
      "ragel/lexer.c.rl.erb",
      "ragel/lexer.java.rl.erb",
@@ -140,8 +142,7 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{Fast Gherkin lexer}
   s.test_files = [
-    "spec/spec_helper.rb",
-     "spec/gherkin/c_lexer_spec.rb",
+    "spec/gherkin/c_lexer_spec.rb",
      "spec/gherkin/i18n_spec.rb",
      "spec/gherkin/java_lexer_spec.rb",
      "spec/gherkin/parser_spec.rb",
@@ -150,7 +151,8 @@ Gem::Specification.new do |s|
      "spec/gherkin/shared/lexer_spec.rb",
      "spec/gherkin/shared/py_string_spec.rb",
      "spec/gherkin/shared/table_spec.rb",
-     "spec/gherkin/shared/tags_spec.rb"
+     "spec/gherkin/shared/tags_spec.rb",
+     "spec/spec_helper.rb"
   ]
 
   if s.respond_to? :specification_version then
