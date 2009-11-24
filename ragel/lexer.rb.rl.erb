@@ -24,8 +24,8 @@ module Gherkin
         }
 
         action store_pystring_content {
-          con = data[@content_start...@next_keyword_start-1].pack("c*").sub(/(\r?\n)?( )*\Z/, '')
-          @listener.py_string(@start_col, con, @current_line) 
+          con = unindent(@start_col, data[@content_start...@next_keyword_start-1].pack("c*").sub(/(\r?\n)?( )*\Z/, ''))
+          @listener.py_string(con, @current_line) 
         }
  
         action store_feature_content {
@@ -151,6 +151,10 @@ module Gherkin
  
       def multiline_strip(text)
         text.split("\n").map{|s| s.strip}.join("\n").strip
+      end
+
+      def unindent(startcol, text)
+        text.gsub(/^ {0,#{startcol}}/, "")
       end
  
       def store_keyword_content(event, data, p, eof)

@@ -2,6 +2,7 @@ package gherkin.lexer;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 import gherkin.Lexer;
 import gherkin.Listener;
 import gherkin.LexingError;
@@ -25,8 +26,8 @@ public class <%= i18n_lexer_class_name %> implements Lexer {
     }
 
     action store_pystring_content {
-      String con = input.substring(contentStart, nextKeywordStart-1).replaceFirst("(\\r?\\n)?( )*\\Z", "");
-      listener.py_string(startCol, con, currentLine);
+      String con = unindent(startCol, input.substring(contentStart, nextKeywordStart-1).replaceFirst("(\\r?\\n)?( )*\\Z", ""));
+      listener.py_string(con, currentLine);
     }
 
     action store_feature_content {
@@ -176,6 +177,10 @@ public class <%= i18n_lexer_class_name %> implements Lexer {
             result.append(s.trim()).append("\n");
         }
         return result.toString().trim();
+    }
+
+    private String unindent(int startCol, String text) {
+        return Pattern.compile("^ {0," + startCol + "}", Pattern.MULTILINE).matcher(text).replaceAll("");
     }
 
     private String currentLineContent(String input, int lastNewline) {

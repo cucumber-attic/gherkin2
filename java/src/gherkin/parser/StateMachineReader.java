@@ -50,7 +50,7 @@ public class StateMachineReader implements Listener {
     public void step(String keyword, String name, int line) {
     }
 
-    public void py_string(int startCol, String string, int line) {
+    public void py_string(String string, int line) {
     }
 
     public void syntax_error(String name, String event, List<String> strings, int line) {

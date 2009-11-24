@@ -36,7 +36,7 @@ module Gherkin
         # TODO: grab table pretty printing code from the Textmate bundle
       end
 
-      def py_string(start_col, string, line)
+      def py_string(string, line)
         puts '      """'
         # TODO: the string should come in with leading spaces stripped, and we should re-indent it.
         # Also: we don't really need to know start_col.

@@ -39,9 +39,9 @@ public class Parser implements Listener {
             listener.tag(name, line);
     }
 
-    public void py_string(int startCol, String string, int line) {
+    public void py_string(String string, int line) {
         if (event("py_string", line))
-            listener.py_string(startCol, string, line);
+            listener.py_string(string, line);
     }
 
     public void feature(String keyword, String name, int line) {

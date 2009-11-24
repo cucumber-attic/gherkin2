@@ -21,7 +21,7 @@ public interface Listener {
 
     void table(List<List<String>> rows, int line);
 
-    void py_string(int startCol, String string, int line);
+    void py_string(String string, int line);
 
     void syntax_error(String state, String event, List<String> legalEvents, int line);
 }

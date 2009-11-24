@@ -234,7 +234,7 @@ Given I am a step
           @lexer.scan("Given I have a string\n\"\"\"\nhello\nworld\n\"\"\"")
           @listener.to_sexp.should == [
             [:step, "Given", "I have a string", 1],
-            [:py_string, 0, "hello\nworld", 2]
+            [:py_string, "hello\nworld", 2]
           ]
         end
       end
@@ -394,7 +394,7 @@ Given I am a step
             [:step, "Then", "I am happy", 36],
             [:scenario, "Scenario", "Hammerzeit", 38],
             [:step, "Given", "All work and no play", 39],
-            [:py_string, 6, "      Makes Homer something something", 40],
+            [:py_string, "Makes Homer something something", 40],
             [:step, "Then", "crazy", 43]
           ]
         end        
