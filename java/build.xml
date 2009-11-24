@@ -1,7 +1,7 @@
 <project name="Gherkin" default="jar" basedir=".">
   <target name="compile" description="Compile">
     <mkdir dir="${basedir}/target/classes"/>
-    <javac srcdir="src" destdir="target/classes" />
+    <javac srcdir="src" destdir="target/classes" debug="on"/>
   </target>
 
   <target name="jar" description="Jar" depends="compile">
