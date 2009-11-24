@@ -27,55 +27,55 @@ public class <%= i18n_lexer_class_name %> implements Lexer {
     }
 
     action store_pystring_content {
-      String con = unindent(startCol, input.substring(contentStart, nextKeywordStart-1).replaceFirst("(\\r?\\n)?( )*\\Z", ""));
+      String con = unindent(startCol, substring(data, contentStart, nextKeywordStart-1).replaceFirst("(\\r?\\n)?( )*\\Z", ""));
       listener.py_string(con, currentLine);
     }
 
     action store_feature_content {
-      String con = multilineStrip(keywordContent(input, p, eof, nextKeywordStart, contentStart).trim());
+      String con = multilineStrip(keywordContent(data, p, eof, nextKeywordStart, contentStart).trim());
       listener.feature(keyword, con, currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
 
     action store_background_content {
-      String con = multilineStrip(keywordContent(input, p, eof, nextKeywordStart, contentStart));
+      String con = multilineStrip(keywordContent(data, p, eof, nextKeywordStart, contentStart));
       listener.background(keyword, con, currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
 
     action store_scenario_content {
-      String con = multilineStrip(keywordContent(input, p, eof, nextKeywordStart, contentStart));
+      String con = multilineStrip(keywordContent(data, p, eof, nextKeywordStart, contentStart));
       listener.scenario(keyword, con, currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
 
     action store_scenario_outline_content {
-      String con = multilineStrip(keywordContent(input, p, eof, nextKeywordStart, contentStart));
+      String con = multilineStrip(keywordContent(data, p, eof, nextKeywordStart, contentStart));
       listener.scenario_outline(keyword, con, currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
 
     action store_examples_content {
-      String con = multilineStrip(keywordContent(input, p, eof, nextKeywordStart, contentStart));
+      String con = multilineStrip(keywordContent(data, p, eof, nextKeywordStart, contentStart));
       listener.examples(keyword, con, currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
 
     action store_step_content {
-      listener.step(keyword, input.substring(contentStart, p).trim(), currentLine);
+      listener.step(keyword, substring(data, contentStart, p).trim(), currentLine);
     }
 
     action store_comment_content {
-      listener.comment(input.substring(contentStart, p).trim(), lineNumber);
+      listener.comment(substring(data, contentStart, p).trim(), lineNumber);
     }
 
     action store_tag_content {
-      listener.tag(input.substring(contentStart, p).trim(), currentLine);
+      listener.tag(substring(data, contentStart, p).trim(), currentLine);
     }
 
     action inc_line_number {
@@ -91,7 +91,7 @@ public class <%= i18n_lexer_class_name %> implements Lexer {
     }
 
     action end_keyword {
-      keyword = input.substring(keywordStart, p).replaceFirst(":$","").trim();
+      keyword = substring(data, keywordStart, p).replaceFirst(":$","").trim();
       keywordStart = -1;
     }
 
@@ -114,7 +114,7 @@ public class <%= i18n_lexer_class_name %> implements Lexer {
     }
 
     action store_cell_content {
-      currentRow.add(input.substring(contentStart, p).trim());
+      currentRow.add(substring(data, contentStart, p).trim());
     }
 
     action store_row {
@@ -129,7 +129,7 @@ public class <%= i18n_lexer_class_name %> implements Lexer {
 
     action end_feature {
       if(cs < lexer_first_final) {
-        String content = currentLineContent(input, lastNewline);
+        String content = currentLineContent(data, lastNewline);
         throw new LexingError("Lexing error on line " + lineNumber + ": '" + content + "'.");
         //throw new LexingError("Lexing error on line " + lineNumber);
       }
@@ -168,9 +168,9 @@ public class <%= i18n_lexer_class_name %> implements Lexer {
         %% write exec;
     }
 
-    private String keywordContent(String input, int p, int eof, int nextKeywordStart, int contentStart) {
+    private String keywordContent(byte[] data, int p, int eof, int nextKeywordStart, int contentStart) {
       int endPoint = (nextKeywordStart == -1 || (p == eof)) ? p : nextKeywordStart;
-      return input.substring(contentStart, endPoint);
+      return substring(data, contentStart, endPoint);
     }
 
     private String multilineStrip(String text) {
@@ -185,7 +185,15 @@ public class <%= i18n_lexer_class_name %> implements Lexer {
         return Pattern.compile("^ {0," + startCol + "}", Pattern.MULTILINE).matcher(text).replaceAll("");
     }
 
-    private String currentLineContent(String input, int lastNewline) {
-      return input.substring(lastNewline).trim();
+    private String currentLineContent(byte[] data, int lastNewline) {
+        return substring(data, lastNewline, data.length).trim();
+    }
+
+    private String substring(byte[] data, int start, int end) {
+        try {
+            return new String(data, start, end-start, "utf-8");
+        } catch(java.io.UnsupportedEncodingException e) {
+            throw new RuntimeException("Internal error", e);
+        }
     }
 }
