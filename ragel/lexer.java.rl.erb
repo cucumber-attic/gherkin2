@@ -129,7 +129,8 @@ public class <%= i18n_lexer_class_name %> implements Lexer {
     action end_feature {
       if(cs < lexer_first_final) {
         String content = currentLineContent(input, lastNewline);
-        throw new LexingError("Lexing error on line " + lineNumber);
+        throw new LexingError("Lexing error on line " + lineNumber + ": '" + content + "'.");
+        //throw new LexingError("Lexing error on line " + lineNumber);
       }
     }
 
