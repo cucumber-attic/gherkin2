@@ -26,12 +26,14 @@ begin
     if(JRUBY)
       gem.platform = Gem::Platform::CURRENT
       gem.files += FileList['lib/gherkin.jar']
+      gem.extensions = []
     elsif(WINDOWS)
       gem.platform = Gem::Platform::CURRENT
       gem.files += FileList['lib/gherkin_lexer.dll']
+      gem.extensions = []
     else
       gem.files += FileList['ext/gherkin_lexer/*.{c,h}']
-      gem.extensions << 'ext/gherkin_lexer/extconf.rb'
+      gem.extensions = 'ext/gherkin_lexer/extconf.rb'
     end
     
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings

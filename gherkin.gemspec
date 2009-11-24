@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
-  s.date = %q{2009-11-24}
+  s.date = %q{2009-11-25}
   s.default_executable = %q{gherkin}
   s.description = %q{A fast Gherkin lexer in Ragel}
   s.email = %q{cukes@googlegroups.com}
@@ -54,6 +54,7 @@ Gem::Specification.new do |s|
      "lib/gherkin.rb",
      "lib/gherkin/c_lexer.rb",
      "lib/gherkin/i18n.yml",
+     "lib/gherkin/i18n_lexer.rb",
      "lib/gherkin/java_lexer.rb",
      "lib/gherkin/lexer.rb",
      "lib/gherkin/parser.rb",
