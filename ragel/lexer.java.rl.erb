@@ -10,6 +10,7 @@ import gherkin.LexingError;
 public class <%= i18n_lexer_class_name %> implements Lexer {
   %%{
     machine lexer;
+    alphtype byte;
 
     action begin_content {
       contentStart = p;
@@ -147,7 +148,7 @@ public class <%= i18n_lexer_class_name %> implements Lexer {
 
     public void scan(CharSequence inputSequence) {
         String input = inputSequence.toString() + "\n%_FEATURE_END_%";
-        char[] data = input.toCharArray();
+        byte[] data = input.getBytes();
         int cs, p = 0, pe = data.length;
         int eof = pe;
 
