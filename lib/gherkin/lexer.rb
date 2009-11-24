@@ -13,14 +13,13 @@ module Gherkin
             begin
               c[i18n_lang]
             rescue NameError => e
-              warn("WARNING: #{e.message}")
+              warn("WARNING: #{e.message}. Reverting to Ruby lexer")
               rb[i18n_lang]
             rescue LoadError
               rb[i18n_lang]
             end
           end
-        rescue LoadError => e
-          raise e
+        rescue LoadError
           raise I18nLexerNotFound, "No lexer was found for #{i18n_lang}. Supported languages are listed in gherkin/i18n.yml."
         end
       end

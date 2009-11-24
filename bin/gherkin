@@ -5,6 +5,6 @@ require 'gherkin'
 require 'gherkin/tools/pretty_printer'
 
 listener = Gherkin::Tools::PrettyPrinter.new(STDOUT)
-parser = Gherkin::Parser.new(listener, true)
+parser = Gherkin::Parser.new(listener, true) # We could skip the parser here, if we don't want to verify well-formedness
 lexer = Gherkin::Lexer['en'].new(parser)
 lexer.scan(IO.read(ARGV[0]))
