@@ -2,7 +2,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 module Gherkin
-  class Lexer
+  module Lexer
     shared_examples_for "a Gherkin lexer lexing tables" do
       tables = {
         "|a|b|\n"        => [%w{a b}],

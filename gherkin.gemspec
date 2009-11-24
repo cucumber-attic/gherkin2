@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
-  s.date = %q{2009-11-23}
+  s.date = %q{2009-11-24}
   s.default_executable = %q{gherkin}
   s.description = %q{A fast Gherkin lexer in Ragel}
   s.email = %q{cukes@googlegroups.com}
@@ -33,7 +33,9 @@ Gem::Specification.new do |s|
      "features/feature_parser.feature",
      "features/native_lexer.feature",
      "features/parser_with_native_lexer.feature",
+     "features/pretty_printer.feature",
      "features/step_definitions/gherkin_steps.rb",
+     "features/step_definitions/pretty_printer_steps.rb",
      "features/steps_parser.feature",
      "features/support/env.rb",
      "gherkin.gemspec",

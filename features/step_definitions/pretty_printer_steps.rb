@@ -17,7 +17,7 @@ When /^I parse the prettified representation of each of them$/ do
     io       = StringIO.new
     listener = Gherkin::Tools::PrettyPrinter.new(io)
     parser   = Gherkin::Parser.new(listener, true)
-    lexer    = Gherkin::Lexer.new(parser)
+    lexer    = Gherkin::I18nLexer.new(parser)
     
     begin
       lexer.scan(IO.read(feature))
