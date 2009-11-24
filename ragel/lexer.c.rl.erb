@@ -274,9 +274,13 @@ store_pystring_content(VALUE listener,
           const char *at, size_t length, 
           int current_line)
 {
-  VALUE con = Qnil;
-  con = rb_str_new(at, length);
-  rb_funcall(listener, rb_intern("py_string"), 3, INT2FIX(start_col), con, INT2FIX(current_line));
+  VALUE con = rb_str_new(at, length);
+  // Gherkin will crash gracefully if the string representation of start_col pushes the pattern past 64 characters
+  char pat[64]; 
+  snprintf(pat, 64, "^ {0,%d}", start_col); 
+  VALUE re = rb_reg_regcomp(rb_str_new2(pat));
+  rb_funcall(con, rb_intern("gsub!"), 2, re, rb_str_new2(""));
+  rb_funcall(listener, rb_intern("py_string"), 2, con, INT2FIX(current_line));
 }
 
 static void 
