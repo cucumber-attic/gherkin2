@@ -2,7 +2,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 module Gherkin
-  module Lexer
+  class Lexer
     shared_examples_for "a Gherkin lexer" do
 
       describe "Comments" do

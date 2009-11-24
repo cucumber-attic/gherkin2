@@ -4,7 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require 'gherkin/c_lexer'
 
 module Gherkin
-  module Lexer
+  class Lexer
     describe "C Lexer" do
       before do
         @listener = Gherkin::SexpRecorder.new

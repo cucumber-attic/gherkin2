@@ -2,7 +2,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 module Gherkin
-  module Lexer
+  class Lexer
     describe "Ruby Lexer" do
       before do
         @listener = Gherkin::SexpRecorder.new

@@ -2,7 +2,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 module Gherkin
-  module Lexer
+  class Lexer
     shared_examples_for "a Gherkin lexer lexing tags" do
       it "should lex a single tag" do
         @listener.should_receive(:tag).with("dog", 1)
@@ -38,12 +38,12 @@ module Gherkin
     
       it "should not lex tags beginning with two @@ signs" do
         @listener.should_not_receive(:tag)
-        lambda { @lexer.scan("@@test\n") }.should raise_error(/Lexing error on line 1: '@@test/)
+        lambda { @lexer.scan("@@test\n") }.should raise_error(/Lexing error on line 1/)
       end
     
       it "should not lex a lone @ sign" do
         @listener.should_not_receive(:tag)
-        lambda { @lexer.scan("@\n") }.should raise_error(/Lexing error on line 1: '@/)
+        lambda { @lexer.scan("@\n") }.should raise_error(/Lexing error on line 1/)
       end
     end
   end

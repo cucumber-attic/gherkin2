@@ -2,7 +2,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 module Gherkin
-  module Lexer
+  class Lexer
     describe "i18n parsing" do
       before do
         @listener = Gherkin::SexpRecorder.new

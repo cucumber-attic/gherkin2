@@ -1,5 +1,6 @@
 module Gherkin
-  module Lexer
+  class Lexer
+    LANGUAGE_PATTERN = /language\s*:\s*(.*)/ #:nodoc:
     I18nLexerNotFound = Class.new(LoadError)
     LexingError = Class.new(StandardError)
 
@@ -37,6 +38,26 @@ module Gherkin
       def rb
         require 'gherkin/rb_lexer'
         RbLexer
+      end
+    end
+
+    def initialize(parser)
+      @parser = parser
+    end
+
+    def scan(source)
+      delegate = self.class[lang(source) || 'en'].new(@parser)
+      delegate.scan(source)
+    end
+
+    private
+
+    def lang(source)
+      line_one = source.split(/\n/)[0]
+      if line_one =~ LANGUAGE_PATTERN
+        $1.strip
+      else
+        nil
       end
     end
   end
