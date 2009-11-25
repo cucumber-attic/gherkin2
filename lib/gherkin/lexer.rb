@@ -6,6 +6,9 @@ module Gherkin
     class << self
       def [](i18n_lang)
         begin
+          # Uncomment the line below (during development) to force use of Ruby lexer
+          # return rb[i18n_lang]
+
           if defined?(JRUBY_VERSION)
             java[i18n_lang]
           else
@@ -18,8 +21,8 @@ module Gherkin
               rb[i18n_lang]
             end
           end
-        rescue LoadError
-          raise I18nLexerNotFound, "No lexer was found for #{i18n_lang}. Supported languages are listed in gherkin/i18n.yml."
+        rescue LoadError => e
+          raise I18nLexerNotFound, "No lexer was found for #{i18n_lang} (#{e.message}). Supported languages are listed in gherkin/i18n.yml."
         end
       end
 

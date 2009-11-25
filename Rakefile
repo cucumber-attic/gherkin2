@@ -18,7 +18,8 @@ begin
     gem.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
     gem.executables = ["gherkin"]
     gem.add_development_dependency "rspec", "1.2.9"
-    gem.add_development_dependency "cucumber"
+    gem.add_development_dependency "cucumber", "0.4.4"
+    gem.add_development_dependency "rake-compiler", "0.6.0"
     
     # Jeweler only includes files in git by default. Add the generated ones.
     gem.files += FileList['lib/gherkin/rb_lexer/*.rb']
@@ -29,11 +30,11 @@ begin
       gem.extensions = []
     elsif(WINDOWS)
       gem.platform = Gem::Platform::CURRENT
-      gem.files += FileList['lib/gherkin_lexer.dll']
+      gem.files += FileList['lib/*.dll']
       gem.extensions = []
     else
-      gem.files += FileList['ext/gherkin_lexer/*.{c,h}']
-      gem.extensions = 'ext/gherkin_lexer/extconf.rb'
+      gem.files += FileList['ext/**/*.c']
+      gem.extensions = FileList['ext/**/extconf.rb']
     end
     
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings

@@ -2,12 +2,12 @@
   machine lexer_common;
 
   # Language specific
-  I18N_Feature = <%= i18n['feature'] %> >start_keyword %end_keyword; 
-  I18N_Background = <%= i18n['background'] %> >start_keyword %end_keyword;
-  I18N_ScenarioOutline = <%= i18n['scenario_outline'] %> >start_keyword %end_keyword;
-  I18N_Scenario = <%= i18n['scenario'] %> >start_keyword %end_keyword;
-  I18N_Step = (<%= i18n['given'] %> | <%= i18n['when'] %> | <%= i18n['and'] %> | <%= i18n['then'] %> | <%= i18n['but'] %>) >start_keyword %end_keyword;
-  I18N_Examples = <%= i18n['examples'] %> >start_keyword %end_keyword;
+  I18N_Feature = <%= keywords['feature'] %> >start_keyword %end_keyword; 
+  I18N_Background = <%= keywords['background'] %> >start_keyword %end_keyword;
+  I18N_ScenarioOutline = <%= keywords['scenario_outline'] %> >start_keyword %end_keyword;
+  I18N_Scenario = <%= keywords['scenario'] %> >start_keyword %end_keyword;
+  I18N_Step = (<%= keywords['given'] %> | <%= keywords['when'] %> | <%= keywords['and'] %> | <%= keywords['then'] %> | <%= keywords['but'] %>) >start_keyword %end_keyword;
+  I18N_Examples = <%= keywords['examples'] %> >start_keyword %end_keyword;
 
   EOF = '%_FEATURE_END_%'; # Explicit EOF added before scanning begins 
   EOL = ('\r'? '\n') @inc_line_number @last_newline;

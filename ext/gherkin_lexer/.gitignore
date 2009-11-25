@@ -1,6 +1,0 @@
-Makefile
-*.bundle
-*.log
-en.c
-*.o
-*dSYM/

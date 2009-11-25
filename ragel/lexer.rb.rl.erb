@@ -1,6 +1,6 @@
 module Gherkin
   module RbLexer
-    class <%= i18n_lexer_class_name %> #:nodoc:
+    class <%= @i18n.capitalize %> #:nodoc:
       %%{
         # patterns:
         # * data[start...end].pack("c*").strip_of_some_sort
@@ -130,7 +130,7 @@ module Gherkin
           end
         }
 
-        include lexer_common "lexer_common.<%= i18n_language %>.rl"; 
+        include lexer_common "lexer_common.<%= @i18n %>.rl"; 
       }%%
  
       def initialize(listener)

@@ -8,13 +8,13 @@ Gem::Specification.new do |s|
   s.version = "0.0.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
+  s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
   s.date = %q{2009-11-25}
   s.default_executable = %q{gherkin}
   s.description = %q{A fast Gherkin lexer in Ragel}
   s.email = %q{cukes@googlegroups.com}
   s.executables = ["gherkin"]
-  s.extensions = ["ext/gherkin_lexer/extconf.rb"]
+  s.extensions = ["ext/gherkin_lexer_ar/extconf.rb", "ext/gherkin_lexer_bg/extconf.rb", "ext/gherkin_lexer_cat/extconf.rb", "ext/gherkin_lexer_cs/extconf.rb", "ext/gherkin_lexer_cy/extconf.rb", "ext/gherkin_lexer_da/extconf.rb", "ext/gherkin_lexer_de/extconf.rb", "ext/gherkin_lexer_en/extconf.rb", "ext/gherkin_lexer_enau/extconf.rb", "ext/gherkin_lexer_enlol/extconf.rb", "ext/gherkin_lexer_entx/extconf.rb", "ext/gherkin_lexer_es/extconf.rb", "ext/gherkin_lexer_et/extconf.rb", "ext/gherkin_lexer_fi/extconf.rb", "ext/gherkin_lexer_fr/extconf.rb", "ext/gherkin_lexer_he/extconf.rb", "ext/gherkin_lexer_hr/extconf.rb", "ext/gherkin_lexer_hu/extconf.rb", "ext/gherkin_lexer_id/extconf.rb", "ext/gherkin_lexer_it/extconf.rb", "ext/gherkin_lexer_ja/extconf.rb", "ext/gherkin_lexer_ko/extconf.rb", "ext/gherkin_lexer_lt/extconf.rb", "ext/gherkin_lexer_lv/extconf.rb", "ext/gherkin_lexer_nl/extconf.rb", "ext/gherkin_lexer_no/extconf.rb", "ext/gherkin_lexer_pl/extconf.rb", "ext/gherkin_lexer_pt/extconf.rb", "ext/gherkin_lexer_ro/extconf.rb", "ext/gherkin_lexer_ro2/extconf.rb", "ext/gherkin_lexer_ru/extconf.rb", "ext/gherkin_lexer_se/extconf.rb", "ext/gherkin_lexer_sk/extconf.rb", "ext/gherkin_lexer_sr/extconf.rb", "ext/gherkin_lexer_srLatn/extconf.rb", "ext/gherkin_lexer_tr/extconf.rb", "ext/gherkin_lexer_uz/extconf.rb", "ext/gherkin_lexer_vi/extconf.rb", "ext/gherkin_lexer_zhCN/extconf.rb", "ext/gherkin_lexer_zhTW/extconf.rb"]
   s.extra_rdoc_files = [
     "LICENSE",
      "README.rdoc"
@@ -27,9 +27,47 @@ Gem::Specification.new do |s|
      "VERSION.yml",
      "bin/gherkin",
      "cucumber.yml",
-     "ext/gherkin_lexer/.gitignore",
-     "ext/gherkin_lexer/en.c",
-     "ext/gherkin_lexer/extconf.rb",
+     "ext/gherkin_lexer_ar/gherkin_lexer_ar.c",
+     "ext/gherkin_lexer_bg/gherkin_lexer_bg.c",
+     "ext/gherkin_lexer_cat/gherkin_lexer_cat.c",
+     "ext/gherkin_lexer_cs/gherkin_lexer_cs.c",
+     "ext/gherkin_lexer_cy/gherkin_lexer_cy.c",
+     "ext/gherkin_lexer_da/gherkin_lexer_da.c",
+     "ext/gherkin_lexer_de/gherkin_lexer_de.c",
+     "ext/gherkin_lexer_en/extconf.rb",
+     "ext/gherkin_lexer_en/gherkin_lexer_en.c",
+     "ext/gherkin_lexer_enau/gherkin_lexer_enau.c",
+     "ext/gherkin_lexer_enlol/gherkin_lexer_enlol.c",
+     "ext/gherkin_lexer_entx/gherkin_lexer_entx.c",
+     "ext/gherkin_lexer_es/gherkin_lexer_es.c",
+     "ext/gherkin_lexer_et/gherkin_lexer_et.c",
+     "ext/gherkin_lexer_fi/gherkin_lexer_fi.c",
+     "ext/gherkin_lexer_fr/gherkin_lexer_fr.c",
+     "ext/gherkin_lexer_he/gherkin_lexer_he.c",
+     "ext/gherkin_lexer_hr/gherkin_lexer_hr.c",
+     "ext/gherkin_lexer_hu/gherkin_lexer_hu.c",
+     "ext/gherkin_lexer_id/gherkin_lexer_id.c",
+     "ext/gherkin_lexer_it/gherkin_lexer_it.c",
+     "ext/gherkin_lexer_ja/gherkin_lexer_ja.c",
+     "ext/gherkin_lexer_ko/gherkin_lexer_ko.c",
+     "ext/gherkin_lexer_lt/gherkin_lexer_lt.c",
+     "ext/gherkin_lexer_lv/gherkin_lexer_lv.c",
+     "ext/gherkin_lexer_nl/gherkin_lexer_nl.c",
+     "ext/gherkin_lexer_no/gherkin_lexer_no.c",
+     "ext/gherkin_lexer_pl/gherkin_lexer_pl.c",
+     "ext/gherkin_lexer_pt/gherkin_lexer_pt.c",
+     "ext/gherkin_lexer_ro/gherkin_lexer_ro.c",
+     "ext/gherkin_lexer_ro2/gherkin_lexer_ro2.c",
+     "ext/gherkin_lexer_ru/gherkin_lexer_ru.c",
+     "ext/gherkin_lexer_se/gherkin_lexer_se.c",
+     "ext/gherkin_lexer_sk/gherkin_lexer_sk.c",
+     "ext/gherkin_lexer_sr/gherkin_lexer_sr.c",
+     "ext/gherkin_lexer_srLatn/gherkin_lexer_srLatn.c",
+     "ext/gherkin_lexer_tr/gherkin_lexer_tr.c",
+     "ext/gherkin_lexer_uz/gherkin_lexer_uz.c",
+     "ext/gherkin_lexer_vi/gherkin_lexer_vi.c",
+     "ext/gherkin_lexer_zhCN/gherkin_lexer_zhCN.c",
+     "ext/gherkin_lexer_zhTW/gherkin_lexer_zhTW.c",
      "features/feature_parser.feature",
      "features/native_lexer.feature",
      "features/parser_with_native_lexer.feature",
@@ -71,10 +109,10 @@ Gem::Specification.new do |s|
      "lib/gherkin/rb_lexer/cy.rb",
      "lib/gherkin/rb_lexer/da.rb",
      "lib/gherkin/rb_lexer/de.rb",
-     "lib/gherkin/rb_lexer/en-au.rb",
-     "lib/gherkin/rb_lexer/en-lol.rb",
-     "lib/gherkin/rb_lexer/en-tx.rb",
      "lib/gherkin/rb_lexer/en.rb",
+     "lib/gherkin/rb_lexer/enau.rb",
+     "lib/gherkin/rb_lexer/enlol.rb",
+     "lib/gherkin/rb_lexer/entx.rb",
      "lib/gherkin/rb_lexer/es.rb",
      "lib/gherkin/rb_lexer/et.rb",
      "lib/gherkin/rb_lexer/fi.rb",
@@ -97,13 +135,13 @@ Gem::Specification.new do |s|
      "lib/gherkin/rb_lexer/ru.rb",
      "lib/gherkin/rb_lexer/se.rb",
      "lib/gherkin/rb_lexer/sk.rb",
-     "lib/gherkin/rb_lexer/sr-Latn.rb",
      "lib/gherkin/rb_lexer/sr.rb",
+     "lib/gherkin/rb_lexer/srLatn.rb",
      "lib/gherkin/rb_lexer/tr.rb",
      "lib/gherkin/rb_lexer/uz.rb",
      "lib/gherkin/rb_lexer/vi.rb",
-     "lib/gherkin/rb_lexer/zh-CN.rb",
-     "lib/gherkin/rb_lexer/zh-TW.rb",
+     "lib/gherkin/rb_lexer/zhCN.rb",
+     "lib/gherkin/rb_lexer/zhTW.rb",
      "lib/gherkin/rb_parser.rb",
      "lib/gherkin/tools/pretty_printer.rb",
      "ragel/i18n/.gitignore",
@@ -133,8 +171,8 @@ Gem::Specification.new do |s|
      "tasks/bench/feature_builder.rb",
      "tasks/bench/generated/.gitignore",
      "tasks/bench/null_listener.rb",
+     "tasks/compile.rake",
      "tasks/cucumber.rake",
-     "tasks/ext.rake",
      "tasks/ragel.rake",
      "tasks/rdoc.rake",
      "tasks/rspec.rake"
@@ -164,14 +202,17 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<rspec>, ["= 1.2.9"])
-      s.add_development_dependency(%q<cucumber>, [">= 0"])
+      s.add_development_dependency(%q<cucumber>, ["= 0.4.4"])
+      s.add_development_dependency(%q<rake-compiler>, ["= 0.6.0"])
     else
       s.add_dependency(%q<rspec>, ["= 1.2.9"])
-      s.add_dependency(%q<cucumber>, [">= 0"])
+      s.add_dependency(%q<cucumber>, ["= 0.4.4"])
+      s.add_dependency(%q<rake-compiler>, ["= 0.6.0"])
     end
   else
     s.add_dependency(%q<rspec>, ["= 1.2.9"])
-    s.add_dependency(%q<cucumber>, [">= 0"])
+    s.add_dependency(%q<cucumber>, ["= 0.4.4"])
+    s.add_dependency(%q<rake-compiler>, ["= 0.6.0"])
   end
 end
 

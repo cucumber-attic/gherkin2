@@ -1,69 +1,66 @@
 CLEAN.include [
   'ragel/i18n/*.rl',
   'lib/gherkin/rb_lexer/*.rb',
-  'ext/gherkin_lexer/*.c',
+  'ext/**/*.c',
   'java/src/gherkin/lexer/*.java',
 ]
 
 class RagelCompiler
   RL_OUTPUT_DIR = File.dirname(__FILE__) + "/../ragel/i18n"
   
-  def initialize(target)
+  def initialize(lang, i18n, keywords)
     require 'yaml'
     require 'erb'
     
-    @target = target
-    @flag, @output_dir, @filename_proc = case
-      when @target == "rb"   then ["-R", "lib/gherkin/rb_lexer", lambda{|name| name}]
-      when @target == "c"    then ["-C", "ext/gherkin_lexer", lambda{|name| name}]
-      when @target == "java" then ["-J", "java/src/gherkin/lexer", lambda{|name| name.gsub(/[\s-]/, '').capitalize}]
-    end
+    @lang = lang
+    @i18n = i18n
+    @keywords = keywords
+    raise "Hmm" if keywords.nil?
 
-    @i18n_languages = YAML.load_file(File.dirname(__FILE__) + '/../lib/gherkin/i18n.yml')
-    @common_tmpl = ERB.new(IO.read(File.dirname(__FILE__) + '/../ragel/lexer_common.rl.erb'))
-    @actions_tmpl = ERB.new(IO.read(File.dirname(__FILE__) + "/../ragel/lexer.#{@target}.rl.erb"))
-  end
+    @common_ragel_file = RL_OUTPUT_DIR + "/lexer_common.#{@i18n}.rl"
+    @main_ragel_file   = RL_OUTPUT_DIR + "/#{@i18n}.#{@lang}.rl"
 
-  def compile_all
-    @i18n_languages.keys.each do |lang|
-      compile(lang)
+    @flag, @emit_path = case(@lang)
+      when "rb"   then ["-R", "lib/gherkin/rb_lexer/#{@i18n}.rb"]
+      when "c"    then ["-C", "ext/gherkin_lexer_#{@i18n}/gherkin_lexer_#{@i18n}.c"]
+      when "java" then ["-J", "java/src/gherkin/lexer/#{@i18n.gsub(/[\s-]/, '').capitalize}.java"]
     end
   end
 
-  def compile(i18n_language)
-    FileUtils.mkdir(RL_OUTPUT_DIR) unless File.exist?(RL_OUTPUT_DIR)
-    
-    common_path = RL_OUTPUT_DIR + "/lexer_common.#{i18n_language}.rl"
-    actions_path = RL_OUTPUT_DIR + "/#{i18n_language}.#{@target}.rl"
-    
-    generate_common(i18n_language, common_path)
-    generate_actions(i18n_language, actions_path)
-    
-    sh "ragel #{@flag} #{actions_path} -o #{@output_dir}/#{@filename_proc.call(i18n_language)}.#{@target}"
+  def emit
+    FileUtils.mkdir(RL_OUTPUT_DIR) unless File.directory?(RL_OUTPUT_DIR)
+    generate_lang_rl
+    generate_common_rl
+    run_ragel
   end
   
-  def generate_common(i18n_language, path)
-    i18n = prep_keywords(@i18n_languages['en'].merge(@i18n_languages[i18n_language]))
-    common = @common_tmpl.result(binding)
-    write common, path
+  def generate_common_rl
+    keywords = prep_keywords
+    common = ERB.new(IO.read(File.dirname(__FILE__) + '/../ragel/lexer_common.rl.erb')).result(binding)
+    write(common, @common_ragel_file)
   end
   
-  def generate_actions(i18n_language, path)
-    i18n_lexer_class_name = i18n_language.gsub(/[\s-]/, '').capitalize
-    impl = @actions_tmpl.result(binding)
-    write impl, path
+  def generate_lang_rl
+    impl = ERB.new(IO.read(File.dirname(__FILE__) + "/../ragel/lexer.#{@lang}.rl.erb")).result(binding)
+    write(impl, @main_ragel_file)
   end
 
-  def prep_keywords(i18n)
+  def run_ragel
+    mkdir_p(File.dirname(@emit_path)) unless File.directory?(File.dirname(@emit_path))
+    sh "ragel #{@flag} #{@main_ragel_file} -o #{@emit_path}"
+  end
+
+  def prep_keywords
+    keywords = @keywords.dup
     delimited_keywords = %w{feature background scenario scenario_outline examples}
     bare_keywords = %w{given when then and but}
     all_keywords = delimited_keywords + bare_keywords
     
-    all_keywords.each { |kw| i18n[kw] = i18n[kw].split("|") }
-    delimited_keywords.each { |kw| i18n[kw].map! { |v| v += ':'} }
-    bare_keywords.each { |kw| i18n[kw].map! { |v| (v + ' ').sub(/< $/,'')} }
-    all_keywords.each { |kw| i18n[kw] = '("' + i18n[kw].join('" | "') + '")' }    
-    i18n
+    all_keywords.each       { |k| keywords[k] = keywords[k].split("|") }
+    delimited_keywords.each { |k| keywords[k].map! { |v| v += ':'} }
+    bare_keywords.each      { |k| keywords[k].map! { |v| (v + ' ').sub(/< $/,'')} }
+    all_keywords.each       { |k| keywords[k] = '("' + keywords[k].join('" | "') + '")' }    
+    keywords
   end
 
   def write(content, filename)
@@ -73,22 +70,29 @@ class RagelCompiler
   end  
 end
 
-namespace :ragel do
-  desc "Generate i18n sources for C lexers (TODO: Do it for all)"
-  task :c do
-    RagelCompiler.new("c").compile('en')
-  end
+YAML.load_file(File.dirname(__FILE__) + '/../lib/gherkin/i18n.yml').each do |i18n, keywords|
+  i18n = i18n.gsub(/[\s-]/, '')
 
-  desc "Generate all i18n Ruby lexers"
-  task :rb do
-    RagelCompiler.new("rb").compile_all
-  end
+  namespace :ragel do
+    namespace :c do
+      task i18n do
+        RagelCompiler.new("c", i18n, keywords).emit
+      end
+    end
 
-  desc "Generate all i18n Java lexers"
-  task :java do
-    RagelCompiler.new("java").compile_all
+    namespace :java do
+      task i18n do
+        RagelCompiler.new("java", i18n, keywords).emit
+      end
+    end
+
+    namespace :rb do
+      task i18n do
+        RagelCompiler.new("rb", i18n, keywords).emit
+      end
+    end
+    
+    desc "Emit all ruby ragel parsers"
+    task :rb => "rb:#{i18n}"
   end
 end
-
-desc "Generate all i18n lexers for all programming languages"
-task :ragel => ['ragel:c', 'ragel:rb', 'ragel:java']

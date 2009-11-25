@@ -217,7 +217,7 @@ static VALUE rb_eGherkinLexerError;
     }
   }
 
-  include lexer_common "lexer_common.<%= i18n_language %>.rl";   
+  include lexer_common "lexer_common.<%= @i18n %>.rl";   
 
 }%%
 
@@ -371,14 +371,14 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
   }
 }
 
-void Init_gherkin_lexer()
+void Init_gherkin_lexer_<%= @i18n %>()
 {
   mGherkin = rb_define_module("Gherkin");
   mLexer = rb_const_get(mGherkin, rb_intern("Lexer"));
   rb_eGherkinLexerError = rb_const_get(mLexer, rb_intern("LexingError"));
 
   mCLexer = rb_define_module_under(mGherkin, "CLexer");
-  cI18nLexer = rb_define_class_under(mCLexer, "En", rb_cObject);
+  cI18nLexer = rb_define_class_under(mCLexer, "<%= @i18n.capitalize %>", rb_cObject);
   rb_define_alloc_func(cI18nLexer, CLexer_alloc);
   rb_define_method(cI18nLexer, "initialize", CLexer_init, 1);
   rb_define_method(cI18nLexer, "scan", CLexer_scan, 1);

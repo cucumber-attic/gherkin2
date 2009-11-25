@@ -1,2 +1,4 @@
-gherkin_lexer.bundle
-gherkin.jar
+*.bundle
+*.dll
+*.so
+*.jar

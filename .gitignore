@@ -3,6 +3,5 @@
 coverage
 rdoc
 pkg
-*.dot
-*.png
-*.so
+ext
+tmp
