@@ -13,7 +13,7 @@ module PrettyPlease
   end
 end
 
-World(PrettyPlease  )
+World(PrettyPlease)
 
 Given /^I have Cucumber's home dir defined in CUCUMBER_HOME$/ do
   @cucumber_home = ENV['CUCUMBER_HOME']
