@@ -17,6 +17,24 @@ rake spec cucumber
 
 rake clobber
 
+== Release process
+
+(We'll put this in a release.sh later)
+
+rvm jruby
+rake clobber ragel compile spec cucumber
+rvm 1.9
+rake clobber ragel compile spec cucumber
+rvm 1.8.7
+rake clobber ragel compile spec cucumber
+rake release
+rvm jruby
+rake gemspec compile build
+gem push pkg/gherkin-0.0.3-universal-java-1.5.gem
+
+TODO: Also build windows gem with dll using rake-compiler. MinGW gem can be done on OS X/Linux, but
+the one for the old Ruby one-click installers must be built with Visual Studio/nmake.
+
 == Notes
 
 Ragel supports Ruby, but it's much slower than C. The ruby target will be used for development.
