@@ -93,22 +93,23 @@ class Benchmarker
   def run_tt
     require 'cucumber'
     # Using Cucumber's Treetop lexer, but never calling #build to build the AST
-    lexer = Cucumber::Parser::NaturalLanguage.new(nil, 'en').lexer
+    lexer = Cucumber::Parser::NaturalLanguage.new(nil, 'en').parser
     @features.each do |file|
       source = IO.read(file)
       parse_tree = lexer.parse(source)
       if parse_tree.nil?
-        raise Cucumber::Lexer::SyntaxError.new(lexer, file, 0)
+        raise Cucumber::Parser::SyntaxError.new(lexer, file, 0)
       end
     end
   end
 
   def run_rb_gherkin    
     require 'gherkin'
+    require 'gherkin/rb_lexer'
     require 'null_listener'
-    listener = NullListener.new
     @features.each do |feature|
-      lexer = Gherkin::Feature.new('en', listener)
+      parser = Gherkin::Parser.new(NullListener.new, true, "root")
+      lexer = Gherkin::RbLexer['en'].new(parser)
       lexer.scan(File.read(feature))
     end
   end
@@ -116,9 +117,9 @@ class Benchmarker
   def run_c_gherkin    
     require 'gherkin'
     require 'null_listener'
-    listener = NullListener.new
-    @features.each_with_index do |feature, idx|
-      lexer = Gherkin::Feature.new('Native', listener)
+    @features.each do |feature|
+      parser = Gherkin::Parser.new(NullListener.new, true, "root")
+      lexer = Gherkin::CLexer['en'].new(parser)
       lexer.scan(File.read(feature))
     end
   end

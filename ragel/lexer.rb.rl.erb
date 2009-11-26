@@ -1,12 +1,9 @@
+require 'gherkin/core_ext/array'
+
 module Gherkin
   module RbLexer
     class <%= @i18n.capitalize %> #:nodoc:
       %%{
-        # patterns:
-        # * data[start...end].pack("c*").strip_of_some_sort
-        # * changing the end point of the range according to next_keyword_start
-        # * methods taking the machine state because Ragel doesn't seem to know about ivars
- 
         machine lexer;
  
         action begin_content {
@@ -24,7 +21,7 @@ module Gherkin
         }
 
         action store_pystring_content {
-          con = unindent(@start_col, data[@content_start...@next_keyword_start-1].pack("c*").sub(/(\r?\n)?( )*\Z/, ''))
+          con = unindent(@start_col, data[@content_start...@next_keyword_start-1].utf8_pack("c*").sub(/(\r?\n)?( )*\Z/, ''))
           @listener.py_string(con, @current_line) 
         }
  
@@ -59,17 +56,17 @@ module Gherkin
         }
 
         action store_step_content {
-          con = data[@content_start...p].pack("c*").strip
+          con = data[@content_start...p].utf8_pack("c*").strip
           @listener.step(@keyword, con, @current_line)
         }
  
         action store_comment_content {
-          con = data[@content_start...p].pack("c*").strip
+          con = data[@content_start...p].utf8_pack("c*").strip
           @listener.comment(con, @line_number)
         }
  
         action store_tag_content {
-          con = data[@content_start...p].pack("c*").strip
+          con = data[@content_start...p].utf8_pack("c*").strip
           @listener.tag(con, @current_line)
         }
  
@@ -86,7 +83,7 @@ module Gherkin
         }
  
         action end_keyword {
-          @keyword = data[@keyword_start...p].pack("c*").sub(/:$/,'').strip
+          @keyword = data[@keyword_start...p].utf8_pack("c*").sub(/:$/,'').strip
           @keyword_start = nil
         }
  
@@ -109,7 +106,7 @@ module Gherkin
         }
 
         action store_cell_content {
-          con = data[@content_start...p].pack("c*").strip
+          con = data[@content_start...p].utf8_pack("c*").strip
           current_row << con
         }
 
@@ -159,13 +156,13 @@ module Gherkin
  
       def store_keyword_content(event, data, p, eof)
         end_point = (!@next_keyword_start or (p == eof)) ? p : @next_keyword_start
-        con = yield data[@content_start...end_point].pack("c*")
+        con = yield data[@content_start...end_point].utf8_pack("c*")
         @listener.send(event, @keyword, con, @current_line)
       end
       
       def current_line_content(data, p)
         rest = data[@last_newline..-1]
-        rest[0..rest.index(10)||-1].pack("c*").strip
+        rest[0..rest.index(10)||-1].utf8_pack("c*").strip
       end
     end
   end

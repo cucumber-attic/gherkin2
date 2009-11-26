@@ -92,7 +92,8 @@ YAML.load_file(File.dirname(__FILE__) + '/../lib/gherkin/i18n.yml').each do |i18
       end
     end
     
-    desc "Emit all ruby ragel parsers"
     task :rb => "rb:#{i18n}"
   end
 end
+
+Rake::Task["ragel:rb"].add_description "Emit all ruby ragel parsers"
