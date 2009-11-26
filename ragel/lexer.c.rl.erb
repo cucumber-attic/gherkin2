@@ -5,6 +5,18 @@
 #include <stddef.h>
 #endif
 
+#ifdef HAVE_RUBY_ENCODING_H
+#include <ruby/encoding.h>
+#define ENCODED_STR_NEW(ptr, len) \
+    rb_enc_str_new(ptr, len, rb_utf8_encoding()); \
+
+#else
+
+#define ENCODED_STR_NEW(ptr, len) \
+    rb_str_new(ptr, len); \
+
+#endif
+
 #ifndef RSTRING_PTR
 #define RSTRING_PTR(s) (RSTRING(s)->ptr)
 #endif
@@ -160,7 +172,7 @@ static VALUE rb_eGherkinLexerError;
 
   action store_cell_content {
     VALUE con = Qnil;
-    con = rb_str_new(PTR_TO(content_start), LEN(content_start, p));
+    con = ENCODED_STR_NEW(PTR_TO(content_start), LEN(content_start, p));
     rb_funcall(con, rb_intern("strip!"), 0);
 
     rb_ary_push(current_row, con);
@@ -251,8 +263,8 @@ store_kw_con(VALUE listener, const char * event_name,
              int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
-  kw = rb_str_new(keyword_at, keyword_length);
-  con = rb_str_new(at, length);
+  kw = ENCODED_STR_NEW(keyword_at, keyword_length);
+  con = ENCODED_STR_NEW(at, length);
   con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(kw, rb_intern("strip!"), 0);
@@ -264,7 +276,7 @@ store_attr(VALUE listener, const char * attr_type,
            const char * at, size_t length, 
            int line)
 {
-  VALUE val = rb_str_new(at, length);
+  VALUE val = ENCODED_STR_NEW(at, length);
   rb_funcall(listener, rb_intern(attr_type), 2, val, INT2FIX(line));
 }
 
@@ -274,7 +286,7 @@ store_pystring_content(VALUE listener,
           const char *at, size_t length, 
           int current_line)
 {
-  VALUE con = rb_str_new(at, length);
+  VALUE con = ENCODED_STR_NEW(at, length);
   // Gherkin will crash gracefully if the string representation of start_col pushes the pattern past 64 characters
   char pat[32]; 
   snprintf(pat, 32, "^ {0,%d}", start_col); 
