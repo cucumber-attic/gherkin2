@@ -35,6 +35,11 @@ gem push pkg/gherkin-0.0.3-universal-java-1.5.gem
 TODO: Also build windows gem with dll using rake-compiler. MinGW gem can be done on OS X/Linux, but
 the one for the old Ruby one-click installers must be built with Visual Studio/nmake.
 
+== Build windows gems on OS X
+
+* http://www.copiousfreetime.org/articles/2008/10/12/building-gems-for-windows.html
+* rake-compiler docs
+
 == Notes
 
 Ragel supports Ruby, but it's much slower than C. The ruby target will be used for development.
