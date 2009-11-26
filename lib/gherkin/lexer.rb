@@ -14,10 +14,8 @@ module Gherkin
           else
             begin
               c[i18n_lang]
-            rescue NameError => e
+            rescue NameError, LoadError => e
               warn("WARNING: #{e.message}. Reverting to Ruby lexer")
-              rb[i18n_lang]
-            rescue LoadError
               rb[i18n_lang]
             end
           end
