@@ -5,16 +5,17 @@
 #include <stddef.h>
 #endif
 
+#ifdef HAVE_RUBY_RE_H
+#include <ruby/re.h>
+#endif
+
 #ifdef HAVE_RUBY_ENCODING_H
 #include <ruby/encoding.h>
 #define ENCODED_STR_NEW(ptr, len) \
-    rb_enc_str_new(ptr, len, rb_utf8_encoding()); \
-
+    rb_enc_str_new(ptr, len, rb_utf8_encoding());
 #else
-
 #define ENCODED_STR_NEW(ptr, len) \
-    rb_str_new(ptr, len); \
-
+    rb_str_new(ptr, len); 
 #endif
 
 #ifndef RSTRING_PTR
@@ -287,7 +288,7 @@ store_pystring_content(VALUE listener,
           int current_line)
 {
   VALUE con = ENCODED_STR_NEW(at, length);
-  // Gherkin will crash gracefully if the string representation of start_col pushes the pattern past 64 characters
+  // Gherkin will crash gracefully if the string representation of start_col pushes the pattern past 32 characters
   char pat[32]; 
   snprintf(pat, 32, "^ {0,%d}", start_col); 
   VALUE re = rb_reg_regcomp(rb_str_new2(pat));
