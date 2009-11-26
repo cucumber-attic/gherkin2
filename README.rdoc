@@ -22,11 +22,11 @@ rake clobber
 (We'll put this in a release.sh later)
 
 rvm jruby
-rake clobber ragel compile spec cucumber
+rake clobber compile spec cucumber
 rvm 1.9
-rake clobber ragel compile spec cucumber
+rake clobber compile spec cucumber
 rvm 1.8.7
-rake clobber ragel compile spec cucumber
+rake clobber compile spec cucumber
 rake release
 rvm jruby
 rake gemspec compile build
