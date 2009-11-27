@@ -10,12 +10,5 @@ Feature: Pretty printer
     # two files that were not identical are written to p1.feature
     # and p2.feature. Do a diff -u p1.feature p2.feature
     #
-    # On Both C and Java we get an extra/missing empty line 
-    # in some pystrings.
-    #
-    # Both need to be fixed so we can have a test suite that
-    # verifies consistent parsing and prettifying of lots ot
-    # features.
-    #
     Then the following files should have errors:
       | Path | Error |
