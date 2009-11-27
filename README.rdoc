@@ -31,6 +31,7 @@ rake release
 rvm jruby
 rake gemspec compile build
 gem push pkg/gherkin-0.0.3-universal-java-1.5.gem
+git checkout .
 
 TODO: Also build windows gem with dll using rake-compiler. MinGW gem can be done on OS X/Linux, but
 the one for the old Ruby one-click installers must be built with Visual Studio/nmake.

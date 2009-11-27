@@ -19,7 +19,7 @@ begin
     gem.executables = ["gherkin"]
     gem.add_development_dependency "rspec", "1.2.9"
     gem.add_development_dependency "cucumber", "0.4.4"
-    gem.add_development_dependency "rake-compiler", "0.6.0"
+    gem.add_development_dependency "rake-compiler", "0.6.0" unless JRUBY
     
     # Jeweler only includes files in git by default. Add the generated ones.
     gem.files += FileList['lib/gherkin/rb_lexer/*.rb']
