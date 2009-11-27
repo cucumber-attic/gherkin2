@@ -72,6 +72,7 @@ public class <%= @i18n.capitalize %> implements Lexer {
 
     action store_comment_content {
       listener.comment(substring(data, contentStart, p).trim(), lineNumber);
+      keywordStart = -1;
     }
 
     action store_tag_content {
