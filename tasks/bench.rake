@@ -74,6 +74,7 @@ class Benchmarker
   def report_all 
     Benchmark.bmbm do |x|
       x.report("c_gherkin:") { run_c_gherkin }
+      x.report("c_gherkin_no_parser:") { run_c_gherkin_no_parser }
       x.report("rb_gherkin:") { run_rb_gherkin }
       x.report("cucumber:") { run_cucumber }
       x.report("tt:") { run_tt }
@@ -114,12 +115,21 @@ class Benchmarker
     end
   end
 
-  def run_c_gherkin    
+  def run_c_gherkin
     require 'gherkin'
     require 'null_listener'
     @features.each do |feature|
       parser = Gherkin::Parser.new(NullListener.new, true, "root")
       lexer = Gherkin::CLexer['en'].new(parser)
+      lexer.scan(File.read(feature))
+    end
+  end
+
+  def run_c_gherkin_no_parser
+    require 'gherkin'
+    require 'null_listener'
+    @features.each do |feature|
+      lexer = Gherkin::CLexer['en'].new(NullListener.new)
       lexer.scan(File.read(feature))
     end
   end
@@ -145,22 +155,28 @@ namespace :bench do
     benchmarker.report("cucumber")
   end
   
-  desc "Benchmark the Treetop lexer with the features in tasks/bench/generated"
+  desc "Benchmark the Treetop parser with the features in tasks/bench/generated"
   task :tt do
     benchmarker = Benchmarker.new
     benchmarker.report("tt")
   end
 
-  desc "Benchmark the Ruby Gherkin lexer with the features in tasks/bench/generated"
+  desc "Benchmark the Ruby Gherkin lexer+parser with the features in tasks/bench/generated"
   task :rb_gherkin do
     benchmarker = Benchmarker.new
     benchmarker.report("rb_gherkin")
   end
 
-  desc "Benchmark the C Gherkin lexer with the features in tasks/bench/generated"
+  desc "Benchmark the C Gherkin lexer+parser with the features in tasks/bench/generated"
   task :c_gherkin do
     benchmarker = Benchmarker.new
     benchmarker.report("c_gherkin")
+  end
+
+  desc "Benchmark the C Gherkin lexer (no parser) with the features in tasks/bench/generated"
+  task :c_gherkin_no_parser do
+    benchmarker = Benchmarker.new
+    benchmarker.report("c_gherkin_no_parser")
   end
 
   desc "Show basic statistics about the features in tasks/bench/generated"
