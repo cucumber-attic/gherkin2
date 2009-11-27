@@ -128,6 +128,7 @@ static VALUE rb_eGherkinLexerError;
   
   action store_comment_content {
     STORE_ATTR(comment)
+    lexer->mark = 0;
   }
   
   action store_tag_content {

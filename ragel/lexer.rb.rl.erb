@@ -63,6 +63,7 @@ module Gherkin
         action store_comment_content {
           con = data[@content_start...p].utf8_pack("c*").strip
           @listener.comment(con, @line_number)
+          @keyword_start = nil
         }
  
         action store_tag_content {
