@@ -378,9 +378,9 @@ Given I am a step
           scan_file("complex.feature")
           @listener.to_sexp.should == [
             [:comment, "#Comment on line 1", 1],
-            [:tag, "tag1", 2],
-            [:tag, "tag2", 2],
-            [:comment, "#Comment on line 3", 3],
+            [:comment, "#Comment on line 2", 2],
+            [:tag, "tag1", 3],
+            [:tag, "tag2", 3],
             [:feature, "Feature", "Feature Text\nIn order to test multiline forms\nAs a ragel writer\nI need to check for complex combinations", 4],
             [:comment, "#Comment on line 9", 9],
             [:comment, "#Comment on line 11", 11],
