@@ -69,6 +69,7 @@ module Gherkin
         action store_tag_content {
           con = data[@content_start...p].utf8_pack("c*").strip
           @listener.tag(con, @current_line)
+          @keyword_start = nil
         }
  
         action inc_line_number {

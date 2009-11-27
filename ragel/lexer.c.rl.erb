@@ -133,6 +133,7 @@ static VALUE rb_eGherkinLexerError;
   
   action store_tag_content {
     STORE_ATTR(tag)
+    lexer->mark = 0;
   }
   
   action inc_line_number {

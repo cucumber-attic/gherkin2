@@ -77,6 +77,7 @@ public class <%= @i18n.capitalize %> implements Lexer {
 
     action store_tag_content {
       listener.tag(substring(data, contentStart, p).trim(), currentLine);
+      keywordStart = -1;
     }
 
     action inc_line_number {
