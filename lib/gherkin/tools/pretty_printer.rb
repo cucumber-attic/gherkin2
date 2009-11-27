@@ -53,9 +53,7 @@ module Gherkin
       end
 
       def py_string(string, line)
-        @io.puts '      """'
-        @io.puts string.gsub(/^/, '      ')
-        @io.puts '      """'
+        @io.puts "      \"\"\"\n" + string.gsub(/^/, '      ') + "\n      \"\"\""
       end
 
       def syntax_error(state, event, legal_events, line)

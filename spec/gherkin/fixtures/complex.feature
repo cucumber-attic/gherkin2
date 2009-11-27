@@ -1,6 +1,6 @@
 #Comment on line 1
+#Comment on line 2
 @tag1 @tag2
-#Comment on line 3
 Feature: Feature Text
   In order to test multiline forms
   As a ragel writer

@@ -128,10 +128,12 @@ static VALUE rb_eGherkinLexerError;
   
   action store_comment_content {
     STORE_ATTR(comment)
+    lexer->mark = 0;
   }
   
   action store_tag_content {
     STORE_ATTR(tag)
+    lexer->mark = 0;
   }
   
   action inc_line_number {
@@ -344,9 +346,10 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
   lexer_state *lexer = NULL;
   DATA_GET(self, lexer_state, lexer);
 
-  rb_str_append(input, rb_str_new2("\n%_FEATURE_END_%"));
-  char *data = RSTRING_PTR(input);
-  long len = RSTRING_LEN(input);
+  VALUE input_copy = rb_str_dup(input);
+  rb_str_append(input_copy, rb_str_new2("\n%_FEATURE_END_%"));
+  char *data = RSTRING_PTR(input_copy);
+  long len = RSTRING_LEN(input_copy);
  
   if (len == 0) { 
     rb_raise(rb_eGherkinLexerError, "No content to lex.");
