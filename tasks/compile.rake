@@ -23,7 +23,8 @@ YAML.load_file(File.dirname(__FILE__) + '/../lib/gherkin/i18n.yml').each do |i18
   task :jar     => java.target
   task :jar     => rb.target
 
-  if defined?(Rake::ExtensionTask)
+  begin
+    require 'rake/extensiontask'
     c = RagelTask.new('c', i18n, keywords)
 
     extconf = "ext/gherkin_lexer_#{i18n}/extconf.rb"
@@ -55,7 +56,7 @@ EOF
     Rake::Task["compile"].prerequisites.unshift(extconf)
     Rake::Task["compile"].prerequisites.unshift(c.target)
     Rake::Task["compile"].prerequisites.unshift(rb.target)
-  else
+  rescue LoadError
     unless defined?($c_warned)
       warn "WARNING: Rake::ExtensionTask not installed. Skipping C compilation." 
       $c_warned = true
