@@ -107,6 +107,18 @@ EOS
         @listener.should_receive(:py_string).with("  Line one", 1)
         @lexer.scan(str)
       end
+
+      it "should preserve the last newline(s) at the end of a py_string" do
+str = <<EOS
+     """
+     PyString text
+
+
+     """
+EOS
+        @listener.should_receive(:py_string).with("PyString text\n\n",1)
+        @lexer.scan(str)
+      end        
     end
   end
 end

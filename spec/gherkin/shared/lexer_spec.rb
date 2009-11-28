@@ -362,15 +362,28 @@ Given I am a step
           ]
         end        
       end
-   
+
+      describe "Comment or tag between Feature elements where previous narrative starts with same letter as a keyword" do
+        it "should lex this feature properly" do
+          scan_file("1.feature")
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "Logging in\nSo that I can be myself", 1],
+            [:comment, "# Comment", 3],
+            [:scenario, "Scenario", "Anonymous user can get a login form.\nScenery here", 4],
+            [:tag, "tag", 7],
+            [:scenario, "Scenario", "Another one", 8]
+          ]
+        end
+      end   
+
       describe "A complex feature with tags, comments, multiple scenarios, and multiple steps and tables" do
         it "should find things in the right order" do
           scan_file("complex.feature")
           @listener.to_sexp.should == [
             [:comment, "#Comment on line 1", 1],
-            [:tag, "tag1", 2],
-            [:tag, "tag2", 2],
-            [:comment, "#Comment on line 3", 3],
+            [:comment, "#Comment on line 2", 2],
+            [:tag, "tag1", 3],
+            [:tag, "tag2", 3],
             [:feature, "Feature", "Feature Text\nIn order to test multiline forms\nAs a ragel writer\nI need to check for complex combinations", 4],
             [:comment, "#Comment on line 9", 9],
             [:comment, "#Comment on line 11", 11],
