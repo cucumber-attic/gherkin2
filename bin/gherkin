@@ -4,9 +4,7 @@ $:.unshift(File.dirname(__FILE__) + '/../lib') unless $:.include?(File.dirname(_
 require 'gherkin'
 require 'gherkin/tools/pretty_printer'
 
-ARGV.each do |f|
-  listener = Gherkin::Tools::PrettyPrinter.new(STDOUT)
-  parser = Gherkin::Parser.new(listener, true) # We could skip the parser here, if we don't want to verify well-formedness
-  lexer = Gherkin::I18nLexer.new(parser)
-  lexer.scan(IO.read(f))
-end
+listener = Gherkin::Tools::PrettyPrinter.new(STDOUT)
+parser = Gherkin::Parser.new(listener, true) # We could skip the parser here, if we don't want to verify well-formedness
+lexer = Gherkin::I18nLexer.new(parser)
+lexer.scan(IO.read(ARGV[0]))
