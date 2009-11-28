@@ -42,6 +42,10 @@ EOF
     end
 
     Rake::ExtensionTask.new("gherkin_lexer_#{i18n}") do |ext|
+      if ENV['RUBY_CC_VERSION']
+        ext.cross_compile = true
+        ext.cross_platform = 'i386-mingw32'
+      end
     end
 
     task :compile => c.target

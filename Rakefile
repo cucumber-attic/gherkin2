@@ -4,8 +4,6 @@ require 'rubygems'
 require 'rake'
 require 'rake/clean'
 
-WINDOWS = Config::CONFIG['host_os'] =~ /mswin|mingw/
-
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
@@ -20,18 +18,21 @@ begin
     gem.add_development_dependency "cucumber", "0.4.4"
     gem.add_development_dependency "rake-compiler", "0.6.0" unless defined?(JRUBY_VERSION)
     
-    # Jeweler only includes files in git by default. Add the generated ones.
-    gem.files += FileList['lib/gherkin/rb_lexer/*.rb']
-
-    if(defined?(JRUBY_VERSION))
-      gem.platform = Gem::Platform::CURRENT
+    case ENV['PLATFORM']
+    when 'universal-java-1.5'
+      gem.platform = 'universal-java-1.5'
       gem.files += FileList['lib/gherkin.jar']
       gem.extensions = []
-    elsif(WINDOWS)
-      gem.platform = Gem::Platform::CURRENT
-      gem.files += FileList['lib/*.dll']
+    when 'i386-mswin32'
+      gem.platform = 'i386-mswin32'
+      gem.files += FileList['lib/*.so']
+      gem.extensions = []
+    when 'i386-mingw32'
+      gem.platform = 'i386-mingw32'
+      gem.files += FileList['lib/*.so']
       gem.extensions = []
     else
+      gem.files += FileList['lib/gherkin/rb_lexer/*.rb']
       gem.files += FileList['ext/**/*.c']
       gem.extensions = FileList['ext/**/extconf.rb']
     end

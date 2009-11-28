@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gherkin}
-  s.version = "0.0.3"
+  s.version = "0.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
-  s.date = %q{2009-11-25}
+  s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
+  s.date = %q{2009-11-28}
   s.default_executable = %q{gherkin}
   s.description = %q{A fast Gherkin lexer in Ragel}
   s.email = %q{cukes@googlegroups.com}
@@ -34,7 +34,6 @@ Gem::Specification.new do |s|
      "ext/gherkin_lexer_cy/gherkin_lexer_cy.c",
      "ext/gherkin_lexer_da/gherkin_lexer_da.c",
      "ext/gherkin_lexer_de/gherkin_lexer_de.c",
-     "ext/gherkin_lexer_en/extconf.rb",
      "ext/gherkin_lexer_en/gherkin_lexer_en.c",
      "ext/gherkin_lexer_enau/gherkin_lexer_enau.c",
      "ext/gherkin_lexer_enlol/gherkin_lexer_enlol.c",
@@ -91,6 +90,7 @@ Gem::Specification.new do |s|
      "lib/.gitignore",
      "lib/gherkin.rb",
      "lib/gherkin/c_lexer.rb",
+     "lib/gherkin/core_ext/array.rb",
      "lib/gherkin/i18n.yml",
      "lib/gherkin/i18n_lexer.rb",
      "lib/gherkin/java_lexer.rb",
@@ -144,12 +144,14 @@ Gem::Specification.new do |s|
      "lib/gherkin/rb_lexer/zhTW.rb",
      "lib/gherkin/rb_parser.rb",
      "lib/gherkin/tools/pretty_printer.rb",
+     "nativegems.sh",
      "ragel/i18n/.gitignore",
      "ragel/lexer.c.rl.erb",
      "ragel/lexer.java.rl.erb",
      "ragel/lexer.rb.rl.erb",
      "ragel/lexer_common.rl.erb",
      "spec/gherkin/c_lexer_spec.rb",
+     "spec/gherkin/fixtures/1.feature",
      "spec/gherkin/fixtures/complex.feature",
      "spec/gherkin/fixtures/i18n_fr.feature",
      "spec/gherkin/fixtures/i18n_no.feature",
@@ -173,7 +175,7 @@ Gem::Specification.new do |s|
      "tasks/bench/null_listener.rb",
      "tasks/compile.rake",
      "tasks/cucumber.rake",
-     "tasks/ragel.rake",
+     "tasks/ragel_task.rb",
      "tasks/rdoc.rake",
      "tasks/rspec.rake"
   ]
