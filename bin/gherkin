@@ -7,6 +7,6 @@ require 'gherkin/tools/pretty_printer'
 ARGV.each do |f|
   listener = Gherkin::Tools::PrettyPrinter.new(STDOUT)
   parser = Gherkin::Parser.new(listener, true) # We could skip the parser here, if we don't want to verify well-formedness
-  lexer = Gherkin::Lexer['en'].new(parser)
+  lexer = Gherkin::I18nLexer.new(parser)
   lexer.scan(IO.read(f))
 end
