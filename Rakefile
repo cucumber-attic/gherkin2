@@ -4,7 +4,6 @@ require 'rubygems'
 require 'rake'
 require 'rake/clean'
 
-JRUBY   = defined?(JRUBY_VERSION)
 WINDOWS = Config::CONFIG['host_os'] =~ /mswin|mingw/
 
 begin
@@ -19,12 +18,12 @@ begin
     gem.executables = ["gherkin"]
     gem.add_development_dependency "rspec", "1.2.9"
     gem.add_development_dependency "cucumber", "0.4.4"
-    gem.add_development_dependency "rake-compiler", "0.6.0" unless JRUBY
+    gem.add_development_dependency "rake-compiler", "0.6.0" unless defined?(JRUBY_VERSION)
     
     # Jeweler only includes files in git by default. Add the generated ones.
     gem.files += FileList['lib/gherkin/rb_lexer/*.rb']
 
-    if(JRUBY)
+    if(defined?(JRUBY_VERSION))
       gem.platform = Gem::Platform::CURRENT
       gem.files += FileList['lib/gherkin.jar']
       gem.extensions = []
@@ -46,4 +45,4 @@ end
 
 Dir['tasks/**/*.rake'].each { |rake| load rake }
 
-task :default => [:spec, :cucumber]
+task :default => [:jar, :compile, :spec, :cucumber]
