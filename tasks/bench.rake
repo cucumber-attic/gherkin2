@@ -73,8 +73,8 @@ class Benchmarker
   
   def report_all 
     Benchmark.bmbm do |x|
-      x.report("c_gherkin:") { run_c_gherkin }
-      x.report("c_gherkin_no_parser:") { run_c_gherkin_no_parser }
+      x.report("native_gherkin:") { run_native_gherkin }
+      x.report("native_gherkin_no_parser:") { run_native_gherkin_no_parser }
       x.report("rb_gherkin:") { run_rb_gherkin }
       x.report("cucumber:") { run_cucumber }
       x.report("tt:") { run_tt }
@@ -115,21 +115,21 @@ class Benchmarker
     end
   end
 
-  def run_c_gherkin
+  def run_native_gherkin
     require 'gherkin'
     require 'null_listener'
     @features.each do |feature|
       parser = Gherkin::Parser.new(NullListener.new, true, "root")
-      lexer = Gherkin::CLexer['en'].new(parser)
+      lexer = Gherkin::Lexer['en'].new(parser)
       lexer.scan(File.read(feature))
     end
   end
 
-  def run_c_gherkin_no_parser
+  def run_native_gherkin_no_parser
     require 'gherkin'
     require 'null_listener'
     @features.each do |feature|
-      lexer = Gherkin::CLexer['en'].new(NullListener.new)
+      lexer = Gherkin::Lexer['en'].new(NullListener.new)
       lexer.scan(File.read(feature))
     end
   end
@@ -167,16 +167,16 @@ namespace :bench do
     benchmarker.report("rb_gherkin")
   end
 
-  desc "Benchmark the C Gherkin lexer+parser with the features in tasks/bench/generated"
-  task :c_gherkin do
+  desc "Benchmark the ntive Gherkin lexer+parser with the features in tasks/bench/generated"
+  task :native_gherkin do
     benchmarker = Benchmarker.new
-    benchmarker.report("c_gherkin")
+    benchmarker.report("native_gherkin")
   end
 
-  desc "Benchmark the C Gherkin lexer (no parser) with the features in tasks/bench/generated"
-  task :c_gherkin_no_parser do
+  desc "Benchmark the native Gherkin lexer (no parser) with the features in tasks/bench/generated"
+  task :native_gherkin_no_parser do
     benchmarker = Benchmarker.new
-    benchmarker.report("c_gherkin_no_parser")
+    benchmarker.report("native_gherkin_no_parser")
   end
 
   desc "Show basic statistics about the features in tasks/bench/generated"
