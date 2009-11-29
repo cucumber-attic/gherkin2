@@ -7,7 +7,7 @@ import gherkin.Lexer;
 import gherkin.Listener;
 import gherkin.LexingError;
 
-public class <%= @i18n.capitalize %> implements Lexer {
+public class <%= @i18n.sanitized_key.capitalize %> implements Lexer {
   %%{
     machine lexer;
     alphtype byte;
@@ -136,12 +136,12 @@ public class <%= @i18n.capitalize %> implements Lexer {
       }
     }
 
-    include lexer_common "lexer_common.<%= @i18n %>.rl"; 
+    include lexer_common "lexer_common.<%= @i18n.sanitized_key %>.rl"; 
   }%%
 
     private final Listener listener;
 
-    public <%= @i18n.capitalize %>(Listener listener) {
+    public <%= @i18n.sanitized_key.capitalize %>(Listener listener) {
         this.listener = listener;
     }
 
