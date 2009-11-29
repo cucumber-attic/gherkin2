@@ -65,6 +65,6 @@ class RagelTask
   end
 
   def ragel_list(keywords)
-    "(#{keywords.map{|keyword| keyword.inspect}.join(' | ')})"
+    "(#{keywords.map{|keyword| %{"#{keyword}"}}.join(' | ')})"
   end
 end
