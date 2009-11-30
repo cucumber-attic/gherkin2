@@ -346,10 +346,14 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
   lexer_state *lexer = NULL;
   DATA_GET(self, lexer_state, lexer);
 
-  VALUE input_copy = rb_str_dup(input);
-  rb_str_append(input_copy, rb_str_new2("\n%_FEATURE_END_%"));
-  char *data = RSTRING_PTR(input_copy);
-  long len = RSTRING_LEN(input_copy);
+  //VALUE input_copy = rb_str_dup(input);
+  //rb_str_append(input_copy, rb_str_new2("\n%_FEATURE_END_%"));
+  //char *data = RSTRING_PTR(input_copy);
+  //long len = RSTRING_LEN(input_copy);
+  
+  rb_str_append(input, rb_str_new2("\n%_FEATURE_END_%"));
+  char *data = RSTRING_PTR(input);
+  long len = RSTRING_LEN(input);
  
   if (len == 0) { 
     rb_raise(rb_eGherkinLexerError, "No content to lex.");

@@ -33,7 +33,7 @@ When /^I parse the prettified representation of each of them$/ do
     begin
 #      announce "========== #{feature}:"
       pretty1 = pretty(IO.read(feature))
-      pretty2 = pretty(pretty1)
+      pretty2 = pretty(pretty1.dup)
       pretty2.should == pretty1
     rescue Spec::Expectations::ExpectationNotMetError => e
       File.open("p1.feature", "w") {|io| io.write(pretty1)}
