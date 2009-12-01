@@ -13,7 +13,7 @@ begin
     gem.email = "cukes@googlegroups.com"
     gem.homepage = "http://github.com/aslakhellesoy/gherkin"
     gem.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
-    gem.executables = ["gherkin"]
+    gem.executables = ["gherkin", "gherkin-purdy"]
     gem.add_development_dependency "rspec", "1.2.9"
     gem.add_development_dependency "cucumber", "0.4.4"
     gem.add_development_dependency "rake-compiler", "0.6.0" unless defined?(JRUBY_VERSION)

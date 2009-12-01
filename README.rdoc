@@ -10,8 +10,7 @@ that makes it possible to plug in a builder that can build an AST.
 
 == Testing
 
-rake ragel
-rake spec cucumber
+rake clean spec cucumber
 
 == Cleaning generated code
 
@@ -20,12 +19,12 @@ rake clobber
 == Release process
 
 Run just "rake clean spec cucumber" for each platform (1.8.6, 1.8.7, 1.9, jruby) to make sure all is green.
-Make sure jruby was run last, so the jar file is left intact.
 
-0) rvm 1.8.7
-1) Bump version in the VERSION file
+1) rvm 1.8.7
+2) Bump version in the VERSION file
+3) rake clean jar compile
 2) rake gemspec
-3) Commit everything
+3) git commit -a -m "Release vX.Y.Z"
 4) rake release
 5) ./nativegems.sh
 6) gem push pkg/... (for each native gem)
