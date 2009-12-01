@@ -1,54 +1,25 @@
 = Gherkin
 
-Fast Gherkin lexer based on Ragel. 
+Fast Gherkin lexer and parser based on Ragel. Gherkin is two things:
 
-Gherkin is the language that has evolved out of the Cucumber project. Cucumber currently uses
-Treetop, which is too slow for larger projects.
+* The language that has evolved out of the Cucumber project.
+* This library
 
-This project will *not* include code to build an AST. Instead, this lexer will have an API
-that makes it possible to plug in a builder that can build an AST.
-
-== Testing
+== Running RSpec and Cucumber tests
 
 rake clean spec cucumber
 
-== Cleaning generated code
-
-rake clobber
-
 == Release process
 
-Run just "rake clean spec cucumber" for each platform (1.8.6, 1.8.7, 1.9, jruby) to make sure all is green.
-
-1) rvm 1.8.7
-2) Bump version in the VERSION file
-3) rake clean jar compile
-2) rake gemspec
-3) git commit -a -m "Release vX.Y.Z"
-4) rake release
-5) ./nativegems.sh
-6) gem push pkg/... (for each native gem)
-
-TODO: Also build windows gem with dll using rake-compiler. MinGW gem can be done on OS X/Linux, but
-the one for the old Ruby one-click installers must be built with Visual Studio/nmake.
-
-== Build windows gems on OS X
-
-* http://www.copiousfreetime.org/articles/2008/10/12/building-gems-for-windows.html
-* rake-compiler docs
-
-== Notes
-
-Ragel supports Ruby, but it's much slower than C. The ruby target will be used for development.
-The final version will use C for MRI and Java for JRuby.
-
-== Ragel links
-
-* http://www.complang.org/ragel/
-* http://dev.sipdoc.net/attachments/2/ragel_talk.pdf 
-* http://lambda-the-ultimate.org/node/1125
-* http://www.zedshaw.com/essays/ragel_state_charts.html
-* http://www.devchix.com/2008/01/13/a-hello-world-for-ruby-on-ragel-60/
+* Run "rake clean spec cucumber" for each platform (1.8.6, 1.8.7, 1.9, jruby) to make sure all is green.
+* rvm 1.8.7
+* Bump version in the VERSION file
+* rake clean jar compile
+* rake gemspec
+* git commit -a -m "Release vX.Y.Z"
+* rake release
+* ./nativegems.sh
+* gem push pkg/... (for each native gem)
 
 == Note on Patches/Pull Requests
  
@@ -57,7 +28,7 @@ The final version will use C for MRI and Java for JRuby.
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
   future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
+* Commit, do not mess with Rakefile, VERSION, or History.txt.
   (if you want to have your own version, that is fine but
    bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.

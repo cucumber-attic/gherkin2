@@ -2,6 +2,7 @@ require File.dirname(__FILE__) + '/ragel_task'
 require 'gherkin/i18n'
 
 CLEAN.include [
+  'pkg', 'tmp',
   '**/*.{o,bundle,jar,so,obj,pdb,lib,def,exp,log}', 'ext',
   'java/target',
   'ragel/i18n/*.rl',
