@@ -1,6 +1,6 @@
 Feature: Native (C/Java) Lexer
 
-  Background:
+  Background: 
     Given a "en", "native" "root" parser
 
   Scenario: Parsing an empty feature
@@ -9,7 +9,7 @@ Feature: Native (C/Java) Lexer
       Feature: blah
       """
     Then there should be no parse errors
-  
+
   Scenario: Parsing a comment
     Given the following text is parsed:
       """

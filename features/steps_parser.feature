@@ -3,9 +3,9 @@ Feature: Gherkin Steps parser
   As a Cucumber developer
   I want a steps parser to make writing compound steps easier
 
-  Background:
+  Background: 
     Given a "en", "ruby" "steps" parser
-    
+
   Scenario: Parsing steps
     Given the following text is parsed:
       """
@@ -23,7 +23,7 @@ Feature: Gherkin Steps parser
         | foo | bar | #{arg} |
       """
     Then there should be no parse errors
-    
+
   Scenario: Trying to parse a full feature with the step parser
     Given the following text is parsed:
       """
@@ -34,7 +34,7 @@ Feature: Gherkin Steps parser
           Then something should happen
       """
     Then there should be parse errors on lines 1 and 2
-    
+
   Scenario: Tags
     Given the following text is parsed:
       """
