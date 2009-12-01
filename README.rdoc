@@ -19,8 +19,10 @@ rake clobber
 
 == Release process
 
-Run just "rake" for each platform (1.8.6, 1.8.7, 1.9, jruby) to make sure all is green.
+Run just "rake clean spec cucumber" for each platform (1.8.6, 1.8.7, 1.9, jruby) to make sure all is green.
+Make sure jruby was run last, so the jar file is left intact.
 
+0) rvm 1.8.7
 1) Bump version in the VERSION file
 2) rake gemspec
 3) Commit everything
