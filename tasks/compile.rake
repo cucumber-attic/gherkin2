@@ -33,6 +33,7 @@ Gherkin::I18n.all.each do |i18n|
       File.open(extconf, "w") do |io|
         io.write(<<-EOF)
 require 'mkmf'
+$CFLAGS << ' -O0 -Wall -Werror'
 dir_config("gherkin_lexer_#{i18n.sanitized_key}")
 have_library("c", "main")
 create_makefile("gherkin_lexer_#{i18n.sanitized_key}")

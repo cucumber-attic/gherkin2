@@ -46,4 +46,6 @@ end
 
 Dir['tasks/**/*.rake'].each { |rake| load rake }
 
-task :default => [:jar, :compile, :spec, :cucumber]
+task :default  => [:spec, :cucumber]
+task :spec     => defined?(JRUBY_VERSION) ? :jar : :compile
+task :cucumber => defined?(JRUBY_VERSION) ? :jar : :compile
