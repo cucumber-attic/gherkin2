@@ -3,9 +3,9 @@ Feature: Gherkin Feature lexer
   In order to make it easy to control the Gherkin syntax
   As a Gherkin developer bent on Gherkin world-domination
   I want a feature lexer that uses a feature parser to
-    make all the syntax decisions for me
+  make all the syntax decisions for me
 
-  Background:
+  Background: 
     Given a "en", "ruby" "root" parser
 
   Scenario: Correctly formed feature
@@ -22,13 +22,13 @@ Feature: Gherkin Feature lexer
         Background: 
           Given I have a transmogrifier
           And I am a member of G.R.O.S.S
-        
+      
         Scenario: Whoozit to whatzit transmogrification
           Given I have a whoozit
           When I put it in the transmogrifier
           And I press the "transmogrify" button
           Then I should have a whatzit
-
+      
         Scenario Outline: Imaginary Beings
           Given I have a <boring being>
           When I transmogrify it with the incantation:
@@ -36,7 +36,7 @@ Feature: Gherkin Feature lexer
           ALAKAZAM!
           \"\"\"
           Then I should have an <exciting being>
-
+      
           Examples:
           | boring being | exciting being |
           | Sparrow      | Alicanto       |
@@ -60,8 +60,8 @@ Feature: Gherkin Feature lexer
           When I read it
           Then I should be amused
       """
-   Then there should be no parse errors
-   
+    Then there should be no parse errors
+
   Scenario: Keyword before feature
     Given the following text is parsed:
       """
@@ -91,7 +91,7 @@ Feature: Gherkin Feature lexer
         Then it shouldn't work
       """
     Then there should be parse errors on lines 5, 10 and 12
-      
+
   Scenario: Tables
     Given the following text is parsed:
       """
@@ -124,48 +124,48 @@ Feature: Gherkin Feature lexer
             \"\"\" # Not interpreted as a pystring, just plain text
             Oh hai
             \"\"\"
-
+      
             La la la
-
+      
             Examples:
             | one | two |
             | foo | bar |
-
+      
             \"\"\"
             Oh Hello
             \"\"\"
- 
+      
             # Body of the scenario outline starts below
             Given <something> 
             And something <else>
- 
+      
             # The real examples table
             Examples: 
             | something | else |
             | orange | apple |
       """
-      Then there should be no parse errors
+    Then there should be no parse errors
 
   Scenario: Scenario Outline with multiple Example groups
     Given the following text is parsed:
       """
       Feature: Outline Sample
-
+      
         Scenario: I have no steps
-
+      
         Scenario Outline: Test state
           Given <state> without a table
           Given <other_state> without a table
-
+      
           Examples: Rainbow colours
-            |  state   | other_state |
-            | missing |  passing|
-            | passing| passing |
-            | failing | passing |
+            | state   | other_state |
+            | missing | passing     |
+            | passing | passing     |
+            | failing | passing     |
           
           Examples: Only passing
-            |  state   | other_state |
-            | passing  | passing |
+            | state   | other_state |
+            | passing | passing     |
       """
     Then there should be no parse errors
 
@@ -175,20 +175,20 @@ Feature: Gherkin Feature lexer
       Feature: Test
         Scenario Outline: with step tables
           Given I have the following fruits in my pantry
-            |    name     | quantity |
-            | cucumbers   |    10    |
-            | strawberrys |    5     |
-            | apricots    |    7     |
-
+            | name        | quantity |
+            | cucumbers   | 10       |
+            | strawberrys | 5        |
+            | apricots    | 7        |
+      
           When I eat <number> <fruits> from the pantry
           Then I should have <left> <fruits> in the pantry
-
+      
           Examples:
-            | number |   fruits   | left |
-            |   2    | cucumbers  |  8   |
-            |   4    | strawberrys|  1   |
-            |   2    | apricots   |  5   |
-
+            | number | fruits      | left |
+            | 2      | cucumbers   | 8    |
+            | 4      | strawberrys | 1    |
+            | 2      | apricots    | 5    |
+      
         Scenario Outline: placeholder in a multiline string
           Given my shopping list
             \"\"\"
@@ -198,9 +198,9 @@ Feature: Gherkin Feature lexer
             \"\"\"
               Must buy some cucumbers
             \"\"\"
-    
+      
           Examples:
-            |  fruits   |
+            | fruits    |
             | cucumbers |
       """
     Then there should be no parse errors

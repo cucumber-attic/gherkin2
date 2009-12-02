@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Gherkin
   module Tools
     class PrettyPrinter
@@ -53,7 +54,7 @@ module Gherkin
       end
 
       def py_string(string, line)
-        @io.puts "      \"\"\"\n" + string.gsub(/^/, '      ') + "\n      \"\"\""
+        @io.puts "      \"\"\"\n" + string.gsub(START, '      ') + "\n      \"\"\""
       end
 
       def syntax_error(state, event, legal_events, line)
@@ -61,10 +62,17 @@ module Gherkin
       end
 
     private
+      if(RUBY_VERSION =~ /^1\.9/)
+        START = /#{"^".encode('UTF-8')}/
+        NL    = Regexp.new("\n".encode('UTF-8'))
+      else
+        START = /^/
+        NL    = /\n/n
+      end
 
       def indent(string, indentation)
         indent = ""
-        string.split(/\n/n).map do |l|
+        string.split(NL).map do |l|
           s = "#{indent}#{l}"
           indent = indentation
           s

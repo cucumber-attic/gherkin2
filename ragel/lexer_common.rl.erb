@@ -2,12 +2,12 @@
   machine lexer_common;
 
   # Language specific
-  I18N_Feature = <%= keywords['feature'] %> >start_keyword %end_keyword; 
-  I18N_Background = <%= keywords['background'] %> >start_keyword %end_keyword;
-  I18N_ScenarioOutline = <%= keywords['scenario_outline'] %> >start_keyword %end_keyword;
-  I18N_Scenario = <%= keywords['scenario'] %> >start_keyword %end_keyword;
-  I18N_Step = (<%= keywords['given'] %> | <%= keywords['when'] %> | <%= keywords['and'] %> | <%= keywords['then'] %> | <%= keywords['but'] %>) >start_keyword %end_keyword;
-  I18N_Examples = <%= keywords['examples'] %> >start_keyword %end_keyword;
+  I18N_Feature = (<%= ragel_list(@i18n.feature_keywords) %> ':') >start_keyword %end_keyword; 
+  I18N_Background = (<%= ragel_list(@i18n.background_keywords) %> ':') >start_keyword %end_keyword;
+  I18N_ScenarioOutline = (<%= ragel_list(@i18n.scenario_outline_keywords) %> ':') >start_keyword %end_keyword;
+  I18N_Scenario = (<%= ragel_list(@i18n.scenario_keywords) %> ':') >start_keyword %end_keyword;
+  I18N_Step = <%= ragel_list(@i18n.step_keywords) %> >start_keyword %end_keyword;
+  I18N_Examples = (<%= ragel_list(@i18n.examples_keywords) %> ':') >start_keyword %end_keyword;
 
   EOF = '%_FEATURE_END_%'; # Explicit EOF added before scanning begins 
   EOL = ('\r'? '\n') @inc_line_number @last_newline;
