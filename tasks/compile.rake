@@ -25,10 +25,10 @@ Gherkin::I18n.all.each do |i18n|
 
   begin
     require 'rake/extensiontask'
+
     c = RagelTask.new('c', i18n)
 
     extconf = "ext/gherkin_lexer_#{i18n.sanitized_key}/extconf.rb"
-
     file extconf do
       FileUtils.mkdir(File.dirname(extconf)) unless File.directory?(File.dirname(extconf))
       File.open(extconf, "w") do |io|
@@ -48,9 +48,6 @@ EOF
         ext.cross_platform = 'i386-mingw32'
       end
     end
-
-    task :compile => c.target
-    task :compile => rb.target
 
     # The way tasks are defined with compile:xxx (but without namespace) in rake-compiler forces us
     # to use these hacks for setting up dependencies. Ugly!
