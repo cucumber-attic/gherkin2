@@ -139,62 +139,62 @@ public class <%= @i18n.sanitized_key.capitalize %> implements Lexer {
     include lexer_common "lexer_common.<%= @i18n.sanitized_key %>.rl"; 
   }%%
 
-    private final Listener listener;
+  private final Listener listener;
 
-    public <%= @i18n.sanitized_key.capitalize %>(Listener listener) {
-        this.listener = listener;
+  public <%= @i18n.sanitized_key.capitalize %>(Listener listener) {
+    this.listener = listener;
+  }
+
+  %% write data noerror;
+
+  public void scan(CharSequence inputSequence) {
+    String input = inputSequence.toString() + "\n%_FEATURE_END_%";
+    byte[] data = input.getBytes();
+    int cs, p = 0, pe = data.length;
+    int eof = pe;
+
+    int lineNumber = 1;
+    int lastNewline = 0;
+
+    int contentStart = -1;
+    int currentLine = -1;
+    int startCol = -1;
+    int nextKeywordStart = -1;
+    int keywordStart = -1;
+    String keyword = null;
+    List<List<String>> rows = null;
+    List<String> currentRow = null;
+
+    %% write init;
+    %% write exec;
+  }
+
+  private String keywordContent(byte[] data, int p, int eof, int nextKeywordStart, int contentStart) {
+    int endPoint = (nextKeywordStart == -1 || (p == eof)) ? p : nextKeywordStart;
+    return substring(data, contentStart, endPoint);
+  }
+
+  private String multilineStrip(String text) {
+    StringBuffer result = new StringBuffer();
+    for(String s : text.split("\n")) {
+      result.append(s.trim()).append("\n");
     }
+    return result.toString().trim();
+  }
 
-    %% write data noerror;
+  private String unindent(int startCol, String text) {
+    return Pattern.compile("^ {0," + startCol + "}", Pattern.MULTILINE).matcher(text).replaceAll("");
+  }
 
-    public void scan(CharSequence inputSequence) {
-        String input = inputSequence.toString() + "\n%_FEATURE_END_%";
-        byte[] data = input.getBytes();
-        int cs, p = 0, pe = data.length;
-        int eof = pe;
+  private String currentLineContent(byte[] data, int lastNewline) {
+    return substring(data, lastNewline, data.length).trim();
+  }
 
-        int lineNumber = 1;
-        int lastNewline = 0;
-
-        int contentStart = -1;
-        int currentLine = -1;
-        int startCol = -1;
-        int nextKeywordStart = -1;
-        int keywordStart = -1;
-        String keyword = null;
-        List<List<String>> rows = null;
-        List<String> currentRow = null;
-
-        %% write init;
-        %% write exec;
+  private String substring(byte[] data, int start, int end) {
+    try {
+      return new String(data, start, end-start, "utf-8");
+    } catch(java.io.UnsupportedEncodingException e) {
+      throw new RuntimeException("Internal error", e);
     }
-
-    private String keywordContent(byte[] data, int p, int eof, int nextKeywordStart, int contentStart) {
-      int endPoint = (nextKeywordStart == -1 || (p == eof)) ? p : nextKeywordStart;
-      return substring(data, contentStart, endPoint);
-    }
-
-    private String multilineStrip(String text) {
-        StringBuffer result = new StringBuffer();
-        for(String s : text.split("\n")) {
-            result.append(s.trim()).append("\n");
-        }
-        return result.toString().trim();
-    }
-
-    private String unindent(int startCol, String text) {
-        return Pattern.compile("^ {0," + startCol + "}", Pattern.MULTILINE).matcher(text).replaceAll("");
-    }
-
-    private String currentLineContent(byte[] data, int lastNewline) {
-        return substring(data, lastNewline, data.length).trim();
-    }
-
-    private String substring(byte[] data, int start, int end) {
-        try {
-            return new String(data, start, end-start, "utf-8");
-        } catch(java.io.UnsupportedEncodingException e) {
-            throw new RuntimeException("Internal error", e);
-        }
-    }
+  }
 }
