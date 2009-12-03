@@ -179,13 +179,6 @@ namespace :bench do
     benchmarker.report("native_gherkin_no_parser")
   end
 
-  desc "Show basic statistics about the features in tasks/bench/generated"
-  task :stats do
-    ["Feature", "Scenario", "Given"].each do |kw|
-      sh "grep #{kw} #{GENERATED_FEATURES}/* | wc -l"
-    end
-  end
-
   desc "Remove all generated features in tasks/bench/generated"
   task :clean do
     rm_f FileList[GENERATED_FEATURES + "/**/*feature"]

@@ -1,7 +1,7 @@
 # encoding: utf-8
 module Gherkin
   module Tools
-    class PrettyPrinter
+    class PrettyListener
       def initialize(io)
         @io = io
       end
