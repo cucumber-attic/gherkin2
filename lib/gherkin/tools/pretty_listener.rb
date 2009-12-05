@@ -38,7 +38,7 @@ module Gherkin
       end
 
       def examples(keyword, name, line)
-        @io.puts "\n  #{keyword}: #{indent(name, '    ')}"
+        @io.puts "\n    #{keyword}: #{indent(name, '    ')}"
       end
 
       def step(keyword, name, line)
