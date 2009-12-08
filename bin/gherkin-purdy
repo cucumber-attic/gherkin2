@@ -3,7 +3,7 @@ $:.unshift(File.dirname(__FILE__) + '/../lib') unless $:.include?(File.dirname(_
 
 require 'stringio'
 require 'gherkin'
-require 'gherkin/tools/pretty_printer'
+require 'gherkin/tools/reformat_listener'
 
 Dir[ARGV[0]].each do |f|
   purdy = StringIO.new

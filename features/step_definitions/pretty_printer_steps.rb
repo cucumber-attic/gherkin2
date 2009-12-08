@@ -1,6 +1,6 @@
 require 'stringio'
 require 'gherkin'
-require 'gherkin/tools/pretty_printer'
+require 'gherkin/tools/reformat_listener'
 
 module PrettyPlease
   def pretty(source)
