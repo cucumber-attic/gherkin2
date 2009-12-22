@@ -1,3 +1,5 @@
+require 'yaml'
+
 module Gherkin
   class I18n
     KEYWORD_KEYS = %w{name native feature background scenario scenario_outline examples given when then and but}
