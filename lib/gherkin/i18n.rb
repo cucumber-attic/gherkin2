@@ -18,12 +18,13 @@ module Gherkin
       end
     end
 
+    attr_reader :key
+
     def initialize(key)
       @key = key
       @keywords = LANGUAGES[key]
       raise "Language not supported: #{key.inspect}" if @key.nil?
       @keywords['grammar_name'] = @keywords['name'].gsub(/\s/, '')
-      @parser = nil
     end
 
     def sanitized_key
@@ -69,6 +70,10 @@ module Gherkin
     def keywords(key, space=false)
       raise "No #{key} in #{@keywords.inspect}" if @keywords[key].nil?
       @keywords[key].split('|').map{|kw| space ? keyword_space(kw) : kw}
+    end
+
+    def adverbs
+      %w{given when then and but}.map{|keyword| @keywords[keyword].split('|').map{|w| w.gsub(/[\s<']/, '')}}.flatten
     end
 
     private
