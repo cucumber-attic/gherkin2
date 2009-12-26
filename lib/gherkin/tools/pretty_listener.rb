@@ -48,8 +48,8 @@ module Gherkin
       def table(rows, line)
         rows = rows.to_a.map {|row| row.to_a} if defined?(JRUBY_VERSION) # Convert ArrayList
         max_lengths =  rows.transpose.map { |col| col.map { |cell| cell.unpack("U*").length }.max }.flatten
-        rows.each do |line|
-          @io.puts '      | ' + line.zip(max_lengths).map { |cell, max_length| cell + ' ' * (max_length-cell.unpack("U*").length) }.join(' | ') + ' |'
+        rows.each do |table_line|
+          @io.puts '      | ' + table_line.zip(max_lengths).map { |cell, max_length| cell + ' ' * (max_length-cell.unpack("U*").length) }.join(' | ') + ' |'
         end
       end
 
