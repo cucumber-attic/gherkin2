@@ -16,7 +16,7 @@ begin
     gem.executables = ["gherkin"]
     gem.add_development_dependency "rspec", ">= 1.2.9"
     gem.add_development_dependency "cucumber", ">= 0.5.1"
-    gem.add_development_dependency "rake-compiler", ">= 0.6.0" unless defined?(JRUBY_VERSION)
+    gem.add_development_dependency "rake-compiler", ">= 0.7.0" unless defined?(JRUBY_VERSION)
     
     case ENV['PLATFORM']
     when 'java'
@@ -40,7 +40,7 @@ rescue LoadError
   warn "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
 
-Dir['tasks/**/*.rake'].each { |rake| load rake }
+Dir['tasks/**/*.rake'].each { |rake| load File.expand_path(rake) }
 
 task :default  => [:spec, :cucumber]
 task :spec     => defined?(JRUBY_VERSION) ? :jar : :compile
