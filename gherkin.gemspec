@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gherkin}
-  s.version = "1.0.1"
+  s.version = "1.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
-  s.date = %q{2009-12-26}
+  s.date = %q{2009-12-30}
   s.default_executable = %q{gherkin}
   s.description = %q{A fast Gherkin lexer/parser based on the Ragel State Machine Compiler.}
   s.email = %q{cukes@googlegroups.com}
@@ -28,7 +28,6 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION.yml",
      "bin/gherkin",
-     "bin/gherkin-purdy",
      "cucumber.yml",
      "ext/gherkin_lexer_ar/gherkin_lexer_ar.c",
      "ext/gherkin_lexer_bg/gherkin_lexer_bg.c",
@@ -93,6 +92,7 @@ Gem::Specification.new do |s|
      "lib/.gitignore",
      "lib/gherkin.rb",
      "lib/gherkin/c_lexer.rb",
+     "lib/gherkin/cli/main.rb",
      "lib/gherkin/core_ext/array.rb",
      "lib/gherkin/i18n.rb",
      "lib/gherkin/i18n.yml",
@@ -147,7 +147,12 @@ Gem::Specification.new do |s|
      "lib/gherkin/rb_lexer/zhCN.rb",
      "lib/gherkin/rb_lexer/zhTW.rb",
      "lib/gherkin/rb_parser.rb",
-     "lib/gherkin/tools/reformat_listener.rb",
+     "lib/gherkin/tools.rb",
+     "lib/gherkin/tools/files.rb",
+     "lib/gherkin/tools/pretty_listener.rb",
+     "lib/gherkin/tools/reformat.rb",
+     "lib/gherkin/tools/stats.rb",
+     "lib/gherkin/tools/stats_listener.rb",
      "nativegems.sh",
      "ragel/i18n/.gitignore",
      "ragel/lexer.c.rl.erb",
@@ -209,18 +214,21 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<trollop>, [">= 1.15"])
       s.add_development_dependency(%q<rspec>, [">= 1.2.9"])
       s.add_development_dependency(%q<cucumber>, [">= 0.5.1"])
-      s.add_development_dependency(%q<rake-compiler>, [">= 0.6.0"])
+      s.add_development_dependency(%q<rake-compiler>, [">= 0.7.0"])
     else
+      s.add_dependency(%q<trollop>, [">= 1.15"])
       s.add_dependency(%q<rspec>, [">= 1.2.9"])
       s.add_dependency(%q<cucumber>, [">= 0.5.1"])
-      s.add_dependency(%q<rake-compiler>, [">= 0.6.0"])
+      s.add_dependency(%q<rake-compiler>, [">= 0.7.0"])
     end
   else
+    s.add_dependency(%q<trollop>, [">= 1.15"])
     s.add_dependency(%q<rspec>, [">= 1.2.9"])
     s.add_dependency(%q<cucumber>, [">= 0.5.1"])
-    s.add_dependency(%q<rake-compiler>, [">= 0.6.0"])
+    s.add_dependency(%q<rake-compiler>, [">= 0.7.0"])
   end
 end
 
