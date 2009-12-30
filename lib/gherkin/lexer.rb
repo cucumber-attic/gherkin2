@@ -15,7 +15,8 @@ module Gherkin
             begin
               c[i18n_lang]
             rescue NameError, LoadError => e
-              warn("WARNING: #{e.message}. Reverting to Ruby lexer")
+              warn("WARNING: #{e.message}. Reverting to Ruby lexer.") unless defined?(@warned)
+              @warned = true
               rb[i18n_lang]
             end
           end

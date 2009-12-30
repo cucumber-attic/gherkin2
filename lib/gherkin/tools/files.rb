@@ -7,6 +7,7 @@ module Gherkin
       include Enumerable
 
       def initialize(paths)
+        raise "Please specify one or more paths" if paths.empty?
         @paths = paths
       end
 

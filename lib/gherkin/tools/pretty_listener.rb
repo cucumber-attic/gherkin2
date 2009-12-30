@@ -4,6 +4,7 @@ module Gherkin
     class PrettyListener
       def initialize(io)
         @io = io
+        @tags = nil
       end
 
       def tag(name, line)

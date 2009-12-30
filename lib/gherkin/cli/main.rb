@@ -21,11 +21,13 @@ module Gherkin
           Tools.const_get(cmd_name.capitalize.to_sym).new(args).run
         rescue NameError
           die("Unknown command #{cmd_name}")
+        rescue => e
+          Trollop::die(e.message)
         end
       end
 
       def self.die(msg)
-        Trollop::die "#{msg}\nusage: gherkin COMMAND [ARGS]\n\nAvailable commands:\n#{Tools::SUB_COMMANDS.join("\n")}\n"
+        Trollop::die("#{msg}\nusage: gherkin COMMAND [ARGS]\nAvailable commands: #{Tools::SUB_COMMANDS.join(' ')}")
       end
     end
   end
