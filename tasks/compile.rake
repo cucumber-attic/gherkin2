@@ -24,6 +24,7 @@ Gherkin::I18n.all.each do |i18n|
   task :jar     => rb.target
 
   begin
+  unless defined?(JRUBY_VERSION)
     require 'rake/extensiontask'
 
     c = RagelTask.new('c', i18n)
@@ -58,6 +59,7 @@ EOF
     Rake::Task["compile"].prerequisites.unshift(extconf)
     Rake::Task["compile"].prerequisites.unshift(c.target)
     Rake::Task["compile"].prerequisites.unshift(rb.target)
+  end
   rescue LoadError
     unless defined?($c_warned)
       warn "WARNING: Rake::ExtensionTask not installed. Skipping C compilation." 

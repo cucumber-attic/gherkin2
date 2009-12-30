@@ -9,11 +9,11 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
-  s.date = %q{2009-12-02}
+  s.date = %q{2009-12-26}
   s.default_executable = %q{gherkin}
-  s.description = %q{A fast Gherkin lexer in Ragel}
+  s.description = %q{A fast Gherkin lexer/parser based on the Ragel State Machine Compiler.}
   s.email = %q{cukes@googlegroups.com}
-  s.executables = ["gherkin", "gherkin-purdy"]
+  s.executables = ["gherkin"]
   s.extensions = ["ext/gherkin_lexer_ar/extconf.rb", "ext/gherkin_lexer_bg/extconf.rb", "ext/gherkin_lexer_cat/extconf.rb", "ext/gherkin_lexer_cs/extconf.rb", "ext/gherkin_lexer_cy/extconf.rb", "ext/gherkin_lexer_da/extconf.rb", "ext/gherkin_lexer_de/extconf.rb", "ext/gherkin_lexer_en/extconf.rb", "ext/gherkin_lexer_enau/extconf.rb", "ext/gherkin_lexer_enlol/extconf.rb", "ext/gherkin_lexer_entx/extconf.rb", "ext/gherkin_lexer_es/extconf.rb", "ext/gherkin_lexer_et/extconf.rb", "ext/gherkin_lexer_fi/extconf.rb", "ext/gherkin_lexer_fr/extconf.rb", "ext/gherkin_lexer_he/extconf.rb", "ext/gherkin_lexer_hr/extconf.rb", "ext/gherkin_lexer_hu/extconf.rb", "ext/gherkin_lexer_id/extconf.rb", "ext/gherkin_lexer_it/extconf.rb", "ext/gherkin_lexer_ja/extconf.rb", "ext/gherkin_lexer_ko/extconf.rb", "ext/gherkin_lexer_lt/extconf.rb", "ext/gherkin_lexer_lv/extconf.rb", "ext/gherkin_lexer_nl/extconf.rb", "ext/gherkin_lexer_no/extconf.rb", "ext/gherkin_lexer_pl/extconf.rb", "ext/gherkin_lexer_pt/extconf.rb", "ext/gherkin_lexer_ro/extconf.rb", "ext/gherkin_lexer_ro2/extconf.rb", "ext/gherkin_lexer_ru/extconf.rb", "ext/gherkin_lexer_se/extconf.rb", "ext/gherkin_lexer_sk/extconf.rb", "ext/gherkin_lexer_sr/extconf.rb", "ext/gherkin_lexer_srLatn/extconf.rb", "ext/gherkin_lexer_tr/extconf.rb", "ext/gherkin_lexer_uz/extconf.rb", "ext/gherkin_lexer_vi/extconf.rb", "ext/gherkin_lexer_zhCN/extconf.rb", "ext/gherkin_lexer_zhTW/extconf.rb"]
   s.extra_rdoc_files = [
     "LICENSE",
@@ -21,6 +21,8 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     ".gitignore",
+     ".mailmap",
+     "History.txt",
      "LICENSE",
      "README.rdoc",
      "Rakefile",
@@ -145,7 +147,7 @@ Gem::Specification.new do |s|
      "lib/gherkin/rb_lexer/zhCN.rb",
      "lib/gherkin/rb_lexer/zhTW.rb",
      "lib/gherkin/rb_parser.rb",
-     "lib/gherkin/tools/pretty_printer.rb",
+     "lib/gherkin/tools/reformat_listener.rb",
      "nativegems.sh",
      "ragel/i18n/.gitignore",
      "ragel/lexer.c.rl.erb",
@@ -161,6 +163,7 @@ Gem::Specification.new do |s|
      "spec/gherkin/fixtures/simple.feature",
      "spec/gherkin/fixtures/simple_with_comments.feature",
      "spec/gherkin/fixtures/simple_with_tags.feature",
+     "spec/gherkin/i18n_lexer_spec.rb",
      "spec/gherkin/i18n_spec.rb",
      "spec/gherkin/java_lexer_spec.rb",
      "spec/gherkin/parser_spec.rb",
@@ -185,9 +188,10 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
-  s.summary = %q{Fast Gherkin lexer}
+  s.summary = %q{Fast Gherkin lexer/parser}
   s.test_files = [
     "spec/gherkin/c_lexer_spec.rb",
+     "spec/gherkin/i18n_lexer_spec.rb",
      "spec/gherkin/i18n_spec.rb",
      "spec/gherkin/java_lexer_spec.rb",
      "spec/gherkin/parser_spec.rb",
@@ -205,18 +209,18 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<rspec>, ["= 1.2.9"])
-      s.add_development_dependency(%q<cucumber>, ["= 0.4.4"])
-      s.add_development_dependency(%q<rake-compiler>, ["= 0.6.0"])
+      s.add_development_dependency(%q<rspec>, [">= 1.2.9"])
+      s.add_development_dependency(%q<cucumber>, [">= 0.5.1"])
+      s.add_development_dependency(%q<rake-compiler>, [">= 0.6.0"])
     else
-      s.add_dependency(%q<rspec>, ["= 1.2.9"])
-      s.add_dependency(%q<cucumber>, ["= 0.4.4"])
-      s.add_dependency(%q<rake-compiler>, ["= 0.6.0"])
+      s.add_dependency(%q<rspec>, [">= 1.2.9"])
+      s.add_dependency(%q<cucumber>, [">= 0.5.1"])
+      s.add_dependency(%q<rake-compiler>, [">= 0.6.0"])
     end
   else
-    s.add_dependency(%q<rspec>, ["= 1.2.9"])
-    s.add_dependency(%q<cucumber>, ["= 0.4.4"])
-    s.add_dependency(%q<rake-compiler>, ["= 0.6.0"])
+    s.add_dependency(%q<rspec>, [">= 1.2.9"])
+    s.add_dependency(%q<cucumber>, [">= 0.5.1"])
+    s.add_dependency(%q<rake-compiler>, [">= 0.6.0"])
   end
 end
 
