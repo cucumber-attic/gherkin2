@@ -23,7 +23,12 @@ module Gherkin
       def scan(file, listener)
         parser = Parser.new(listener, true)
         lexer = I18nLexer.new(parser)
-        lexer.scan(IO.read(file))
+        begin
+          lexer.scan(IO.read(file))
+        rescue => e
+          e.message << " (#{file})"
+          raise e
+        end
       end
     end
   end

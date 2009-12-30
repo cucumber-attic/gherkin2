@@ -5,6 +5,7 @@ module Gherkin
       def initialize(io)
         @io = io
         @tags = nil
+        @comments = nil
       end
 
       def tag(name, line)
@@ -13,37 +14,32 @@ module Gherkin
       end
 
       def comment(content, line)
-        @io.puts content
+        @comments ||= []
+        @comments << content
       end
 
       def feature(keyword, name, line)
-        tags = @tags ? @tags.join(' ') + "\n" : ''
-        @tags = nil
-        @io.puts "#{tags}#{keyword}: #{indent(name, '  ')}"
+        @io.puts "#{grab_comments!('')}#{grab_tags!('')}#{keyword}: #{indent(name, '  ')}"
       end
 
       def background(keyword, name, line)
-        @io.puts "\n  #{keyword}: #{indent(name, '    ')}"
+        @io.puts "\n#{grab_comments!('  ')}  #{keyword}: #{indent(name, '    ')}"
       end
 
       def scenario(keyword, name, line)
-        tags = @tags ? '  ' + @tags.join(' ') + "\n" : ''
-        @tags = nil
-        @io.puts "\n#{tags}  #{keyword}: #{indent(name, '    ')}"
+        @io.puts "\n#{grab_comments!('  ')}#{grab_tags!('  ')}  #{keyword}: #{indent(name, '    ')}"
       end
 
       def scenario_outline(keyword, name, line)
-        tags = @tags ? '  ' + @tags.join(' ') + "\n" : ''
-        @tags = nil
-        @io.puts "\n#{tags}  #{keyword}: #{indent(name, '    ')}"
+        @io.puts "\n#{grab_comments!('  ')}#{grab_tags!('  ')}  #{keyword}: #{indent(name, '    ')}"
       end
 
       def examples(keyword, name, line)
-        @io.puts "\n    #{keyword}: #{indent(name, '    ')}"
+        @io.puts "\n#{grab_comments!('    ')}#{grab_tags!('    ')}    #{keyword}: #{indent(name, '    ')}"
       end
 
       def step(keyword, name, line)
-        @io.puts "    #{keyword} #{indent(name, '    ')}"
+        @io.puts "#{grab_comments!('    ')}    #{keyword} #{indent(name, '    ')}"
       end
 
       def table(rows, line)
@@ -63,6 +59,7 @@ module Gherkin
       end
 
     private
+
       if(RUBY_VERSION =~ /^1\.9/)
         START = /#{"^".encode('UTF-8')}/
         NL    = Regexp.new("\n".encode('UTF-8'))
@@ -78,6 +75,18 @@ module Gherkin
           indent = indentation
           s
         end.join("\n")
+      end
+
+      def grab_tags!(indent)
+        tags = @tags ? indent + @tags.join(' ') + "\n" : ''
+        @tags = nil
+        tags
+      end
+
+      def grab_comments!(indent)
+        comments = @comments ? indent + @comments.join("\n#{indent}") + "\n" : ''
+        @comments = nil
+        comments
       end
     end
   end

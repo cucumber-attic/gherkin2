@@ -1,3 +1,8 @@
+== In Git
+
+== Bugfixes
+* reformat now prints comments, and does it with proper indentation (Aslak Hellesøy)
+
 == 1.0.2 (2009-12-30)
 
 == Bugfixes
