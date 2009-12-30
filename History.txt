@@ -1,0 +1,9 @@
+== 1.0.2 (2009-12-30)
+
+== Bugfixes
+* Build passes on Ruby 1.9.2 (Aslak Hellesøy)
+
+== New features
+* New command line based on trollop. Commands: reformat, stats. (Aslak Hellesøy)
+* I18nLexer#scan sets #language to the I18n for the language scanned (Mike Sassak)
+* I18n#adverbs, brings I18n to parity with Cucumber::Parser::NaturalLanguage (Mike Sassak)
