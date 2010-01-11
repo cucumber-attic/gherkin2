@@ -27,7 +27,8 @@ module Gherkin
       end
 
       def scenario(keyword, name, line)
-        @io.puts "\n#{grab_comments!('  ')}#{grab_tags!('  ')}  #{keyword}: #{indent(name, '    ')}"
+        indent_locations(keyword, name)
+        @io.puts "\n#{grab_comments!('  ')}#{grab_tags!('  ')}  #{keyword}: #{indent(name, '    ')}#{indented_location!}"
       end
 
       def scenario_outline(keyword, name, line)
@@ -39,7 +40,7 @@ module Gherkin
       end
 
       def step(keyword, name, line)
-        @io.puts "#{grab_comments!('    ')}    #{keyword}#{indent(name, '    ')}"
+        @io.puts "#{grab_comments!('    ')}    #{keyword}#{indent(name, '    ')}#{indented_location!}"
       end
 
       def table(rows, line)
@@ -56,6 +57,12 @@ module Gherkin
 
       def syntax_error(state, event, legal_events, line)
         raise "SYNTAX ERROR"
+      end
+
+      # This method is not part of the Gherkin event API. If invoked before a #scenario,
+      # location "comment" lines will be printed.
+      def locations(locations)
+        @locations = locations
       end
 
     private
@@ -87,6 +94,22 @@ module Gherkin
         comments = @comments ? indent + @comments.join("\n#{indent}") + "\n" : ''
         @comments = nil
         comments
+      end
+
+      def indent_locations(container_keyword, container_name)
+        return if @locations.nil?
+        @locations[0][0] = "#{container_keyword}: #{container_name}"
+        @lengths = @locations.transpose[0].map {|line| line.unpack("U*").length}
+        @lengths[0] -= 2
+        @max_length = @lengths.max
+        @indent_index = -1
+      end
+
+      def indented_location!
+        return if @locations.nil?
+        @indent_index += 1
+        indent = @max_length - @lengths[@indent_index]
+        ' ' * indent + ' # ' + @locations[@indent_index][1]
       end
     end
   end
