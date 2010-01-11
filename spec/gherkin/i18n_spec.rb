@@ -18,9 +18,9 @@ module Gherkin
         @listener.to_sexp.should == [
           [:feature, "Egenskap", "i18n support", 1], 
           [:scenario, "Scenario", "Parsing many languages", 3], 
-          [:step, "Gitt", "Gherkin supports many languages", 4],
-          [:step, "Når",  "Norwegian keywords are parsed", 5],
-          [:step, "Så", "they should be recognized", 6]
+          [:step, "Gitt ", "Gherkin supports many languages", 4],
+          [:step, "Når ",  "Norwegian keywords are parsed", 5],
+          [:step, "Så ", "they should be recognized", 6]
         ]
       end
 
@@ -43,11 +43,11 @@ module Gherkin
         @listener.to_sexp.should == [
           [:feature, "Fonctionnalité", "Addition", 1],
           [:scenario_outline, "Plan du scénario", "Addition de produits dérivés", 2],
-          [:step, "Soit", "une calculatrice", 3],
-          [:step, "Etant donné", "qu'on tape <a>", 4],
-          [:step, "Et", "qu'on tape <b>", 5],
+          [:step, "Soit ", "une calculatrice", 3],
+          [:step, "Etant donné ", "qu'on tape <a>", 4],
+          [:step, "Et ", "qu'on tape <b>", 5],
           [:step, "Lorsqu'", "on tape additionner", 6],
-          [:step, "Alors", "le résultat doit être <somme>", 7],
+          [:step, "Alors ", "le résultat doit être <somme>", 7],
           [:examples, "Exemples", "", 9],
           [:table, [["a","b","somme"],["2","2","4"],["2","3","5"]], 10]
         ]

@@ -39,7 +39,7 @@ module Gherkin
       end
 
       def step(keyword, name, line)
-        @io.puts "#{grab_comments!('    ')}    #{keyword} #{indent(name, '    ')}"
+        @io.puts "#{grab_comments!('    ')}    #{keyword}#{indent(name, '    ')}"
       end
 
       def table(rows, line)

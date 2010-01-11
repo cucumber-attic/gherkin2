@@ -272,7 +272,6 @@ store_kw_con(VALUE listener, const char * event_name,
   con = ENCODED_STR_NEW(at, length);
   con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
-  rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(listener, rb_intern(event_name), 3, kw, con, INT2FIX(current_line)); 
 }
 
