@@ -1,6 +1,8 @@
 # encoding: utf-8
 module Gherkin
   module Tools
+    # TODO: Rename to PrettyFormatter - that's what this class *does*
+    # (The fact that it conforms to the Gherkin Listener interface is scondary)
     class PrettyListener
       def initialize(io)
         @io = io
@@ -47,7 +49,6 @@ module Gherkin
         rows = rows.to_a.map {|row| row.to_a} if defined?(JRUBY_VERSION) # Convert ArrayList
         cell_lengths = rows.map { |col| col.map { |cell| cell.unpack("U*").length }}
         max_lengths = cell_lengths.transpose.map { |col_lengths| col_lengths.max }.flatten
-
         rows_to_print.length.times do |n|
           row_to_print = rows_to_print[n]
           i = n + first_row
