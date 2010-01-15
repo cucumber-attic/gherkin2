@@ -43,11 +43,19 @@ module Gherkin
         @io.puts "#{grab_comments!('    ')}    #{keyword}#{indent(name, '    ')}#{indented_location!}"
       end
 
-      def table(rows, line)
+      def table(rows, line, rows_to_print = rows, first_row=0)
         rows = rows.to_a.map {|row| row.to_a} if defined?(JRUBY_VERSION) # Convert ArrayList
-        max_lengths =  rows.transpose.map { |col| col.map { |cell| cell.unpack("U*").length }.max }.flatten
-        rows.each do |table_line|
-          @io.puts '      | ' + table_line.zip(max_lengths).map { |cell, max_length| cell + ' ' * (max_length-cell.unpack("U*").length) }.join(' | ') + ' |'
+        cell_lengths = rows.map { |col| col.map { |cell| cell.unpack("U*").length }}
+        max_lengths = cell_lengths.transpose.map { |col_lengths| col_lengths.max }.flatten
+
+        rows_to_print.length.times do |n|
+          row_to_print = rows_to_print[n]
+          i = n + first_row
+          j = -1
+          @io.puts '      | ' + row_to_print.zip(max_lengths).map { |cell, max_length|
+            j += 1
+            cell + ' ' * (max_length - cell_lengths[i][j])
+          }.join(' | ') + ' |'
         end
       end
 
