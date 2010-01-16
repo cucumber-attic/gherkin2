@@ -1,5 +1,5 @@
 #encoding: utf-8
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require File.dirname(__FILE__) + '/../../spec_helper'
 
 module Gherkin
   module Lexer
@@ -61,7 +61,7 @@ module Gherkin
           @lexer.scan("Background:\nGiven I am a step\n")
           @listener.to_sexp.should == [
             [:background, "Background", "", 1],
-            [:step, "Given", "I am a step", 2]
+            [:step, "Given ", "I am a step", 2]
           ]
         end
         
@@ -82,7 +82,7 @@ Given I am a step})
           @listener.to_sexp.should == [
             [:feature, "Feature", "Hi", 1],
             [:background, "Background", "It is my ambition to say\nin ten sentences\nwhat others say\nin a whole book.",2],
-            [:step, "Given", "I am a step", 6]
+            [:step, "Given ", "I am a step", 6]
           ]
         end
       end
@@ -102,7 +102,7 @@ Given I am a step})
                           })
           @listener.to_sexp.should == [
             [:scenario, "Scenario", "bar", 1],
-            [:step, "Given", "baz", 3]
+            [:step, "Given ", "baz", 3]
           ]
         end
         
@@ -115,7 +115,7 @@ Given I am a step})
                           })
           @listener.to_sexp.should == [
             [:scenario, "Scenario", "It is my ambition to say\nin ten sentences\nwhat others say\nin a whole book.", 1],
-            [:step, "Given", "I am a step", 5]
+            [:step, "Given ", "I am a step", 5]
           ]
         end
 
@@ -134,8 +134,8 @@ Given I am a step})
 })
           @listener.to_sexp.should == [
             [:scenario, "Scenario", "I have a Button\nButtons are great", 1],
-            [:step, "Given", "I have some", 3],
-            [:step, "But", "I might not because I am a Charles Dickens character", 4]
+            [:step, "Given ", "I have some", 3],
+            [:step, "But ", "I might not because I am a Charles Dickens character", 4]
           ]
         end
         
@@ -146,7 +146,7 @@ Given I am a step
 })
           @listener.to_sexp.should == [
             [:scenario, "Scenario", "When I have when in scenario\nI should be fine", 1],
-            [:step, "Given", "I am a step", 3]
+            [:step, "Given ", "I am a step", 3]
           ]
         end
       end
@@ -161,7 +161,7 @@ Given I am a step
                           })
           @listener.to_sexp.should == [
             [:scenario_outline, "Scenario Outline", "Hello", 1],
-            [:step, "Given", "a <what> cucumber", 2],
+            [:step, "Given ", "a <what> cucumber", 2],
             [:examples, "Examples", "", 3],
             [:table, [["what"],["green"]], 4]
           ]
@@ -188,7 +188,7 @@ Given I am a step
                           })
           @listener.to_sexp.should == [
             [:scenario_outline, "Scenario Outline", "It is my ambition to say\nin ten sentences\nwhat others say\nin a whole book.", 1],
-            [:step, "Given", "I am a step", 5]
+            [:step, "Given ", "I am a step", 5]
           ]
         end        
       end
@@ -225,7 +225,7 @@ Given I am a step
                           |a|b|
                           })
           @listener.to_sexp.should == [
-            [:step, "Given", "I have a table", 1],
+            [:step, "Given ", "I have a table", 1],
             [:table, [['a','b']], 2]
           ]
         end
@@ -233,7 +233,7 @@ Given I am a step
         it "should parse steps with inline py_string" do
           @lexer.scan("Given I have a string\n\"\"\"\nhello\nworld\n\"\"\"")
           @listener.to_sexp.should == [
-            [:step, "Given", "I have a string", 1],
+            [:step, "Given ", "I have a string", 1],
             [:py_string, "hello\nworld", 2]
           ]
         end
@@ -245,7 +245,7 @@ Given I am a step
           @listener.to_sexp.should == [
             [:feature, "Feature", "Feature Text", 1],
             [:scenario, "Scenario", "Reading a Scenario", 2],
-            [:step, "Given", "there is a step", 3]
+            [:step, "Given ", "there is a step", 3]
           ]
         end
       end
@@ -256,7 +256,7 @@ Given I am a step
           @listener.to_sexp.should == [
             [:feature, "Feature", "Feature Text", 1],
             [:scenario, "Scenario", "Reading a Scenario", 2],
-            [:step, "Given", "there is a step", 3]
+            [:step, "Given ", "there is a step", 3]
           ]
         end
       end
@@ -268,9 +268,9 @@ Given I am a step
           @listener.to_sexp.should == [
             [:feature, "Feature", "Feature Text", 1],
             [:scenario, "Scenario", "Reading a Scenario", 2],
-            [:step, "Given", "there is a step", 3],
-            [:step, "And", "another step", 4],
-            [:step, "And", "a third step", 5]
+            [:step, "Given ", "there is a step", 3],
+            [:step, "And ", "another step", 4],
+            [:step, "And ", "a third step", 5]
           ]
         end
       end
@@ -310,9 +310,9 @@ Given I am a step
           @listener.to_sexp.should == [
             [:feature, "Feature", "Feature Text", 1],
             [:scenario, "Scenario", "Reading a Scenario", 2],
-            [:step, "Given", "a step", 3],
+            [:step, "Given ", "a step", 3],
             [:scenario, "Scenario", "A second scenario", 5],
-            [:step, "Given", "another step", 6]
+            [:step, "Given ", "another step", 6]
           ]
         end
         
@@ -321,9 +321,9 @@ Given I am a step
           @listener.to_sexp.should == [
             [:feature, "Feature", "Feature Text", 1],
             [:scenario, "Scenario", "Reading a Scenario", 2],
-            [:step, "Given", "a step", 3],
+            [:step, "Given ", "a step", 3],
             [:scenario, "Scenario", "A second scenario", 4],
-            [:step, "Given", "another step", 5]
+            [:step, "Given ", "another step", 5]
           ]
         end
       end
@@ -337,7 +337,7 @@ Given I am a step
             [:comment, "# Here is another # comment", 3],
             [:scenario, "Scenario", "Reading a Scenario", 4],
             [:comment, "# Here is a third comment", 5],
-            [:step, "Given", "there is a step", 6],
+            [:step, "Given ", "there is a step", 6],
             [:comment, "# Here is a fourth comment", 7]
           ]
         end
@@ -353,7 +353,7 @@ Given I am a step
             [:tag, "st1", 5],
             [:tag, "st2", 5],
             [:scenario, "Scenario", "First", 6],
-            [:step, "Given", "Pepper", 7],
+            [:step, "Given ", "Pepper", 7],
             [:tag, "st3", 9],
             [:tag, "st4", 10],
             [:tag, "ST5", 10],
@@ -388,27 +388,27 @@ Given I am a step
             [:comment, "#Comment on line 9", 9],
             [:comment, "#Comment on line 11", 11],
             [:background, "Background", "", 13],
-            [:step, "Given", "this is a background step", 14],
-            [:step, "And", "this is another one", 15],
+            [:step, "Given ", "this is a background step", 14],
+            [:step, "And ", "this is another one", 15],
             [:tag, "tag3", 17],
             [:tag, "tag4", 17],
             [:scenario, "Scenario", "Reading a Scenario", 18],
-            [:step, "Given", "there is a step", 19],
-            [:step, "But", "not another step", 20],
+            [:step, "Given ", "there is a step", 19],
+            [:step, "But ", "not another step", 20],
             [:tag, "tag3", 22],
             [:scenario, "Scenario", "Reading a second scenario", 23],
             [:comment, "#Comment on line 24", 24],
-            [:step, "Given", "a third step with a table", 25],
+            [:step, "Given ", "a third step with a table", 25],
             [:table, [['a','b'],['c','d'],['e','f']], 26],
-            [:step, "And", "I am still testing things", 29],
+            [:step, "And ", "I am still testing things", 29],
             [:table, [['g','h'],['e','r'],['k','i'],['n','']], 30],
-            [:step, "And", "I am done testing these tables", 34],
+            [:step, "And ", "I am done testing these tables", 34],
             [:comment, "#Comment on line 29", 35],
-            [:step, "Then", "I am happy", 36],
+            [:step, "Then ", "I am happy", 36],
             [:scenario, "Scenario", "Hammerzeit", 38],
-            [:step, "Given", "All work and no play", 39],
+            [:step, "Given ", "All work and no play", 39],
             [:py_string, "Makes Homer something something", 40],
-            [:step, "Then", "crazy", 43]
+            [:step, "Then ", "crazy", 43]
           ]
         end        
       end

@@ -1,0 +1,125 @@
+# encoding: utf-8
+module Gherkin
+  module Tools
+    # TODO: Rename to PrettyFormatter - that's what this class *does*
+    # (The fact that it conforms to the Gherkin Listener interface is scondary)
+    class PrettyListener
+      def initialize(io)
+        @io = io
+        @tags = nil
+        @comments = nil
+      end
+
+      def tag(name, line)
+        @tags ||= []
+        @tags << "@#{name}"
+      end
+
+      def comment(content, line)
+        @comments ||= []
+        @comments << content
+      end
+
+      def feature(keyword, name, line)
+        @io.puts "#{grab_comments!('')}#{grab_tags!('')}#{keyword}: #{indent(name, '  ')}"
+      end
+
+      def background(keyword, name, line)
+        @io.puts "\n#{grab_comments!('  ')}  #{keyword}: #{indent(name, '    ')}"
+      end
+
+      def scenario(keyword, name, line)
+        indent_locations(keyword, name)
+        @io.puts "\n#{grab_comments!('  ')}#{grab_tags!('  ')}  #{keyword}: #{indent(name, '    ')}#{indented_location!}"
+      end
+
+      def scenario_outline(keyword, name, line)
+        @io.puts "\n#{grab_comments!('  ')}#{grab_tags!('  ')}  #{keyword}: #{indent(name, '    ')}"
+      end
+
+      def examples(keyword, name, line)
+        @io.puts "\n#{grab_comments!('    ')}#{grab_tags!('    ')}    #{keyword}: #{indent(name, '    ')}"
+      end
+
+      def step(keyword, name, line)
+        @io.puts "#{grab_comments!('    ')}    #{keyword}#{indent(name, '    ')}#{indented_location!}"
+      end
+
+      def table(rows, line, rows_to_print = rows, first_row=0)
+        rows = rows.to_a.map {|row| row.to_a} if defined?(JRUBY_VERSION) # Convert ArrayList
+        cell_lengths = rows.map { |col| col.map { |cell| cell.unpack("U*").length }}
+        max_lengths = cell_lengths.transpose.map { |col_lengths| col_lengths.max }.flatten
+        rows_to_print.length.times do |n|
+          row_to_print = rows_to_print[n]
+          i = n + first_row
+          j = -1
+          @io.puts '      | ' + row_to_print.zip(max_lengths).map { |cell, max_length|
+            j += 1
+            cell + ' ' * (max_length - cell_lengths[i][j])
+          }.join(' | ') + ' |'
+        end
+      end
+
+      def py_string(string, line)
+        @io.puts "      \"\"\"\n" + string.gsub(START, '      ') + "\n      \"\"\""
+      end
+
+      def syntax_error(state, event, legal_events, line)
+        raise "SYNTAX ERROR"
+      end
+
+      # This method is not part of the Gherkin event API. If invoked before a #scenario,
+      # location "comment" lines will be printed.
+      def locations(locations)
+        @locations = locations
+      end
+
+    private
+
+      if(RUBY_VERSION =~ /^1\.9/)
+        START = /#{"^".encode('UTF-8')}/
+        NL    = Regexp.new("\n".encode('UTF-8'))
+      else
+        START = /^/
+        NL    = /\n/n
+      end
+
+      def indent(string, indentation)
+        indent = ""
+        string.split(NL).map do |l|
+          s = "#{indent}#{l}"
+          indent = indentation
+          s
+        end.join("\n")
+      end
+
+      def grab_tags!(indent)
+        tags = @tags ? indent + @tags.join(' ') + "\n" : ''
+        @tags = nil
+        tags
+      end
+
+      def grab_comments!(indent)
+        comments = @comments ? indent + @comments.join("\n#{indent}") + "\n" : ''
+        @comments = nil
+        comments
+      end
+
+      def indent_locations(container_keyword, container_name)
+        return if @locations.nil?
+        @locations[0][0] = "#{container_keyword}: #{container_name}"
+        @lengths = @locations.transpose[0].map {|line| line.unpack("U*").length}
+        @lengths[0] -= 2
+        @max_length = @lengths.max
+        @indent_index = -1
+      end
+
+      def indented_location!
+        return if @locations.nil?
+        @indent_index += 1
+        indent = @max_length - @lengths[@indent_index]
+        ' ' * indent + ' # ' + @locations[@indent_index][1]
+      end
+    end
+  end
+end

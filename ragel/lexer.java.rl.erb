@@ -93,7 +93,7 @@ public class <%= @i18n.sanitized_key.capitalize %> implements Lexer {
     }
 
     action end_keyword {
-      keyword = substring(data, keywordStart, p).replaceFirst(":$","").trim();
+      keyword = substring(data, keywordStart, p).replaceFirst(":$","");
       keywordStart = -1;
     }
 
