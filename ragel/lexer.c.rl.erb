@@ -45,7 +45,6 @@ typedef struct lexer_state {
   size_t next_keyword_start;
   size_t content_start;
   size_t content_end;
-  size_t field_len;
   size_t query_start;
   size_t last_newline;
   size_t final_newline;
@@ -198,7 +197,7 @@ static VALUE rb_eGherkinLexerError;
   action end_feature {
     if (cs < lexer_first_final) {
       if (raise_lexer_error != NULL) {
-        int count = 0;
+        size_t count = 0;
         int newstr_count = 0;
         size_t len;
         const char *buff;
@@ -310,7 +309,6 @@ static void lexer_init(lexer_state *lexer) {
   lexer->content_end = 0;
   lexer->content_len = 0;
   lexer->mark = 0;
-  lexer->field_len = 0;
   lexer->keyword_start = 0;
   lexer->keyword_end = 0;
   lexer->next_keyword_start = 0;
@@ -350,7 +348,8 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
   VALUE input_copy = rb_str_dup(input);
   rb_str_append(input_copy, rb_str_new2("\n%_FEATURE_END_%"));
   char *data = RSTRING_PTR(input_copy);
-  long len = RSTRING_LEN(input_copy);
+//  long len = RSTRING_LEN(input_copy);
+  size_t len = RSTRING_LEN(input_copy);
   
   if (len == 0) { 
     rb_raise(rb_eGherkinLexerError, "No content to lex.");
@@ -367,7 +366,6 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
     eof = pe;
     
     assert(*pe == '\0' && "pointer does not end on NULL");
-    assert(pe - p == len && "pointers aren't same distance");
     
     %% write init;
     %% write exec;
@@ -375,7 +373,6 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
     assert(p <= pe && "data overflow after parsing execute");
     assert(lexer->content_start <= len && "content starts after data end");
     assert(lexer->mark < len && "mark is after data end");
-    assert(lexer->field_len <= len && "field has length longer than the whole data");
     
     // Reset lexer by re-initializing the whole thing
     lexer_init(lexer);
