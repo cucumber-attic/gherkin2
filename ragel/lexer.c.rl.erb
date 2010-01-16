@@ -348,7 +348,6 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
   VALUE input_copy = rb_str_dup(input);
   rb_str_append(input_copy, rb_str_new2("\n%_FEATURE_END_%"));
   char *data = RSTRING_PTR(input_copy);
-//  long len = RSTRING_LEN(input_copy);
   size_t len = RSTRING_LEN(input_copy);
   
   if (len == 0) { 
