@@ -229,7 +229,7 @@ static VALUE rb_eGherkinLexerError;
 
         int line = lexer->line_number;
         lexer_init(lexer); // Re-initialize so we can scan again with the same lexer
-        raise_lexer_error(listener, newstr, line);
+        raise_lexer_error(newstr, line);
       }
     }
   }
@@ -272,7 +272,6 @@ store_kw_con(VALUE listener, const char * event_name,
   con = ENCODED_STR_NEW(at, length);
   con = multiline_strip(con);
   rb_funcall(con, rb_intern("strip!"), 0);
-  rb_funcall(kw, rb_intern("strip!"), 0);
   rb_funcall(listener, rb_intern(event_name), 3, kw, con, INT2FIX(current_line)); 
 }
 
@@ -301,7 +300,7 @@ store_pystring_content(VALUE listener,
 }
 
 static void 
-raise_lexer_error(VALUE listener, const char * at, int line)
+raise_lexer_error(const char * at, int line)
 { 
   rb_raise(rb_eGherkinLexerError, "Lexing error on line %d: '%s'.", line, at);
 }

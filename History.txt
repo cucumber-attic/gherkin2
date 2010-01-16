@@ -1,3 +1,9 @@
+== In Git
+
+== Bugfixes
+* Emit keywords with space instead of stripping (< keywords are emmitted without space) (Aslak Hellesøy)
+* gherkin reformat now prints comments, and does it with proper indentation (Aslak Hellesøy)
+
 == 1.0.2 (2009-12-30)
 
 == Bugfixes

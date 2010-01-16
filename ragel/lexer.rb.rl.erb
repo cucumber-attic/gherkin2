@@ -85,7 +85,7 @@ module Gherkin
         }
  
         action end_keyword {
-          @keyword = data[@keyword_start...p].utf8_pack("c*").sub(/:$/,'').strip
+          @keyword = data[@keyword_start...p].utf8_pack("c*").sub(/:$/,'')
           @keyword_start = nil
         }
  
