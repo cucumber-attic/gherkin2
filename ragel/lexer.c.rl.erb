@@ -229,7 +229,7 @@ static VALUE rb_eGherkinLexerError;
 
         int line = lexer->line_number;
         lexer_init(lexer); // Re-initialize so we can scan again with the same lexer
-        raise_lexer_error(listener, newstr, line);
+        raise_lexer_error(newstr, line);
       }
     }
   }
@@ -300,7 +300,7 @@ store_pystring_content(VALUE listener,
 }
 
 static void 
-raise_lexer_error(VALUE listener, const char * at, int line)
+raise_lexer_error(const char * at, int line)
 { 
   rb_raise(rb_eGherkinLexerError, "Lexing error on line %d: '%s'.", line, at);
 }
