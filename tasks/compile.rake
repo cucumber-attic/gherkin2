@@ -8,7 +8,8 @@ CLEAN.include [
   'ragel/i18n/*.rl',
   'lib/gherkin/rb_lexer/*.rb',
   'ext/**/*.c',
-  'java/src/gherkin/lexer/*.java'
+  'java/src/gherkin/lexer/*.java',
+  'dotnet/Gherkin/Lexer/*.cs'
 ]
 
 desc "Compile the Java extensions"
@@ -16,12 +17,47 @@ task :jar do
   sh("ant -f java/build.xml")
 end
 
+desc "Compile the .NET extensions"
+task :dotnet do
+end
+
+FileList['lib/gherkin/parser/*'].each do |src|
+  dst = "dotnet/Gherkin/StateMachine/#{File.basename(src)}"
+  file dst => src do
+    cp src, dst, :verbose => true    
+  end
+  task :dotnet => dst
+end
+
+class CSharpSByteFixTask
+  def initialize(source)
+    @source = source
+    define_tasks
+  end
+
+  def define_tasks
+    file target => @source do
+      sh "cat #{@source} | sed ""s/sbyte/short/g"" > #{target}"
+    end
+  end
+
+  def target
+    "dotnet/Gherkin/Lexer/#{File.basename(@source)}"
+  end
+end
+
+
 Gherkin::I18n.all.each do |i18n|
   java = RagelTask.new('java', i18n)
   rb   = RagelTask.new('rb', i18n)
+  csharp_tmp = RagelTask.new('csharp', i18n)
+
+  csharp = CSharpSByteFixTask.new(csharp_tmp.target)
 
   task :jar     => java.target
   task :jar     => rb.target
+  task :dotnet     => csharp.target
+  task :dotnet     => csharp.target
 
   begin
   unless defined?(JRUBY_VERSION)

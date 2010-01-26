@@ -29,7 +29,8 @@ class RagelTask
     {
       'c'    => "ext/gherkin_lexer_#{@i18n.sanitized_key}/gherkin_lexer_#{@i18n.sanitized_key}.c",
       'java' => "java/src/gherkin/lexer/#{@i18n.sanitized_key.capitalize}.java",
-      'rb'   => "lib/gherkin/rb_lexer/#{@i18n.sanitized_key}.rb"
+      'rb'   => "lib/gherkin/rb_lexer/#{@i18n.sanitized_key}.rb",
+      'csharp'   => "tmp/#{@i18n.sanitized_key}.cs"
     }[@lang]
   end
 
@@ -51,9 +52,10 @@ class RagelTask
 
   def flags
     {
-      'c'    => '-C',
-      'java' => '-J',
-      'rb'   => '-R'
+      'c'      => '-C',
+      'java'   => '-J',
+      'rb'     => '-R',
+      'csharp' => '-A -L -T0'
     }[@lang]
   end
 
