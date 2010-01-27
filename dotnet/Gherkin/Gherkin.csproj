@@ -46,46 +46,124 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ILexer.cs" />
-    <Compile Include="Lexer\ar.cs" />
-    <Compile Include="Lexer\bg.cs" />
-    <Compile Include="Lexer\cat.cs" />
-    <Compile Include="Lexer\cs.cs" />
-    <Compile Include="Lexer\cy.cs" />
-    <Compile Include="Lexer\da.cs" />
-    <Compile Include="Lexer\de.cs" />
+    <Compile Include="LanguageAttribute.cs" />
+    <Compile Include="Lexers.cs" />
+    <Compile Include="Lexer\ar.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\bg.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\cat.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\cs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\cy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\da.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\de.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Lexer\en.cs" />
-    <Compile Include="Lexer\enau.cs" />
-    <Compile Include="Lexer\enlol.cs" />
-    <Compile Include="Lexer\entx.cs" />
-    <Compile Include="Lexer\es.cs" />
-    <Compile Include="Lexer\et.cs" />
-    <Compile Include="Lexer\fi.cs" />
-    <Compile Include="Lexer\fr.cs" />
-    <Compile Include="Lexer\he.cs" />
-    <Compile Include="Lexer\hr.cs" />
-    <Compile Include="Lexer\hu.cs" />
-    <Compile Include="Lexer\id.cs" />
-    <Compile Include="Lexer\it.cs" />
-    <Compile Include="Lexer\ja.cs" />
-    <Compile Include="Lexer\ko.cs" />
-    <Compile Include="Lexer\lt.cs" />
-    <Compile Include="Lexer\lv.cs" />
-    <Compile Include="Lexer\nl.cs" />
+    <Compile Include="Lexer\enau.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\enlol.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\entx.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\es.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\et.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\fi.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\fr.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\he.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\hr.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\hu.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\id.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\it.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\ja.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\ko.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\lt.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\lv.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\nl.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Lexer\no.cs" />
-    <Compile Include="Lexer\pl.cs" />
-    <Compile Include="Lexer\pt.cs" />
-    <Compile Include="Lexer\ro.cs" />
-    <Compile Include="Lexer\ro2.cs" />
-    <Compile Include="Lexer\ru.cs" />
-    <Compile Include="Lexer\se.cs" />
-    <Compile Include="Lexer\sk.cs" />
-    <Compile Include="Lexer\sr.cs" />
-    <Compile Include="Lexer\srLatn.cs" />
-    <Compile Include="Lexer\tr.cs" />
-    <Compile Include="Lexer\uz.cs" />
-    <Compile Include="Lexer\vi.cs" />
-    <Compile Include="Lexer\zhCN.cs" />
-    <Compile Include="Lexer\zhTW.cs" />
+    <Compile Include="Lexer\pl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\pt.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\ro.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\ro2.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\ru.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\se.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\sk.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\sr.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\srLatn.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\tr.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\uz.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\vi.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\zhCN.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\zhTW.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="LexingError.cs" />
     <Compile Include="IListener.cs" />
     <Compile Include="ParseError.cs" />

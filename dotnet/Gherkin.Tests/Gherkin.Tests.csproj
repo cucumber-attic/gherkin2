@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq, Version=3.1.416.3, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\moq\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -49,20 +53,74 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Comments.cs" />
-    <Compile Include="Descriptions.cs" />
-    <Compile Include="LexerSpec.cs" />
+    <Compile Include="LexerSpecs\A_complex_feature_with_tags_comments_multiple_scenarios_and_multiple_steps_and_tables.cs" />
+    <Compile Include="LexerSpecs\A_feature_ending_in_whitespace.cs" />
+    <Compile Include="LexerSpecs\A_feature_with_a_scenario_but_no_steps.cs" />
+    <Compile Include="LexerSpecs\A_feature_with_tags_everywhere.cs" />
+    <Compile Include="LexerSpecs\A_multi_line_feature_with_no_scenario.cs" />
+    <Compile Include="LexerSpecs\A_simple_feature_with_comments.cs" />
+    <Compile Include="LexerSpecs\A_single_feature_single_scenario_single_step.cs" />
+    <Compile Include="LexerSpecs\A_single_feature_single_scenario_three_steps.cs" />
+    <Compile Include="LexerSpecs\A_single_feature_with_no_scenario.cs" />
+    <Compile Include="LexerSpecs\Background.cs" />
+    <Compile Include="LexerSpecs\Comments.cs" />
+    <Compile Include="LexerSpecs\Comment_or_tag_between_Feature_elements_where_previous_narrative_starts_with_same_letter_as_a_keyword.cs" />
+    <Compile Include="LexerSpecs\A_feature_with_two_scenarios.cs" />
+    <Compile Include="LexerSpecs\Errors.cs" />
+    <Compile Include="LexerSpecs\Examples.cs" />
+    <Compile Include="LexerSpecs\I18NParsing.cs" />
+    <Compile Include="LexerSpecs\LexerSpec.cs" />
+    <Compile Include="ParserSpecs\Parser.cs" />
+    <Compile Include="ParserSpecs\ParserSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="LexerSpecs\ScenarioOutlines.cs" />
+    <Compile Include="LexerSpecs\Scenarios.cs" />
     <Compile Include="SExp.cs" />
     <Compile Include="SExpList.cs" />
     <Compile Include="SExpListener.cs" />
     <Compile Include="SExpReader.cs" />
+    <Compile Include="LexerSpecs\Steps.cs" />
+    <Compile Include="LexerSpecs\Tags.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gherkin\Gherkin.csproj">
       <Project>{B7CD3273-2795-4F16-A458-890E77B39E71}</Project>
       <Name>Gherkin</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\spec\gherkin\fixtures\1.feature">
+      <Link>fixtures\1.feature</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\spec\gherkin\fixtures\complex.feature">
+      <Link>fixtures\complex.feature</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\spec\gherkin\fixtures\i18n_fr.feature">
+      <Link>fixtures\i18n_fr.feature</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\spec\gherkin\fixtures\i18n_no.feature">
+      <Link>fixtures\i18n_no.feature</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\spec\gherkin\fixtures\i18n_zh-CN.feature">
+      <Link>fixtures\i18n_zh-CN.feature</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\spec\gherkin\fixtures\simple.feature">
+      <Link>fixtures\simple.feature</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\spec\gherkin\fixtures\simple_with_comments.feature">
+      <Link>fixtures\simple_with_comments.feature</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\spec\gherkin\fixtures\simple_with_tags.feature">
+      <Link>fixtures\simple_with_tags.feature</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

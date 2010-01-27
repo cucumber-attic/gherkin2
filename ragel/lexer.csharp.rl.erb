@@ -5,6 +5,7 @@ namespace Gherkin.Lexer
 	using System.IO;
 	using System.Collections.Generic;
 	
+	[Language("<%= @i18n.sanitized_key.capitalize %>")]
 	public class <%= @i18n.sanitized_key.capitalize %> : ILexer {
 		%%{
 			machine lexer;
@@ -147,7 +148,7 @@ namespace Gherkin.Lexer
 
 		public void Scan(TextReader inputSequence) {
 			string input = inputSequence.ReadToEnd() + "\n%_FEATURE_END_%";
-			char[] data = input.ToCharArray();
+			char[] data = Encoding.GetEncoding("iso-8859-1").GetChars(Encoding.UTF8.GetBytes(input));
 			int cs, p = 0, pe = data.Length;
 			int eof = pe;
 
@@ -189,7 +190,7 @@ namespace Gherkin.Lexer
 		}
 
 		private string Substring(char[] data, int start, int end) {
-			return new string(data, start, end-start);
+			return Encoding.UTF8.GetString(Encoding.GetEncoding("iso-8859-1").GetBytes(data, start, end-start));
 		}
 	}
 }

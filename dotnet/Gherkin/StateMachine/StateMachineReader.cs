@@ -14,7 +14,7 @@ namespace Gherkin.StateMachine
         private IList<IList<string>> transitionTable;
 
         public StateMachineReader(string name) {
-            machinePath = "Parser." + name + ".txt";
+            machinePath = "Gherkin.StateMachine." + name + ".txt";
         }
 
         public IList<IList<string>> TransitionTable 
@@ -25,8 +25,7 @@ namespace Gherkin.StateMachine
                 try
                 {
                     var currentAssembly = Assembly.GetExecutingAssembly();
-                    var stream = currentAssembly.GetManifestResourceStream(
-                        string.Format("{0}.{1}", currentAssembly.GetName(), machinePath));
+                    var stream = currentAssembly.GetManifestResourceStream(machinePath);
                     using (var reader = new StreamReader(stream))
                     {
                         lexer.Scan(reader);
