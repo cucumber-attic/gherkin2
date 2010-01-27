@@ -9,7 +9,7 @@ CLEAN.include [
   'lib/gherkin/rb_lexer/*.rb',
   'ext/**/*.c',
   'java/src/gherkin/lexer/*.java',
-  'dotnet/Gherkin/Lexer/*.cs'
+  'dotnet/Gherkin/Lexer'
 ]
 
 desc "Compile the Java extensions"
@@ -36,7 +36,8 @@ class CSharpSByteFixTask
   end
 
   def define_tasks
-    file target => @source do
+    directory File.dirname(target)
+    file target => [File.dirname(target), @source] do
       sh "cat #{@source} | sed ""s/sbyte/short/g"" > #{target}"
     end
   end
