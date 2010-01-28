@@ -17,7 +17,7 @@ namespace Gherkin.Tests.LexerSpecs
                           ").
                 should_result_in("(root " + 
                                  "(scenario 1   Scenario   bar  )" +
-                                 "(step 3  \"Given \"  baz  )" +
+                                 "(step 3 Given \"Given \"  baz  )" +
                                  "");
         }
         
@@ -30,7 +30,7 @@ namespace Gherkin.Tests.LexerSpecs
                           ").
                 should_result_in("(root " + 
                                  "(scenario 1   Scenario  \"It is my ambition to say\nin ten sentences\nwhat others say\nin a whole book.\" )" +
-                                 "(step 5  \"Given \" \"I am a step\" )" +
+                                 "(step 5 Given  \"Given \" \"I am a step\" )" +
                                  "");
         }
 
@@ -49,8 +49,8 @@ namespace Gherkin.Tests.LexerSpecs
 ").
                 should_result_in("(root " + 
                                  "(scenario 1   Scenario  \"I have a Button\nButtons are great\" )" +
-                                 "(step 3  \"Given \" \"I have some\" )" +
-                                 "(step 4  \"But \" \"I might not because I am a Charles Dickens character\" )" +
+                                 "(step 3 Given \"Given \" \"I have some\" )" +
+                                 "(step 4 But \"But \" \"I might not because I am a Charles Dickens character\" )" +
                                  "");
         }
         
@@ -61,7 +61,7 @@ Given I am a step
 ").
                 should_result_in("(root " + 
                                  "(scenario 1   Scenario  \"When I have when in scenario\nI should be fine\" )" +
-                                 "(step 3  \"Given \" \"I am a step\" )" +
+                                 "(step 3 Given \"Given \" \"I am a step\" )" +
                                  "");
         }
     }

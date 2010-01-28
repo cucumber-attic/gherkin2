@@ -7,7 +7,7 @@ namespace Gherkin.Tests.LexerSpecs
             lexing_input("Background:\nGiven I am a step\n").
                 should_result_in("(root " + 
                                  "(background 1   Background  \"\" )" +
-                                 "(step 2  \"Given \" \"I am a step\" )" +
+                                 "(step 2 Given  \"Given \" \"I am a step\" )" +
                                  "");
         }
         
@@ -28,7 +28,7 @@ Given I am a step").
                 should_result_in("(root " + 
                                  "(feature 1   Feature   Hi  )" +
                                  "(background 2   Background  \"It is my ambition to say\nin ten sentences\nwhat others say\nin a whole book.\")" +
-                                 "(step 6  \"Given \" \"I am a step\" )" +
+                                 "(step 6 Given \"Given \" \"I am a step\" )" +
                                  "");
         }
     }

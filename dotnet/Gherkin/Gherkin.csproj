@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="I18NLexer.cs" />
     <Compile Include="ILexer.cs" />
     <Compile Include="LanguageAttribute.cs" />
     <Compile Include="Lexers.cs" />

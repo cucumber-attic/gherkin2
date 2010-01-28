@@ -14,27 +14,27 @@ namespace Gherkin.Tests.LexerSpecs
                                  "(comment 9  \"#Comment on line 9\" )" +
                                  "(comment 11  \"#Comment on line 11\" )" +
                                  "(background 13   Background  \"\" )" +
-                                 "(step 14  \"Given \" \"this is a background step\" )" +
-                                 "(step 15  \"And \" \"this is another one\" )" +
+                                 "(step 14 Given \"Given \" \"this is a background step\" )" +
+                                 "(step 15 And \"And \" \"this is another one\" )" +
                                  "(tag 17   tag3 )" +
                                  "(tag 17   tag4 )" +
                                  "(scenario 18   Scenario  \"Reading a Scenario\" )" +
-                                 "(step 19  \"Given \" \"there is a step\" )" +
-                                 "(step 20  \"But \" \"not another step\" )" +
+                                 "(step 19 Given \"Given \" \"there is a step\" )" +
+                                 "(step 20 But \"But \" \"not another step\" )" +
                                  "(tag 22   tag3  )" +
                                  "(scenario 23   Scenario  \"Reading a second scenario\" )" +
                                  "(comment 24  \"#Comment on line 24\" )" +
-                                 "(step 25  \"Given \" \"a third step with a table\" )" +
+                                 "(step 25 Given \"Given \" \"a third step with a table\" )" +
                                  "(table 26  (row (cell a)(cell b)) (row (cell c)(cell d)) (row (cell e)(cell f)) )" +
-                                 "(step 29  \"And \" \"I am still testing things\" )" +
+                                 "(step 29 And \"And \" \"I am still testing things\" )" +
                                  "(table 30  (row (cell g)(cell h)) (row (cell e)(cell r)) (row (cell k)(cell i)) (row (cell n) (cell \"\")) )" +
-                                 "(step 34  \"And \" \"I am done testing these tables\" )" +
+                                 "(step 34 And \"And \" \"I am done testing these tables\" )" +
                                  "(comment 35  \"#Comment on line 29\" )" +
-                                 "(step 36  \"Then \" \"I am happy\" )" +
+                                 "(step 36 Then \"Then \" \"I am happy\" )" +
                                  "(scenario 38   Scenario   Hammerzeit  )" +
-                                 "(step 39  \"Given \" \"All work and no play\" )" +
+                                 "(step 39 Given \"Given \" \"All work and no play\" )" +
                                  "(py_string 40  \"Makes Homer something something\" )" +
-                                 "(step 43  \"Then \"  crazy )" +
+                                 "(step 43 Then \"Then \"  crazy )" +
                                  "");
         }        
     }

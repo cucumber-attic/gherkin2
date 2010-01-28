@@ -12,7 +12,7 @@ namespace Gherkin.Tests.LexerSpecs
                                  "(tag 5   st1  )" +
                                  "(tag 5   st2  )" +
                                  "(scenario 6   Scenario   First  )" +
-                                 "(step 7  \"Given \"  Pepper  )" +
+                                 "(step 7 Given \"Given \"  Pepper  )" +
                                  "(tag 9   st3 )" +
                                  "(tag 10   st4 )" +
                                  "(tag 10   ST5 )" +

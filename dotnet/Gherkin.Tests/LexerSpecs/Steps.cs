@@ -8,7 +8,7 @@ namespace Gherkin.Tests.LexerSpecs
                           |a|b|
                           ").
                 should_result_in("(root " + 
-                                 "(step 1 \"Given \" \"I have a table\" )" +
+                                 "(step 1 Given \"Given \" \"I have a table\" )" +
                                  "(table 2 (row (cell a) (cell b)))" +
                                  "");
         }
@@ -16,7 +16,7 @@ namespace Gherkin.Tests.LexerSpecs
         [Fact] public void should_parse_steps_with_inline_py_string() {
             lexing_input("Given I have a string\n\"\"\"\nhello\nworld\n\"\"\"").
                 should_result_in("(root " + 
-                                 "(step 1  \"Given \" \"I have a string\" )" +
+                                 "(step 1 Given \"Given \" \"I have a string\" )" +
                                  "(py_string 2 \"hello\nworld\")" +
                                  "");
         }

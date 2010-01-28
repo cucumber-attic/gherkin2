@@ -69,9 +69,9 @@ namespace Gherkin
                 listener.Examples(keyword, name, line);
         }
 
-        public void Step(string keyword, string name, int line) {
+        public void Step(string keyword, StepKind stepKind, string name, int line) {
             if (NextEvent("step", line))
-                listener.Step(keyword, name, line);
+                listener.Step(keyword, stepKind, name, line);
         }
 
         public void Comment(string content, int line) {

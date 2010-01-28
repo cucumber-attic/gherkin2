@@ -4,6 +4,7 @@ namespace Gherkin.Lexer
 	using System.Text.RegularExpressions;
 	using System.IO;
 	using System.Collections.Generic;
+	using System.Linq;
 	
 	[Language("<%= @i18n.sanitized_key.capitalize %>")]
 	public class <%= @i18n.sanitized_key.capitalize %> : ILexer {
@@ -66,7 +67,7 @@ namespace Gherkin.Lexer
 			}
 
 			action store_step_content {
-				listener.Step(keyword, Substring(data, contentStart, p).Trim(), currentLine);
+				listener.Step(keyword, LookupStepKind(keyword), Substring(data, contentStart, p).Trim(), currentLine);
 			}
 
 			action store_comment_content {
@@ -140,8 +141,38 @@ namespace Gherkin.Lexer
 
 		private readonly IListener listener;
 
+		private static readonly IDictionary<string, StepKind> stepKeywords = new Dictionary<string, StepKind>();
+
+		static <%= @i18n.sanitized_key.capitalize %>()
+		{
+			<% @i18n.keywords('given', true).reject{|kw| kw == '* '}.each do |keyword| %>
+			stepKeywords["<%=keyword%>"] = StepKind.Given;
+			<% end %>
+			<% @i18n.keywords('when', true).reject{|kw| kw == '* '}.each do |keyword| %>
+			stepKeywords["<%=keyword%>"] = StepKind.When;
+			<% end %>
+			<% @i18n.keywords('then', true).reject{|kw| kw == '* '}.each do |keyword| %>
+			stepKeywords["<%=keyword%>"] = StepKind.Then;
+			<% end %>
+			<% @i18n.keywords('and', true).reject{|kw| kw == '* '}.each do |keyword| %>
+			stepKeywords["<%=keyword%>"] = StepKind.And;
+			<% end %>
+			<% @i18n.keywords('but', true).reject{|kw| kw == '* '}.each do |keyword| %>
+			stepKeywords["<%=keyword%>"] = StepKind.But;
+			<% end %>
+			stepKeywords["* "] = StepKind.Any;
+		}
+
+		private static StepKind LookupStepKind(string keyword)
+		{
+			if (!stepKeywords.Keys.Contains(keyword))
+			   return StepKind.Unknown;
+			return stepKeywords[keyword];
+		}
+
 		public <%= @i18n.sanitized_key.capitalize %>(IListener listener) {
 			this.listener = listener;
+
 		}
 
 		%% write data noerror;

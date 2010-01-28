@@ -60,7 +60,7 @@ namespace Gherkin.StateMachine
         public void Examples(string keyword, string name, int line) {
         }
 
-        public void Step(string keyword, string name, int line) {
+        public void Step(string keyword, StepKind stepKind, string name, int line) {
         }
 
         public void PythonString(string pyString, int line) {

@@ -9,9 +9,9 @@ namespace Gherkin.Tests.LexerSpecs
                 should_result_in("(root " + 
                                  "(feature 1 Feature \"Feature Text\" )" +
                                  "(scenario 2 Scenario \"Reading a Scenario\" )" +
-                                 "(step 3 \"Given \" \"there is a step\" )" +
-                                 "(step 4 \"And \" \"another step\" )" +
-                                 "(step 5 \"And \" \"a third step\" )" +
+                                 "(step 3 Given \"Given \" \"there is a step\" )" +
+                                 "(step 4 And \"And \" \"another step\" )" +
+                                 "(step 5 And \"And \" \"a third step\" )" +
                                  "");
         }
     }

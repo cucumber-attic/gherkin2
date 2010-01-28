@@ -17,7 +17,7 @@ namespace Gherkin
 
         void Examples(string keyword, string name, int line);
 
-        void Step(string keyword, string name, int line);
+        void Step(string keyword, StepKind stepKind, string name, int line);
 
         void Table(IList<IList<string>> rows, int line);
 

@@ -11,7 +11,7 @@ namespace Gherkin.Tests.LexerSpecs
                                  "(comment 3  \"# Here is another # comment\" )" +
                                  "(scenario 4   Scenario  \"Reading a Scenario\" )" +
                                  "(comment 5  \"# Here is a third comment\" )" +
-                                 "(step 6  \"Given \" \"there is a step\" )" +
+                                 "(step 6 Given \"Given \" \"there is a step\" )" +
                                  "(comment 7  \"# Here is a fourth comment\" )" +
                                  "");
         }

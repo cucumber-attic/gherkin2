@@ -8,7 +8,7 @@ namespace Gherkin.Tests.LexerSpecs
                 should_result_in("(root " + 
                                  "(feature 1   Feature  \"Feature Text\" )" +
                                  "(scenario 2   Scenario  \"Reading a Scenario\" )" +
-                                 "(step 3  \"Given \" \"there is a step\" )" +
+                                 "(step 3 Given \"Given \" \"there is a step\" )" +
                                  "");
         }
     }

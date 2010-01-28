@@ -49,9 +49,9 @@ namespace Gherkin.Tests
             root.Add(new SExpList("examples", new SExp(line.ToString()), new SExp(keyword), new SExp(name)));
         }
 
-        public void Step(string keyword, string name, int line)
+        public void Step(string keyword, StepKind stepKind, string name, int line)
         {
-            root.Add(new SExpList("step", new SExp(line.ToString()), new SExp(keyword), new SExp(name)));
+            root.Add(new SExpList("step", new SExp(line.ToString()), new SExp(stepKind.ToString()), new SExp(keyword), new SExp(name)));
         }
 
         public void Table(IList<IList<string>> rows, int line)
