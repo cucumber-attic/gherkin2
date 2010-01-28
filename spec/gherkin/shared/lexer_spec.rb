@@ -1,5 +1,5 @@
 #encoding: utf-8
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 module Gherkin
   module Lexer
@@ -340,6 +340,18 @@ Given I am a step
             [:step, "Given ", "there is a step", 6],
             [:comment, "# Here is a fourth comment", 7]
           ]
+        end
+
+        it "should support comments in tables" do
+          scan_file("comments_in_table.feature")
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "x", 1], 
+            [:scenario_outline, "Scenario Outline", "x", 3], 
+            [:step, "Then ", "x is <state>", 4], 
+            [:examples, "Examples", "", 6], 
+            [:table, [["state"]], 7], 
+            [:comment, "# comment", 8], 
+            [:table, [["1"]], 9]]
         end
       end
       

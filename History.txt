@@ -1,6 +1,7 @@
 == In Git
 
 == Bugfixes
+* The C lexer correctly instantiates a new array for each table, instead of reusing the old one. (Aslak Hellesøy)
 * Emit keywords with space instead of stripping (< keywords are emmitted without space) (Aslak Hellesøy)
 * gherkin reformat now prints comments, and does it with proper indentation (Aslak Hellesøy)
 

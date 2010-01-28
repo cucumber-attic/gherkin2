@@ -166,8 +166,7 @@ static VALUE rb_eGherkinLexerError;
   action start_table {
     p = p - 1;
     lexer->current_line = lexer->line_number;
-    rb_ary_clear(rows);
-    rb_ary_clear(current_row);
+    rows = rb_ary_new();
   }
   
   action begin_cell_content {
@@ -175,8 +174,7 @@ static VALUE rb_eGherkinLexerError;
   }
 
   action store_cell_content {
-    VALUE con = Qnil;
-    con = ENCODED_STR_NEW(PTR_TO(content_start), LEN(content_start, p));
+    VALUE con = ENCODED_STR_NEW(PTR_TO(content_start), LEN(content_start, p));
     rb_funcall(con, rb_intern("strip!"), 0);
 
     rb_ary_push(current_row, con);
@@ -357,8 +355,8 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
     int cs = 0;
     
     VALUE listener = rb_iv_get(self, "@listener");
-    VALUE rows = rb_ary_new();
-    VALUE current_row = rb_ary_new();
+    VALUE rows = Qnil;
+    VALUE current_row = Qnil;
     
     p = data;
     pe = data + len;
