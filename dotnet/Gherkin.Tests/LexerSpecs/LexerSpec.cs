@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Gherkin.Lexer;
 using Xunit;
@@ -39,7 +40,7 @@ namespace Gherkin.Tests.LexerSpecs
 
         protected LexingResult scan_file(string fileName, string language)
         {
-            using (var fileStream = new FileStream(string.Format("fixtures/{0}", fileName), FileMode.Open))
+            using (var fileStream = GetFixtureFileContent(fileName))
             {
                 var encoding = DetermineEncoding(fileStream, Encoding.UTF8);
                 using (var stream = new StreamReader(fileStream, encoding))
@@ -48,6 +49,12 @@ namespace Gherkin.Tests.LexerSpecs
                     return lexing_input(content, language);
                 }
             }
+        }
+
+        private Stream GetFixtureFileContent(string fileName)
+        {
+            var currentAssembly = Assembly.GetExecutingAssembly();
+            return currentAssembly.GetManifestResourceStream(string.Format("Gherkin.Tests.fixtures.{0}", fileName));
         }
 
         protected Encoding DetermineEncoding(Stream stream, Encoding defaultEncoding)

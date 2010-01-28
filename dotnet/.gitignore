@@ -6,3 +6,5 @@ Gherkin/StateMachine/meta.txt
 Gherkin/StateMachine/root.txt
 Gherkin/StateMachine/steps.txt
 Gherkin/Lexer/*.cs
+*.sln.cache
+_ReSharper*

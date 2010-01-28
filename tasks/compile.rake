@@ -17,17 +17,40 @@ task :jar do
   sh("ant -f java/build.xml")
 end
 
-desc "Compile the .NET extensions"
-task :dotnet do
+namespace :dotnet do
+  require 'albacore'
+
+  desc "Generate the C# lexer files"
+  task :lexer do
+  end
+
+  FileList['lib/gherkin/parser/*'].each do |src|
+    dst = "dotnet/Gherkin/StateMachine/#{File.basename(src)}"
+    file dst => src do
+      cp src, dst, :verbose => true    
+    end
+    task 'dotnet:lexer' => dst
+  end
+
+  
+  msbuild :compile => :lexer do |msb|
+    msb.properties :configuration => :Release
+    msb.targets :Build
+    msb.solution = 'dotnet/Gherkin.sln'
+  end
+
+  xunit :test => :compile do |xunit|
+    xunit.path_to_command = "dotnet/lib/xunit/xunit.console.exe"
+    xunit.assembly = "dotnet/Gherkin.Tests/bin/Release/Gherkin.Tests.dll"
+  end
+
+  task :package => :test do
+    cp 'dotnet/Gherkin/bin/Release/Gherkin.dll', 'lib/Gherkin.dll'
+  end
 end
 
-FileList['lib/gherkin/parser/*'].each do |src|
-  dst = "dotnet/Gherkin/StateMachine/#{File.basename(src)}"
-  file dst => src do
-    cp src, dst, :verbose => true    
-  end
-  task :dotnet => dst
-end
+desc "Compile and package the .NET extensions"
+task :dotnet => ['dotnet:lexer']
 
 class CSharpSByteFixTask
   def initialize(source)
@@ -57,8 +80,8 @@ Gherkin::I18n.all.each do |i18n|
 
   task :jar     => java.target
   task :jar     => rb.target
-  task :dotnet     => csharp.target
-  task :dotnet     => csharp.target
+  task 'dotnet:lexer'     => csharp.target
+  task 'dotnet:lexer'     => csharp.target
 
   begin
   unless defined?(JRUBY_VERSION)

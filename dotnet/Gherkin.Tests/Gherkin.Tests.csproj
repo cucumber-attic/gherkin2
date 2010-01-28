@@ -89,38 +89,30 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\spec\gherkin\fixtures\1.feature">
+    <EmbeddedResource Include="..\..\spec\gherkin\fixtures\1.feature">
       <Link>fixtures\1.feature</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\spec\gherkin\fixtures\complex.feature">
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\spec\gherkin\fixtures\complex.feature">
       <Link>fixtures\complex.feature</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\spec\gherkin\fixtures\i18n_fr.feature">
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\spec\gherkin\fixtures\i18n_fr.feature">
       <Link>fixtures\i18n_fr.feature</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\spec\gherkin\fixtures\i18n_no.feature">
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\spec\gherkin\fixtures\i18n_no.feature">
       <Link>fixtures\i18n_no.feature</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\spec\gherkin\fixtures\i18n_zh-CN.feature">
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\spec\gherkin\fixtures\i18n_zh-CN.feature">
       <Link>fixtures\i18n_zh-CN.feature</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\spec\gherkin\fixtures\simple.feature">
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\spec\gherkin\fixtures\simple.feature">
       <Link>fixtures\simple.feature</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\spec\gherkin\fixtures\simple_with_comments.feature">
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\spec\gherkin\fixtures\simple_with_comments.feature">
       <Link>fixtures\simple_with_comments.feature</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\..\spec\gherkin\fixtures\simple_with_tags.feature">
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\..\spec\gherkin\fixtures\simple_with_tags.feature">
       <Link>fixtures\simple_with_tags.feature</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
