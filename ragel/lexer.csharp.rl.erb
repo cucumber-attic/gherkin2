@@ -6,7 +6,7 @@ namespace Gherkin.Lexer
 	using System.Collections.Generic;
 	using System.Linq;
 	
-	[Language("<%= @i18n.sanitized_key.capitalize %>")]
+	[Language("<%= @i18n.sanitized_key.downcase %>")]
 	public class <%= @i18n.sanitized_key.capitalize %> : ILexer {
 		%%{
 			machine lexer;

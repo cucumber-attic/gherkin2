@@ -31,7 +31,7 @@ namespace Gherkin.StateMachine
                         lexer.Scan(reader);
                     }
                 }
-                catch (IOException e)
+                catch (IOException)
                 {
                     throw new Exception("Fatal error. Couldn't read " + machinePath);
                 }

@@ -34,5 +34,10 @@ namespace Gherkin
 
             throw new ArgumentOutOfRangeException(language, string.Format("No lexer exists for language '{0}'", language));
         }
+
+        public static bool Exists(string language)
+        {
+            return LexerActivators.ContainsKey(language.ToLower());
+        }
     }
 }

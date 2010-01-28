@@ -50,7 +50,7 @@ namespace :dotnet do
 end
 
 desc "Compile and package the .NET extensions"
-task :dotnet => ['dotnet:lexer']
+task :dotnet => ['dotnet:package']
 
 class CSharpSByteFixTask
   def initialize(source)

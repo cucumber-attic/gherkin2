@@ -68,6 +68,7 @@
     <Compile Include="LexerSpecs\A_feature_with_two_scenarios.cs" />
     <Compile Include="LexerSpecs\Errors.cs" />
     <Compile Include="LexerSpecs\Examples.cs" />
+    <Compile Include="LexerSpecs\I18NLexer.cs" />
     <Compile Include="LexerSpecs\I18NParsing.cs" />
     <Compile Include="LexerSpecs\LexerSpec.cs" />
     <Compile Include="ParserSpecs\Parser.cs" />

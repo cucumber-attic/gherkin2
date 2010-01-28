@@ -171,6 +171,7 @@
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StateMachine\StateMachineReader.cs" />
+    <Compile Include="StepKind.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="StateMachine\meta.txt" />
