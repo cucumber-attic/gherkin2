@@ -9,8 +9,8 @@ namespace Gherkin
         public string State { get; private set; }
         public IEnumerable<string> ExpectedEvents { get; private set; }
 
-        public ParseException(string state, string @event, IEnumerable<string> expectedEvents, int line)
-            : base("Parse error on line " + line + ". Found " + @event + " when expecting one of: " + string.Join(", ", expectedEvents.ToArray()) + ". (Current state: " + state + ").")
+        public ParseException(string state, string @event, IEnumerable<string> expectedEvents, Position position)
+            : base("Parse error on line " + position.Line + ". Found " + @event + " when expecting one of: " + string.Join(", ", expectedEvents.ToArray()) + ". (Current state: " + state + ").")
         {
             State = state;
             ExpectedEvents = expectedEvents;

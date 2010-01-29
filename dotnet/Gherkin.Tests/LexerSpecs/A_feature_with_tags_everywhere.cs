@@ -4,7 +4,7 @@ namespace Gherkin.Tests.LexerSpecs
 {
     public class A_feature_with_tags_everywhere : LexerSpec { 
         [Fact] public void should_find_the_feature_scenario_step_and_tags_in_the_proper_order() {
-            scan_file("simple_with_tags.feature").
+            a_lexer().scan_file("simple_with_tags.feature").
                 should_result_in("(root " + 
                                  "(comment 1  \"# FC\" )" +
                                  "(tag 2   ft )" +

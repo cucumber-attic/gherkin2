@@ -10,71 +10,82 @@ namespace Gherkin.Tests.LexerSpecs
 {
     public class LexerSpec
     {
-        private readonly string defaultLangauge = "en";
-        protected LexingResult lexing_input(string input)
+        protected LexerDecl a_lexer()
         {
-            return lexing_input(input, defaultLangauge);
+            return new LexerDecl();
         }
 
-        protected LexingResult lexing_input(string input, string language)
+        protected class LexerDecl
         {
-            var listener = new SExpListener();
-            var lexer = Gherkin.Lexers.Create(language, listener);
-
-            try
+            private string language = "en";
+            private bool useColumns = false;
+            internal LexerDecl with_language(string language)
             {
-                //lexer.Scan(new StringReader(input));
-                lexer.Scan(new StringReader(input.Replace("\r", "")));
-                return new LexingResult(listener.Value);
+                this.language = language;
+                return this;
             }
-            catch (Exception e)
-            {
-                return new LexingResult(e);
-            }
-        }
 
-        protected LexingResult scan_file(string fileName)
-        {
-            return scan_file(fileName, defaultLangauge);
-        }
-
-        protected LexingResult scan_file(string fileName, string language)
-        {
-            using (var fileStream = GetFixtureFileContent(fileName))
+            internal LexingResult lexing_input(string input)
             {
-                var encoding = DetermineEncoding(fileStream, Encoding.UTF8);
-                using (var stream = new StreamReader(fileStream, encoding))
+                var listener = new SExpListener(useColumns);
+                var lexer = Gherkin.Lexers.Create(language, listener);
+
+                try
                 {
-                    var content = stream.ReadToEnd();
-                    return lexing_input(content, language);
+                    //lexer.Scan(new StringReader(input));
+                    lexer.Scan(new StringReader(input.Replace("\r", "")));
+                    return new LexingResult(listener.Value);
+                }
+                catch (Exception e)
+                {
+                    return new LexingResult(e);
                 }
             }
-        }
 
-        private Stream GetFixtureFileContent(string fileName)
-        {
-            var currentAssembly = Assembly.GetExecutingAssembly();
-            return currentAssembly.GetManifestResourceStream(string.Format("Gherkin.Tests.fixtures.{0}", fileName));
-        }
-
-        protected Encoding DetermineEncoding(Stream stream, Encoding defaultEncoding)
-        {
-            if (!stream.CanSeek)
-                return defaultEncoding;
-
-            var encodingsToTest = new[] { Encoding.BigEndianUnicode, Encoding.Unicode, Encoding.UTF32, Encoding.UTF8 };
-
-            foreach (var enc in encodingsToTest)
+            internal LexingResult scan_file(string fileName)
             {
-                var preamble = enc.GetPreamble();
-                var start = new byte[preamble.Length];
-                var read = stream.Read(start, 0, preamble.Length);
-                stream.Position = 0;
-
-                if (read == preamble.Length && start.SequenceEqual(preamble))
-                    return enc;
+                using (var fileStream = GetFixtureFileContent(fileName))
+                {
+                    var encoding = DetermineEncoding(fileStream, Encoding.UTF8);
+                    using (var stream = new StreamReader(fileStream, encoding))
+                    {
+                        var content = stream.ReadToEnd();
+                        return lexing_input(content);
+                    }
+                }
             }
-            return defaultEncoding;
+
+            private Stream GetFixtureFileContent(string fileName)
+            {
+                var currentAssembly = Assembly.GetExecutingAssembly();
+                return currentAssembly.GetManifestResourceStream(string.Format("Gherkin.Tests.fixtures.{0}", fileName));
+            }
+
+            protected Encoding DetermineEncoding(Stream stream, Encoding defaultEncoding)
+            {
+                if (!stream.CanSeek)
+                    return defaultEncoding;
+
+                var encodingsToTest = new[] { Encoding.BigEndianUnicode, Encoding.Unicode, Encoding.UTF32, Encoding.UTF8 };
+
+                foreach (var enc in encodingsToTest)
+                {
+                    var preamble = enc.GetPreamble();
+                    var start = new byte[preamble.Length];
+                    var read = stream.Read(start, 0, preamble.Length);
+                    stream.Position = 0;
+
+                    if (read == preamble.Length && start.SequenceEqual(preamble))
+                        return enc;
+                }
+                return defaultEncoding;
+            }
+
+            internal LexerDecl using_column_positions()
+            {
+                useColumns = true;
+                return this;
+            }
         }
 
         protected class LexingResult

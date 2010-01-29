@@ -5,13 +5,13 @@ namespace Gherkin.Tests.LexerSpecs
     public class A_single_feature_with_no_scenario : LexerSpec 
     { 
         [Fact] public void should_find_the_feature() {
-            lexing_input("Feature: Feature Text\n").
+            a_lexer().lexing_input("Feature: Feature Text\n").
                 should_result_in("(root " +
                                  "(feature 1 Feature \"Feature Text\")");
         }
 
         [Fact] public void should_parse_a_one_line_feature_with_no_newline() {
-            lexing_input("Feature: hi").
+            a_lexer().lexing_input("Feature: hi").
                 should_result_in("(root " + "(feature 1   Feature   hi  )");
         }
     }

@@ -11,12 +11,12 @@ namespace Gherkin.Tests.LexerSpecs
                                 };
             foreach (var input in inputs)
             {
-                lexing_input(input).should_fail_with(e => e.Message.Contains("Lexing error on line"));
+                a_lexer().lexing_input(input).should_fail_with(e => e.Message.Contains("Lexing error on line"));
             }
         }
         
         [Fact] public void should_include_the_line_number_and_context_of_the_error() {
-            lexing_input("Feature: hello\nScenario: My scenario\nGiven foo\nAand blah\nHmmm wrong\nThen something something").
+            a_lexer().lexing_input("Feature: hello\nScenario: My scenario\nGiven foo\nAand blah\nHmmm wrong\nThen something something").
                 should_fail_with_message("Lexing error on line 4");
         }
     }

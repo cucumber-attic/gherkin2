@@ -15,14 +15,16 @@ namespace Gherkin.Tests.ParserSpecs
         {
             a_parser().
                 parsing_input("# Content").
-                should_delegate(l => l.Comment("# Content", It.IsAny<int>()));
+                should_delegate(l => l.Comment(new Token("# Content", new Position(1, 1))));
         }
 
         [Fact]
         public void should_raise_helpful_error_messages_by_default()
         {
             a_parser().
-                receiving(p => p.Scenario("Scenario", "My pet scenario", 12)).
+                receiving(p => p.Scenario(
+                    new Token("Scenario", new Position(12,1)), 
+                    new Token("My pet scenario", new Position(12, 10)))).
                 should_raise_error("Parse error on line 12. Found scenario when expecting one of: comment, feature, tag. (Current state: root).");
         }
 
@@ -31,9 +33,11 @@ namespace Gherkin.Tests.ParserSpecs
         {
             a_parser()
                 .with_raise_on_error(false)
-                .receiving(p => p.Background("Background", "Content", 1))
+                .receiving(p => p.Background(
+                    new Token("Background", new Position(1, 1)), 
+                    new Token("Content", new Position(1, 12))))
                 .should_delegate(
-                l => l.SyntaxError("root", "background", Containing<string>.Same("comment", "feature", "tag"), 1));
+                l => l.SyntaxError("root", "background", Containing<string>.Same("comment", "feature", "tag"), It.Is<Position>(p => p.Line == 1)));
         }
     }
 

@@ -5,107 +5,127 @@ using System.Text.RegularExpressions;
 
 namespace Gherkin
 {
-    public class Parser : IListener 
+    public class Parser : IListener
     {
         private IList<Machine> machines = new List<Machine>();
 
         private IListener listener;
         private bool throwOnError;
 
-        public Parser(IListener listener) : this(listener, true)
+        public Parser(IListener listener)
+            : this(listener, true)
         {
         }
 
-        public Parser(IListener listener, bool throwOnError) : this(listener, throwOnError, "root")
+        public Parser(IListener listener, bool throwOnError)
+            : this(listener, throwOnError, "root")
         {
         }
 
-        public Parser(IListener listener, bool throwOnError, string machineName) {
+        public Parser(IListener listener, bool throwOnError, string machineName)
+        {
             this.listener = listener;
             this.throwOnError = throwOnError;
             pushMachine(machineName);
         }
 
-        private void pushMachine(string machineName) {
+        private void pushMachine(string machineName)
+        {
             machines.Add(new Machine(this, machineName));
         }
 
-        private void popMachine() {
+        private void popMachine()
+        {
             machines.RemoveAt(machines.Count - 1);
         }
 
-        public void Tag(string name, int line) {
-            if (NextEvent("tag", line))
-                listener.Tag(name, line);
+        public void Tag(Token name)
+        {
+            if (NextEvent("tag", name.Position))
+                listener.Tag(name);
         }
 
-        public void PythonString(string pyString, int line) {
-            if (NextEvent("py_string", line))
-                listener.PythonString(pyString, line);
+        public void PythonString(Token pyString)
+        {
+            if (NextEvent("py_string", pyString.Position))
+                listener.PythonString(pyString);
         }
 
-        public void Feature(string keyword, string name, int line) {
-            if (NextEvent("feature", line))
-                listener.Feature(keyword, name, line);
+        public void Feature(Token keyword, Token name)
+        {
+            if (NextEvent("feature", keyword.Position))
+                listener.Feature(keyword, name);
         }
 
-        public void Background(string keyword, string name, int line) {
-            if (NextEvent("background", line))
-                listener.Background(keyword, name, line);
+        public void Background(Token keyword, Token name)
+        {
+            if (NextEvent("background", keyword.Position))
+                listener.Background(keyword, name);
         }
 
-        public void Scenario(string keyword, string name, int line) {
-            if (NextEvent("scenario", line))
-                listener.Scenario(keyword, name, line);
+        public void Scenario(Token keyword, Token name)
+        {
+            if (NextEvent("scenario", keyword.Position))
+                listener.Scenario(keyword, name);
         }
 
-        public void ScenarioOutline(string keyword, string name, int line) {
-            if (NextEvent("scenario_outline", line))
-                listener.ScenarioOutline(keyword, name, line);
+        public void ScenarioOutline(Token keyword, Token name)
+        {
+            if (NextEvent("scenario_outline", keyword.Position))
+                listener.ScenarioOutline(keyword, name);
         }
 
-        public void Examples(string keyword, string name, int line) {
-            if (NextEvent("examples", line))
-                listener.Examples(keyword, name, line);
+        public void Examples(Token keyword, Token name)
+        {
+            if (NextEvent("examples", keyword.Position))
+                listener.Examples(keyword, name);
         }
 
-        public void Step(string keyword, StepKind stepKind, string name, int line) {
-            if (NextEvent("step", line))
-                listener.Step(keyword, stepKind, name, line);
+        public void Step(Token keyword, Token name, StepKind stepKind)
+        {
+            if (NextEvent("step", keyword.Position))
+                listener.Step(keyword, name, stepKind);
         }
 
-        public void Comment(string content, int line) {
-            if (NextEvent("comment", line))
-                listener.Comment(content, line);
+        public void Comment(Token content)
+        {
+            if (NextEvent("comment", content.Position))
+                listener.Comment(content);
         }
 
-        public void Table(IList<IList<string>> rows, int line) {
-            if (NextEvent("table", line))
-                listener.Table(rows, line);
+        public void Table(IList<IList<Token>> rows, Position tablePosition)
+        {
+            if (NextEvent("table", tablePosition))
+                listener.Table(rows, tablePosition);
         }
 
-        public void SyntaxError(string name, string @event, IEnumerable<string> strings, int line) {
+        public void SyntaxError(string state, string @event, IEnumerable<string> legalEvents, Position position)
+        {
         }
 
-        private bool NextEvent(string @event, int line) {
-            try {
-                machine().NextEvent(@event, line);
+        private bool NextEvent(string @event, Position position)
+        {
+            try
+            {
+                machine().NextEvent(@event, position);
                 return true;
-            } 
-            catch (ParseException e) 
+            }
+            catch (ParseException e)
             {
                 if (throwOnError) throw;
 
-                listener.SyntaxError(e.State, @event, e.ExpectedEvents, line);
+                listener.SyntaxError(e.State, @event, e.ExpectedEvents, position);
                 return false;
             }
         }
 
-        private Machine machine() {
+        private Machine machine()
+        {
             return machines[machines.Count - 1];
         }
 
-        private sealed class Machine {
+        private sealed class Machine
+        {
             private static readonly Regex PUSH = new Regex("push\\((.+)\\)");
             private static readonly IDictionary<string, IDictionary<string, IDictionary<string, string>>> TRANSITION_MAPS = new Dictionary<string, IDictionary<string, IDictionary<string, string>>>();
 
@@ -114,20 +134,22 @@ namespace Gherkin
             private string state;
             private IDictionary<string, IDictionary<string, string>> transitionMap;
 
-            public Machine(Parser parser, string name) {
+            public Machine(Parser parser, string name)
+            {
                 this.parser = parser;
                 this.name = name;
                 this.state = name;
                 this.transitionMap = TransitionMap(name);
             }
 
-            public void NextEvent(string @event, int line) {
-                if (!transitionMap.ContainsKey(state)) 
+            public void NextEvent(string @event, Position position)
+            {
+                if (!transitionMap.ContainsKey(state))
                 {
                     throw new Exception("Unknown state: " + state + " for machine " + name);
                 }
                 var states = transitionMap[state];
-                
+
                 if (!states.ContainsKey(@event))
                 {
                     throw new Exception("Unknown transition: " + @event + " among " + states + " for machine " + name + " in state " + state);
@@ -135,31 +157,36 @@ namespace Gherkin
 
                 var newState = states[@event];
 
-                if ("E" == newState) 
+                if ("E" == newState)
                 {
-                    throw new ParseException(state, @event, ExpectedEvents, line);
-                } 
+                    throw new ParseException(state, @event, ExpectedEvents, position);
+                }
 
                 Match push = PUSH.Match(newState);
-                if (push.Success) {
+                if (push.Success)
+                {
                     parser.pushMachine(push.Groups[1].Captures[0].Value);
-                    parser.NextEvent(@event, line);
-                } else if ("pop()" == newState) {
+                    parser.NextEvent(@event, position);
+                }
+                else if ("pop()" == newState)
+                {
                     parser.popMachine();
-                    parser.NextEvent(@event, line);
-                } else {
+                    parser.NextEvent(@event, position);
+                }
+                else
+                {
                     state = newState;
                 }
             }
 
             private IEnumerable<string> ExpectedEvents
-            { 
+            {
                 get
                 {
                     var result = new List<string>();
-                    foreach (var @event in transitionMap[state].Keys) 
+                    foreach (var @event in transitionMap[state].Keys)
                     {
-                        if (transitionMap[state][@event] != "E") 
+                        if (transitionMap[state][@event] != "E")
                         {
                             result.Add(@event);
                         }
@@ -169,7 +196,8 @@ namespace Gherkin
                 }
             }
 
-            private IDictionary<string, IDictionary<string, string>> TransitionMap(string name) {
+            private IDictionary<string, IDictionary<string, string>> TransitionMap(string name)
+            {
                 if (!TRANSITION_MAPS.ContainsKey(name))
                 {
                     TRANSITION_MAPS[name] = BuildTransitionMap(name);
@@ -177,15 +205,17 @@ namespace Gherkin
                 return TRANSITION_MAPS[name];
             }
 
-            private IDictionary<string, IDictionary<string, string>> BuildTransitionMap(string name) {
+            private IDictionary<string, IDictionary<string, string>> BuildTransitionMap(string name)
+            {
                 var result = new Dictionary<string, IDictionary<string, string>>();
                 var transitionTable = new StateMachine.StateMachineReader(name).TransitionTable;
                 var events = transitionTable[0].Skip(1);
-                foreach (var actions in transitionTable.Skip(1)) 
+                foreach (var actions in transitionTable.Skip(1))
                 {
                     var transitions = new Dictionary<string, string>();
                     int col = 1;
-                    foreach (var @event in events) {
+                    foreach (var @event in events)
+                    {
                         transitions[@event] = actions[col++];
                     }
                     var state = actions[0];

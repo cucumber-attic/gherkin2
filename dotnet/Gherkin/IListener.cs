@@ -3,26 +3,16 @@ using System.Collections.Generic;
 namespace Gherkin
 {
     public interface IListener {
-        void Tag(string name, int line);
-
-        void Comment(string content, int line);
-
-        void Feature(string keyword, string name, int line);
-
-        void Background(string keyword, string name, int line);
-
-        void Scenario(string keyword, string name, int line);
-
-        void ScenarioOutline(string keyword, string name, int line);
-
-        void Examples(string keyword, string name, int line);
-
-        void Step(string keyword, StepKind stepKind, string name, int line);
-
-        void Table(IList<IList<string>> rows, int line);
-
-        void PythonString(string pyString, int line);
-
-        void SyntaxError(string state, string @event, IEnumerable<string> legalEvents, int line);
+        void Tag(Token name);
+        void Comment(Token content);
+        void Feature(Token keyword, Token name);
+        void Background(Token keyword, Token name);
+        void Scenario(Token keyword, Token name);
+        void ScenarioOutline(Token keyword, Token name);
+        void Examples(Token keyword, Token name);
+        void Step(Token keyword, Token name, StepKind stepKind);
+        void Table(IList<IList<Token>> rows, Position tablePosition);
+        void PythonString(Token pyString);
+        void SyntaxError(string state, string @event, IEnumerable<string> legalEvents, Position position);
     }
 }

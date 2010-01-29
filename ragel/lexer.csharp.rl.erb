@@ -14,12 +14,15 @@ namespace Gherkin.Lexer
 
 			action begin_content {
 				contentStart = p;
+				contentCol = p - lastNewline + 1;
+	            contentNewline = lastNewline;
 				currentLine = lineNumber;
 			}
 
 			action start_pystring {
 				currentLine = lineNumber;
-				startCol = p - lastNewline;
+				pystringStartCol = p - lastNewline;
+				pystringStartNewline = lastNewline;
 			}
 		    
 			action begin_pystring_content {
@@ -27,56 +30,59 @@ namespace Gherkin.Lexer
 			}
 
 			action store_pystring_content {
-				string con = Unindent(startCol, new Regex("(\\r?\\n)?( )*\\Z").Replace(Substring(data, contentStart, nextKeywordStart-1), "", 1));
-				listener.PythonString(con, currentLine);
+				string con = Unindent(pystringStartCol, new Regex("(\\r?\\n)?( )*\\Z").Replace(Substring(data, contentStart, nextKeywordStart-1), "", 1));
+				listener.PythonString(new Token(con, GetCharacterPosition(data, pystringStartNewline, currentLine, pystringStartCol+1)));
 			}
 
 			action store_feature_content {
 				string con = MultilineStrip(KeywordContent(data, p, eof, nextKeywordStart, contentStart).Trim());
-				listener.Feature(keyword, con, currentLine);
+				listener.Feature(new Token(keyword, GetCharacterPosition(data, keywordNewline, currentLine, keywordCol)), new Token(con, GetCharacterPosition(data, contentNewline, currentLine, contentCol)));
 				if(nextKeywordStart != -1) p = nextKeywordStart - 1;
 				nextKeywordStart = -1;
 			}
 
 			action store_background_content {
 				string con = MultilineStrip(KeywordContent(data, p, eof, nextKeywordStart, contentStart));
-				listener.Background(keyword, con, currentLine);
+				listener.Background(new Token(keyword, GetCharacterPosition(data, keywordNewline, currentLine, keywordCol)), new Token(con, GetCharacterPosition(data, contentNewline, currentLine, contentCol)));
 				if(nextKeywordStart != -1) p = nextKeywordStart - 1;
 				nextKeywordStart = -1;
 			}
 
 			action store_scenario_content {
 				string con = MultilineStrip(KeywordContent(data, p, eof, nextKeywordStart, contentStart));
-				listener.Scenario(keyword, con, currentLine);
+				listener.Scenario(new Token(keyword, GetCharacterPosition(data, keywordNewline, currentLine, keywordCol)), new Token(con, GetCharacterPosition(data, contentNewline, currentLine, contentCol)));
 				if(nextKeywordStart != -1) p = nextKeywordStart - 1;
 				nextKeywordStart = -1;
 			}
 
 			action store_scenario_outline_content {
 				string con = MultilineStrip(KeywordContent(data, p, eof, nextKeywordStart, contentStart));
-				listener.ScenarioOutline(keyword, con, currentLine);
+				listener.ScenarioOutline(new Token(keyword, GetCharacterPosition(data, keywordNewline, currentLine, keywordCol)), new Token(con, GetCharacterPosition(data, contentNewline, currentLine, contentCol)));
 				if(nextKeywordStart != -1) p = nextKeywordStart - 1;
 				nextKeywordStart = -1;
 			}
 
 			action store_examples_content {
 				string con = MultilineStrip(KeywordContent(data, p, eof, nextKeywordStart, contentStart));
-				listener.Examples(keyword, con, currentLine);
+				listener.Examples(new Token(keyword, GetCharacterPosition(data, keywordNewline, currentLine, keywordCol)), new Token(con, GetCharacterPosition(data, contentNewline, currentLine, contentCol)));
 				if(nextKeywordStart != -1) p = nextKeywordStart - 1;
 				nextKeywordStart = -1;
 			}
 
 			action store_step_content {
-				listener.Step(keyword, LookupStepKind(keyword), Substring(data, contentStart, p).Trim(), currentLine);
+				listener.Step(
+					new Token(keyword, GetCharacterPosition(data, keywordNewline, currentLine, keywordCol)), 
+					new Token(Substring(data, contentStart, p).Trim(), GetCharacterPosition(data, contentNewline, currentLine, contentCol)),
+					LookupStepKind(keyword));
 			}
 
 			action store_comment_content {
-				listener.Comment(Substring(data, contentStart, p).Trim(), lineNumber);
+				listener.Comment(new Token(Substring(data, contentStart, p).Trim(), GetCharacterPosition(data, contentNewline, currentLine, contentCol)));
 				keywordStart = -1;
 			}
 
 			action store_tag_content {
-				listener.Tag(Substring(data, contentStart, p).Trim(), currentLine);
+				listener.Tag(new Token(Substring(data, contentStart, p).Trim(), GetCharacterPosition(data, contentNewline, currentLine, contentCol-1)));
 				keywordStart = -1;
 			}
 
@@ -90,6 +96,11 @@ namespace Gherkin.Lexer
 
 			action start_keyword {
 				if(keywordStart == -1) keywordStart = p;
+				if(nextKeywordStart == -1)
+				{
+					keywordCol = p - lastNewline + 1;
+					keywordNewline = lastNewline;
+				}
 			}
 
 			action end_keyword {
@@ -102,13 +113,14 @@ namespace Gherkin.Lexer
 			}
 
 			action start_table {
-				p = p - 1;
-				rows = new List<IList<string>>();
 				currentLine = lineNumber;
+				contentCol = p - lastNewline + 1;
+				p = p - 1;
+				rows = new List<IList<Token>>();
 			}
 
 			action start_row {
-				currentRow = new List<string>();
+				currentRow = new List<Token>();
 			}
 
 			action begin_cell_content {
@@ -116,7 +128,7 @@ namespace Gherkin.Lexer
 			}
 
 			action store_cell_content {
-				currentRow.Add(Substring(data, contentStart, p).Trim());
+				currentRow.Add(new Token(Substring(data, contentStart, p).Trim(), GetCharacterPosition(data, lastNewline, lineNumber, contentStart - lastNewline + 1)));
 			}
 
 			action store_row {
@@ -125,7 +137,7 @@ namespace Gherkin.Lexer
 
 			action store_table {
 				if(rows.Count > 0) {
-					listener.Table(rows, currentLine);
+					listener.Table(rows, GetCharacterPosition(data, contentNewline, currentLine, contentCol));
 				}
 			}
 
@@ -186,14 +198,19 @@ namespace Gherkin.Lexer
 			int lineNumber = 1;
 			int lastNewline = 0;
 
+			int keywordCol = -1;
+		    int keywordNewline = 0;
+			int contentCol = -1;
+		    int contentNewline = 0;
 			int contentStart = -1;
 			int currentLine = -1;
-			int startCol = -1;
+			int pystringStartNewline = 0;
+			int pystringStartCol = -1;
 			int nextKeywordStart = -1;
 			int keywordStart = -1;
 			string keyword = null;
-			IList<IList<string>> rows = null;
-			IList<string> currentRow = null;
+			IList<IList<Token>> rows = null;
+			IList<Token> currentRow = null;
 
 			%% write init;
 			%% write exec;
@@ -223,5 +240,10 @@ namespace Gherkin.Lexer
 		private string Substring(char[] data, int start, int end) {
 			return Encoding.UTF8.GetString(Encoding.GetEncoding("iso-8859-1").GetBytes(data, start, end-start));
 		}
+		
+        private Position GetCharacterPosition(char[] data, int lineStart, int line, int bytecol) {
+            return new Position(line,
+                Encoding.UTF8.GetCharCount(Encoding.GetEncoding("iso-8859-1").GetBytes(data, lineStart, bytecol)));
+        }
 	}
 }

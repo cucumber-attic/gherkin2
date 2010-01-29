@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Linq;
 using System.Reflection;
 using System.Resources;
 
@@ -39,38 +41,49 @@ namespace Gherkin.StateMachine
             }
         }
 
-        public void Tag(string name, int line) {
+        public void Tag(Token name)
+        {
         }
 
-        public void Comment(string content, int line) {
+        public void Comment(Token content)
+        {
         }
 
-        public void Feature(string keyword, string name, int line) {
+        public void Feature(Token keyword, Token name)
+        {
         }
 
-        public void Background(string keyword, string name, int line) {
+        public void Background(Token keyword, Token name)
+        {
         }
 
-        public void Scenario(string keyword, string name, int line) {
+        public void Scenario(Token keyword, Token name)
+        {
         }
 
-        public void ScenarioOutline(string keyword, string name, int line) {
+        public void ScenarioOutline(Token keyword, Token name)
+        {
         }
 
-        public void Examples(string keyword, string name, int line) {
+        public void Examples(Token keyword, Token name)
+        {
         }
 
-        public void Step(string keyword, StepKind stepKind, string name, int line) {
+        public void Step(Token keyword, Token name, StepKind stepKind)
+        {
         }
 
-        public void PythonString(string pyString, int line) {
+        public void Table(IList<IList<Token>> rows, Position tablePosition)
+        {
+            transitionTable = rows.Select(row => (IList<string>)new List<string>(row.Select(cell => cell.Content))).ToList();
         }
 
-        public void SyntaxError(string name, string @event, IEnumerable<string> strings, int line) {
+        public void PythonString(Token pyString)
+        {
         }
 
-        public void Table(IList<IList<string>> rows, int line) {
-            transitionTable = rows;
+        public void SyntaxError(string state, string @event, IEnumerable<string> legalEvents, Position position)
+        {
         }
     }
 }

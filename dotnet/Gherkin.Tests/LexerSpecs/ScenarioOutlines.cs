@@ -4,7 +4,7 @@ namespace Gherkin.Tests.LexerSpecs
 {
     public class ScenarioOutlines : LexerSpec { 
         [Fact] public void should_be_parsed() {
-            lexing_input(@"Scenario Outline: Hello
+            a_lexer().lexing_input(@"Scenario Outline: Hello
                           Given a <what> cucumber
                           Examples:
                           |what|
@@ -19,7 +19,7 @@ namespace Gherkin.Tests.LexerSpecs
         }
 
         [Fact] public void should_parse_with_no_steps_or_examples() {
-            lexing_input(@"Scenario Outline: Hello
+            a_lexer().lexing_input(@"Scenario Outline: Hello
 
                           Scenario: My Scenario
                           ").
@@ -30,7 +30,7 @@ namespace Gherkin.Tests.LexerSpecs
         }
 
         [Fact] public void should_allow_multiline_names() {
-            lexing_input(@"Scenario Outline: It is my ambition to say 
+            a_lexer().lexing_input(@"Scenario Outline: It is my ambition to say 
                           in ten sentences
                           what others say 
                           in a whole book.

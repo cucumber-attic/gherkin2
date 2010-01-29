@@ -124,7 +124,9 @@
     <Compile Include="Lexer\nl.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Lexer\no.cs" />
+    <Compile Include="Lexer\no.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Lexer\pl.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -171,9 +173,11 @@
     <Compile Include="IListener.cs" />
     <Compile Include="ParseError.cs" />
     <Compile Include="Parser.cs" />
+    <Compile Include="Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StateMachine\StateMachineReader.cs" />
     <Compile Include="StepKind.cs" />
+    <Compile Include="Token.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="StateMachine\meta.txt" />

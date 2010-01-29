@@ -4,7 +4,7 @@ namespace Gherkin.Tests.LexerSpecs
 {
     public class Examples : LexerSpec { 
         [Fact] public void should_be_parsed() {
-            lexing_input(@"Examples:
+            a_lexer().lexing_input(@"Examples:
                           |x|y|
                           |5|6|
                           ").
@@ -15,7 +15,7 @@ namespace Gherkin.Tests.LexerSpecs
         }
         
         [Fact] public void should_parse_multiline_example_names() {
-            lexing_input(@"Examples: I'm a multiline name
+            a_lexer().lexing_input(@"Examples: I'm a multiline name
                           and I'm ok
                           f'real
                           |x|

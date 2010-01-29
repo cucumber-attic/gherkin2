@@ -4,7 +4,7 @@ namespace Gherkin.Tests.LexerSpecs
 {
     public class A_simple_feature_with_comments : LexerSpec { 
         [Fact] public void should_find_the_feature_scenarios_steps_and_comments_in_the_proper_order() {
-            scan_file("simple_with_comments.feature").
+            a_lexer().scan_file("simple_with_comments.feature").
                 should_result_in("(root " + 
                                  "(comment 1  \"# Here is a comment\" )" +
                                  "(feature 2   Feature  \"Feature Text\" )" +
