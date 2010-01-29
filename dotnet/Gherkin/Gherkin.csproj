@@ -12,6 +12,8 @@
     <AssemblyName>Gherkin</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>gherkin.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -177,6 +179,9 @@
     <EmbeddedResource Include="StateMachine\meta.txt" />
     <EmbeddedResource Include="StateMachine\root.txt" />
     <EmbeddedResource Include="StateMachine\steps.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="gherkin.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
