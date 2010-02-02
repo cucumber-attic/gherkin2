@@ -25,8 +25,8 @@
   ScenarioOutlineHeading = space* I18N_ScenarioOutline %begin_content ^ScenarioOutlineHeadingEnd* :>> ScenarioOutlineHeadingEnd @store_scenario_outline_content;
   ExamplesHeading = space* I18N_Examples %begin_content ^ExamplesHeadingEnd* :>> ExamplesHeadingEnd @store_examples_content;
 
-  Step = space* I18N_Step %begin_content ^EOL+ %store_step_content <: EOL+;
-  Comment = space* '#' >begin_content ^EOL* %store_comment_content <: EOL+;
+  Step = space* I18N_Step %begin_content ^EOL+ %store_step_content :> EOL+;
+  Comment = space* '#' >begin_content ^EOL* %store_comment_content :> EOL+;
   
   Tag = ( '@' [^@\r\n\t ]+ >begin_content ) %store_tag_content;
   Tags = space* (Tag space*)+ EOL+;
