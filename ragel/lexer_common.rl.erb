@@ -10,7 +10,8 @@
   I18N_Examples = (<%= ragel_list(@i18n.examples_keywords) %> ':') >start_keyword %end_keyword;
 
   EOF = '%_FEATURE_END_%'; # Explicit EOF added before scanning begins 
-  EOL = ('\r'? '\n') @inc_line_number @last_newline;
+  #EOL = ('\r'? '\n') @inc_line_number @last_newline;
+  EOL = ('\n' | '\r\n') @inc_line_number @last_newline;
 
   FeatureHeadingEnd = EOL+ space* (I18N_Background | I18N_Scenario | I18N_ScenarioOutline | '@' | '#' | EOF) >next_keyword_start;
   ScenarioHeadingEnd = EOL+ space* ( I18N_Scenario | I18N_ScenarioOutline | I18N_Step | '@' | '#' | EOF ) >next_keyword_start;
@@ -24,8 +25,8 @@
   ScenarioOutlineHeading = space* I18N_ScenarioOutline %begin_content ^ScenarioOutlineHeadingEnd* :>> ScenarioOutlineHeadingEnd @store_scenario_outline_content;
   ExamplesHeading = space* I18N_Examples %begin_content ^ExamplesHeadingEnd* :>> ExamplesHeadingEnd @store_examples_content;
 
-  Step = space* I18N_Step %begin_content ^EOL+ %store_step_content EOL+;
-  Comment = space* '#' >begin_content ^EOL* %store_comment_content EOL+;
+  Step = space* I18N_Step %begin_content ^EOL+ %store_step_content <: EOL+;
+  Comment = space* '#' >begin_content ^EOL* %store_comment_content <: EOL+;
   
   Tag = ( '@' [^@\r\n\t ]+ >begin_content ) %store_tag_content;
   Tags = space* (Tag space*)+ EOL+;
