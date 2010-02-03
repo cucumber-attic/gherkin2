@@ -119,6 +119,11 @@ EOS
         @listener.should_receive(:py_string).with("PyString text\n\n",1)
         @lexer.scan(str)
       end        
+
+      it "should preserve CRLFs within py_strings" do
+        @listener.should_receive(:py_string).with("Line one\r\nLine two\r\n", 1)
+        @lexer.scan("\"\"\"\r\nLine one\r\nLine two\r\n\r\n\"\"\"")
+      end
     end
   end
 end
