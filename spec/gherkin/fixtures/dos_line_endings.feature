@@ -21,6 +21,7 @@ Feature: Feature Text
 
   @tag3
   Scenario: Reading a second scenario
+    With two lines of text
     #Comment on line 24
     Given a third step with a table
     |a|b|
@@ -39,5 +40,6 @@ Feature: Feature Text
     Given All work and no play
       """
       Makes Homer something something
+      And something else
       """
     Then crazy

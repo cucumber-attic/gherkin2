@@ -10,7 +10,6 @@
   I18N_Examples = (<%= ragel_list(@i18n.examples_keywords) %> ':') >start_keyword %end_keyword;
 
   EOF = '%_FEATURE_END_%'; # Explicit EOF added before scanning begins 
-  #EOL = ('\r'? '\n') @inc_line_number @last_newline;
   EOL = ('\n' | '\r\n') @inc_line_number @last_newline;
 
   FeatureHeadingEnd = EOL+ space* (I18N_Background | I18N_Scenario | I18N_ScenarioOutline | '@' | '#' | EOF) >next_keyword_start;
