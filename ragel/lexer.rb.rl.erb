@@ -149,7 +149,10 @@ module Gherkin
       end
  
       def multiline_strip(text)
-        text.split("\n").map{|s| s.strip}.join("\n").strip
+        crlf_count = text.scan(/\r\n/).size
+        lf_count = text.scan(/[^\r]\n/).size
+        eol = crlf_count > lf_count ? "\r\n" : "\n"
+        text.split(/\r?\n/).map{|s| s.strip}.join(eol).strip
       end
 
       def unindent(startcol, text)
