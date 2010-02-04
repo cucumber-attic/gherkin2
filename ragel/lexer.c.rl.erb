@@ -39,6 +39,7 @@ typedef struct lexer_state {
   int line_number;
   int current_line;
   int start_col;
+  int crlf;
   size_t mark;
   size_t keyword_start;
   size_t keyword_end;
@@ -64,7 +65,7 @@ static VALUE rb_eGherkinLexerError;
   store_kw_con(listener, # EVENT, \
     PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), \
     PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), \
-    lexer->current_line); \
+    lexer->current_line, lexer->crlf); \
     if (lexer->content_end != 0) { \
       p = PTR_TO(content_end - 1); \
     } \
@@ -124,7 +125,7 @@ static VALUE rb_eGherkinLexerError;
     store_kw_con(listener, "step",
       PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)),
       PTR_TO(content_start), LEN(content_start, p), 
-      lexer->current_line);
+      lexer->current_line, lexer->crlf);
   }
   
   action store_comment_content {
@@ -248,26 +249,30 @@ strip_i(VALUE str, VALUE ary)
 }
 
 static VALUE 
-multiline_strip(VALUE text)
+multiline_strip(VALUE text, int crlf)
 {
   VALUE map = rb_ary_new();
   VALUE split = rb_str_split(text, "\n");
   
   rb_iterate(rb_each, split, strip_i, map);
   
-  return rb_ary_join(split, rb_str_new2("\n"));
+  if(crlf == 1) {
+    return rb_ary_join(split, rb_str_new2("\r\n"));
+  } else {
+    return rb_ary_join(split, rb_str_new2("\n"));
+  }
 }
 
 static void 
 store_kw_con(VALUE listener, const char * event_name, 
              const char * keyword_at, size_t keyword_length, 
              const char * at,         size_t length, 
-             int current_line)
+             int current_line, int crlf)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = ENCODED_STR_NEW(keyword_at, keyword_length);
   con = ENCODED_STR_NEW(at, length);
-  con = multiline_strip(con);
+  con = multiline_strip(con, crlf);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(listener, rb_intern(event_name), 3, kw, con, INT2FIX(current_line)); 
 }
@@ -304,6 +309,20 @@ raise_lexer_error(const char * at, int line)
   rb_raise(rb_eGherkinLexerError, "Lexing error on line %d: '%s'.", line, at);
 }
 
+static int 
+count_char(char char_to_count, char *str) {
+
+  int count = 0;
+  int i = 0;
+  while(str[i] != '\0') {
+    if(str[i] == char_to_count) {
+      count++;
+    }
+    i++;
+  }
+  return count;
+}
+
 static void lexer_init(lexer_state *lexer) {
   lexer->content_start = 0;
   lexer->content_end = 0;
@@ -316,6 +335,7 @@ static void lexer_init(lexer_state *lexer) {
   lexer->last_newline = 0;
   lexer->final_newline = 0;
   lexer->start_col = 0;
+  lexer->crlf = 0;
 }
 
 static VALUE CLexer_alloc(VALUE klass)
@@ -345,10 +365,16 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
   lexer_state *lexer = NULL;
   DATA_GET(self, lexer_state, lexer);
 
+
   VALUE input_copy = rb_str_dup(input);
+
   rb_str_append(input_copy, rb_str_new2("\n%_FEATURE_END_%"));
   char *data = RSTRING_PTR(input_copy);
   size_t len = RSTRING_LEN(input_copy);
+  
+  if (count_char('\r', data) > (count_char('\n', data) / 2)) {
+    lexer->crlf = 1;
+  }
   
   if (len == 0) { 
     rb_raise(rb_eGherkinLexerError, "No content to lex.");
@@ -396,3 +422,4 @@ void Init_gherkin_lexer_<%= @i18n.sanitized_key %>()
   rb_define_method(cI18nLexer, "initialize", CLexer_init, 1);
   rb_define_method(cI18nLexer, "scan", CLexer_scan, 1);
 }
+
