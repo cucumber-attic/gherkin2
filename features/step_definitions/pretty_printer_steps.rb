@@ -31,13 +31,12 @@ When /^I parse the prettified representation of each of them$/ do
     pretty1 = nil
     pretty2 = nil
     begin
-#      announce "========== #{feature}:"
       pretty1 = pretty(IO.read(feature))
       pretty2 = pretty(pretty1)
       pretty2.should == pretty1
     rescue Spec::Expectations::ExpectationNotMetError => e
-      File.open("p1.feature", "w") {|io| io.write(pretty1)}
-      File.open("p2.feature", "w") {|io| io.write(pretty2)}
+      File.open("p1.feature", "wb") {|io| io.write(pretty1)}
+      File.open("p2.feature", "wb") {|io| io.write(pretty2)}
       announce "========== #{feature}:"
       if(e.message =~ /(@@.*)/m)
         announce $1
