@@ -32,7 +32,6 @@ namespace :dotnet do
     task 'dotnet:lexer' => dst
   end
 
-  
   msbuild :compile => :lexer do |msb|
     msb.properties :configuration => :Release
     msb.targets :Build
@@ -80,7 +79,6 @@ Gherkin::I18n.all.each do |i18n|
 
   task :jar     => java.target
   task :jar     => rb.target
-  task 'dotnet:lexer'     => csharp.target
   task 'dotnet:lexer'     => csharp.target
 
   begin

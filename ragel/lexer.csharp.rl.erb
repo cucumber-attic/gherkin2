@@ -144,7 +144,7 @@ namespace Gherkin.Lexer
 			action end_feature {
 				if(cs < lexer_first_final) {
 					string content = CurrentLineContent(data, lastNewline);
-					throw new LexingException("Lexing error on line " + lineNumber);
+					throw new LexingException("Lexing error on line " + lineNumber + ": '" + content + "'");
 				}
 			}
 
