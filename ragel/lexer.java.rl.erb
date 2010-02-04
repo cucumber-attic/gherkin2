@@ -3,6 +3,7 @@ package gherkin.lexer;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import gherkin.Lexer;
 import gherkin.Listener;
 import gherkin.LexingError;
@@ -174,12 +175,29 @@ public class <%= @i18n.sanitized_key.capitalize %> implements Lexer {
     return substring(data, contentStart, endPoint);
   }
 
+  private static final Pattern CRLF_RE = Pattern.compile("\r\n");
+  private static final Pattern LF_RE = Pattern.compile("[^\r]\n");
+  private static final String CRLF = "\r\n";
+  private static final String LF = "\n";
+
   private String multilineStrip(String text) {
+    int crlfCount = matchCount(CRLF_RE.matcher(text));
+    int lfCount = matchCount(LF_RE.matcher(text));
+    String eol = crlfCount > lfCount ? CRLF : LF;
+
     StringBuffer result = new StringBuffer();
-    for(String s : text.split("\n")) {
-      result.append(s.trim()).append("\n");
+    for(String s : text.split("\r?\n")) {
+      result.append(s.trim()).append(eol);
     }
     return result.toString().trim();
+  }
+
+  private int matchCount(Matcher m) {
+    int count = 0;
+    while(m.find()) {
+      count++;
+    }
+    return count;
   }
 
   private String unindent(int startCol, String text) {
