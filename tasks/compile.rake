@@ -20,6 +20,22 @@ end
 namespace :dotnet do
   require 'albacore'
 
+  if (`which mono` rescue "") =~ /mono/
+    class MSBuild
+      def build_path_to_command
+        `which xbuild`.strip
+      end
+    end
+    
+    require 'rake/xunittask'
+    class XUnitTestRunner
+      def execute
+        system("mono dotnet/lib/xunit/xunit.console.exe dotnet/Gherkin.Tests/bin/Release/Gherkin.Tests.dll")
+        exit 1 if $? != 0
+      end
+    end
+  end
+
   desc "Generate the C# lexer files"
   task :lexer do
   end
