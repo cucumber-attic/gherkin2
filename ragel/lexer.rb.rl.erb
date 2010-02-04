@@ -147,9 +147,17 @@ module Gherkin
         %% write init;
         %% write exec;
       end
- 
+
+      CRLF_RE = /\r\n/
+      LF_RE = /[^\r]\n/
+      CRLF = "\r\n"
+      LF = "\n"
+
       def multiline_strip(text)
-        text.split("\n").map{|s| s.strip}.join("\n").strip
+        crlf_count = text.scan(CRLF_RE).size
+        lf_count = text.scan(LF_RE).size
+        eol = crlf_count > lf_count ? CRLF : LF
+        text.split(/\r?\n/).map{|s| s.strip}.join(eol).strip
       end
 
       def unindent(startcol, text)

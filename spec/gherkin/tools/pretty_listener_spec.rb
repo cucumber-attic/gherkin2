@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 require 'gherkin/tools/pretty_listener'
 require 'stringio'
 
@@ -15,8 +15,8 @@ module Gherkin
       def assert_pretty(text)
         io = StringIO.new
         l = PrettyListener.new(io)
-        parser = Parser.new(l, true, "root")
-        lexer  = I18nLexer.new(parser)
+        parser = Gherkin::Parser.new(l, true, "root")
+        lexer  = Gherkin::I18nLexer.new(parser)
         lexer.scan(text)
         io.rewind
         actual = io.read
@@ -135,6 +135,27 @@ module Gherkin
 })
       end
 
+
+      it "should prettify scenario outline with table" do
+        assert_pretty(%{Feature: Feature Description
+  Some preamble
+
+  Scenario Outline: Scenario Ouline Description
+    Given there is a
+      """
+      string with <foo>
+      """
+    And a table with
+      | <bar> |
+      | <baz> |
+
+    Examples: Examples Description
+      | foo    | bar  | baz         |
+      | Banana | I    | am hungry   |
+      | Beer   | You  | are thirsty |
+      | Bed    | They | are tired   |
+})
+      end
     end
   end
 end

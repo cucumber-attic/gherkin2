@@ -166,8 +166,7 @@ static VALUE rb_eGherkinLexerError;
   action start_table {
     p = p - 1;
     lexer->current_line = lexer->line_number;
-    rb_ary_clear(rows);
-    rb_ary_clear(current_row);
+    rows = rb_ary_new();
   }
   
   action begin_cell_content {
@@ -175,8 +174,7 @@ static VALUE rb_eGherkinLexerError;
   }
 
   action store_cell_content {
-    VALUE con = Qnil;
-    con = ENCODED_STR_NEW(PTR_TO(content_start), LEN(content_start, p));
+    VALUE con = ENCODED_STR_NEW(PTR_TO(content_start), LEN(content_start, p));
     rb_funcall(con, rb_intern("strip!"), 0);
 
     rb_ary_push(current_row, con);
@@ -294,7 +292,9 @@ store_pystring_content(VALUE listener,
   char pat[32]; 
   snprintf(pat, 32, "^ {0,%d}", start_col); 
   VALUE re = rb_reg_regcomp(rb_str_new2(pat));
+  VALUE re2 = rb_reg_regcomp(rb_str_new2("\r\\Z"));
   rb_funcall(con, rb_intern("gsub!"), 2, re, rb_str_new2(""));
+  rb_funcall(con, rb_intern("sub!"), 2, re2, rb_str_new2(""));
   rb_funcall(listener, rb_intern("py_string"), 2, con, INT2FIX(current_line));
 }
 
@@ -357,8 +357,8 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
     int cs = 0;
     
     VALUE listener = rb_iv_get(self, "@listener");
-    VALUE rows = rb_ary_new();
-    VALUE current_row = rb_ary_new();
+    VALUE rows = Qnil;
+    VALUE current_row = Qnil;
     
     p = data;
     pe = data + len;

@@ -15,8 +15,8 @@ begin
     gem.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
     gem.executables = ["gherkin"]
     gem.add_dependency "trollop", ">= 1.15"
-    gem.add_development_dependency "rspec", ">= 1.2.9"
-    gem.add_development_dependency "cucumber", ">= 0.6.1"
+    gem.add_development_dependency "rspec", ">= 1.3.0"
+    gem.add_development_dependency "cucumber", ">= 0.6.2"
     gem.add_development_dependency "rake-compiler", ">= 0.7.0" unless defined?(JRUBY_VERSION)
     
     case ENV['PLATFORM']

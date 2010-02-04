@@ -1,5 +1,5 @@
 #encoding: utf-8
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 
 module Gherkin
   module Lexer
@@ -341,6 +341,18 @@ Given I am a step
             [:comment, "# Here is a fourth comment", 7]
           ]
         end
+
+        it "should support comments in tables" do
+          scan_file("comments_in_table.feature")
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "x", 1], 
+            [:scenario_outline, "Scenario Outline", "x", 3], 
+            [:step, "Then ", "x is <state>", 4], 
+            [:examples, "Examples", "", 6], 
+            [:table, [["state"]], 7], 
+            [:comment, "# comment", 8], 
+            [:table, [["1"]], 9]]
+        end
       end
       
       describe "A feature with tags everywhere" do
@@ -396,21 +408,60 @@ Given I am a step
             [:step, "Given ", "there is a step", 19],
             [:step, "But ", "not another step", 20],
             [:tag, "tag3", 22],
-            [:scenario, "Scenario", "Reading a second scenario", 23],
-            [:comment, "#Comment on line 24", 24],
-            [:step, "Given ", "a third step with a table", 25],
-            [:table, [['a','b'],['c','d'],['e','f']], 26],
-            [:step, "And ", "I am still testing things", 29],
-            [:table, [['g','h'],['e','r'],['k','i'],['n','']], 30],
-            [:step, "And ", "I am done testing these tables", 34],
-            [:comment, "#Comment on line 29", 35],
-            [:step, "Then ", "I am happy", 36],
-            [:scenario, "Scenario", "Hammerzeit", 38],
-            [:step, "Given ", "All work and no play", 39],
-            [:py_string, "Makes Homer something something", 40],
-            [:step, "Then ", "crazy", 43]
+            [:scenario, "Scenario", "Reading a second scenario\nWith two lines of text", 23],
+            [:comment, "#Comment on line 24", 25],
+            [:step, "Given ", "a third step with a table", 26],
+            [:table, [['a','b'],['c','d'],['e','f']], 27],
+            [:step, "And ", "I am still testing things", 30],
+            [:table, [['g','h'],['e','r'],['k','i'],['n','']], 31],
+            [:step, "And ", "I am done testing these tables", 35],
+            [:comment, "#Comment on line 29", 36],
+            [:step, "Then ", "I am happy", 37],
+            [:scenario, "Scenario", "Hammerzeit", 39],
+            [:step, "Given ", "All work and no play", 40],
+            [:py_string, "Makes Homer something something\nAnd something else", 41 ],
+            [:step, "Then ", "crazy", 45]
           ]
         end        
+      end
+      
+      context "DOS line endings" do
+        describe "A complex feature with tags, comments, multiple scenarios, and multiple steps and tables" do
+          it "should find things in the right order" do
+            scan_file("dos_line_endings.feature")
+            @listener.to_sexp.should == [
+              [:comment, "#Comment on line 1", 1],
+              [:comment, "#Comment on line 2", 2],
+              [:tag, "tag1", 3],
+              [:tag, "tag2", 3],
+              [:feature, "Feature", "Feature Text\r\nIn order to test multiline forms\r\nAs a ragel writer\r\nI need to check for complex combinations", 4],
+              [:comment, "#Comment on line 9", 9],
+              [:comment, "#Comment on line 11", 11],
+              [:background, "Background", "", 13],
+              [:step, "Given ", "this is a background step", 14],
+              [:step, "And ", "this is another one", 15],
+              [:tag, "tag3", 17],
+              [:tag, "tag4", 17],
+              [:scenario, "Scenario", "Reading a Scenario", 18],
+              [:step, "Given ", "there is a step", 19],
+              [:step, "But ", "not another step", 20],
+              [:tag, "tag3", 22],
+              [:scenario, "Scenario", "Reading a second scenario\r\nWith two lines of text", 23],
+              [:comment, "#Comment on line 24", 25],
+              [:step, "Given ", "a third step with a table", 26],
+              [:table, [['a','b'],['c','d'],['e','f']], 27],
+              [:step, "And ", "I am still testing things", 30],
+              [:table, [['g','h'],['e','r'],['k','i'],['n','']], 31],
+              [:step, "And ", "I am done testing these tables", 35],
+              [:comment, "#Comment on line 29", 36],
+              [:step, "Then ", "I am happy", 37],
+              [:scenario, "Scenario", "Hammerzeit", 39],
+              [:step, "Given ", "All work and no play", 40],
+              [:py_string, "Makes Homer something something\r\nAnd something else", 41],
+              [:step, "Then ", "crazy", 45]
+            ]
+          end        
+        end
       end
 
       describe "errors" do
