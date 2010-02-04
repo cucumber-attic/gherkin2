@@ -5,6 +5,9 @@
 * Emit keywords with space instead of stripping (< keywords are emmitted without space) (Aslak Hellesøy)
 * gherkin reformat now prints comments, and does it with proper indentation (Aslak Hellesøy)
 
+== New features
+* .NET (C#) port (#36, #37 Attila Sztupak)
+
 == 1.0.2 (2009-12-30)
 
 == Bugfixes
