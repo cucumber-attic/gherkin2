@@ -9,3 +9,5 @@ Gherkin/Lexer/*.cs
 *.sln.cache
 _ReSharper*
 Gherkin.sln.proj
+*.pidb
+*.userprefs
