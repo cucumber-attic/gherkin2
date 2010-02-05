@@ -1,4 +1,4 @@
-﻿using System.Xml.Schema;
+using System.Xml.Schema;
 using Xunit;
 
 namespace Gherkin.Tests.LexerSpecs
@@ -43,7 +43,7 @@ namespace Gherkin.Tests.LexerSpecs
         public void should_not_allow_comments_within_the_Feature_description() 
         {
             a_lexer().lexing_input("Feature: something\nAs a something\n# Comment\nI want something").
-                should_fail_with_message("Lexing error on line 4");
+				should_fail_with(ex => ex.Message.Contains("Lexing error on line 4"));
         }
     }
 }

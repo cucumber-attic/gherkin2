@@ -11,14 +11,17 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B7CD3273-2795-4F16-A458-890E77B39E71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B7CD3273-2795-4F16-A458-890E77B39E71}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B7CD3273-2795-4F16-A458-890E77B39E71}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B7CD3273-2795-4F16-A458-890E77B39E71}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3136E586-1B00-4782-B710-8A7E4E9272A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3136E586-1B00-4782-B710-8A7E4E9272A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3136E586-1B00-4782-B710-8A7E4E9272A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3136E586-1B00-4782-B710-8A7E4E9272A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7CD3273-2795-4F16-A458-890E77B39E71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7CD3273-2795-4F16-A458-890E77B39E71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7CD3273-2795-4F16-A458-890E77B39E71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7CD3273-2795-4F16-A458-890E77B39E71}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Gherkin.Tests\Gherkin.Tests.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -17,7 +17,7 @@ namespace Gherkin.Tests.LexerSpecs
         
         [Fact] public void should_include_the_line_number_and_context_of_the_error() {
             a_lexer().lexing_input("Feature: hello\nScenario: My scenario\nGiven foo\nAand blah\nHmmm wrong\nThen something something").
-                should_fail_with_message("Lexing error on line 4");
+                should_fail_with(ex => ex.Message.Contains("Lexing error on line 4"));
         }
     }
 }

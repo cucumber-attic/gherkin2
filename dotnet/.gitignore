@@ -8,3 +8,4 @@ Gherkin/StateMachine/steps.txt
 Gherkin/Lexer/*.cs
 *.sln.cache
 _ReSharper*
+Gherkin.sln.proj
