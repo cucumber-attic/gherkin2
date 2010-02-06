@@ -1,9 +1,14 @@
 # encoding: utf-8
+
+require 'gherkin/tools/colors'
+
 module Gherkin
   module Tools
-    # TODO: Rename to PrettyFormatter - that's what this class *does*
-    # (The fact that it conforms to the Gherkin Listener interface is scondary)
+    # TODO: Rename to Gherkin::Pretty::PrettyReporter - that's what this class *does*
+    # (The fact that it conforms to the Gherkin Listener interface is secondary)
     class PrettyListener
+      include Gherkin::Tools::Colors
+      
       def initialize(io)
         @io = io
         @tags = nil
@@ -45,7 +50,7 @@ module Gherkin
         @io.puts "#{grab_comments!('    ')}    #{keyword}#{indent(name, '    ')}#{indented_location!}"
       end
 
-      def table(rows, line, rows_to_print = rows, first_row=0)
+      def table(rows, line, rows_to_print = rows, first_row=0, statuses=nil)
         rows = rows.to_a.map {|row| row.to_a} if defined?(JRUBY_VERSION) # Convert ArrayList
         cell_lengths = rows.map { |col| col.map { |cell| cell.unpack("U*").length }}
         max_lengths = cell_lengths.transpose.map { |col_lengths| col_lengths.max }.flatten
@@ -55,7 +60,7 @@ module Gherkin
           j = -1
           @io.puts '      | ' + row_to_print.zip(max_lengths).map { |cell, max_length|
             j += 1
-            cell + ' ' * (max_length - cell_lengths[i][j])
+            color(cell, statuses, j) + ' ' * (max_length - cell_lengths[i][j])
           }.join(' | ') + ' |'
         end
       end
@@ -75,6 +80,10 @@ module Gherkin
       end
 
     private
+
+      def color(cell, statuses, col)
+        statuses ? self.__send__(statuses[col], cell) : cell
+      end
 
       if(RUBY_VERSION =~ /^1\.9/)
         START = /#{"^".encode('UTF-8')}/

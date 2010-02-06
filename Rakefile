@@ -18,6 +18,7 @@ begin
     gem.add_development_dependency "rspec", ">= 1.3.0"
     gem.add_development_dependency "cucumber", ">= 0.6.2"
     gem.add_development_dependency "rake-compiler", ">= 0.7.0" unless defined?(JRUBY_VERSION)
+    gem.add_development_dependency "albacore", ">= 0.1.0"
     
     case ENV['PLATFORM']
     when 'java'

@@ -109,12 +109,13 @@ module Gherkin
           ],
           0,
           [
-            %w(c[c]c d)
+            %w(ccc d)
           ],
-          1
+          1,
+          [:passed, :failed]
         )
         assert_io(
-          "      | c[c]c | d    |\n"
+          "      | \e[32mccc\e[0m | \e[31md\e[0m    |\n"
         )
       end
 
