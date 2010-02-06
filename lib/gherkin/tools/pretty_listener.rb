@@ -50,7 +50,7 @@ module Gherkin
         @io.puts "#{grab_comments!('    ')}    #{keyword}#{indent(name, '    ')}#{indented_location!}"
       end
 
-      def table(rows, line, rows_to_print = rows, first_row=0, statuses=nil)
+      def table(rows, line, rows_to_print = rows, first_row=0, statuses=nil, exception=nil)
         rows = rows.to_a.map {|row| row.to_a} if defined?(JRUBY_VERSION) # Convert ArrayList
         cell_lengths = rows.map { |col| col.map { |cell| cell.unpack("U*").length }}
         max_lengths = cell_lengths.transpose.map { |col_lengths| col_lengths.max }.flatten
@@ -62,6 +62,9 @@ module Gherkin
             j += 1
             color(cell, statuses, j) + ' ' * (max_length - cell_lengths[i][j])
           }.join(' | ') + ' |'
+          if(exception)
+            @io.puts(failed("#{exception.message} (#{exception.class})\n#{(exception.backtrace || []).join("\n")}".gsub(/^/, '      ')))
+          end
         end
       end
 

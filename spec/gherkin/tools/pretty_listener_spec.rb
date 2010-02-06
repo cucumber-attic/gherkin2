@@ -100,7 +100,8 @@ module Gherkin
         )
       end
 
-      it "should prettify 1 table row with ANSI coloured rows" do
+      it "should prettify 1 table row with ANSI coloured rows and exception" do
+        e = Exception.new("Hello")
         @l.table(
           [
             %w(a bb),
@@ -112,10 +113,12 @@ module Gherkin
             %w(ccc d)
           ],
           1,
-          [:passed, :failed]
+          [:passed, :failed],
+          e
         )
         assert_io(
-          "      | \e[32mccc\e[0m | \e[31md\e[0m    |\n"
+          "      | \e[32mccc\e[0m | \e[31md\e[0m    |\n" +
+          "\e[31m      Hello (Exception)\n\e[0m\n"
         )
       end
 
