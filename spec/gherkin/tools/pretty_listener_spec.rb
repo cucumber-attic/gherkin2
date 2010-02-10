@@ -1,6 +1,7 @@
 # encoding: utf-8
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 require 'gherkin/tools/pretty_listener'
+require 'gherkin/format/argument'
 require 'stringio'
 
 module Gherkin
@@ -120,6 +121,11 @@ module Gherkin
           "      | \e[32mccc\e[0m | \e[31md\e[0m    |\n" +
           "\e[31m      Hello (Exception)\n\e[0m\n"
         )
+      end
+
+      it "should highlight arguments for regular steps" do
+        @l.step("Given ", "I have 999 cukes in my belly", 3, :passed, [Gherkin::Format::Argument.new(7, '999')])
+        assert_io("    \e[32mGiven I have \e[32m\e[1m999\e[0m\e[0m\e[32m cukes in my belly\e[0m\n")
       end
 
       it "should prettify scenario outline" do

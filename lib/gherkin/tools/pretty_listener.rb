@@ -46,8 +46,14 @@ module Gherkin
         @io.puts "\n#{grab_comments!('    ')}#{grab_tags!('    ')}    #{keyword}: #{indent(name, '    ')}"
       end
 
-      def step(keyword, name, line)
-        @io.puts "#{grab_comments!('    ')}    #{keyword}#{indent(name, '    ')}#{indented_location!}"
+      def step(keyword, name, line, status=nil, arguments=nil)
+        status_param = "#{status}_param" if status
+        name = Gherkin::Format::Argument.format(name, arguments) {|arg| status_param ? self.__send__(status_param, arg) : arg} if arguments
+
+        step = "#{keyword}#{indent(name, '    ')}"
+        step = self.__send__(status, step) if status
+
+        @io.puts("#{grab_comments!('    ')}    #{step}#{indented_location!}")
       end
 
       def table(rows, line, rows_to_print = rows, first_row=0, statuses=nil, exception=nil)
