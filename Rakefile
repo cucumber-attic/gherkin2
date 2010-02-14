@@ -20,6 +20,7 @@ begin
     gem.add_development_dependency "rake-compiler", ">= 0.7.0" unless defined?(JRUBY_VERSION)
     gem.add_development_dependency "albacore", ">= 0.1.0"
     
+    gem.files -= FileList['dotnet/**/*']
     case ENV['PLATFORM']
     when 'java'
       gem.platform = 'java'

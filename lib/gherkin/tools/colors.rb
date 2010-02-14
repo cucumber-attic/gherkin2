@@ -65,11 +65,13 @@ module Gherkin
       ALIASES.each do |method, color|
         unless method =~ /.*_param/
           code = <<-EOF
-          def #{method}(string=nil, &proc)
+          def #{method}(string=nil, monochrome=false, &proc)
+            return string if monochrome
             #{ALIASES[method].split(",").join("(") + "(string, &proc" + ")" * ALIASES[method].split(",").length}
           end
           # This resets the colour to the non-param colour
-          def #{method}_param(string=nil, &proc)
+          def #{method}_param(string=nil, monochrome=false, &proc)
+            return string if monochrome
             #{ALIASES[method+'_param'].split(",").join("(") + "(string, &proc" + ")" * ALIASES[method+'_param'].split(",").length} + #{ALIASES[method].split(",").join(' + ')}
           end
           EOF

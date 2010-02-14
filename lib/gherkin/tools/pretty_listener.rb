@@ -9,8 +9,9 @@ module Gherkin
     class PrettyListener
       include Gherkin::Tools::Colors
       
-      def initialize(io)
+      def initialize(io, monochrome=false)
         @io = io
+        @monochrome = monochrome
         @tags = nil
         @comments = nil
       end
@@ -48,10 +49,10 @@ module Gherkin
 
       def step(keyword, name, line, status=nil, arguments=nil)
         status_param = "#{status}_param" if status
-        name = Gherkin::Format::Argument.format(name, arguments) {|arg| status_param ? self.__send__(status_param, arg) : arg} if arguments
+        name = Gherkin::Format::Argument.format(name, arguments) {|arg| status_param ? self.__send__(status_param, arg, @monochrome) : arg} if arguments
 
         step = "#{keyword}#{indent(name, '    ')}"
-        step = self.__send__(status, step) if status
+        step = self.__send__(status, step, @monochrome) if status
 
         @io.puts("#{grab_comments!('    ')}    #{step}#{indented_location!}")
       end
@@ -68,9 +69,7 @@ module Gherkin
             j += 1
             color(cell, statuses, j) + ' ' * (max_length - cell_lengths[i][j])
           }.join(' | ') + ' |'
-          if(exception)
-            @io.puts(failed("#{exception.message} (#{exception.class})\n#{(exception.backtrace || []).join("\n")}".gsub(/^/, '      ')))
-          end
+          exception(exception) if exception
         end
       end
 
@@ -88,10 +87,14 @@ module Gherkin
         @locations = locations
       end
 
+      def exception(exception)
+        @io.puts(failed("#{exception.message} (#{exception.class})\n#{(exception.backtrace || []).join("\n")}".gsub(/^/, '      ')))
+      end
+
     private
 
       def color(cell, statuses, col)
-        statuses ? self.__send__(statuses[col], cell) : cell
+        statuses ? self.__send__(statuses[col], cell, @monochrome) : cell
       end
 
       if(RUBY_VERSION =~ /^1\.9/)
