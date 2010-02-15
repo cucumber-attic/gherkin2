@@ -80,8 +80,7 @@ module Gherkin
         raise "SYNTAX ERROR"
       end
 
-      # This method is not part of the Gherkin event API. If invoked before a #scenario,
-      # location "comment" lines will be printed.
+      # This method can be invoked before a #scenario, to ensure location arguments are aligned
       def steps(steps)
         @step_lengths = steps.map {|keyword, name| (keyword+name).unpack("U*").length}
         @max_step_length = @step_lengths.max
@@ -96,7 +95,11 @@ module Gherkin
     private
 
       def color(cell, statuses, col)
-        statuses ? self.__send__(statuses[col], cell, @monochrome) : cell
+        if statuses
+          self.__send__(statuses[col], cell, @monochrome) + (@monochrome ? '' : reset)
+        else
+          cell
+        end
       end
 
       if(RUBY_VERSION =~ /^1\.9/)
