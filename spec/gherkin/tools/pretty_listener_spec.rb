@@ -15,7 +15,7 @@ module Gherkin
       
       def assert_pretty(text)
         io = StringIO.new
-        l = PrettyListener.new(io)
+        l = PrettyListener.new(io, true)
         parser = Gherkin::Parser.new(l, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser)
         lexer.scan(text)
@@ -26,7 +26,7 @@ module Gherkin
 
       before do
         @io = StringIO.new
-        @l = PrettyListener.new(@io)
+        @l = PrettyListener.new(@io, true)
       end
 
       it "should print comments when scenario is longer" do
@@ -70,17 +70,17 @@ module Gherkin
           ['Given ', 'some stuff that is longer']
         ])
         @l.scenario("Scenario", "The scenario", 4, "features/foo.feature:4")
-        @l.step("Given ", "some \e[32mstuff\e[0m that is longer", 5, nil, nil, "features/step_definitions/bar.rb:56")
+        @l.step("Given ", "some stuff that is longer", 5, nil, nil, "features/step_definitions/bar.rb:56")
 
         assert_io(%{Feature: Hello
   World
 
   Scenario: The scenario            # features/foo.feature:4
-    Given some \e[32mstuff\e[0m that is longer # features/step_definitions/bar.rb:56
+    Given some stuff that is longer # features/step_definitions/bar.rb:56
 })
       end
 
-      it "should prettify a whole table with ANSI coloured rows" do
+      it "should prettify a whole table with padding (typically ANSI)" do
         @l.table(
           [
             %w(a bb),
@@ -101,7 +101,7 @@ module Gherkin
         )
       end
 
-      it "should prettify 1 table row with ANSI coloured rows and exception" do
+      it "should prettify 1 table row with padding (typically ANSI)" do
         e = Exception.new("Hello")
         @l.table(
           [
@@ -118,14 +118,14 @@ module Gherkin
           e
         )
         assert_io(
-          "      | \e[32mccc\e[0m | \e[31md\e[0m    |\n" +
-          "\e[31m      Hello (Exception)\n\e[0m\n"
+          "      | ccc | d    |\n" +
+          "      Hello (Exception)\n"
         )
       end
 
       it "should highlight arguments for regular steps" do
         @l.step("Given ", "I have 999 cukes in my belly", 3, :passed, [Gherkin::Format::Argument.new(7, '999')])
-        assert_io("    \e[32mGiven I have \e[32m\e[1m999\e[0m\e[0m\e[32m cukes in my belly\e[0m\n")
+        assert_io("    Given I have 999 cukes in my belly\n")
       end
 
       it "should prettify scenario outline" do

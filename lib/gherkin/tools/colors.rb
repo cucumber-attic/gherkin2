@@ -51,7 +51,7 @@ module Gherkin
         'passed'    => 'green',
         'outline'   => 'cyan',
         'skipped'   => 'cyan',
-        'comment'   => 'grey',
+        'comments'  => 'grey',
         'tag'       => 'cyan'
       })
 
@@ -109,11 +109,7 @@ module Gherkin
     
       def self.define_real_grey #:nodoc:
         def grey(m) #:nodoc:
-          if ::Term::ANSIColor.coloring?
-            "\e[90m#{m}\e[0m"
-          else
-            m
-          end
+          "\e[90m#{m}\e[0m"
         end
       end
     

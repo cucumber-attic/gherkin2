@@ -89,7 +89,8 @@ module Gherkin
       end
 
       def exception(exception)
-        @io.puts(failed("#{exception.message} (#{exception.class})\n#{(exception.backtrace || []).join("\n")}".gsub(/^/, '      ')))
+        exception_text = "#{exception.message} (#{exception.class})\n#{(exception.backtrace || []).join("\n")}".gsub(/^/, '      ')
+        @io.puts(failed(exception_text, @monochrome))
       end
 
     private
@@ -132,13 +133,13 @@ module Gherkin
         l = (keyword+name).unpack("U*").length
         @max_step_length = [@max_step_length, l].max
         indent = @max_step_length - l
-        ' ' * indent + ' # ' + location
+        ' ' * indent + ' ' + comments("# #{location}", @monochrome)
       end
 
       def indented_step_location!(location)
         return "" if location.nil?
         indent = @max_step_length - @step_lengths[@step_index+=1]
-        ' ' * indent + ' # ' + location
+        ' ' * indent + ' ' + comments("# #{location}", @monochrome)
       end
     end
   end
