@@ -31,29 +31,30 @@ module Gherkin
 
       it "should print comments when scenario is longer" do
         @l.feature("Feature", "Hello\nWorld", 1)
-        @l.locations([
-          [nil, "features/foo.feature:4"],
-          ['Given some stuff', "features/step_definitions/bar.rb:56"]
+        @l.steps([
+          ['Given ', 'some stuff'],
+          ['When ', 'foo']
         ])
-        @l.scenario("Scenario", "The scenario", 4)
-        @l.step("Given ", "some stuff", 5)
+        @l.scenario("Scenario", "The scenario", 4, "features/foo.feature:4")
+        @l.step("Given ", "some stuff", 5, nil, nil, "features/step_definitions/bar.rb:56")
+        @l.step("When ", "foo", 6, nil, nil, "features/step_definitions/bar.rb:96")
 
         assert_io(%{Feature: Hello
   World
 
   Scenario: The scenario # features/foo.feature:4
     Given some stuff     # features/step_definitions/bar.rb:56
+    When foo             # features/step_definitions/bar.rb:96
 })
       end
 
       it "should print comments when step is longer" do
         @l.feature("Feature", "Hello\nWorld", 1)
-        @l.locations([
-          [nil, "features/foo.feature:4"],
-          ['Given some stuff that is longer', "features/step_definitions/bar.rb:56"]
+        @l.steps([
+          ['Given ', 'some stuff that is longer']
         ])
-        @l.scenario("Scenario", "The scenario", 4)
-        @l.step("Given ", "some stuff that is longer", 5)
+        @l.scenario("Scenario", "The scenario", 4, "features/foo.feature:4")
+        @l.step("Given ", "some stuff that is longer", 5, nil, nil, "features/step_definitions/bar.rb:56")
 
         assert_io(%{Feature: Hello
   World
@@ -65,18 +66,17 @@ module Gherkin
 
       it "should print ANSI coloured steps" do
         @l.feature("Feature", "Hello\nWorld", 1)
-        @l.locations([
-          [nil, "features/foo.feature:4"],
-          ['Given some stuff that is longer', "features/step_definitions/bar.rb:56"]
+        @l.steps([
+          ['Given ', 'some stuff that is longer']
         ])
-        @l.scenario("Scenario", "The scenario", 4)
-        @l.step("Given ", "some [stuff] that is longer", 5)
+        @l.scenario("Scenario", "The scenario", 4, "features/foo.feature:4")
+        @l.step("Given ", "some \e[32mstuff\e[0m that is longer", 5, nil, nil, "features/step_definitions/bar.rb:56")
 
         assert_io(%{Feature: Hello
   World
 
   Scenario: The scenario            # features/foo.feature:4
-    Given some [stuff] that is longer # features/step_definitions/bar.rb:56
+    Given some \e[32mstuff\e[0m that is longer # features/step_definitions/bar.rb:56
 })
       end
 

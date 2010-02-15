@@ -34,9 +34,8 @@ module Gherkin
         @io.puts "\n#{grab_comments!('  ')}  #{keyword}: #{indent(name, '    ')}"
       end
 
-      def scenario(keyword, name, line)
-        indent_locations(keyword, name)
-        @io.puts "\n#{grab_comments!('  ')}#{grab_tags!('  ')}  #{keyword}: #{indent(name, '    ')}#{indented_location!}"
+      def scenario(keyword, name, line, location=nil)
+        @io.puts "\n#{grab_comments!('  ')}#{grab_tags!('  ')}  #{keyword}: #{indent(name, '    ')}#{indented_scenario_location!(keyword, name, location)}"
       end
 
       def scenario_outline(keyword, name, line)
@@ -47,14 +46,14 @@ module Gherkin
         @io.puts "\n#{grab_comments!('    ')}#{grab_tags!('    ')}    #{keyword}: #{indent(name, '    ')}"
       end
 
-      def step(keyword, name, line, status=nil, arguments=nil)
+      def step(keyword, name, line, status=nil, arguments=nil, location=nil)
         status_param = "#{status}_param" if status
         name = Gherkin::Format::Argument.format(name, arguments) {|arg| status_param ? self.__send__(status_param, arg, @monochrome) : arg} if arguments
 
         step = "#{keyword}#{indent(name, '    ')}"
         step = self.__send__(status, step, @monochrome) if status
 
-        @io.puts("#{grab_comments!('    ')}    #{step}#{indented_location!}")
+        @io.puts("#{grab_comments!('    ')}    #{step}#{indented_step_location!(location)}")
       end
 
       def table(rows, line, rows_to_print = rows, first_row=0, statuses=nil, exception=nil)
@@ -83,8 +82,10 @@ module Gherkin
 
       # This method is not part of the Gherkin event API. If invoked before a #scenario,
       # location "comment" lines will be printed.
-      def locations(locations)
-        @locations = locations
+      def steps(steps)
+        @step_lengths = steps.map {|keyword, name| (keyword+name).unpack("U*").length}
+        @max_step_length = @step_lengths.max
+        @step_index = -1
       end
 
       def exception(exception)
@@ -126,20 +127,18 @@ module Gherkin
         comments
       end
 
-      def indent_locations(container_keyword, container_name)
-        return if @locations.nil?
-        @locations[0][0] = "#{container_keyword}: #{container_name}"
-        @lengths = @locations.transpose[0].map {|line| line.unpack("U*").length}
-        @lengths[0] -= 2
-        @max_length = @lengths.max
-        @indent_index = -1
+      def indented_scenario_location!(keyword, name, location)
+        return "" if location.nil?
+        l = (keyword+name).unpack("U*").length
+        @max_step_length = [@max_step_length, l].max
+        indent = @max_step_length - l
+        ' ' * indent + ' # ' + location
       end
 
-      def indented_location!
-        return if @locations.nil?
-        @indent_index += 1
-        indent = @max_length - @lengths[@indent_index]
-        ' ' * indent + ' # ' + @locations[@indent_index][1]
+      def indented_step_location!(location)
+        return "" if location.nil?
+        indent = @max_step_length - @step_lengths[@step_index+=1]
+        ' ' * indent + ' # ' + location
       end
     end
   end
