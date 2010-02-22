@@ -69,6 +69,10 @@ module Gherkin
       %w{given when then and but}.map{|key| keywords(key, true)}.flatten.uniq
     end
 
+    def gwt_keywords
+      %w{given when then}.map{|key| keywords(key, true)}.flatten.uniq
+    end
+
     def keywords(key, space=false)
       raise "No #{key} in #{@keywords.inspect}" if @keywords[key].nil?
       @keywords[key].split('|').map{|kw| space ? keyword_space(kw) : kw}
