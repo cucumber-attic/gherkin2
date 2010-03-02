@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
-  s.date = %q{2010-02-14}
+  s.date = %q{2010-03-02}
   s.default_executable = %q{gherkin}
   s.description = %q{A fast Gherkin lexer/parser based on the Ragel State Machine Compiler.}
   s.email = %q{cukes@googlegroups.com}
@@ -188,6 +188,7 @@ Gem::Specification.new do |s|
      "spec/gherkin/shared/py_string_spec.rb",
      "spec/gherkin/shared/table_spec.rb",
      "spec/gherkin/shared/tags_spec.rb",
+     "spec/gherkin/tools/colors_spec.rb",
      "spec/gherkin/tools/pretty_listener_spec.rb",
      "spec/spec_helper.rb",
      "tasks/bench.rake",
@@ -203,7 +204,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/aslakhellesoy/gherkin}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.5}
+  s.rubygems_version = %q{1.3.6}
   s.summary = %q{Fast Gherkin lexer/parser}
   s.test_files = [
     "spec/gherkin/c_lexer_spec.rb",
