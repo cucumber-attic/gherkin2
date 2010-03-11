@@ -101,6 +101,7 @@ module Gherkin
 
         action start_row {
           current_row = []
+          @row_line = @line_number
         }
  
         action begin_cell_content {
@@ -114,11 +115,12 @@ module Gherkin
 
         action store_row {
           @rows << current_row
+          @listener.table(current_row, @row_line)
         }
 
         action store_table {
           if @rows.size != 0
-            @listener.table(@rows, @current_line)
+            # @listener.table(@rows, @current_line)
           end 
         }
  

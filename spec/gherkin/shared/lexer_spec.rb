@@ -163,7 +163,8 @@ Given I am a step
             [:scenario_outline, "Scenario Outline", "Hello", 1],
             [:step, "Given ", "a <what> cucumber", 2],
             [:examples, "Examples", "", 3],
-            [:table, [["what"],["green"]], 4]
+            [:table, ["what"], 4],
+            [:table, ["green"], 5]
           ]
         end
 
