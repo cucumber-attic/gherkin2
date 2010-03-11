@@ -25,9 +25,9 @@ end
 Spec::Matchers.define :t do |expected|
   match do |table|
     def table.inspect
-      "t " + self.map{|row| row.map{|cell| cell}}.inspect
+      "t " + self.map{|cell| cell}.inspect
     end
-    table.map{|row| row.map{|cell| cell}}.should == expected
+    table.map{|cell| cell}.should == expected
   end
 end
 
