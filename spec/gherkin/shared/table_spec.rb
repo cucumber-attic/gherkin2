@@ -91,6 +91,14 @@ module Gherkin
         @listener.should_receive(:table).with(t([["abc", "123"]]), 1)
         @lexer.scan("  \t| \t   abc\t| \t123\t \t\t| \t\t   \t \t\n  ")
       end
+
+      # leaving this in while I'm modifying the ragel
+      it "should parse a table with a commented-out row" do
+        @listener.should_receive(:table).with(t([["abc"]]), 1)
+        @listener.should_receive(:comment).with("#|123|", 2)
+        @listener.should_receive(:table).with(t([["def"]]), 3)
+        @lexer.scan("|abc|\n#|123|\n|def|\n") 
+      end
       
       it "should raise LexingError for rows that aren't closed" do
         lambda { 
