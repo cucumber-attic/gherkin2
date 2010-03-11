@@ -85,11 +85,8 @@ class CSharpSByteFixTask
   end
 end
 
-if ENV['RL_LANG']
-  langs = [Gherkin::I18n.get(ENV['RL_LANG'])]
-else
-  langs = Gherkin::I18n.all
-end
+rl_langs = ENV['RL_LANGS'] ? ENV['RL_LANGS'].split(',') : []
+langs = Gherkin::I18n.all.select { |lang| rl_langs.empty? || rl_langs.include?(lang.key) }
 
 langs.each do |i18n|
   java = RagelTask.new('java', i18n)
