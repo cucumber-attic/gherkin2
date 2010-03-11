@@ -95,13 +95,11 @@ module Gherkin
 
         action start_table {
           p = p - 1
-          @rows = []
-          @current_line = @line_number
         }
 
         action start_row {
           current_row = []
-          @row_line = @line_number
+          @current_line = @line_number
         }
  
         action begin_cell_content {
@@ -114,14 +112,11 @@ module Gherkin
         }
 
         action store_row {
-          @rows << current_row
-          @listener.table(current_row, @row_line)
+          @listener.table(current_row, @current_line)
         }
 
         action store_table {
-          if @rows.size != 0
-            # @listener.table(@rows, @current_line)
-          end 
+          # no-op
         }
  
         action end_feature {
