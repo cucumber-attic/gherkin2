@@ -85,8 +85,13 @@ class CSharpSByteFixTask
   end
 end
 
+if ENV['RL_LANG']
+  langs = [Gherkin::I18n.get(ENV['RL_LANG'])]
+else
+  langs = Gherkin::I18n.all
+end
 
-Gherkin::I18n.all.each do |i18n|
+langs.each do |i18n|
   java = RagelTask.new('java', i18n)
   rb   = RagelTask.new('rb', i18n)
   csharp_tmp = RagelTask.new('csharp', i18n)
