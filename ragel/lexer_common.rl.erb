@@ -34,7 +34,7 @@
   EndTable = EOL space* ^('|') >next_keyword_start;    
   Cell = '|' (any - '|')* >begin_cell_content %store_cell_content;
   Row = space* Cell* >start_row '|' :>> (space* EOL+ space*) %store_row;
-  Table = StartTable :>> Row+ %store_table <: EndTable?;
+  Table = StartTable :>> Row+ <: EndTable?;
   
   StartPyString = '"""' >start_pystring space* :>> EOL; 
   EndPyString = (space* '"""') >next_keyword_start; 

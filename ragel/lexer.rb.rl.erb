@@ -115,10 +115,6 @@ module Gherkin
           @listener.table(current_row, @current_line)
         }
 
-        action store_table {
-          # no-op
-        }
- 
         action end_feature {
           if cs < lexer_first_final
             content = current_line_content(data, p)
