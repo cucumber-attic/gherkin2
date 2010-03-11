@@ -14,10 +14,10 @@
 #ifdef HAVE_RUBY_ENCODING_H
 #include <ruby/encoding.h>
 #define ENCODED_STR_NEW(ptr, len) \
-    rb_enc_str_new(ptr, len, rb_utf8_encoding());
+    rb_enc_str_new(ptr, len, rb_utf8_encoding())
 #else
 #define ENCODED_STR_NEW(ptr, len) \
-    rb_str_new(ptr, len); 
+    rb_str_new(ptr, len)
 #endif
 
 #define LF_FLAG      0
@@ -74,12 +74,12 @@ static VALUE rb_eGherkinLexerError;
     if (lexer->content_end != 0) { \
       p = PTR_TO(content_end - 1); \
     } \
-    lexer->content_end = 0;
+    lexer->content_end = 0
 
 #define STORE_ATTR(ATTR) \
     store_attr(listener, # ATTR, \
       PTR_TO(content_start), LEN(content_start, p), \
-      lexer->line_number);
+      lexer->line_number)
 
 %%{
   machine lexer;
@@ -107,23 +107,23 @@ static VALUE rb_eGherkinLexerError;
   } 
  
   action store_feature_content {
-    STORE_KW_END_CON(feature)
+    STORE_KW_END_CON(feature);
   }
   
   action store_background_content {
-    STORE_KW_END_CON(background)
+    STORE_KW_END_CON(background);
   }
   
   action store_scenario_content {
-    STORE_KW_END_CON(scenario)
+    STORE_KW_END_CON(scenario);
   }
   
   action store_scenario_outline_content {
-    STORE_KW_END_CON(scenario_outline)
+    STORE_KW_END_CON(scenario_outline);
   }
   
   action store_examples_content {
-    STORE_KW_END_CON(examples)
+    STORE_KW_END_CON(examples);
   }
   
   action store_step_content {
@@ -134,12 +134,12 @@ static VALUE rb_eGherkinLexerError;
   }
   
   action store_comment_content {
-    STORE_ATTR(comment)
+    STORE_ATTR(comment);
     lexer->mark = 0;
   }
   
   action store_tag_content {
-    STORE_ATTR(tag)
+    STORE_ATTR(tag);
     lexer->mark = 0;
   }
   
