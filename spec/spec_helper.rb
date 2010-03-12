@@ -9,7 +9,7 @@ require 'spec/autorun'
 require 'shared/lexer_spec'
 require 'shared/tags_spec'
 require 'shared/py_string_spec'
-require 'shared/table_spec'
+require 'shared/row_spec'
 
 module GherkinSpecHelper
   def scan_file(file)
@@ -21,13 +21,13 @@ Spec::Runner.configure do |c|
   c.include(GherkinSpecHelper)
 end
 
-# Allows comparison of Java List with Ruby Array (tables)
-Spec::Matchers.define :t do |expected|
-  match do |table|
-    def table.inspect
-      "t " + self.map{|cell| cell}.inspect
+# Allows comparison of Java List with Ruby Array (rows)
+Spec::Matchers.define :r do |expected|
+  match do |row|
+    def row.inspect
+      "r " + self.map{|cell| cell}.inspect
     end
-    table.map{|cell| cell}.should == expected
+    row.map{|cell| cell}.should == expected
   end
 end
 

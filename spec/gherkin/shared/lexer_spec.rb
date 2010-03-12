@@ -163,8 +163,8 @@ Given I am a step
             [:scenario_outline, "Scenario Outline", "Hello", 1],
             [:step, "Given ", "a <what> cucumber", 2],
             [:examples, "Examples", "", 3],
-            [:table, ["what"], 4],
-            [:table, ["green"], 5]
+            [:row, ["what"], 4],
+            [:row, ["green"], 5]
           ]
         end
 
@@ -202,8 +202,8 @@ Given I am a step
                           })
           @listener.to_sexp.should == [
             [:examples, "Examples", "", 1],
-            [:table, ["x","y"], 2],
-            [:table, ["5","6"], 3]
+            [:row, ["x","y"], 2],
+            [:row, ["5","6"], 3]
           ]
         end
         
@@ -216,8 +216,8 @@ Given I am a step
                           })
           @listener.to_sexp.should == [
             [:examples, "Examples", "I'm a multiline name\nand I'm ok\nf'real", 1],
-            [:table, ["x"], 4],
-            [:table, ["5"], 5]
+            [:row, ["x"], 4],
+            [:row, ["5"], 5]
           ]
         end
       end
@@ -229,7 +229,7 @@ Given I am a step
                           })
           @listener.to_sexp.should == [
             [:step, "Given ", "I have a table", 1],
-            [:table, ['a','b'], 2]
+            [:row, ['a','b'], 2]
           ]
         end
         
@@ -352,9 +352,9 @@ Given I am a step
             [:scenario_outline, "Scenario Outline", "x", 3], 
             [:step, "Then ", "x is <state>", 4], 
             [:examples, "Examples", "", 6], 
-            [:table, ["state"], 7], 
+            [:row, ["state"], 7], 
             [:comment, "# comment", 8], 
-            [:table, ["1"], 9]]
+            [:row, ["1"], 9]]
         end
       end
       
@@ -414,14 +414,14 @@ Given I am a step
             [:scenario, "Scenario", "Reading a second scenario\nWith two lines of text", 23],
             [:comment, "#Comment on line 24", 25],
             [:step, "Given ", "a third step with a table", 26],
-            [:table, %w{a b}, 27],
-            [:table, %w{c d}, 28],
-            [:table, %w{e f}, 29],
+            [:row, %w{a b}, 27],
+            [:row, %w{c d}, 28],
+            [:row, %w{e f}, 29],
             [:step, "And ", "I am still testing things", 30],
-            [:table, %w{g h}, 31],
-            [:table, %w{e r}, 32],
-            [:table, %w{k i}, 33],
-            [:table, ['n', ''], 34], 
+            [:row, %w{g h}, 31],
+            [:row, %w{e r}, 32],
+            [:row, %w{k i}, 33],
+            [:row, ['n', ''], 34], 
             [:step, "And ", "I am done testing these tables", 35],
             [:comment, "#Comment on line 29", 36],
             [:step, "Then ", "I am happy", 37],
@@ -457,14 +457,14 @@ Given I am a step
               [:scenario, "Scenario", "Reading a second scenario\r\nWith two lines of text", 23],
               [:comment, "#Comment on line 24", 25],
               [:step, "Given ", "a third step with a table", 26],
-              [:table, %w{a b}, 27],
-              [:table, %w{c d}, 28],
-              [:table, %w{e f}, 29],
+              [:row, %w{a b}, 27],
+              [:row, %w{c d}, 28],
+              [:row, %w{e f}, 29],
               [:step, "And ", "I am still testing things", 30],
-              [:table, %w{g h}, 31],
-              [:table, %w{e r}, 32],
-              [:table, %w{k i}, 33],
-              [:table, ['n', ''], 34], 
+              [:row, %w{g h}, 31],
+              [:row, %w{e r}, 32],
+              [:row, %w{k i}, 33],
+              [:row, ['n', ''], 34], 
               [:step, "And ", "I am done testing these tables", 35],
               [:comment, "#Comment on line 29", 36],
               [:step, "Then ", "I am happy", 37],

@@ -5,7 +5,7 @@ module Gherkin
     end
 
     def method_missing(m, *args)
-      args[0] = args[0].map{|cell| cell} if m == :table
+      args[0] = args[0].map{|cell| cell} if m == :row
       @sexps << [m] + args
     end
 
