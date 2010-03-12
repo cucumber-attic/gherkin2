@@ -107,8 +107,13 @@ module Gherkin
 
       class StateMachineReader
         attr_reader :rows
-        def table(rows, line_number)
-          @rows = rows
+
+        def initialize
+          @rows = []
+        end
+
+        def row(row, line_number)
+          @rows << row
         end
       end
 
