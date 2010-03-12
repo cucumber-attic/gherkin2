@@ -30,17 +30,17 @@
   Tag = ( '@' [^@\r\n\t ]+ >begin_content ) %store_tag_content;
   Tags = space* (Tag space*)+ EOL+;
   
-  StartTable = space* '|' >start_table;
-  EndTable = EOL space* ^('|') >next_keyword_start;    
+  StartRow = space* '|' >start_table;
+  EndRow = EOL space* ^('|') >next_keyword_start;    
   Cell = '|' (any - '|')* >begin_cell_content %store_cell_content;
-  Row = space* Cell* >start_row '|' :>> (space* EOL+ space*) %store_row;
-  Table = StartTable :>> Row+ <: EndTable?;
+  RowBody = space* Cell* >start_row '|' :>> (space* EOL+ space*) %store_row;
+  Row = StartRow :>> RowBody <: EndRow?;
   
   StartPyString = '"""' >start_pystring space* :>> EOL; 
   EndPyString = (space* '"""') >next_keyword_start; 
   PyString = space* StartPyString %begin_pystring_content (^EOL | EOL)* :>> EndPyString %store_pystring_content space* EOL+;
   
-  Tokens = (space | EOL)* (Tags | Comment | FeatureHeading | BackgroundHeading | ScenarioHeading | ScenarioOutlineHeading | ExamplesHeading | Step | Table | PyString)* (space | EOL)* EOF;
+  Tokens = (space | EOL)* (Tags | Comment | FeatureHeading | BackgroundHeading | ScenarioHeading | ScenarioOutlineHeading | ExamplesHeading | Step | Row | PyString)* (space | EOL)* EOF;
 
   main := Tokens %end_feature @!end_feature;
 }%%
