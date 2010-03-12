@@ -49,7 +49,9 @@ module Gherkin
           [:step, "Lorsqu'", "on tape additionner", 6],
           [:step, "Alors ", "le résultat doit être <somme>", 7],
           [:examples, "Exemples", "", 9],
-          [:table, [["a","b","somme"],["2","2","4"],["2","3","5"]], 10]
+          [:row, %w{a b somme}, 10],
+          [:row, %w{2 2 4}, 11],
+          [:row, %w{2 3 5}, 12]
         ]
       end
     end

@@ -169,10 +169,10 @@ static VALUE rb_eGherkinLexerError;
     MARK(content_end, p);
   }
 
-  action start_table {
+  action start_row {
     p = p - 1;
     lexer->current_line = lexer->line_number;
-    rows = rb_ary_new();
+    current_row = rb_ary_new();
   }
   
   action begin_cell_content {
@@ -186,16 +186,8 @@ static VALUE rb_eGherkinLexerError;
     rb_ary_push(current_row, con);
   }
 
-  action start_row {
-    current_row = rb_ary_new();
-  }  
-
   action store_row {
-    rb_ary_push(rows, current_row);
-  }
-
-  action store_table {
-    rb_funcall(listener, rb_intern("table"), 2, rows, INT2FIX(lexer->current_line));
+    rb_funcall(listener, rb_intern("row"), 2, current_row, INT2FIX(lexer->current_line));
   }
 
   action end_feature {
@@ -386,7 +378,6 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
     int cs = 0;
     
     VALUE listener = rb_iv_get(self, "@listener");
-    VALUE rows = Qnil;
     VALUE current_row = Qnil;
 
     p = data;
