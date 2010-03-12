@@ -1,4 +1,4 @@
- |                  | feature | background | scenario | scenario_outline | examples | step | table          | py_string | comment    | tag        |
+ |                  | feature | background | scenario | scenario_outline | examples | step | row            | py_string | comment    | tag        |
  | root             | feature | E          | E        | E                | E        | E    | E              | E         | push(meta) | push(meta) |
  | feature          | E       | background | scenario | scenario_outline | E        | E    | E              | E         | push(meta) | push(meta) |
  | step             | E       | E          | scenario | scenario_outline | examples | step | step           | step      | push(meta) | push(meta) |
@@ -6,4 +6,4 @@
  | scenario         | E       | E          | scenario | scenario_outline | E        | step | E              | E         | push(meta) | push(meta) |
  | scenario_outline | E       | E          | E        | E                | E        | step | E              | E         | push(meta) | push(meta) |
  | examples         | E       | E          | E        | E                | E        | E    | examples_table | E         | push(meta) | push(meta) |
- | examples_table   | E       | E          | scenario | scenario_outline | examples | E    | E              | E         | push(meta) | push(meta) |
+ | examples_table   | E       | E          | scenario | scenario_outline | examples | E    | examples_table | E         | push(meta) | push(meta) |
