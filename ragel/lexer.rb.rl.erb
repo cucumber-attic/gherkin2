@@ -93,17 +93,12 @@ module Gherkin
           @next_keyword_start = p
         }
 
-        action start_table {
-          # The following adjustment must be accounted for in the row actions, and then
-          # this action can be removed.
-          p = p - 1
-        }
-
         action start_row {
+          p = p - 1
           current_row = []
           @current_line = @line_number
         }
- 
+
         action begin_cell_content {
           @content_start = p
         }
