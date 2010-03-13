@@ -9,6 +9,9 @@ Fast Gherkin lexer and parser based on Ragel. Gherkin is two things:
 
 rake clean spec cucumber
 
+If the RL_LANG environment variable is set, only the parsers for the languages specified there will be built.
+E.g. in Bash, export RL_LANG="en,fr,no". This can be quite helpful when modifying the Ragel grammar.
+
 == Release process
 
 * Run "rake clean spec cucumber" for each platform (1.8.6, 1.8.7, 1.9, jruby) to make sure all is green.
