@@ -92,7 +92,7 @@ Feature: Gherkin Feature lexer
       """
     Then there should be parse errors on lines 5, 10 and 12
 
-  Scenario: Tables
+  Scenario: Malformed Tables
     Given the following text is parsed:
       """
       Feature: Antiques Roadshow
@@ -114,6 +114,26 @@ Feature: Gherkin Feature lexer
         | aaa | bbb |
       """
     Then there should be parse errors on lines 10 and 17
+
+  Scenario: Well-formed Tables
+    Given the following text is parsed:
+      """
+      Feature: Row-by-row
+      
+      Scenario: Tables with comments!
+        Given I can now comment out a row:
+          | Key  | Value |
+          # | Yes  | No  |
+          # | Good | Bad |
+          | Good | Evil  |
+        Then I am pleased by these things:
+          | Raindrops     | Roses   |
+          # | Whiskers    | Kittens |
+          | Bright Copper | Kettles |
+          # | Warm woolen   | Mittens |
+          | Also Oban | And Hendricks |
+      """
+    Then there should be no parse errors
 
   Scenario: Multiline keyword descriptions
     Given the following text is parsed:
