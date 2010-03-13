@@ -7,6 +7,7 @@ import gherkin.lexer.En;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 
 public class StateMachineReader implements Listener {
     private final String machinePath;
@@ -17,6 +18,7 @@ public class StateMachineReader implements Listener {
     }
 
     public List<List<String>> transitionTable() {
+		transitionTable = new ArrayList<List<String>>();
         Lexer lexer = new En(this);
         try {
             lexer.scan(FixJava.readResourceAsString(machinePath));
@@ -56,7 +58,7 @@ public class StateMachineReader implements Listener {
     public void syntax_error(String name, String event, List<String> strings, int line) {
     }
 
-    public void table(List<List<String>> rows, int line) {
-        transitionTable = rows;
+    public void row(List<String> row, int line) {
+        transitionTable.add(row);
     }
 }

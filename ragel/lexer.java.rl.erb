@@ -102,14 +102,10 @@ public class <%= @i18n.sanitized_key.capitalize %> implements Lexer {
       nextKeywordStart = p;
     }
 
-    action start_table {
-      p = p - 1;
-      rows = new ArrayList<List<String>>();
-      currentLine = lineNumber;
-    }
-
     action start_row {
+      p = p - 1;
       currentRow = new ArrayList<String>();
+      currentLine = lineNumber;
     }
 
     action begin_cell_content {
@@ -121,13 +117,7 @@ public class <%= @i18n.sanitized_key.capitalize %> implements Lexer {
     }
 
     action store_row {
-      rows.add(currentRow);
-    }
-
-    action store_table {
-      if(!rows.isEmpty()) {
-        listener.table(rows, currentLine);
-      }
+      listener.row(currentRow, currentLine);
     }
 
     action end_feature {

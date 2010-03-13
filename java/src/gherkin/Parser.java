@@ -79,9 +79,9 @@ public class Parser implements Listener {
             listener.comment(content, line);
     }
 
-    public void table(List<List<String>> rows, int line) {
-        if (event("table", line))
-            listener.table(rows, line);
+    public void row(List<String> row, int line) {
+        if (event("row", line))
+            listener.row(row, line);
     }
 
     public void syntax_error(String name, String event, List<String> strings, int line) {

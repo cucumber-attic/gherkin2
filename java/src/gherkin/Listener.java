@@ -19,7 +19,7 @@ public interface Listener {
 
     void step(String keyword, String name, int line);
 
-    void table(List<List<String>> rows, int line);
+    void row(List<String> rows, int line);
 
     void py_string(String string, int line);
 
