@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
-  s.date = %q{2010-03-09}
+  s.date = %q{2010-03-14}
   s.default_executable = %q{gherkin}
   s.description = %q{A fast Gherkin lexer/parser based on the Ragel State Machine Compiler.}
   s.email = %q{cukes@googlegroups.com}
@@ -186,7 +186,7 @@ Gem::Specification.new do |s|
      "spec/gherkin/sexp_recorder.rb",
      "spec/gherkin/shared/lexer_spec.rb",
      "spec/gherkin/shared/py_string_spec.rb",
-     "spec/gherkin/shared/table_spec.rb",
+     "spec/gherkin/shared/row_spec.rb",
      "spec/gherkin/shared/tags_spec.rb",
      "spec/gherkin/tools/colors_spec.rb",
      "spec/gherkin/tools/pretty_listener_spec.rb",
@@ -218,7 +218,7 @@ Gem::Specification.new do |s|
      "spec/gherkin/sexp_recorder.rb",
      "spec/gherkin/shared/lexer_spec.rb",
      "spec/gherkin/shared/py_string_spec.rb",
-     "spec/gherkin/shared/table_spec.rb",
+     "spec/gherkin/shared/row_spec.rb",
      "spec/gherkin/shared/tags_spec.rb",
      "spec/gherkin/tools/colors_spec.rb",
      "spec/gherkin/tools/pretty_listener_spec.rb",
