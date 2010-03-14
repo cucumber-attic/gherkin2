@@ -133,11 +133,9 @@ namespace Gherkin.Tests
             root.Add(formatter.CreateStepExpression(keyword, name, stepKind));
         }
 
-        public void Table(IList<IList<Token>> rows, Position tablePosition)
+        public void Row(IList<Token> row, Position rowPosition)
         {
-            root.Add(new SExpList("table", 
-                                  new [] { new SExp(formatter.FormatPosition(tablePosition)) }
-                                  .Concat(rows.Select(row => new SExpList("row", row.Select(cell => formatter.CreateCellExpression(cell)).ToArray())).Cast<SExp>()).ToArray()));
+            root.Add(new SExpList("row", row.Select(cell => formatter.CreateCellExpression(cell)).ToArray()));
         }
 
         public void PythonString(Token pyString)

@@ -93,10 +93,10 @@ namespace Gherkin
                 listener.Comment(content);
         }
 
-        public void Table(IList<IList<Token>> rows, Position tablePosition)
+        public void Row(IList<Token> row, Position tablePosition)
         {
-            if (NextEvent("table", tablePosition))
-                listener.Table(rows, tablePosition);
+            if (NextEvent("row", tablePosition))
+                listener.Row(row, tablePosition);
         }
 
         public void SyntaxError(string state, string @event, IEnumerable<string> legalEvents, Position position)

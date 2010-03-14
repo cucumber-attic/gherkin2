@@ -11,7 +11,7 @@ namespace Gherkin
         void ScenarioOutline(Token keyword, Token name);
         void Examples(Token keyword, Token name);
         void Step(Token keyword, Token name, StepKind stepKind);
-        void Table(IList<IList<Token>> rows, Position tablePosition);
+        void Row(IList<Token> rows, Position tablePosition);
         void PythonString(Token pyString);
         void SyntaxError(string state, string @event, IEnumerable<string> legalEvents, Position position);
     }

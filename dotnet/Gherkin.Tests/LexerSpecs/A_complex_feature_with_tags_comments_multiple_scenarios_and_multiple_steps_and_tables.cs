@@ -25,9 +25,9 @@ namespace Gherkin.Tests.LexerSpecs
                                  "(scenario 23   Scenario  \"Reading a second scenario\nWith two lines of text\" )" +
                                  "(comment 25  \"#Comment on line 24\" )" +
                                  "(step 26 Given \"Given \" \"a third step with a table\" )" +
-                                 "(table 27  (row (cell a)(cell b)) (row (cell c)(cell d)) (row (cell e)(cell f)) )" +
+                                 "(row (cell a)(cell b)) (row (cell c)(cell d)) (row (cell e)(cell f))" +
                                  "(step 30 And \"And \" \"I am still testing things\" )" +
-                                 "(table 31  (row (cell g)(cell h)) (row (cell e)(cell r)) (row (cell k)(cell i)) (row (cell n) (cell \"\")) )" +
+                                 "(row (cell g)(cell h)) (row (cell e)(cell r)) (row (cell k)(cell i)) (row (cell n) (cell \"\"))" +
                                  "(step 35 And \"And \" \"I am done testing these tables\" )" +
                                  "(comment 36  \"#Comment on line 29\" )" +
                                  "(step 37 Then \"Then \" \"I am happy\" )" +
@@ -63,9 +63,9 @@ namespace Gherkin.Tests.LexerSpecs
                                 "(scenario 23:3   Scenario 23:12 \"Reading a second scenario\nWith two lines of text\" )" +
                                 "(comment 25:5  \"#Comment on line 24\" )" +
                                 "(step 26:5 Given \"Given \" 26:11 \"a third step with a table\" )" +
-                                "(table 27:5  (row (cell 27:6 a)(cell 27:8 b)) (row (cell 28:6 c)(cell 28:8 d)) (row (cell 29:6 e)(cell 29:8 f)) )" +
+                                "(row (cell 27:6 a)(cell 27:8 b)) (row (cell 28:6 c)(cell 28:8 d)) (row (cell 29:6 e)(cell 29:8 f))" +
                                 "(step 30:5 And \"And \" 30:9 \"I am still testing things\" )" +
-                                "(table 31:7  (row (cell 31:8 g)(cell 31:10 h)) (row (cell 32:8 e)(cell 32:10 r)) (row (cell 33:8 k)(cell 33:10 i)) (row (cell 34:8 n) (cell 34:10 \"\")) )" +
+                                "(row (cell 31:8 g)(cell 31:10 h)) (row (cell 32:8 e)(cell 32:10 r)) (row (cell 33:8 k)(cell 33:10 i)) (row (cell 34:8 n) (cell 34:10 \"\"))" +
                                 "(step 35:5 And \"And \" 35:9 \"I am done testing these tables\" )" +
                                 "(comment 36:5  \"#Comment on line 29\" )" +
                                 "(step 37:5 Then \"Then \" 37:10 \"I am happy\" )" +

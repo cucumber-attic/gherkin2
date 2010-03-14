@@ -32,7 +32,6 @@ namespace Gherkin.Tests.LexerSpecs
 
                 try
                 {
-                    //lexer.Scan(new StringReader(input));
                     lexer.Scan(new StringReader(input.Replace("\r", "")));
                     return new LexingResult(listener.Value);
                 }

@@ -14,7 +14,7 @@ namespace Gherkin.Tests.LexerSpecs
                                  "(scenario_outline 1  \"Scenario Outline\"  Hello  )" +
                                  "(step 2 Given \"Given \" \"a <what> cucumber\" )" +
                                  "(examples 3   Examples  \"\" )" +
-                                 "(table 4  (row (cell what)) (row (cell green)) )" +
+                                 "(row (cell what)) (row (cell green))" +
                                  "");
         }
 

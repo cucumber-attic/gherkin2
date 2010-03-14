@@ -13,7 +13,7 @@ namespace Gherkin.StateMachine
     public class StateMachineReader : IListener
     {
         private readonly string machinePath;
-        private IList<IList<string>> transitionTable;
+        private IList<IList<string>> transitionTable = new List<IList<string>>();
 
         public StateMachineReader(string name) {
             machinePath = "Gherkin.StateMachine." + name + ".txt";
@@ -73,9 +73,9 @@ namespace Gherkin.StateMachine
         {
         }
 
-        public void Table(IList<IList<Token>> rows, Position tablePosition)
+        public void Row(IList<Token> row, Position tablePosition)
         {
-            transitionTable = rows.Select(row => (IList<string>)new List<string>(row.Select(cell => cell.Content))).ToList();
+            transitionTable.Add(row.Select(cell => cell.Content).ToList());
         }
 
         public void PythonString(Token pyString)

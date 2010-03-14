@@ -76,7 +76,7 @@ namespace Gherkin.Tests.LexerSpecs
                   "(step 6 When Lorsqu' \"on tape additionner\")" + 
                   "(step 7 Then \"Alors \" \"le résultat doit être <somme>\")" + 
                   "(examples 9 Exemples \"\")" + 
-                  "(table 10 (row (cell a)(cell b)(cell somme)) (row (cell 2)(cell 2)(cell 4)) (row (cell 2)(cell 3)(cell 5)))" + 
+                  "(row (cell a)(cell b)(cell somme)) (row (cell 2)(cell 2)(cell 4)) (row (cell 2)(cell 3)(cell 5))" + 
                   ")");
 
         }

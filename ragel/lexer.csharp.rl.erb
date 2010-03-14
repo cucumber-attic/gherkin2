@@ -112,15 +112,11 @@ namespace Gherkin.Lexer
 				nextKeywordStart = p;
 			}
 
-			action start_table {
-				currentLine = lineNumber;
-				contentCol = p - lastNewline + 1;
-				p = p - 1;
-				rows = new List<IList<Token>>();
-			}
-
 			action start_row {
+				p = p - 1;
+				contentCol = p - lastNewline + 1;
 				currentRow = new List<Token>();
+				currentLine = lineNumber;
 			}
 
 			action begin_cell_content {
@@ -132,13 +128,7 @@ namespace Gherkin.Lexer
 			}
 
 			action store_row {
-				rows.Add(currentRow);
-			}
-
-			action store_table {
-				if(rows.Count > 0) {
-					listener.Table(rows, GetCharacterPosition(data, contentNewline, currentLine, contentCol));
-				}
+				listener.Row(currentRow, GetCharacterPosition(data, contentNewline, currentLine, contentCol));
 			}
 
 			action end_feature {
@@ -209,7 +199,6 @@ namespace Gherkin.Lexer
 			int nextKeywordStart = -1;
 			int keywordStart = -1;
 			string keyword = null;
-			IList<IList<Token>> rows = null;
 			IList<Token> currentRow = null;
 
 			%% write init;
