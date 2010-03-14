@@ -115,6 +115,9 @@ module Gherkin
         def row(row, line_number)
           @rows << row
         end
+
+        def end_feature
+        end
       end
 
     end

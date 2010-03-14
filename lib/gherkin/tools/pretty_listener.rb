@@ -35,18 +35,22 @@ module Gherkin
       end
 
       def scenario(keyword, name, line, location=nil)
+        flush_table
         @io.puts "\n#{grab_comments!('  ')}#{grab_tags!('  ')}  #{keyword}: #{indent(name, '    ')}#{indented_scenario_location!(keyword, name, location)}"
       end
 
       def scenario_outline(keyword, name, line)
+        flush_table
         @io.puts "\n#{grab_comments!('  ')}#{grab_tags!('  ')}  #{keyword}: #{indent(name, '    ')}"
       end
 
       def examples(keyword, name, line)
+        flush_table
         @io.puts "\n#{grab_comments!('    ')}#{grab_tags!('    ')}    #{keyword}: #{indent(name, '    ')}"
       end
 
       def step(keyword, name, line, status=nil, arguments=nil, location=nil)
+        flush_table
         status_param = "#{status}_param" if status
         name = Gherkin::Format::Argument.format(name, arguments) {|arg| status_param ? self.__send__(status_param, arg, @monochrome) : arg} if arguments
 
@@ -54,6 +58,11 @@ module Gherkin
         step = self.__send__(status, step, @monochrome) if status
 
         @io.puts("#{grab_comments!('    ')}    #{step}#{indented_step_location!(location)}")
+      end
+
+      def row(row, line, formatted_row=nil)
+        @rows ||= []
+        @rows << row
       end
 
       def table(rows, line, rows_to_print = rows, first_row=0, statuses=nil, exception=nil)
@@ -80,6 +89,10 @@ module Gherkin
         raise "SYNTAX ERROR"
       end
 
+      def end_feature
+        flush_table
+      end
+
       # This method can be invoked before a #scenario, to ensure location arguments are aligned
       def steps(steps)
         @step_lengths = steps.map {|keyword, name| (keyword+name).unpack("U*").length}
@@ -93,6 +106,22 @@ module Gherkin
       end
 
     private
+
+      def flush_table(exception=nil, statuses=nil)
+        return if @rows.nil?
+        cell_lengths = @rows.map { |col| col.map { |cell| cell.unpack("U*").length }}
+        max_lengths = cell_lengths.transpose.map { |col_lengths| col_lengths.max }.flatten
+
+        @rows.each_with_index do |row, i|
+          j = -1
+          @io.puts '      | ' + row.zip(max_lengths).map { |cell, max_length|
+            j += 1
+            color(cell, statuses, j) + ' ' * (max_length - cell_lengths[i][j])
+          }.join(' | ') + ' |'
+          exception(exception) if exception
+        end
+        @rows = nil
+      end
 
       def color(cell, statuses, col)
         if statuses

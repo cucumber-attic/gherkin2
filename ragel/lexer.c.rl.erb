@@ -191,6 +191,7 @@ static VALUE rb_eGherkinLexerError;
   }
 
   action end_feature {
+    rb_funcall(listener, rb_intern("end_feature"), 0);
     if (cs < lexer_first_final) {
       if (raise_lexer_error != NULL) {
         size_t count = 0;
@@ -388,7 +389,7 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
     
     %% write init;
     %% write exec;
-    
+
     assert(p <= pe && "data overflow after parsing execute");
     assert(lexer->content_start <= len && "content starts after data end");
     assert(lexer->mark < len && "mark is after data end");
