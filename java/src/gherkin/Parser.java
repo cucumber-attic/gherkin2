@@ -84,6 +84,11 @@ public class Parser implements Listener {
             listener.row(row, line);
     }
 
+    public void eof() {
+        if (event("eof", 1))
+            listener.eof();
+    }
+    
     public void syntax_error(String name, String event, List<String> strings, int line) {
     }
 

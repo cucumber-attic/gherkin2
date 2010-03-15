@@ -113,10 +113,11 @@ module Gherkin
         }
 
         action end_feature {
-          @listener.end_feature
           if cs < lexer_first_final
             content = current_line_content(data, p)
             raise Lexer::LexingError.new("Lexing error on line %d: '%s'." % [@line_number, content])
+          else
+            @listener.eof
           end
         }
 

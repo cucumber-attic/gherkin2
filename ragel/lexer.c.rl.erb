@@ -191,7 +191,6 @@ static VALUE rb_eGherkinLexerError;
   }
 
   action end_feature {
-    rb_funcall(listener, rb_intern("end_feature"), 0);
     if (cs < lexer_first_final) {
       if (raise_lexer_error != NULL) {
         size_t count = 0;
@@ -227,6 +226,8 @@ static VALUE rb_eGherkinLexerError;
         lexer_init(lexer); // Re-initialize so we can scan again with the same lexer
         raise_lexer_error(newstr, line);
       }
+    } else {
+      rb_funcall(listener, rb_intern("eof"), 0);
     }
   }
 

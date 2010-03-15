@@ -43,7 +43,7 @@ module Gherkin
         @lexer.scan(" | ůﻚ | 2 | \n")
         @listener.to_sexp.should == [
           [:row, ["ůﻚ", "2"], 1],
-          [:end_feature]
+          [:eof]
         ]
       end 
 

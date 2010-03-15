@@ -10,7 +10,7 @@ module Gherkin
           @lexer.scan("# My comment\n")
           @listener.to_sexp.should == [
             [:comment, "# My comment", 1],
-            [:end_feature]
+            [:eof]
           ]
         end
 
@@ -19,7 +19,7 @@ module Gherkin
           @listener.to_sexp.should == [
             [:comment, "# Hello", 1],
             [:comment, "# World", 3],
-            [:end_feature]
+            [:eof]
           ]
         end
 
@@ -29,7 +29,7 @@ module Gherkin
             [:scenario, "Scenario", "test", 1],
             [:comment, "#hello", 2],
             [:scenario, "Scenario", "another", 3],
-            [:end_feature]
+            [:eof]
           ]
         end
 
@@ -39,7 +39,7 @@ module Gherkin
             [:comment, "#", 1],
             [:comment, "# A comment", 2],
             [:comment, "#", 3],
-            [:end_feature]
+            [:eof]
           ]
         end
         
@@ -58,7 +58,7 @@ module Gherkin
             [:scenario, "Scenario", "test", 2],
             [:tag, "hello", 4],
             [:scenario, "Scenario", "another", 5],
-            [:end_feature]
+            [:eof]
           ]
         end  
       end
@@ -69,7 +69,7 @@ module Gherkin
           @listener.to_sexp.should == [
             [:background, "Background", "", 1],
             [:step, "Given ", "I am a step", 2],
-            [:end_feature]
+            [:eof]
           ]
         end
         
@@ -77,7 +77,7 @@ module Gherkin
           @lexer.scan("Background: I have several\n   Lines to look at\n None starting with Given")
           @listener.to_sexp.should == [
             [:background, "Background", "I have several\nLines to look at\nNone starting with Given", 1],
-            [:end_feature]
+            [:eof]
           ]
         end
          
@@ -92,7 +92,7 @@ Given I am a step})
             [:feature, "Feature", "Hi", 1],
             [:background, "Background", "It is my ambition to say\nin ten sentences\nwhat others say\nin a whole book.",2],
             [:step, "Given ", "I am a step", 6],
-            [:end_feature]
+            [:eof]
           ]
         end
       end
@@ -102,7 +102,7 @@ Given I am a step})
           @lexer.scan("Scenario: Hello\n")
           @listener.to_sexp.should == [
             [:scenario, "Scenario", "Hello", 1],
-            [:end_feature]
+            [:eof]
           ]
         end
  
@@ -114,7 +114,7 @@ Given I am a step})
           @listener.to_sexp.should == [
             [:scenario, "Scenario", "bar", 1],
             [:step, "Given ", "baz", 3],
-            [:end_feature]
+            [:eof]
           ]
         end
         
@@ -128,7 +128,7 @@ Given I am a step})
           @listener.to_sexp.should == [
             [:scenario, "Scenario", "It is my ambition to say\nin ten sentences\nwhat others say\nin a whole book.", 1],
             [:step, "Given ", "I am a step", 5],
-            [:end_feature]
+            [:eof]
           ]
         end
 
@@ -136,7 +136,7 @@ Given I am a step})
           @lexer.scan("Scenario: I have several\n       Lines to look at\n None starting with Given")
           @listener.to_sexp.should == [
             [:scenario, "Scenario", "I have several\nLines to look at\nNone starting with Given", 1],
-            [:end_feature]
+            [:eof]
           ]
         end
   
@@ -150,7 +150,7 @@ Given I am a step})
             [:scenario, "Scenario", "I have a Button\nButtons are great", 1],
             [:step, "Given ", "I have some", 3],
             [:step, "But ", "I might not because I am a Charles Dickens character", 4],
-            [:end_feature]
+            [:eof]
           ]
         end
         
@@ -162,7 +162,7 @@ Given I am a step
           @listener.to_sexp.should == [
             [:scenario, "Scenario", "When I have when in scenario\nI should be fine", 1],
             [:step, "Given ", "I am a step", 3],
-            [:end_feature]
+            [:eof]
           ]
         end
       end
@@ -181,7 +181,7 @@ Given I am a step
             [:examples, "Examples", "", 3],
             [:row, ["what"], 4],
             [:row, ["green"], 5],
-            [:end_feature]
+            [:eof]
           ]
         end
 
@@ -193,7 +193,7 @@ Given I am a step
           @listener.to_sexp.should == [
             [:scenario_outline, "Scenario Outline", "Hello", 1],
             [:scenario, "Scenario", "My Scenario", 3],
-            [:end_feature]
+            [:eof]
           ]
         end
 
@@ -208,7 +208,7 @@ Given I am a step
           @listener.to_sexp.should == [
             [:scenario_outline, "Scenario Outline", "It is my ambition to say\nin ten sentences\nwhat others say\nin a whole book.", 1],
             [:step, "Given ", "I am a step", 5],
-            [:end_feature]
+            [:eof]
           ]
         end        
       end
@@ -223,7 +223,7 @@ Given I am a step
             [:examples, "Examples", "", 1],
             [:row, ["x","y"], 2],
             [:row, ["5","6"], 3],
-            [:end_feature]
+            [:eof]
           ]
         end
         
@@ -238,7 +238,7 @@ Given I am a step
             [:examples, "Examples", "I'm a multiline name\nand I'm ok\nf'real", 1],
             [:row, ["x"], 4],
             [:row, ["5"], 5],
-            [:end_feature]
+            [:eof]
           ]
         end
       end
@@ -251,7 +251,7 @@ Given I am a step
           @listener.to_sexp.should == [
             [:step, "Given ", "I have a table", 1],
             [:row, ['a','b'], 2],
-            [:end_feature]
+            [:eof]
           ]
         end
         
@@ -260,7 +260,7 @@ Given I am a step
           @listener.to_sexp.should == [
             [:step, "Given ", "I have a string", 1],
             [:py_string, "hello\nworld", 2],
-            [:end_feature]
+            [:eof]
           ]
         end
       end
@@ -272,7 +272,7 @@ Given I am a step
             [:feature, "Feature", "Feature Text", 1],
             [:scenario, "Scenario", "Reading a Scenario", 2],
             [:step, "Given ", "there is a step", 3],
-            [:end_feature]
+            [:eof]
           ]
         end
       end
@@ -284,7 +284,7 @@ Given I am a step
             [:feature, "Feature", "Feature Text", 1],
             [:scenario, "Scenario", "Reading a Scenario", 2],
             [:step, "Given ", "there is a step", 3],
-            [:end_feature]
+            [:eof]
           ]
         end
       end
@@ -299,7 +299,7 @@ Given I am a step
             [:step, "Given ", "there is a step", 3],
             [:step, "And ", "another step", 4],
             [:step, "And ", "a third step", 5],
-            [:end_feature]
+            [:eof]
           ]
         end
       end
@@ -309,7 +309,7 @@ Given I am a step
           @lexer.scan("Feature: Feature Text\n")
           @listener.to_sexp.should == [
             [:feature, "Feature", "Feature Text", 1],
-            [:end_feature]
+            [:eof]
           ]
         end
 
@@ -317,7 +317,7 @@ Given I am a step
           @lexer.scan("Feature: hi")
           @listener.to_sexp.should == [
             [:feature, "Feature", "hi", 1],
-            [:end_feature]
+            [:eof]
           ]
         end
       end
@@ -327,7 +327,7 @@ Given I am a step
           @lexer.scan("Feature: Feature Text\n  And some more text")
           @listener.to_sexp.should == [
             [:feature, "Feature", "Feature Text\nAnd some more text", 1],
-            [:end_feature]
+            [:eof]
           ]
         end
       end
@@ -338,7 +338,7 @@ Given I am a step
           @listener.to_sexp.should == [
             [:feature, "Feature", "Feature Text", 1],
             [:scenario, "Scenario", "Reading a Scenario", 2],
-            [:end_feature]
+            [:eof]
           ]
         end
       end
@@ -352,7 +352,7 @@ Given I am a step
             [:step, "Given ", "a step", 3],
             [:scenario, "Scenario", "A second scenario", 5],
             [:step, "Given ", "another step", 6],
-            [:end_feature]
+            [:eof]
           ]
         end
         
@@ -364,7 +364,7 @@ Given I am a step
             [:step, "Given ", "a step", 3],
             [:scenario, "Scenario", "A second scenario", 4],
             [:step, "Given ", "another step", 5],
-            [:end_feature]
+            [:eof]
           ]
         end
       end
@@ -380,7 +380,7 @@ Given I am a step
             [:comment, "# Here is a third comment", 5],
             [:step, "Given ", "there is a step", 6],
             [:comment, "# Here is a fourth comment", 7],
-            [:end_feature]
+            [:eof]
           ]
         end
 
@@ -394,7 +394,7 @@ Given I am a step
             [:row, ["state"], 7], 
             [:comment, "# comment", 8], 
             [:row, ["1"], 9],
-            [:end_feature]
+            [:eof]
           ]
         end
       end
@@ -415,7 +415,7 @@ Given I am a step
             [:tag, "ST5", 10],
             [:tag, "#^%&ST6**!", 10],
             [:scenario, "Scenario", "Second", 11],
-            [:end_feature]
+            [:eof]
           ]
         end        
       end
@@ -429,7 +429,7 @@ Given I am a step
             [:scenario, "Scenario", "Anonymous user can get a login form.\nScenery here", 4],
             [:tag, "tag", 7],
             [:scenario, "Scenario", "Another one", 8],
-            [:end_feature]
+            [:eof]
           ]
         end
       end   
@@ -472,7 +472,7 @@ Given I am a step
             [:step, "Given ", "All work and no play", 40],
             [:py_string, "Makes Homer something something\nAnd something else", 41 ],
             [:step, "Then ", "crazy", 45],
-            [:end_feature]
+            [:eof]
           ]
         end        
       end
@@ -516,7 +516,7 @@ Given I am a step
               [:step, "Given ", "All work and no play", 40],
               [:py_string, "Makes Homer something something\r\nAnd something else", 41],
               [:step, "Then ", "crazy", 45],
-              [:end_feature]
+              [:eof]
             ]
           end        
         end

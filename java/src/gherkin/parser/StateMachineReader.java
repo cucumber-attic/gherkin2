@@ -55,6 +55,9 @@ public class StateMachineReader implements Listener {
     public void py_string(String string, int line) {
     }
 
+    public void eof() {
+    }
+
     public void syntax_error(String name, String event, List<String> strings, int line) {
     }
 

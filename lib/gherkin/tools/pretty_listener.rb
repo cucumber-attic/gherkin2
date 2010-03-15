@@ -89,7 +89,7 @@ module Gherkin
         raise "SYNTAX ERROR"
       end
 
-      def end_feature
+      def eof
         flush_table
       end
 

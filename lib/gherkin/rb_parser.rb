@@ -116,7 +116,7 @@ module Gherkin
           @rows << row
         end
 
-        def end_feature
+        def eof
         end
       end
 

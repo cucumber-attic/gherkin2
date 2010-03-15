@@ -50,7 +50,7 @@ EOS
         @lexer.scan ps("A\n\nB")
         @listener.to_sexp.should == [
           [:py_string, "A\n\nB", 1],
-          [:end_feature]
+          [:eof]
         ]
       end
       

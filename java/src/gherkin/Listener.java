@@ -23,5 +23,7 @@ public interface Listener {
 
     void py_string(String string, int line);
 
+    void eof();
+
     void syntax_error(String state, String event, List<String> legalEvents, int line);
 }

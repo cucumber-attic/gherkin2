@@ -21,7 +21,7 @@ module Gherkin
           [:step, "Gitt ", "Gherkin supports many languages", 4],
           [:step, "Når ",  "Norwegian keywords are parsed", 5],
           [:step, "Så ", "they should be recognized", 6],
-          [:end_feature]
+          [:eof]
         ]
       end
 
@@ -35,7 +35,7 @@ module Gherkin
           [:step, "而且", "我已经在计算器里输入7", 5],
           [:step, "当", "我按相加按钮", 6],
           [:step, "那么", "我应该在屏幕上看到的结果是13", 7],
-          [:end_feature]
+          [:eof]
         ] 
       end
 
@@ -54,7 +54,7 @@ module Gherkin
           [:row, %w{a b somme}, 10],
           [:row, %w{2 2 4}, 11],
           [:row, %w{2 3 5}, 12],
-          [:end_feature]
+          [:eof]
         ]
       end
     end
