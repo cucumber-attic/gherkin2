@@ -1,5 +1,5 @@
  |                  | feature | background | scenario | scenario_outline | examples | step | row            | py_string | eof | comment    | tag        |
- | root             | feature | E          | E        | E                | E        | E    | E              | E         | E   | push(meta) | push(meta) |
+ | root             | feature | E          | E        | E                | E        | E    | E              | E         | eof | push(meta) | push(meta) |
  | feature          | E       | background | scenario | scenario_outline | E        | E    | E              | E         | eof | push(meta) | push(meta) |
  | step             | E       | E          | scenario | scenario_outline | examples | step | step           | step      | eof | push(meta) | push(meta) |
  | background       | E       | E          | scenario | scenario_outline | E        | step | E              | E         | eof | push(meta) | push(meta) |

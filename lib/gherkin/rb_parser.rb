@@ -77,7 +77,7 @@ module Gherkin
 
       def expected
         allowed = @transition_map[@state].find_all { |_, action| action != "E" }
-        allowed.collect { |state| state[0] }.sort
+        allowed.collect { |state| state[0] }.sort - ['eof']
       end
 
       private

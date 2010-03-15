@@ -159,6 +159,7 @@ public class Parser implements Listener {
                 }
             }
             Collections.sort(result);
+            result.remove("eof");
             return result;
         }
 

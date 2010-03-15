@@ -19,6 +19,11 @@ module Gherkin
       }.should raise_error(/Parse error on line 12\. Found scenario when expecting one of: comment, feature, tag\. \(Current state: root\)\.$/)
     end
 
+    it "should allow empty files" do
+      @listener.should_receive(:eof)
+      @parser.eof
+    end
+
     it "should delegate an error message when raise on error is false" do
       @listener.should_receive(:syntax_error).with(sym(:root), sym(:background), a([:comment, :feature, :tag]), 1)
       @parser = Parser.new(@listener, false)
