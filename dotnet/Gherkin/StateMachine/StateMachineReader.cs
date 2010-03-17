@@ -82,6 +82,10 @@ namespace Gherkin.StateMachine
         {
         }
 
+        public void Eof()
+        {
+        }
+
         public void SyntaxError(string state, string @event, IEnumerable<string> legalEvents, Position position)
         {
         }

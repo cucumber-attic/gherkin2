@@ -10,6 +10,7 @@ namespace Gherkin.Tests.LexerSpecs
                                  "(scenario 2   Scenario   test  )" +
                                  "(tag 4   hello  )" +
                                  "(scenario 5   Scenario   another  )" +
+                                 "(eof )" +
                                  "");
         }  
     }

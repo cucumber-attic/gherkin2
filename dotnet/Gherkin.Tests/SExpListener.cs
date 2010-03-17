@@ -16,6 +16,7 @@ namespace Gherkin.Tests
         private interface IFormatter
         {
             string FormatPosition(Position position);
+            SExp CreateExpression(string symbol);
             SExp CreateExpression(string symbol, Token token);
             SExp CreateMultipartExpression(string symbol, Token keyword, Token content);
             SExp CreateStepExpression(Token keyword, Token name, StepKind stepKind);
@@ -27,6 +28,11 @@ namespace Gherkin.Tests
             public string FormatPosition(Position position)
             {
                 return position.Line.ToString();
+            }
+
+            public SExp CreateExpression(string symbol)
+            {
+                return new SExpList(symbol);
             }
 
             public SExp CreateExpression(string symbol, Token token)
@@ -55,6 +61,11 @@ namespace Gherkin.Tests
             public string FormatPosition(Position position)
             {
                 return string.Format("{0}:{1}", position.Line, position.Column);
+            }
+
+            public SExp CreateExpression(string symbol)
+            {
+                return new SExpList(symbol);
             }
 
             public SExp CreateExpression(string symbol, Token token)
@@ -141,6 +152,11 @@ namespace Gherkin.Tests
         public void PythonString(Token pyString)
         {
             root.Add(formatter.CreateExpression("py_string", pyString));
+        }
+
+        public void Eof()
+        {
+            root.Add(formatter.CreateExpression("eof"));
         }
 
         public void SyntaxError(string state, string @event, IEnumerable<string> legalEvents, Position position)

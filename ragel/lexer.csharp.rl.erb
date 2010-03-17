@@ -135,6 +135,8 @@ namespace Gherkin.Lexer
 				if(cs < lexer_first_final) {
 					string content = CurrentLineContent(data, lastNewline);
 					throw new LexingException("Lexing error on line " + lineNumber + ": '" + content + "'");
+				} else {
+				  listener.Eof();
 				}
 			}
 

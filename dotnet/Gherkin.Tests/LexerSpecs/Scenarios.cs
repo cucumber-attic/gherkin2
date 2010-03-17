@@ -7,6 +7,7 @@ namespace Gherkin.Tests.LexerSpecs
             a_lexer().lexing_input("Scenario: Hello\n").
                 should_result_in("(root " + 
                                  "(scenario 1   Scenario   Hello  )" +
+                                 "(eof )" +
                                  "");
         }
  
@@ -18,6 +19,7 @@ namespace Gherkin.Tests.LexerSpecs
                 should_result_in("(root " + 
                                  "(scenario 1   Scenario   bar  )" +
                                  "(step 3 Given \"Given \"  baz  )" +
+                                 "(eof )" +
                                  "");
         }
         
@@ -31,6 +33,7 @@ namespace Gherkin.Tests.LexerSpecs
                 should_result_in("(root " + 
                                  "(scenario 1   Scenario  \"It is my ambition to say\nin ten sentences\nwhat others say\nin a whole book.\" )" +
                                  "(step 5 Given  \"Given \" \"I am a step\" )" +
+                                 "(eof )" +
                                  "");
         }
 
@@ -38,6 +41,7 @@ namespace Gherkin.Tests.LexerSpecs
             a_lexer().lexing_input("Scenario: I have several\n       Lines to look at\n None starting with Given").
                 should_result_in("(root " + 
                                  "(scenario 1   Scenario  \"I have several\nLines to look at\nNone starting with Given\" )" +
+                                 "(eof )" +
                                  "");
         }
   
@@ -51,6 +55,7 @@ namespace Gherkin.Tests.LexerSpecs
                                  "(scenario 1   Scenario  \"I have a Button\nButtons are great\" )" +
                                  "(step 3 Given \"Given \" \"I have some\" )" +
                                  "(step 4 But \"But \" \"I might not because I am a Charles Dickens character\" )" +
+                                 "(eof )" +
                                  "");
         }
         
@@ -62,6 +67,7 @@ Given I am a step
                 should_result_in("(root " + 
                                  "(scenario 1   Scenario  \"When I have when in scenario\nI should be fine\" )" +
                                  "(step 3 Given \"Given \" \"I am a step\" )" +
+                                 "(eof )" +
                                  "");
         }
     }

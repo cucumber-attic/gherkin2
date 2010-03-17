@@ -15,6 +15,7 @@ namespace Gherkin.Tests.LexerSpecs
                                  "(step 2 Given \"Given \" \"a <what> cucumber\" )" +
                                  "(examples 3   Examples  \"\" )" +
                                  "(row (cell what)) (row (cell green))" +
+                                 "(eof )" +
                                  "");
         }
 
@@ -26,6 +27,7 @@ namespace Gherkin.Tests.LexerSpecs
                 should_result_in("(root " + 
                                  "(scenario_outline 1  \"Scenario Outline\"  Hello  )" +
                                  "(scenario 3   Scenario  \"My Scenario\" )" +
+                                 "(eof )" +
                                  "");
         }
 
@@ -40,6 +42,7 @@ namespace Gherkin.Tests.LexerSpecs
                 should_result_in("(root " + 
                                  "(scenario_outline 1  \"Scenario Outline\" \"It is my ambition to say\nin ten sentences\nwhat others say\nin a whole book.\" )" +
                                  "(step 5 Given \"Given \" \"I am a step\" )" +
+                                 "(eof )" +
                                  "");
         }        
     }

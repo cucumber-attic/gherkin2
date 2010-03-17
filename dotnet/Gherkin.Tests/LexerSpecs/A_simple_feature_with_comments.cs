@@ -13,6 +13,7 @@ namespace Gherkin.Tests.LexerSpecs
                                  "(comment 5  \"# Here is a third comment\" )" +
                                  "(step 6 Given \"Given \" \"there is a step\" )" +
                                  "(comment 7  \"# Here is a fourth comment\" )" +
+                                 "(eof )" +
                                  "");
         }
     }

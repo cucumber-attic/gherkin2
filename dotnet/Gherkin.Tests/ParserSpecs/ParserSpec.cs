@@ -78,7 +78,7 @@ namespace Gherkin.Tests.ParserSpecs
                 }
                 catch (Exception)
                 {
-                    Assert.True(false, "Did not received");
+                    Assert.True(false, "Did not receive");
                 }
             }
 
@@ -90,7 +90,7 @@ namespace Gherkin.Tests.ParserSpecs
                 }
                 catch (Exception)
                 {
-                    Assert.True(false, "Did not received");
+                    Assert.True(false, "Did not receive");
                 }
             }
 

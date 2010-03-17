@@ -35,6 +35,7 @@ namespace Gherkin.Tests.LexerSpecs
                                  "(step 40 Given \"Given \" \"All work and no play\" )" +
                                  "(py_string 41  \"Makes Homer something something\nAnd something else\" )" +
                                  "(step 45 Then \"Then \"  crazy )" +
+                                 "(eof )" +
                                  "");
         }
 
@@ -73,6 +74,7 @@ namespace Gherkin.Tests.LexerSpecs
                                 "(step 40:5 Given \"Given \" 40:11 \"All work and no play\" )" +
                                 "(py_string 41:7  \"Makes Homer something something\nAnd something else\" )" +
                                 "(step 45:5 Then \"Then \" 45:10 crazy )" +
+                                "(eof )" +
                                 "");
         }
     }

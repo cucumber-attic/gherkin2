@@ -15,6 +15,7 @@ namespace Gherkin.Tests.LexerSpecs
                                   "(step 4 Given \"Gitt \" \"Gherkin supports many languages\") " +
                                   "(step 5 When \"Når \" \"Norwegian keywords are parsed\") " +
                                   "(step 6 Then \"Så \" \"they should be recognized\") " +
+                                  "(eof )" +
                                   ")");
         }
 
@@ -29,6 +30,7 @@ namespace Gherkin.Tests.LexerSpecs
                                   "(step 4:5 Given \"Gitt \" 4:10 \"Gherkin supports many languages\") " +
                                   "(step 5:5 When \"Når \" 5:9 \"Norwegian keywords are parsed\") " +
                                   "(step 6:5 Then \"Så \" 6:8 \"they should be recognized\") " +
+                                  "(eof )" +
                                   ")");
         }
 
@@ -44,6 +46,7 @@ namespace Gherkin.Tests.LexerSpecs
                 "(step 5 And 而且 我已经在计算器里输入7) " +
                 "(step 6 When 当 我按相加按钮) " +
                 "(step 7 Then 那么 我应该在屏幕上看到的结果是13) " +
+                "(eof )" +
                 ")");
         }
 
@@ -59,6 +62,7 @@ namespace Gherkin.Tests.LexerSpecs
                 "(step 5:5 And 而且 5:7 我已经在计算器里输入7) " +
                 "(step 6:5 When 当 6:6 我按相加按钮) " +
                 "(step 7:5 Then 那么 7:7 我应该在屏幕上看到的结果是13) " +
+                "(eof )" +
                 ")");
         }
  
@@ -77,6 +81,7 @@ namespace Gherkin.Tests.LexerSpecs
                   "(step 7 Then \"Alors \" \"le résultat doit être <somme>\")" + 
                   "(examples 9 Exemples \"\")" + 
                   "(row (cell a)(cell b)(cell somme)) (row (cell 2)(cell 2)(cell 4)) (row (cell 2)(cell 3)(cell 5))" + 
+                  "(eof )" +
                   ")");
 
         }

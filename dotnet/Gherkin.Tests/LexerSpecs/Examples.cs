@@ -11,6 +11,7 @@ namespace Gherkin.Tests.LexerSpecs
                 should_result_in("(root " + 
                                  "(examples 1 Examples \"\" )" +
                                  "(row (cell x) (cell y)) (row (cell 5) (cell 6))" +
+                                 "(eof )" +
                                  "");
         }
         
@@ -24,6 +25,7 @@ namespace Gherkin.Tests.LexerSpecs
                 should_result_in("(root " + 
                                  "(examples 1 Examples \"I'm a multiline name\nand I'm ok\nf'real\" )" +
                                  "(row (cell x))(row (cell 5))" +
+                                 "(eof )" +
                                  "");
         }
     }

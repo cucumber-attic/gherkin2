@@ -6,7 +6,10 @@ namespace Gherkin.Tests.LexerSpecs
     { 
         [Fact] public void should_find_the_feature() {
             a_lexer().lexing_input("Feature: Feature Text\n  And some more text").
-                should_result_in("(root " + "(feature 1   Feature  \"Feature Text\nAnd some more text\" )");
+                should_result_in("(root " + 
+                                 "(feature 1   Feature  \"Feature Text\nAnd some more text\" )" + 
+                                 "(eof )" +
+                                 "");
         }
     }
 }

@@ -9,14 +9,21 @@ namespace Gherkin.Tests.LexerSpecs
         public void should_parse_a_one_line_comment()
         {
             a_lexer().lexing_input("# My comment\n").
-                should_result_in("(root (comment 1 \"# My comment\"))");
+                should_result_in("(root " + 
+                                 "(comment 1 \"# My comment\")" + 
+                                 "(eof )" + 
+                                 ")");
         }
 
         [Fact]
         public void should_parse_a_multiline_comment()
         {
             a_lexer().lexing_input("# Hello\n\n# World\n").
-                should_result_in("(root (comment 1 \"# Hello\") (comment 3 \"# World\")))");
+                should_result_in("(root " + 
+                                 "(comment 1 \"# Hello\") " + 
+                                 "(comment 3 \"# World\")" + 
+                                 "(eof )" + 
+                                 ")");
         }
 
         [Fact] 
@@ -26,7 +33,9 @@ namespace Gherkin.Tests.LexerSpecs
                 should_result_in("(root " +
                                  "(scenario 1 Scenario test)" +
                                  "(comment 2 #hello)" +
-                                 "(scenario 3 Scenario another)");
+                                 "(scenario 3 Scenario another)" + 
+                                 "(eof )" +
+                                 ")");
         }
 
         [Fact] 
@@ -36,7 +45,9 @@ namespace Gherkin.Tests.LexerSpecs
                 should_result_in("(root " +
                                  "(comment 1 #)" +
                                  "(comment 2 \"# A comment\")" +
-                                 "(comment 3 #)");
+                                 "(comment 3 #)" + 
+                                 "(eof )" +
+                                 ")");
         }
 
         [Fact] 

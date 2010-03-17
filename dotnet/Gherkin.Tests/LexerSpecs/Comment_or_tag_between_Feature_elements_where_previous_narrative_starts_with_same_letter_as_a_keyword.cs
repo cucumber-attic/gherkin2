@@ -11,6 +11,7 @@ namespace Gherkin.Tests.LexerSpecs
                                  "(scenario 4   Scenario  \"Anonymous user can get a login form.\nScenery here\" )" +
                                  "(tag 7   tag  )" +
                                  "(scenario 8   Scenario  \"Another one\" )" +
+                                 "(eof )" +
                                  "");
         }
     }

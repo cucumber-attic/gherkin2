@@ -8,6 +8,7 @@ namespace Gherkin.Tests.LexerSpecs
                 should_result_in("(root " + 
                                  "(feature 1   Feature  \"Feature Text\" )" +
                                  "(scenario 2   Scenario  \"Reading a Scenario\" )" +
+                                 "(eof )" +
                                  "");
         }
     }

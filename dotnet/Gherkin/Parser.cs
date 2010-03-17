@@ -99,6 +99,12 @@ namespace Gherkin
                 listener.Row(row, tablePosition);
         }
 
+        public void Eof()
+        {
+            if (NextEvent("eof", new Position(-1,-1)))
+                listener.Eof();
+        }
+
         public void SyntaxError(string state, string @event, IEnumerable<string> legalEvents, Position position)
         {
         }

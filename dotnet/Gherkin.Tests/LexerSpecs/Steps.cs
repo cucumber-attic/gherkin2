@@ -10,6 +10,7 @@ namespace Gherkin.Tests.LexerSpecs
                 should_result_in("(root " + 
                                  "(step 1 Given \"Given \" \"I have a table\" )" +
                                  "(row (cell a) (cell b))" +
+                                 "(eof )" +
                                  "");
         }
         
@@ -18,6 +19,7 @@ namespace Gherkin.Tests.LexerSpecs
                 should_result_in("(root " + 
                                  "(step 1 Given \"Given \" \"I have a string\" )" +
                                  "(py_string 2 \"hello\nworld\")" +
+                                 "(eof )" +
                                  "");
         }
     }

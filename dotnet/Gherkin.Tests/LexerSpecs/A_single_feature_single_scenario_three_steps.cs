@@ -12,6 +12,7 @@ namespace Gherkin.Tests.LexerSpecs
                                  "(step 3 Given \"Given \" \"there is a step\" )" +
                                  "(step 4 And \"And \" \"another step\" )" +
                                  "(step 5 And \"And \" \"a third step\" )" +
+                                 "(eof )" +
                                  "");
         }
     }

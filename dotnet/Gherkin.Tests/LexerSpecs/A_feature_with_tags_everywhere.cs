@@ -18,6 +18,7 @@ namespace Gherkin.Tests.LexerSpecs
                                  "(tag 10   ST5 )" +
                                  "(tag 10   #^%&ST6**! )" +
                                  "(scenario 11   Scenario   Second )" +
+                                 "(eof )" +
                                  "");
         }        
     }

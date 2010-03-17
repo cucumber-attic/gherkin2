@@ -12,6 +12,7 @@ namespace Gherkin.Tests.LexerSpecs
                                  "(step 3 Given \"Given \" \"a step\" )" +
                                  "(scenario 5   Scenario  \"A second scenario\" )" +
                                  "(step 6 Given \"Given \" \"another step\" )" +
+                                 "(eof )" +
                                  "");
         }
         
@@ -23,6 +24,7 @@ namespace Gherkin.Tests.LexerSpecs
                                  "(step 3 Given \"Given \" \"a step\" )" +
                                  "(scenario 4   Scenario  \"A second scenario\" )" +
                                  "(step 5 Given \"Given \" \"another step\" )" +
+                                 "(eof )" +
                                  "");
         }
     }

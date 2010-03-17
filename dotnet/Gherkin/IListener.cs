@@ -13,6 +13,7 @@ namespace Gherkin
         void Step(Token keyword, Token name, StepKind stepKind);
         void Row(IList<Token> rows, Position tablePosition);
         void PythonString(Token pyString);
+        void Eof();
         void SyntaxError(string state, string @event, IEnumerable<string> legalEvents, Position position);
     }
 }

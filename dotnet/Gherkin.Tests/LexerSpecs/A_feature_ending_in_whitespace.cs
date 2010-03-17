@@ -9,6 +9,7 @@ namespace Gherkin.Tests.LexerSpecs
                                  "(feature 1   Feature  \"Feature Text\" )" +
                                  "(scenario 2   Scenario  \"Reading a Scenario\" )" +
                                  "(step 3 Given \"Given \" \"there is a step\" )" +
+                                 "(eof )" +
                                  "");
         }
     }
