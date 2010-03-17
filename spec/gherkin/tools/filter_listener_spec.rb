@@ -7,24 +7,26 @@ require 'stringio'
 module Gherkin
   module Tools
     describe FilterListener do
-      before do
-        @io = StringIO.new
-        pl = PrettyListener.new(@io, true)
-        fl = FilterListener.new(pl)
-        parser = Gherkin::Parser.new(fl, true, "root")
-        @lexer  = Gherkin::I18nLexer.new(parser)
-      end
-
-      it "should replay everything when there is no filter" do
+      it "should replay identically when there is no filter" do
         input = %{Feature: one
 
   Scenario: two
     Given three
     When four
 }
-        @lexer.scan(input)
-        @io.rewind
-        @io.read.should == input
+
+        verify_filter(input, input)
+      end
+
+      def verify_filter(input, expected_output)
+        io = StringIO.new
+        pl = PrettyListener.new(io, true)
+        fl = FilterListener.new(pl)
+        parser = Gherkin::Parser.new(fl, true, "root")
+        lexer  = Gherkin::I18nLexer.new(parser)
+        lexer.scan(input)
+        io.rewind
+        io.read.should == expected_output
       end
     end
   end
