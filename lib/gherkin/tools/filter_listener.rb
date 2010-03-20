@@ -1,9 +1,10 @@
 module Gherkin
   module Tools
     class FilterListener
-      def initialize(listener, lines)
+      def initialize(listener, lines, name_regexen)
         @listener = listener
         @lines = lines
+        @name_regexen = name_regexen
 
         @sexp_arrays = []
         @current = []
@@ -18,21 +19,26 @@ module Gherkin
         case(event)
         when :feature
           @current << sexp
-        when :scenario, :eof
+        when :scenario
           @feature ||= @current
           @current = []
           @current << sexp
           @line_match = nil
           @current_added = false
-          detect(sexp)
+          
+          name = args[1]
+          name_match = no_filters? || @name_regexen.detect{|regex| name =~ regex}
+          
+          add_if_matched(sexp, name_match)
+        when :eof
+          @sexp_arrays << [sexp]
         else
           @current << sexp
-          detect(sexp)
+          add_if_matched(sexp, false)
         end
       end
 
       def lines
-#        p @sexp_arrays
         @sexp_arrays.map do |sexp_array| 
           sexp_array.map do |sexp| 
             sexp[-1]
@@ -42,16 +48,11 @@ module Gherkin
 
   private
 
-      def detect(sexp)
-        if(sexp[0] == :eof)
-          @sexp_arrays << @current
-          return
-        end
-        
+      def add_if_matched(sexp, name_match)
         line = sexp[-1]
-        @line_match ||= @lines.empty? || line == @lines[0]
+        @line_match ||= no_filters? || @lines.index(line)
 
-        matched = @line_match
+        matched = @line_match || name_match
 
         if matched
           if !@feature_added
@@ -59,11 +60,14 @@ module Gherkin
             @feature_added = true
           end
           if !@current_added
-#            puts "ADDING #{@current.inspect}"
             @sexp_arrays << @current
             @current_added = true
           end
         end
+      end
+
+      def no_filters?
+        @lines.empty? && @name_regexen.empty?
       end
 
       def replay
