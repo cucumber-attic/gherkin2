@@ -13,12 +13,16 @@ module Gherkin
   Scenario: 3
     Given 4
     When 5
+
+  Scenario: 7
+    Given 8
+    When 9
 }
 
-        verify_filter(input, [1,3,4,5], [])
+        verify_filter(input, [1,3,4,5,7,8,9,:eof], [])
       end
 
-      it "should filter on a single line using last scenario" do
+      it "should filter on step line of first scenario" do
         input = %{Feature: 1
 
   Scenario: 3
@@ -29,10 +33,10 @@ module Gherkin
     Given 8
     When 9
 }
-        verify_filter(input, [1,3,4,5], [5])
+        verify_filter(input, [1,3,4,5,:eof], [5])
       end
 
-      it "should filter on a single line using last scenario" do
+      it "should filter on scenario line of second scenario" do
         input = %{Feature: 1
 
   Scenario: 3
@@ -44,7 +48,22 @@ module Gherkin
     When 9
 }
 
-        verify_filter(input, [1,7,8,9], [7])
+        verify_filter(input, [1,7,8,9,:eof], [7])
+      end
+
+      it "should filter on scenario name of first scenario" do
+        input = %{Feature: 1
+
+  Scenario: 3
+    Given 4
+    When 5
+
+  Scenario: 7
+    Given 8
+    When 9
+}
+
+        verify_filter(input, [1,3,4,5,:eof], [3])
       end
 
       def verify_filter(input, expected_lines, lines)

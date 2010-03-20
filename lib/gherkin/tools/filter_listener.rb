@@ -6,11 +6,9 @@ module Gherkin
         @lines = lines
 
         @sexp_arrays = []
-
-        @feature = []
+        @current = []
         @feature_added = false
-
-        @current = @feature
+        @needs_add = true
       end
 
       def method_missing(event, *args)
@@ -20,18 +18,21 @@ module Gherkin
         case(event)
         when :feature
           @current << sexp
-        when :scenario
+        when :scenario, :eof
+          @feature ||= @current
           @current = []
           @current << sexp
-          detect_line(args)
-        when :step
-          @current << sexp
-          detect_line(args)
+          @line_match = nil
+          @current_added = false
+          detect(sexp)
         else
+          @current << sexp
+          detect(sexp)
         end
       end
 
       def lines
+#        p @sexp_arrays
         @sexp_arrays.map do |sexp_array| 
           sexp_array.map do |sexp| 
             sexp[-1]
@@ -41,17 +42,27 @@ module Gherkin
 
   private
 
-      def detect_line(args)
-        line = args[-1]
+      def detect(sexp)
+        if(sexp[0] == :eof)
+          @sexp_arrays << @current
+          return
+        end
+        
+        line = sexp[-1]
         @line_match ||= @lines.empty? || line == @lines[0]
 
-        if @line_match && !@feature_element_added
+        matched = @line_match
+
+        if matched
           if !@feature_added
             @sexp_arrays << @feature
             @feature_added = true
           end
-          @sexp_arrays << @current
-          @feature_element_added = true
+          if !@current_added
+#            puts "ADDING #{@current.inspect}"
+            @sexp_arrays << @current
+            @current_added = true
+          end
         end
       end
 
