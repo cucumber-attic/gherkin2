@@ -4,9 +4,9 @@ module Gherkin
       @sexps = []
     end
 
-    def method_missing(m, *args)
-      args[0] = args[0].map{|cell| cell} if m == :row
-      @sexps << [m] + args
+    def method_missing(event, *args)
+      args[0] = args[0].to_a if event == :row # Special JRuby handling
+      @sexps << [event] + args
     end
 
     def to_sexp
