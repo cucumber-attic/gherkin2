@@ -3,8 +3,8 @@ require 'gherkin/tools/tag_expression'
 module Gherkin
   module Tools
     class FilterListener
-      def initialize(listener, lines, name_regexen, tag_expressions)
-        @listener, @lines, @name_regexen, @tag_expressions = listener, lines, name_regexen, TagExpression.new(tag_expressions)
+      def initialize(listener, lines, name_regexen, tag_expression)
+        @listener, @lines, @name_regexen, @tag_expression = listener, lines, name_regexen, tag_expression
 
         @sexp_arrays = []
         @current = []
@@ -32,7 +32,7 @@ module Gherkin
           name = args[1]
           name_match = no_filters? || @name_regexen.detect{|regex| name =~ regex}
 
-          tag_match = no_filters? || (@tags.any? && @tag_expressions.eval(@tags))
+          tag_match = no_filters? || (@tags.any? && @tag_expression.eval(*@tags))
           @tags = []
           
           add_if_matched(sexp, name_match, tag_match)
@@ -90,7 +90,7 @@ module Gherkin
       end
 
       def no_filters?
-        @lines.empty? && @name_regexen.empty? && @tag_expressions.empty?
+        @lines.empty? && @name_regexen.empty? && @tag_expression.empty?
       end
 
       def replay

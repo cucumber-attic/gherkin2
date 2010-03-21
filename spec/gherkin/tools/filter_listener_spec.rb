@@ -21,7 +21,7 @@ module Gherkin
      |11|11|
 }
 
-        verify_filter(input, [1,3,4,5,7,8,9,10,11,:eof], [], [], [])
+        verify_filter(input, [1,3,4,5,7,8,9,10,11,:eof], [], [], TagExpression.new)
       end
 
       it "should filter on step line of first scenario" do
@@ -35,7 +35,7 @@ module Gherkin
     Given 8
     When 9
 }
-        verify_filter(input, [1,3,4,5,:eof], [5], [], [])
+        verify_filter(input, [1,3,4,5,:eof], [5], [], TagExpression.new)
       end
 
       it "should filter on scenario line of second scenario" do
@@ -50,7 +50,7 @@ module Gherkin
     When 9
 }
 
-        verify_filter(input, [1,7,8,9,:eof], [7], [], [])
+        verify_filter(input, [1,7,8,9,:eof], [7], [], TagExpression.new)
       end
 
       it "should filter on scenario name of first scenario" do
@@ -84,8 +84,8 @@ module Gherkin
     Given 13
     When 14
 }
-        verify_filter(input, [1,3,4,5,7,8,9,10,:eof], [5], [], [])
-        verify_filter(input, [1,3,4,5,7,8,  10,:eof], [10], [], [])
+        verify_filter(input, [1,3,4,5,7,8,9,10,:eof], [ 5], [], TagExpression.new)
+        verify_filter(input, [1,3,4,5,7,8,  10,:eof], [10], [], TagExpression.new)
       end
 
       context "tags" do
@@ -100,15 +100,15 @@ module Gherkin
     Given 8
     When 9
 }
-          verify_filter(input, [1,2,3,4,5,:eof], [], [], ["@foo"])
+          verify_filter(input, [1,2,3,4,5,:eof], [], [], TagExpression.new("@foo"))
         end
       end
 
-      def verify_filter(input, expected_lines, lines, name_regexen, tag_expressions)
+      def verify_filter(input, expected_lines, lines, name_regexen, tag_expression)
         #io = StringIO.new
         #pl = PrettyListener.new(io, true)
         #fl = FilterListener.new(pl, lines)
-        fl = FilterListener.new(nil, lines, name_regexen, tag_expressions)
+        fl = FilterListener.new(nil, lines, name_regexen, tag_expression)
         parser = Gherkin::Parser.new(fl, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser)
         lexer.scan(input)

@@ -10,7 +10,7 @@ module Gherkin
         end
 
         it "should match @foo" do
-          @e.eval(['@foo']).should == true
+          @e.eval('@foo').should == true
         end
 
         it "should match empty tags" do
@@ -20,72 +20,67 @@ module Gherkin
 
       context "@foo" do
         before(:each) do
-          @e = TagExpression.new(['@foo'])
+          @e = TagExpression.new('@foo')
         end
 
         it "should match @foo" do
-          @e.eval(['@foo']).should == true
+          @e.eval('@foo').should == true
         end
 
         it "should not match @bar" do
-          @e.eval(['@bar']).should == false
+          @e.eval('@bar').should == false
         end
       end
 
       context "!@foo" do
         before(:each) do
-          @e = TagExpression.new(['~@foo'])
+          @e = TagExpression.new('~@foo')
         end
 
         it "should match @bar" do
-          @e.eval(['@bar']).should == true
+          @e.eval('@bar').should == true
         end
 
         it "should not match @foo" do
-          @e.eval(['@foo']).should == false
+          @e.eval('@foo').should == false
         end
       end
 
       context "@foo || @bar" do
         before(:each) do
-          @e = TagExpression.new
-          @e.add(['@foo', '@bar'])
+          @e = TagExpression.new('@foo,@bar')
         end
 
         it "should match @foo" do
-          @e.eval(['@foo']).should == true
+          @e.eval('@foo').should == true
         end
 
         it "should match @bar" do
-          @e.eval(['@bar']).should == true
+          @e.eval('@bar').should == true
         end
 
         it "should not match @zap" do
-          @e.eval(['@zap']).should == false
+          @e.eval('@zap').should == false
         end
       end
 
       context "(@foo || @bar) && !@zap" do
         before(:each) do
-          @e = TagExpression.new
-          @e.add(['@foo', '@bar'])
-          @e.add(['~@zap'])
+          @e = TagExpression.new('@foo,@bar', '~@zap')
         end
 
         it "should match @foo" do
-          @e.eval(['@foo']).should == true
+          @e.eval('@foo').should == true
         end
 
         it "should not match @foo @zap" do
-          @e.eval(['@foo', '@zap']).should == false
+          @e.eval('@foo', '@zap').should == false
         end
       end
 
       context "(@foo:3 || !@bar:4) && @zap:5" do
         before(:each) do
-          @e = TagExpression.new
-          @e.add(['@foo:3', '~@bar'])
-          @e.add(['@zap:5'])
+          @e = TagExpression.new('@foo:3,~@bar','@zap:5')
         end
 
         it "should count tags for positive tags" do
@@ -93,13 +88,13 @@ module Gherkin
         end
 
         it "should match @foo @zap" do
-          @e.eval(['@foo', '@zap']).should == true
+          @e.eval('@foo', '@zap').should == true
         end
       end
 
       context "Parsing '@foo:3,~@bar', '@zap:5'" do
         before(:each) do
-          @e = TagExpression.new([' @foo:3 , ~@bar ', ' @zap:5 '])
+          @e = TagExpression.new(' @foo:3 , ~@bar ', ' @zap:5 ')
         end
 
         it "should split and trim" do
@@ -113,7 +108,7 @@ module Gherkin
 
       context "Parsing ''" do
         before(:each) do
-          @e = TagExpression.new([''])
+          @e = TagExpression.new('')
         end
 
         it "should ignore empty tags" do
