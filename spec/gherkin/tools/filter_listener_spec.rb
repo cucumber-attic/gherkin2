@@ -17,9 +17,11 @@ module Gherkin
   Scenario: 7
     Given 8
     When 9
+     |10|10|
+     |11|11|
 }
 
-        verify_filter(input, [1,3,4,5,7,8,9,:eof], [], [])
+        verify_filter(input, [1,3,4,5,7,8,9,10,11,:eof], [], [], [])
       end
 
       it "should filter on step line of first scenario" do
@@ -33,7 +35,7 @@ module Gherkin
     Given 8
     When 9
 }
-        verify_filter(input, [1,3,4,5,:eof], [5], [])
+        verify_filter(input, [1,3,4,5,:eof], [5], [], [])
       end
 
       it "should filter on scenario line of second scenario" do
@@ -48,7 +50,7 @@ module Gherkin
     When 9
 }
 
-        verify_filter(input, [1,7,8,9,:eof], [7], [])
+        verify_filter(input, [1,7,8,9,:eof], [7], [], [])
       end
 
       it "should filter on scenario name of first scenario" do
@@ -63,14 +65,50 @@ module Gherkin
     When 9
 }
 
-        verify_filter(input, [1,3,4,5,:eof], [], [/3/])
+        verify_filter(input, [1,3,4,5,:eof], [], [/3/], [])
       end
 
-      def verify_filter(input, expected_lines, lines, name_regexen)
+      it "should filter on step line of first scenario outline" do
+        input = %{Feature: 1
+
+  Scenario Outline: 3
+    Given <foo> 4
+    When <bar> 5
+
+    Examples: 7
+      |foo|bar|
+      |  9|  9|
+      | 10| 10|
+
+  Scenario: 12
+    Given 13
+    When 14
+}
+        verify_filter(input, [1,3,4,5,7,8,9,10,:eof], [5], [], [])
+        verify_filter(input, [1,3,4,5,7,8,  10,:eof], [10], [], [])
+      end
+
+      context "tags" do
+        it "should filter on step line of first scenario" do
+        input = %{Feature: 1
+  @foo
+  Scenario: 3
+    Given 4
+    When 5
+
+  Scenario: 7
+    Given 8
+    When 9
+}
+          verify_filter(input, [1,2,3,4,5,:eof], [], [], ["@foo"])
+        end
+      end
+
+      def verify_filter(input, expected_lines, lines, name_regexen, tag_expressions)
         #io = StringIO.new
         #pl = PrettyListener.new(io, true)
         #fl = FilterListener.new(pl, lines)
-        fl = FilterListener.new(nil, lines, name_regexen)
+        fl = FilterListener.new(nil, lines, name_regexen, tag_expressions)
         parser = Gherkin::Parser.new(fl, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser)
         lexer.scan(input)
