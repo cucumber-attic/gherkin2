@@ -5,100 +5,129 @@ module Gherkin
     class FilterListener
       def initialize(listener, lines, name_regexen, tag_expression)
         @listener, @lines, @name_regexen, @tag_expression = listener, lines, name_regexen, tag_expression
-
-        @sexp_arrays = []
-        @current = []
-        @tags = []
-        @feature_added = false
-        @needs_add = true
+        @sexps = []
+        @results = []
+        @i = 0
       end
 
       def method_missing(event, *args)
         args[0] = args[0].to_a if event == :row # Special JRuby handling
         sexp = [event] + args
+        @sexps << sexp
+        line = sexp[-1]
+        line_match = @lines.index(line)
+        ok = no_filters? || line_match
+
         case(event)
         when :tag
-          @current << sexp
-          @tags << '@' + sexp[1]
+          @tags ||= []
+          @tags << '@'+args[0]
+          @tag_index ||= @i
         when :feature
-          @current << sexp
-        when :scenario, :scenario_outline
-          @feature ||= @current
-          @current = []
-          @current << sexp
-          @line_match = nil
-          @current_added = false
+          @feature_tags = @tags || []
+          @feature_index = @i
+        when :scenario
+          ok = ok || name_match?(name=args[1]) || tag_match?
+          @scenario_index = @i
+          ensure_tags_added if ok
+        when :scenario_outline
+          ok ||= name_match?(name=args[1])
+          @scenario_index = @i
+          ensure_tags_added if ok
           
-          name = args[1]
-          name_match = no_filters? || @name_regexen.detect{|regex| name =~ regex}
-
-          tag_match = no_filters? || (@tags.any? && @tag_expression.eval(*@tags))
-          @tags = []
-          
-          add_if_matched(sexp, name_match, tag_match)
+          @examples_index = nil
         when :examples
-          @in_example = true
-          @example_header_added = false
-          @current << sexp
-          add_if_matched(sexp, false, false)
+          @examples_index = @i
+          @header_row_index = nil
+        when :step
+          @tags = nil
+          @last_step_index = @i
+          ok ||= last_scenario_ok?
+          ensure_scenario_added if ok
         when :row
-          if @in_example
-            line = sexp[-1]
-            @line_match ||= no_filters? || @lines.index(line)
-
-            if !@example_header_added || @line_match
-              @current << sexp
-              @example_header_added = true
-            end
-          else
-            @current << sexp
+          if @examples_index
+            ok ||= last_scenario_ok?
+            @header_row_index ||= @i
+            ensure_examples_added if ok
           end
-          add_if_matched(sexp, false, false)
         when :eof
-          @sexp_arrays << [sexp]
+          ok = true
         else
-          @current << sexp
-          add_if_matched(sexp, false, false)
+          super
+        end
+        @results[@i] = ok
+        @i += 1
+      end
+
+      def name_match?(name)
+        @name_regexen.detect{|regex| name =~ regex}
+      end
+
+      def tag_match?
+        tags = (@feature_tags + (@tags || [])).uniq
+        !@tag_expression.empty? && @tag_expression.eval(*tags)
+      end
+
+      def ensure_tags_added
+        if @tag_index && !@results[@tag_index]
+          (@tag_index...@i).each do |i|
+            @results[i] = true
+          end
+        end
+      end
+      
+
+      def ensure_feature_added
+        if !@results[@feature_index]
+          (0..@feature_index).each do |i|
+            @results[i] = true
+          end
         end
       end
 
+      def last_scenario_ok?
+        @results[@scenario_index] && @results[@scenario_index] != :implicit
+      end
+
+      def ensure_scenario_added(how=true)
+        ensure_feature_added
+        if !last_scenario_ok?
+          (@scenario_index..@last_step_index).each do |i|
+            @results[i] = how
+          end
+        end
+      end
+
+      def last_examples_ok?
+        @results[@examples_index]
+      end
+
+      def ensure_examples_added
+        ensure_scenario_added(:implicit)
+        if !last_examples_ok?
+          (@examples_index..@header_row_index).each do |i|
+            @results[i] = true
+          end
+        end
+      end
+
+      def filtered_sexps
+        raise "Bad count #{@results.length} != #{@sexps.length}" if @results.length != @sexps.length
+        filtered = []
+        @results.each_with_index do |result, i|
+          if result
+            filtered << @sexps[i]
+          end
+        end
+        filtered
+      end
+      
       def lines
-        @sexp_arrays.map do |sexp_array| 
-          sexp_array.map do |sexp| 
-            sexp[-1]
-          end
-        end.flatten
-      end
-
-  private
-
-      def add_if_matched(sexp, name_match, tag_match)
-        line = sexp[-1]
-        @line_match ||= no_filters? || @lines.index(line)
-        matched = @line_match || name_match || tag_match
-
-        if matched
-          if !@feature_added
-            @sexp_arrays << @feature
-            @feature_added = true
-          end
-          if !@current_added
-            @sexp_arrays << @current
-            @current_added = true
-          end
-        end
+        filtered_sexps.map{|sexp| sexp[-1]}
       end
 
       def no_filters?
         @lines.empty? && @name_regexen.empty? && @tag_expression.empty?
-      end
-
-      def replay
-        @sexp_arrays.each do |sexp_array|
-          sexp_array.each do |sexp|
-            @listener.__send__(sexp[0], *sexp[1..-1]) if @listener
-          end
-        end
       end
     end
   end
