@@ -6,6 +6,7 @@
 * gherkin reformat now prints comments, and does it with proper indentation (Aslak Hellesøy)
 
 == New features
+* Writing code generated i18n syntax highlighters for Gherkin is a lot easier thanks to several convenience methods in Gherkin::I18n. (Aslak Hellesøy)
 * .NET (C#) port (#36, #37 Attila Sztupak)
 * Tables parsed and sent by row rather than by table. (Mike Sassak)
 
