@@ -21,7 +21,7 @@ module Gherkin
      |11|11|
 }
 
-        verify_filter(input, [1,3,4,5,7,8,9,10,11,:eof], [], [], TagExpression.new)
+        verify_lines(input, [1,3,4,5,7,8,9,10,11,:eof], [], [], TagExpression.new)
       end
 
       it "should filter on step line of first scenario" do
@@ -35,7 +35,7 @@ module Gherkin
     Given 8
     When 9
 }
-        verify_filter(input, [1,3,4,5,:eof], [5], [], TagExpression.new)
+        verify_lines(input, [1,3,4,5,:eof], [5], [], TagExpression.new)
       end
 
       it "should filter on scenario line of second scenario" do
@@ -50,7 +50,7 @@ module Gherkin
     When 9
 }
 
-        verify_filter(input, [1,7,8,9,:eof], [7], [], TagExpression.new)
+        verify_lines(input, [1,7,8,9,:eof], [7], [], TagExpression.new)
       end
 
       it "should filter on scenario name of first scenario" do
@@ -65,7 +65,7 @@ module Gherkin
     When 9
 }
 
-        verify_filter(input, [1,3,4,5,:eof], [], [/3/], [])
+        verify_lines(input, [1,3,4,5,:eof], [], [/3/], [])
       end
 
       it "should filter on step line of first scenario outline" do
@@ -90,8 +90,8 @@ module Gherkin
     When 19
 }
 
-        verify_filter(input, [1, 3,4,5, 7,8,9,10, 12,13,14,15, :eof], [ 5], [], TagExpression.new)
-        verify_filter(input, [1, 3,4,5, 7,8,  10,              :eof], [10], [], TagExpression.new)
+        verify_lines(input, [1, 3,4,5, 7,8,9,10, 12,13,14,15, :eof], [ 5], [], TagExpression.new)
+        verify_lines(input, [1, 3,4,5, 7,8,  10,              :eof], [10], [], TagExpression.new)
       end
 
       context "tags" do
@@ -106,7 +106,7 @@ module Gherkin
     Given 8
     When 9
 }
-          verify_filter(input, [1,2,3,4,5,:eof], [], [], TagExpression.new("@foo"))
+          verify_lines(input, [1,2,3,4,5,:eof], [], [], TagExpression.new("@foo"))
         end
 
         it "should filter on tag of feature" do
@@ -115,27 +115,56 @@ Feature: 2
   Scenario: 3
     Given 4
     When 5
-
+  # Comment 6
   Scenario: 7
     Given 8
-    When 9
+    # Comment 9
+    When 10
 }
-          verify_filter(input, [1,2,3,4,5,7,8,9,:eof], [], [], TagExpression.new("@foo"))
+          verify_lines(input, [1,2,3,4,5,6,7,8,9,10,:eof], [], [], TagExpression.new("@foo"))
+        end
+
+        it "should filter on tag of feature" do
+          input = %{@foo
+Feature: 2
+  Scenario: 3
+    Given 4
+    When 5
+  # Comment 6
+  Scenario: 7
+    Given 8
+    # Comment 9
+    When 10
+}
+          expected_output = %{@foo
+Feature: 2
+
+  Scenario: 3
+    Given 4
+    When 5
+}
+
+          verify_output(input, expected_output, [3], [], TagExpression.new)
         end
       end
 
-      def verify_filter(input, expected_lines, lines, name_regexen, tag_expression)
-        #io = StringIO.new
-        #pl = PrettyListener.new(io, true)
-        #fl = FilterListener.new(pl, lines)
-#        fl = FilterListener.new(nil, lines, name_regexen, tag_expression)
+      def verify_lines(input, expected_lines, lines, name_regexen, tag_expression)
         fl = FilterListener.new(nil, lines, name_regexen, tag_expression)
         parser = Gherkin::Parser.new(fl, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser)
         lexer.scan(input)
         fl.lines.should == expected_lines
-#        io.rewind
-#        io.read.should == expected_output
+      end
+
+      def verify_output(input, expected_output, lines, name_regexen, tag_expression)
+        io = StringIO.new
+        pl = PrettyListener.new(io, true)
+        fl = FilterListener.new(pl, lines, name_regexen, tag_expression)
+        parser = Gherkin::Parser.new(fl, true, "root")
+        lexer  = Gherkin::I18nLexer.new(parser)
+        lexer.scan(input)
+        io.rewind
+        io.read.should == expected_output
       end
     end
   end

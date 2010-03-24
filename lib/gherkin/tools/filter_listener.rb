@@ -4,6 +4,7 @@ module Gherkin
   module Tools
     class FilterListener
       def initialize(listener, lines, name_regexen, tag_expression)
+        raise "lines!!!" if lines.nil?
         @listener, @lines, @name_regexen, @tag_expression = listener, lines, name_regexen, tag_expression
         @sexps = []
         @results = []
@@ -23,13 +24,19 @@ module Gherkin
           @tags ||= []
           @tags << '@'+args[0]
           @tag_index ||= @i
+        when :comment
+          @comment_index ||= @i
+          ok ||= last_scenario_ok?
         when :feature
           @feature_tags = @tags || []
           @feature_index = @i
         when :scenario
           ok = ok || name_match?(name=args[1]) || tag_match?
           @scenario_index = @i
-          ensure_tags_added if ok
+          if ok
+            ensure_comments_added
+            ensure_tags_added
+          end
         when :scenario_outline
           ok ||= name_match?(name=args[1])
           @scenario_index = @i
@@ -51,7 +58,9 @@ module Gherkin
             ensure_examples_added if ok
           end
         when :eof
-          ok = true
+          @results[@i] = true
+          replay if @listener
+          return
         else
           super
         end
@@ -68,6 +77,14 @@ module Gherkin
         !@tag_expression.empty? && @tag_expression.eval(*tags)
       end
 
+      def ensure_comments_added
+        if @comment_index && !@results[@comment_index]
+          (@comment_index...@i).each do |i|
+            @results[i] = true
+          end
+        end
+      end
+
       def ensure_tags_added
         if @tag_index && !@results[@tag_index]
           (@tag_index...@i).each do |i|
@@ -75,7 +92,6 @@ module Gherkin
           end
         end
       end
-      
 
       def ensure_feature_added
         if !@results[@feature_index]
@@ -86,7 +102,7 @@ module Gherkin
       end
 
       def last_scenario_ok?
-        @results[@scenario_index] && @results[@scenario_index] != :implicit
+        @scenario_index && @results[@scenario_index] && @results[@scenario_index] != :implicit
       end
 
       def ensure_scenario_added(how=true)
@@ -128,6 +144,12 @@ module Gherkin
 
       def no_filters?
         @lines.empty? && @name_regexen.empty? && @tag_expression.empty?
+      end
+
+      def replay
+        filtered_sexps.each do |sexp|
+          @listener.__send__(sexp[0], *sexp[1..-1])
+        end
       end
     end
   end
