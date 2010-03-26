@@ -9,12 +9,12 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
-  s.date = %q{2010-03-14}
+  s.date = %q{2010-03-26}
   s.default_executable = %q{gherkin}
   s.description = %q{A fast Gherkin lexer/parser based on the Ragel State Machine Compiler.}
   s.email = %q{cukes@googlegroups.com}
   s.executables = ["gherkin"]
-  s.extensions = ["ext/gherkin_lexer_ar/extconf.rb", "ext/gherkin_lexer_bg/extconf.rb", "ext/gherkin_lexer_cat/extconf.rb", "ext/gherkin_lexer_cs/extconf.rb", "ext/gherkin_lexer_cy/extconf.rb", "ext/gherkin_lexer_da/extconf.rb", "ext/gherkin_lexer_de/extconf.rb", "ext/gherkin_lexer_en/extconf.rb", "ext/gherkin_lexer_enau/extconf.rb", "ext/gherkin_lexer_enlol/extconf.rb", "ext/gherkin_lexer_entx/extconf.rb", "ext/gherkin_lexer_es/extconf.rb", "ext/gherkin_lexer_et/extconf.rb", "ext/gherkin_lexer_fi/extconf.rb", "ext/gherkin_lexer_fr/extconf.rb", "ext/gherkin_lexer_he/extconf.rb", "ext/gherkin_lexer_hr/extconf.rb", "ext/gherkin_lexer_hu/extconf.rb", "ext/gherkin_lexer_id/extconf.rb", "ext/gherkin_lexer_it/extconf.rb", "ext/gherkin_lexer_ja/extconf.rb", "ext/gherkin_lexer_ko/extconf.rb", "ext/gherkin_lexer_lt/extconf.rb", "ext/gherkin_lexer_lv/extconf.rb", "ext/gherkin_lexer_nl/extconf.rb", "ext/gherkin_lexer_no/extconf.rb", "ext/gherkin_lexer_pl/extconf.rb", "ext/gherkin_lexer_pt/extconf.rb", "ext/gherkin_lexer_ro/extconf.rb", "ext/gherkin_lexer_ro2/extconf.rb", "ext/gherkin_lexer_ru/extconf.rb", "ext/gherkin_lexer_se/extconf.rb", "ext/gherkin_lexer_sk/extconf.rb", "ext/gherkin_lexer_sr/extconf.rb", "ext/gherkin_lexer_srLatn/extconf.rb", "ext/gherkin_lexer_tr/extconf.rb", "ext/gherkin_lexer_uz/extconf.rb", "ext/gherkin_lexer_vi/extconf.rb", "ext/gherkin_lexer_zhCN/extconf.rb", "ext/gherkin_lexer_zhTW/extconf.rb"]
+  s.extensions = ["ext/gherkin_lexer_ar/extconf.rb", "ext/gherkin_lexer_bg/extconf.rb", "ext/gherkin_lexer_ca/extconf.rb", "ext/gherkin_lexer_cs/extconf.rb", "ext/gherkin_lexer_cyGB/extconf.rb", "ext/gherkin_lexer_da/extconf.rb", "ext/gherkin_lexer_de/extconf.rb", "ext/gherkin_lexer_en/extconf.rb", "ext/gherkin_lexer_enau/extconf.rb", "ext/gherkin_lexer_enlol/extconf.rb", "ext/gherkin_lexer_enScouse/extconf.rb", "ext/gherkin_lexer_entx/extconf.rb", "ext/gherkin_lexer_es/extconf.rb", "ext/gherkin_lexer_et/extconf.rb", "ext/gherkin_lexer_fi/extconf.rb", "ext/gherkin_lexer_fr/extconf.rb", "ext/gherkin_lexer_he/extconf.rb", "ext/gherkin_lexer_hr/extconf.rb", "ext/gherkin_lexer_hu/extconf.rb", "ext/gherkin_lexer_id/extconf.rb", "ext/gherkin_lexer_it/extconf.rb", "ext/gherkin_lexer_ja/extconf.rb", "ext/gherkin_lexer_ko/extconf.rb", "ext/gherkin_lexer_lt/extconf.rb", "ext/gherkin_lexer_lv/extconf.rb", "ext/gherkin_lexer_nl/extconf.rb", "ext/gherkin_lexer_no/extconf.rb", "ext/gherkin_lexer_pl/extconf.rb", "ext/gherkin_lexer_pt/extconf.rb", "ext/gherkin_lexer_ro/extconf.rb", "ext/gherkin_lexer_roRO/extconf.rb", "ext/gherkin_lexer_ru/extconf.rb", "ext/gherkin_lexer_sk/extconf.rb", "ext/gherkin_lexer_srCyrl/extconf.rb", "ext/gherkin_lexer_srLatn/extconf.rb", "ext/gherkin_lexer_sv/extconf.rb", "ext/gherkin_lexer_tr/extconf.rb", "ext/gherkin_lexer_uz/extconf.rb", "ext/gherkin_lexer_vi/extconf.rb", "ext/gherkin_lexer_zhCN/extconf.rb", "ext/gherkin_lexer_zhTW/extconf.rb"]
   s.extra_rdoc_files = [
     "LICENSE",
      "README.rdoc"
@@ -33,12 +33,13 @@ Gem::Specification.new do |s|
      "dotnet/.gitignore",
      "ext/gherkin_lexer_ar/gherkin_lexer_ar.c",
      "ext/gherkin_lexer_bg/gherkin_lexer_bg.c",
-     "ext/gherkin_lexer_cat/gherkin_lexer_cat.c",
+     "ext/gherkin_lexer_ca/gherkin_lexer_ca.c",
      "ext/gherkin_lexer_cs/gherkin_lexer_cs.c",
-     "ext/gherkin_lexer_cy/gherkin_lexer_cy.c",
+     "ext/gherkin_lexer_cyGB/gherkin_lexer_cyGB.c",
      "ext/gherkin_lexer_da/gherkin_lexer_da.c",
      "ext/gherkin_lexer_de/gherkin_lexer_de.c",
      "ext/gherkin_lexer_en/gherkin_lexer_en.c",
+     "ext/gherkin_lexer_enScouse/gherkin_lexer_enScouse.c",
      "ext/gherkin_lexer_enau/gherkin_lexer_enau.c",
      "ext/gherkin_lexer_enlol/gherkin_lexer_enlol.c",
      "ext/gherkin_lexer_entx/gherkin_lexer_entx.c",
@@ -60,12 +61,12 @@ Gem::Specification.new do |s|
      "ext/gherkin_lexer_pl/gherkin_lexer_pl.c",
      "ext/gherkin_lexer_pt/gherkin_lexer_pt.c",
      "ext/gherkin_lexer_ro/gherkin_lexer_ro.c",
-     "ext/gherkin_lexer_ro2/gherkin_lexer_ro2.c",
+     "ext/gherkin_lexer_roRO/gherkin_lexer_roRO.c",
      "ext/gherkin_lexer_ru/gherkin_lexer_ru.c",
-     "ext/gherkin_lexer_se/gherkin_lexer_se.c",
      "ext/gherkin_lexer_sk/gherkin_lexer_sk.c",
-     "ext/gherkin_lexer_sr/gherkin_lexer_sr.c",
+     "ext/gherkin_lexer_srCyrl/gherkin_lexer_srCyrl.c",
      "ext/gherkin_lexer_srLatn/gherkin_lexer_srLatn.c",
+     "ext/gherkin_lexer_sv/gherkin_lexer_sv.c",
      "ext/gherkin_lexer_tr/gherkin_lexer_tr.c",
      "ext/gherkin_lexer_uz/gherkin_lexer_uz.c",
      "ext/gherkin_lexer_vi/gherkin_lexer_vi.c",
@@ -112,12 +113,13 @@ Gem::Specification.new do |s|
      "lib/gherkin/rb_lexer/README.rdoc",
      "lib/gherkin/rb_lexer/ar.rb",
      "lib/gherkin/rb_lexer/bg.rb",
-     "lib/gherkin/rb_lexer/cat.rb",
+     "lib/gherkin/rb_lexer/ca.rb",
      "lib/gherkin/rb_lexer/cs.rb",
-     "lib/gherkin/rb_lexer/cy.rb",
+     "lib/gherkin/rb_lexer/cyGB.rb",
      "lib/gherkin/rb_lexer/da.rb",
      "lib/gherkin/rb_lexer/de.rb",
      "lib/gherkin/rb_lexer/en.rb",
+     "lib/gherkin/rb_lexer/enScouse.rb",
      "lib/gherkin/rb_lexer/enau.rb",
      "lib/gherkin/rb_lexer/enlol.rb",
      "lib/gherkin/rb_lexer/entx.rb",
@@ -139,12 +141,12 @@ Gem::Specification.new do |s|
      "lib/gherkin/rb_lexer/pl.rb",
      "lib/gherkin/rb_lexer/pt.rb",
      "lib/gherkin/rb_lexer/ro.rb",
-     "lib/gherkin/rb_lexer/ro2.rb",
+     "lib/gherkin/rb_lexer/roRO.rb",
      "lib/gherkin/rb_lexer/ru.rb",
-     "lib/gherkin/rb_lexer/se.rb",
      "lib/gherkin/rb_lexer/sk.rb",
-     "lib/gherkin/rb_lexer/sr.rb",
+     "lib/gherkin/rb_lexer/srCyrl.rb",
      "lib/gherkin/rb_lexer/srLatn.rb",
+     "lib/gherkin/rb_lexer/sv.rb",
      "lib/gherkin/rb_lexer/tr.rb",
      "lib/gherkin/rb_lexer/uz.rb",
      "lib/gherkin/rb_lexer/vi.rb",
