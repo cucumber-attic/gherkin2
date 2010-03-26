@@ -444,8 +444,8 @@
   and: "*|A"
   but: "*|Ale"
 "sr-Latn":
-  name: Serbian_latin
-  native: Srpski_latinica
+  name: Serbian (Latin)
+  native: Srpski (Latinica)
   feature: Funkcionalnost|Mogućnost|Mogucnost|Osobina
   background: Kontekst|Osnova|Pozadina
   scenario: Scenario|Primer
