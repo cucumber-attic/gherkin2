@@ -27,13 +27,13 @@ module Gherkin
       # The +keywords+ arguments can be one of <tt>:feature</tt>, <tt>:background</tt>, <tt>:scenario</tt>, 
       # <tt>:scenario_outline</tt>, <tt>:examples</tt>, <tt>:step</tt>.
       def keyword_regexp(*keywords)
-        unique_sorted_keywords = all.map do |lang|
+        unique_keywords = all.map do |lang|
           keywords.map do |keyword|
             lang.__send__("#{keyword}_keywords".to_sym)
           end
         end
         
-        unique_sorted_keywords.flatten.compact.sort.reverse.uniq.join('|').gsub(/'/, "\\\\'").gsub(/\*/, "\\\\*")
+        unique_keywords.flatten.compact.sort.reverse.uniq.join('|').gsub(/\*/, '\*')
       end
     end
 
