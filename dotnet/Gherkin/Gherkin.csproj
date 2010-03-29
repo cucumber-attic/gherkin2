@@ -57,13 +57,13 @@
     <Compile Include="Lexer\bg.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Lexer\cat.cs">
+    <Compile Include="Lexer\ca.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Lexer\cs.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Lexer\cy.cs">
+    <Compile Include="Lexer\cygb.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Lexer\da.cs">
@@ -77,6 +77,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Lexer\enlol.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Lexer\enscouse.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Lexer\entx.cs">
@@ -136,19 +139,19 @@
     <Compile Include="Lexer\ro.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Lexer\ro2.cs">
+    <Compile Include="Lexer\roro.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Lexer\ru.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Lexer\se.cs">
+    <Compile Include="Lexer\sv.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Lexer\sk.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Lexer\sr.cs">
+    <Compile Include="Lexer\srcyrl.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Lexer\srLatn.cs">
