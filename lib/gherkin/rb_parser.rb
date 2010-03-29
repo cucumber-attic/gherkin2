@@ -100,7 +100,7 @@ module Gherkin
 
       def transition_table(name)
         state_machine_reader = StateMachineReader.new
-        lexer = Gherkin::Lexer['en'].new(state_machine_reader)
+        lexer = Gherkin::I18nLexer.lexer_class('en', false).new(state_machine_reader)
         lexer.scan(File.read(File.dirname(__FILE__) + "/parser/#{name}.txt"))
         state_machine_reader.rows
       end

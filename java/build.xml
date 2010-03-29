@@ -8,6 +8,9 @@
     <jar destfile="${basedir}/../lib/gherkin.jar">
       <fileset dir="${basedir}/target/classes" />
       <fileset dir="${basedir}/../lib" includes="gherkin/parser/*.txt" />
+      <manifest>
+        <attribute name="Main-Class" value="gherkin.Main" />
+      </manifest>
     </jar>
   </target>
 </project>

@@ -1,3 +1,4 @@
+#language:fr
 Fonctionnalité: Addition
   Plan du scénario: Addition de produits dérivés
     Soit une calculatrice

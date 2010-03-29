@@ -1,10 +1,6 @@
-Given /^a "([^\"]*)", "([^\"]*)" "([^\"]*)" parser$/ do |i18n_language, impl, parser_name|
+Given /^a "([^\"]*)" "([^\"]*)" parser$/ do |ruby_or_native, parser_name|
   parser = Gherkin::Parser.new(@listener, false, parser_name)
-  programming_language = {
-    'ruby' => 'rb',
-    'native' => (defined?(JRUBY_VERSION) ? 'java' : 'c')
-  }[impl]
-  @lexer = Gherkin::Lexer.send(programming_language)[i18n_language].new(parser)
+  @lexer = Gherkin::I18nLexer.new(parser, ruby_or_native == "ruby")
 end
 
 Given "the following text is parsed:" do |text|

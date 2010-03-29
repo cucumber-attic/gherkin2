@@ -1,3 +1,4 @@
+#language:no
 Egenskap: i18n support
 
   Scenario: Parsing many languages

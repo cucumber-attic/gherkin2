@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require 'gherkin/tools/colors'
+require 'gherkin/format/monochrome_format'
 
 module Gherkin
   module Tools
@@ -9,9 +10,21 @@ module Gherkin
     class PrettyListener
       include Gherkin::Tools::Colors
       
+      class << self
+        def new(io, monochrome=false)
+          if defined?(JRUBY_VERSION)
+            require 'gherkin.jar'
+            Java::GherkinFormatter::PrettyFormatter.new(io, monochrome)
+          else
+            super
+          end
+        end
+      end
+
       def initialize(io, monochrome=false)
         @io = io
         @monochrome = monochrome
+        @format = @monochrome ? Format::MonochromeFormat.new : Format::AnsiColorFormat.new
         @tags = nil
         @comments = nil
       end
@@ -52,7 +65,8 @@ module Gherkin
       def step(keyword, name, line, status=nil, arguments=nil, location=nil)
         flush_table
         status_param = "#{status}_param" if status
-        name = Gherkin::Format::Argument.format(name, arguments) {|arg| status_param ? self.__send__(status_param, arg, @monochrome) : arg} if arguments
+        name = Gherkin::Format::Argument.format(name, @format, (arguments || [])) 
+        #{|arg| status_param ? self.__send__(status_param, arg, @monochrome) : arg} if arguments
 
         step = "#{keyword}#{indent(name, '    ')}"
         step = self.__send__(status, step, @monochrome) if status
@@ -60,25 +74,9 @@ module Gherkin
         @io.puts("#{grab_comments!('    ')}    #{step}#{indented_step_location!(location)}")
       end
 
-      def row(row, line, formatted_row=nil)
+      def row(row, line)
         @rows ||= []
         @rows << row
-      end
-
-      def table(rows, line, rows_to_print = rows, first_row=0, statuses=nil, exception=nil)
-        rows = rows.to_a.map {|row| row.to_a} if defined?(JRUBY_VERSION) # Convert ArrayList
-        cell_lengths = rows.map { |col| col.map { |cell| cell.unpack("U*").length }}
-        max_lengths = cell_lengths.transpose.map { |col_lengths| col_lengths.max }.flatten
-        rows_to_print.length.times do |n|
-          row_to_print = rows_to_print[n]
-          i = n + first_row
-          j = -1
-          @io.puts '      | ' + row_to_print.zip(max_lengths).map { |cell, max_length|
-            j += 1
-            color(cell, statuses, j) + ' ' * (max_length - cell_lengths[i][j])
-          }.join(' | ') + ' |'
-          exception(exception) if exception
-        end
       end
 
       def py_string(string, line)
@@ -105,8 +103,6 @@ module Gherkin
         @io.puts(failed(exception_text, @monochrome))
       end
 
-    private
-
       def flush_table(exception=nil, statuses=nil)
         return if @rows.nil?
         cell_lengths = @rows.map { |col| col.map { |cell| cell.unpack("U*").length }}
@@ -122,6 +118,8 @@ module Gherkin
         end
         @rows = nil
       end
+
+      private
 
       def color(cell, statuses, col)
         if statuses

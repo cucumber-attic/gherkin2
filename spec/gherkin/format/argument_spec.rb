@@ -4,13 +4,22 @@ require 'gherkin/format/argument'
 
 module Gherkin
   module Format
-    describe Argument do
-      def bracket(s)
+    class BracketFormat
+      class << self
+        def new
+          defined?(JRUBY_VERSION) ? ::Java::GherkinFormatter::ArgumentFormat.new("[", "]") : super
+        end
+      end
+
+      def format_argument(s)
         "[#{s}]"
       end
-      
+    end
+    
+    describe Argument do
       it "should replace one arg" do
-        Argument.format("I have 10 cukes", [Argument.new(7, '10')], &method(:bracket).to_proc).should == "I have [10] cukes"
+        argument_class = defined?(JRUBY_VERSION) ? ::Java::GherkinFormatter::Argument : Argument
+        argument_class.format("I have 10 cukes", BracketFormat.new, [Argument.new(7, '10')]).should == "I have [10] cukes"
       end
       
       # TODO: Add this spec: http://github.com/alg/cucumber/commit/33188e9db51f59ced74c4861524d7b2e69454630

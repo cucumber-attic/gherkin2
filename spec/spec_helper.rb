@@ -2,6 +2,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'spec/gherkin'))
 require 'gherkin'
+require 'stringio'
 require 'gherkin/sexp_recorder'
 require 'rubygems'
 require 'spec'
@@ -10,6 +11,29 @@ require 'shared/lexer_spec'
 require 'shared/tags_spec'
 require 'shared/py_string_spec'
 require 'shared/row_spec'
+
+if defined?(JRUBY_VERSION)
+  class OutputStreamStringIO < java.io.ByteArrayOutputStream
+    def rewind
+    end
+
+    def read
+      toString("UTF-8")
+    end
+  end
+end
+
+class StringIO
+  class << self
+    def new
+      if defined?(JRUBY_VERSION)
+        OutputStreamStringIO.new
+      else
+        super
+      end
+    end
+  end
+end
 
 module GherkinSpecHelper
   def scan_file(file)
