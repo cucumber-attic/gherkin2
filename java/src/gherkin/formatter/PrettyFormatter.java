@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static gherkin.FixJava.join;
 import static gherkin.formatter.Colors.*;
 
 public class PrettyFormatter implements Formatter {
@@ -16,6 +17,8 @@ public class PrettyFormatter implements Formatter {
     private int[] stepLengths;
     private int stepIndex;
     private List<List<String>> rows;
+    private List<String> comments;
+    private List<String> tags;
 
     public PrettyFormatter(OutputStream out, boolean monochrome) {
         this.out = new PrintWriter(out);
@@ -23,20 +26,25 @@ public class PrettyFormatter implements Formatter {
     }
 
     public void tag(String name, int line) {
-        out.println(name);
+        if (tags == null) tags = new ArrayList<String>();
+        tags.add('@' + name);
     }
 
     public void comment(String content, int line) {
-        out.println(content);
+        if (comments == null) comments = new ArrayList<String>();
+        comments.add(content);
     }
 
     public void feature(String keyword, String name, int line) {
+        printCommentsAndTags("");
         out.println(keyword + ": " + indent(name, "  "));
         out.flush();
     }
 
     public void background(String keyword, String name, int line) {
-        out.println("\n  " + keyword + ": " + name);
+        out.println();
+        printCommentsAndTags("  ");
+        out.println("  " + keyword + ": " + name);
     }
 
     public void scenario(String keyword, String name, int line) {
@@ -45,44 +53,51 @@ public class PrettyFormatter implements Formatter {
 
     public void scenario(String keyword, String name, int line, String location) {
         flushTable();
-        out.println("\n  " + keyword + ": " + indent(name, "    ") + indentedScenarioLocation(keyword, name, location));
+        out.println();
+        printCommentsAndTags("  ");
+        out.println("  " + keyword + ": " + indent(name, "    ") + indentedScenarioLocation(keyword, name, location));
         out.flush();
     }
 
     public void scenario_outline(String keyword, String name, int line) {
-        out.println("\n  " + keyword + ": " + name);
+        flushTable();
+        out.println();
+        printCommentsAndTags("  ");
+        out.println("  " + keyword + ": " + name);
     }
 
     public void examples(String keyword, String name, int line) {
         flushTable();
-        out.println("\n    " + keyword + ": " + name);
+        out.println();
+        printCommentsAndTags("    ");
+        out.println("    " + keyword + ": " + name);
     }
 
     public void step(String keyword, String name, int line, String status, List<Argument> arguments, String location) {
         flushTable();
-        out.println("    " + keyword + indent(name, "    ") + indentedStepLocation(keyword, name, location));
+        out.println("    " + keyword + indent(name, "    ") + indentedStepLocation(location));
         out.flush();
     }
 
     public void flushTable() {
-        if(rows == null) return;
+        if (rows == null) return;
         int columnCount = rows.get(0).size();
         int[][] cellLengths = new int[rows.size()][columnCount];
         int[] maxLengths = new int[columnCount];
-        for(int i = 0; i < rows.size(); i++) {
-            for(int j = 0; j < columnCount; j++) {
+        for (int i = 0; i < rows.size(); i++) {
+            for (int j = 0; j < columnCount; j++) {
                 int length = rows.get(i).get(j).length();
                 cellLengths[i][j] = length;
                 maxLengths[j] = Math.max(maxLengths[j], length);
             }
         }
 
-        for(int i = 0; i < rows.size(); i++) {
+        for (int i = 0; i < rows.size(); i++) {
             out.write("      | ");
-            for(int j = 0; j < columnCount; j++) {
+            for (int j = 0; j < columnCount; j++) {
                 out.write(rows.get(i).get(j));
                 padSpace(maxLengths[j] - cellLengths[i][j]);
-                if(j < columnCount -1) {
+                if (j < columnCount - 1) {
                     out.write(" | ");
                 } else {
                     out.write(" |");
@@ -141,6 +156,31 @@ public class PrettyFormatter implements Formatter {
         }
     }
 
+    private void printCommentsAndTags(String indent) {
+        printComments(indent);
+        printTags(indent);
+    }
+
+    private boolean printComments(String indent) {
+        if (comments == null) return false;
+        for (String comment : comments) {
+            out.print(indent);
+            out.println(comment);
+        }
+        out.flush();
+        comments = null;
+        return true;
+    }
+
+    private boolean printTags(String indent) {
+        if (tags == null) return false;
+        out.print(indent);
+        out.println(join(tags, " "));
+        out.flush();
+        tags = null;
+        return true;
+    }
+
     private String indent(String name, String indentation) {
         String indent = "";
         StringBuilder sb = new StringBuilder();
@@ -167,7 +207,7 @@ public class PrettyFormatter implements Formatter {
         return buffer.toString();
     }
 
-    private String indentedStepLocation(String keyword, String name, String location) {
+    private String indentedStepLocation(String location) {
         if (location == null || "".equals(location)) return "";
         int indent = maxStepLength - stepLengths[stepIndex += 1];
 

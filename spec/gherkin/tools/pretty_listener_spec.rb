@@ -118,9 +118,13 @@ module Gherkin
 
 
       it "should prettify scenario outline with table" do
-        assert_pretty(%{Feature: Feature Description
+        assert_pretty(%{# A feature comment
+@foo
+Feature: Feature Description
   Some preamble
 
+  # A Scenario Outline comment
+  @bar
   Scenario Outline: Scenario Ouline Description
     Given there is a
       """
@@ -130,6 +134,7 @@ module Gherkin
       | <bar> |
       | <baz> |
 
+    @zap @boing
     Examples: Examples Description
       | foo    | bar  | baz         |
       | Banana | I    | am hungry   |
