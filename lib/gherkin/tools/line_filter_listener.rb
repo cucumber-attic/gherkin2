@@ -72,17 +72,13 @@ module Gherkin
       def collect_filtered_sexps
         # Collect Feature
         if !@feature_added && @first_scenario_index
-          while [:comment, :tag].index(@sexps[@first_scenario_index - 1][0])
-            @first_scenario_index -= 1
-          end
+          @first_scenario_index = comments_before(@first_scenario_index)
           @filtered_sexps += @sexps[0...@first_scenario_index]
           @feature_added = true
         end
 
         # Collect Scenario
-        while [:comment, :tag].index(@sexps[@next_uncollected_scenario_index - 1][0])
-          @next_uncollected_scenario_index -= 1
-        end
+        @next_uncollected_scenario_index = comments_before(@next_uncollected_scenario_index)
         (@next_uncollected_scenario_index..@current_index).each do |sexp_index|
           sexp = @sexps[sexp_index]
           event = sexp[0]
@@ -91,6 +87,13 @@ module Gherkin
         end
         
         @next_uncollected_scenario_index = @current_index + 1
+      end
+
+      def comments_before(index)
+        while [:comment, :tag].index(@sexps[index - 1][0])
+          index -= 1
+        end
+        index
       end
 
       def replay
