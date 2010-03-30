@@ -17,7 +17,7 @@ module Gherkin
       context "Scenario" do
         before do
           @input = %{Feature: 1
-
+  # 2
   Scenario: 3
     Given 4
     When 5
@@ -31,11 +31,11 @@ module Gherkin
         end
 
         it "should replay identically when there is no filter" do
-          verify_lines([1,3,4,5,7,8,9,10,11,:eof], [])
+          verify_lines([1,2,3,4,5,7,8,9,10,11,:eof], [])
         end
 
         it "should filter on step line of first scenario" do
-          verify_lines([1,3,4,5,:eof], [5])
+          verify_lines([1,2,3,4,5,:eof], [5])
         end
 
         it "should filter on scenario line of second scenario" do
