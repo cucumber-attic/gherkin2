@@ -35,7 +35,7 @@ module Gherkin
         end
 
         it "should filter on step line of first scenario" do
-          verify_lines([1,3,4,5], [5])
+          verify_lines([1,3,4,5,:eof], [5])
         end
 
         it "should filter on scenario line of second scenario" do
@@ -71,19 +71,19 @@ module Gherkin
         end
 
         it "should filter on step line of first scenario outline" do
-          verify_lines([1,3,4,5,7,8,9,10,11,12,13,15,16,17,18], [5])
+          verify_lines([1,3,4,5,7,8,9,10,11,12,13,15,16,17,18,:eof], [5])
         end
 
         it "should filter on row line of first scenario outline" do
-          verify_lines([1,3,4,5,7,8,11], [11])
+          verify_lines([1,3,4,5,7,8,11,:eof], [11])
         end
 
         it "should filter on examples line of second scenario outline" do
-          verify_lines([1,3,4,5,15,16,17,18], [15])
+          verify_lines([1,3,4,5,15,16,17,18,:eof], [15])
         end
 
         it "should filter on header row line of second scenario outline" do
-          verify_lines([1,3,4,5,15,17,18], [16])
+          verify_lines([1,3,4,5,15,17,18,:eof], [16])
         end
       end
     end

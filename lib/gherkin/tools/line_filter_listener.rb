@@ -24,17 +24,17 @@ module Gherkin
         when :feature
         when :background
         when :scenario, :scenario_outline
-          @first_scenario ||= @current_index
-          @next_uncollected_scenario_index = @current_index
           @scenario_ok = line_match
+          @first_scenario_index ||= @current_index
+          @next_uncollected_scenario_index = @current_index
         when :examples
-          @table_state = :examples
           @examples_ok = line_match
           @included_rows = {}
+          @table_state = :examples
         when :step
-          @table_state = :step
           @scenario_ok ||= line_match
           @included_rows = nil
+          @table_state = :step
         when :row
           case(@table_state)
           when :examples
@@ -51,6 +51,9 @@ module Gherkin
             raise "BAD STATE"
           end
         when :eof
+          @filtered_sexps << sexp
+          replay if @listener
+          return
         else
           super
         end
@@ -68,8 +71,8 @@ module Gherkin
 
       def collect_filtered_sexps
         # Collect Feature
-        if !@feature_added && @first_scenario
-          @filtered_sexps += @sexps[0...@first_scenario]
+        if !@feature_added && @first_scenario_index
+          @filtered_sexps += @sexps[0...@first_scenario_index]
           @feature_added = true
         end
 
@@ -82,6 +85,12 @@ module Gherkin
         end
         
         @next_uncollected_scenario_index = @current_index + 1
+      end
+
+      def replay
+        filtered_sexps.each do |sexp|
+          @listener.__send__(sexp[0], *sexp[1..-1])
+        end
       end
     end
   end
