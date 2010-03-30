@@ -42,7 +42,7 @@ module Gherkin
           @first_scenario_index ||= @current_index
           @next_uncollected_scenario_index = @current_index
         when :examples
-          # @examples_ok = line_match
+          @examples_ok = line_match
           @included_rows = {}
           @table_state = :examples
         when :step
