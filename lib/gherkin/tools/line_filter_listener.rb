@@ -22,6 +22,7 @@ module Gherkin
         when :tag
         when :comment
         when :feature
+        when :background
         when :scenario, :scenario_outline
           @first_scenario ||= @current_index
           @next_uncollected_scenario_index = @current_index
@@ -76,8 +77,8 @@ module Gherkin
         (@next_uncollected_scenario_index..@current_index).each do |sexp_index|
           sexp = @sexps[sexp_index]
           event = sexp[0]
-          included_row = (event != :row) || @included_rows.nil? || @included_rows[sexp_index]
-          @filtered_sexps << sexp if included_row
+          included = (event != :row) || @included_rows.nil? || @included_rows[sexp_index]
+          @filtered_sexps << sexp if included
         end
         
         @next_uncollected_scenario_index = @current_index + 1
