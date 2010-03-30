@@ -41,7 +41,9 @@ module Gherkin
           @scenario_ok = line_match
           @first_scenario_index ||= @current_index
           @next_uncollected_scenario_index = @current_index
+          @examples_ok = false
         when :examples
+          @examples_index = @scenario_ok ? false : @current_index
           @examples_ok = line_match
           @included_rows = {}
           @table_state = :examples
@@ -52,12 +54,13 @@ module Gherkin
         when :row
           case(@table_state)
           when :examples
-            row_ok = line_match
+            row_ok = line_match 
             if @included_rows.empty?
               # The header row is always ok
               @included_rows[@current_index] = true
+              @examples_ok = true if line_match
             else
-              @included_rows[@current_index] = @scenario_ok || @examples_ok || line_match
+              @included_rows[@current_index] = @scenario_ok || @examples_ok || row_ok
             end
           when :step
             @scenario_ok ||= line_match
@@ -95,11 +98,14 @@ module Gherkin
         @next_uncollected_scenario_index = comments_before(@next_uncollected_scenario_index)
         (@next_uncollected_scenario_index..@current_index).each do |sexp_index|
           sexp = @sexps[sexp_index]
-          included = (sexp.event != :row) || @included_rows.nil? || @included_rows[sexp_index]
-          @filtered_sexps << sexp if included
+          @filtered_sexps << sexp if included?(sexp.event, sexp_index)
         end
         
         @next_uncollected_scenario_index = @current_index + 1
+      end
+
+      def included?(event, index)
+        (event != :row and event != :examples) || !@examples_index || index == @examples_index || @included_rows.nil? || @included_rows[index] || index == @examples_index
       end
 
       def comments_before(index)
