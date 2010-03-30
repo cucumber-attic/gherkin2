@@ -21,7 +21,7 @@ public class StateMachineReader implements Listener {
 		transitionTable = new ArrayList<List<String>>();
         Lexer lexer = new En(this);
         try {
-            lexer.scan(FixJava.readResourceAsString(machinePath));
+            lexer.scan(FixJava.readResource(machinePath));
         } catch (IOException e) {
             throw new RuntimeException("Fatal error. Couldn't read " + machinePath);
         }

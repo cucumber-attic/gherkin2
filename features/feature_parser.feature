@@ -6,7 +6,7 @@ Feature: Gherkin Feature lexer
   make all the syntax decisions for me
 
   Background: 
-    Given a "en", "ruby" "root" parser
+    Given a "ruby" "root" parser
 
   Scenario: Correctly formed feature
     Given the following text is parsed:

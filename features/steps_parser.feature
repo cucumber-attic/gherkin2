@@ -4,7 +4,7 @@ Feature: Gherkin Steps parser
   I want a steps parser to make writing compound steps easier
 
   Background: 
-    Given a "en", "ruby" "steps" parser
+    Given a "ruby" "steps" parser
 
   Scenario: Parsing steps
     Given the following text is parsed:

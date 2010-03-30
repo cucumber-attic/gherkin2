@@ -20,9 +20,17 @@ E.g. in Bash, export RL_LANG="en,fr,no". This can be quite helpful when modifyin
 * rake clean jar compile
 * rake gemspec
 * git commit -a -m "Release vX.Y.Z"
-* rake release
+* rake gemcutter:release
 * ./nativegems.sh
 * gem push pkg/... (for each native gem)
+
+== Configuring Rake-Compiler for cross compilation
+In order to build Windows binaries (so we can release Windows gems from OS X/Linux) we need to set up rake-compiler.
+
+http://github.com/luislavena/rake-compiler/
+
+I didn't want to install macports (I'm on homebrew) and I couldn't figure out how to build MinGW myself. I got prebuilt binaries:
+http://crossgcc.rts-software.org/doku.php - just add the bin folder to your PATH
 
 == Note on Patches/Pull Requests
  

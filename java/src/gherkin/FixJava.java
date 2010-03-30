@@ -17,14 +17,17 @@ public class FixJava {
         return sb.toString();
     }
 
-    public static String readResourceAsString(String filePath) throws IOException {
-        Reader machine = new InputStreamReader(FixJava.class.getResourceAsStream(filePath));
+    public static String readResource(String filePath) throws IOException {
+        Reader reader = new InputStreamReader(FixJava.class.getResourceAsStream(filePath));
+        return readReader(reader);
+    }
 
+    public static String readReader(Reader reader) throws IOException {
         final char[] buffer = new char[0x10000];
         StringBuilder sb = new StringBuilder();
         int read;
         do {
-            read = machine.read(buffer, 0, buffer.length);
+            read = reader.read(buffer, 0, buffer.length);
             if (read > 0) {
                 sb.append(buffer, 0, read);
             }

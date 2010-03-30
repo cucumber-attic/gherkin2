@@ -6,13 +6,13 @@ module Gherkin
   end
 
   class Parser
-    def self.new(listener, raise_on_error=false, machine_names='root')
+    def self.new(listener, raise_on_error=false, machine_name='root')
       if defined?(JRUBY_VERSION)
         require 'gherkin.jar'
-        Java::Gherkin::Parser.new(listener, raise_on_error, machine_names)
+        Java::Gherkin::Parser.new(listener, raise_on_error, machine_name)
       else
         require 'gherkin/rb_parser'
-        Gherkin::RbParser.new(listener, raise_on_error, machine_names)
+        Gherkin::RbParser.new(listener, raise_on_error, machine_name)
       end
     end
   end

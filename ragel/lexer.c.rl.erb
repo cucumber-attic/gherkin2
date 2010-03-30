@@ -57,10 +57,9 @@ typedef struct lexer_state {
 } lexer_state;
 
 static VALUE mGherkin;
-static VALUE mLexer;
 static VALUE mCLexer;
 static VALUE cI18nLexer;
-static VALUE rb_eGherkinLexerError;
+static VALUE rb_eGherkinLexingError;
 
 #define LEN(AT, P) (P - data - lexer->AT)
 #define MARK(M, P) (lexer->M = (P) - data)
@@ -302,7 +301,7 @@ store_pystring_content(VALUE listener,
 static void 
 raise_lexer_error(const char * at, int line)
 { 
-  rb_raise(rb_eGherkinLexerError, "Lexing error on line %d: '%s'.", line, at);
+  rb_raise(rb_eGherkinLexingError, "Lexing error on line %d: '%s'.", line, at);
 }
 
 static int 
@@ -373,7 +372,7 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
   }
   
   if (len == 0) { 
-    rb_raise(rb_eGherkinLexerError, "No content to lex.");
+    rb_raise(rb_eGherkinLexingError, "No content to lex.");
   } else {
 
     const char *p, *pe, *eof;
@@ -399,7 +398,7 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
     lexer_init(lexer);
 
     if (cs == lexer_error) {
-      rb_raise(rb_eGherkinLexerError, "Invalid format, lexing fails.");
+      rb_raise(rb_eGherkinLexingError, "Invalid format, lexing fails.");
     } else {
       return Qtrue;
     }
@@ -409,8 +408,7 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
 void Init_gherkin_lexer_<%= @i18n.sanitized_key %>()
 {
   mGherkin = rb_define_module("Gherkin");
-  mLexer = rb_const_get(mGherkin, rb_intern("Lexer"));
-  rb_eGherkinLexerError = rb_const_get(mLexer, rb_intern("LexingError"));
+  rb_eGherkinLexingError = rb_const_get(mGherkin, rb_intern("LexingError"));
 
   mCLexer = rb_define_module_under(mGherkin, "CLexer");
   cI18nLexer = rb_define_class_under(mCLexer, "<%= @i18n.sanitized_key.capitalize %>", rb_cObject);

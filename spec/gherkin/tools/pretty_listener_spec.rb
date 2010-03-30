@@ -17,7 +17,7 @@ module Gherkin
         io = StringIO.new
         l = PrettyListener.new(io, true)
         parser = Gherkin::Parser.new(l, true, "root")
-        lexer  = Gherkin::I18nLexer.new(parser)
+        lexer  = Gherkin::I18nLexer.new(parser, true)
         lexer.scan(text)
         io.rewind
         actual = io.read
@@ -81,54 +81,25 @@ module Gherkin
       end
 
       it "should prettify a whole table with padding (typically ANSI)" do
-        @l.table(
-          [
-            %w(a bb),
-            %w(ccc d),
-            %w(ee ffff),
-          ],
-          0,
-          [
-            %w([a] b[b]),
-            %w(c[c]c d),
-            %w(ee f[ff]f),
-          ]
-        )
-        assert_io(
-          "      | [a]   | b[b]   |\n" +
-          "      | c[c]c | d    |\n" +
-          "      | ee  | f[ff]f |\n"
-        )
-      end
+        @l.row(%w(a bb), 1)
+        @l.row(%w(ccc d), 2)
+        @l.row(%w(ee ffff), 3)
+        @l.flush_table
 
-      it "should prettify 1 table row with padding (typically ANSI)" do
-        e = Exception.new("Hello")
-        @l.table(
-          [
-            %w(a bb),
-            %w(ccc d),
-            %w(ee ffff),
-          ],
-          0,
-          [
-            %w(ccc d)
-          ],
-          1,
-          [:passed, :failed],
-          e
-        )
         assert_io(
+          "      | a   | bb   |\n" +
           "      | ccc | d    |\n" +
-          "      Hello (Exception)\n"
+          "      | ee  | ffff |\n"
         )
       end
 
       it "should highlight arguments for regular steps" do
-        @l.step("Given ", "I have 999 cukes in my belly", 3, :passed, [Gherkin::Format::Argument.new(7, '999')])
+        passed = defined?(JRUBY_VERSION) ? 'passed' : :passed
+        @l.step("Given ", "I have 999 cukes in my belly", 3, passed, [Gherkin::Format::Argument.new(7, '999')], nil)
         assert_io("    Given I have 999 cukes in my belly\n")
       end
 
-      it "should prettify scenario outline" do
+      it "should prettify scenario" do
         assert_pretty(%{Feature: Feature Description
   Some preamble
 
@@ -147,9 +118,13 @@ module Gherkin
 
 
       it "should prettify scenario outline with table" do
-        assert_pretty(%{Feature: Feature Description
+        assert_pretty(%{# A feature comment
+@foo
+Feature: Feature Description
   Some preamble
 
+  # A Scenario Outline comment
+  @bar
   Scenario Outline: Scenario Ouline Description
     Given there is a
       """
@@ -159,6 +134,7 @@ module Gherkin
       | <bar> |
       | <baz> |
 
+    @zap @boing
     Examples: Examples Description
       | foo    | bar  | baz         |
       | Banana | I    | am hungry   |
