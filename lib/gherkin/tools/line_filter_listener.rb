@@ -1,6 +1,21 @@
 module Gherkin
   module Tools
     class LineFilterListener
+      class Sexp < Array
+        def initialize(*args)
+          super
+          self[1] = self[1].to_a if event == :row # Special JRuby handling
+        end
+        
+        def event
+          self[0]
+        end
+        
+        def line
+          self[-1]
+        end
+      end
+
       def initialize(listener, lines)
         @listener, @lines = listener, lines
         @sexps = []
@@ -10,15 +25,14 @@ module Gherkin
         @current_index = -1
       end
 
-      def method_missing(event, *args)
-        @current_index += 1
-        args[0] = args[0].to_a if event == :row # Special JRuby handling
-        sexp = [event] + args
+      def method_missing(*args)
+        sexp = Sexp.new(args)
         @sexps << sexp
-        line = sexp[-1]
-        line_match = @lines.index(line)
 
-        case(event)
+        @current_index += 1
+        line_match = @lines.index(sexp.line)
+
+        case(sexp.event)
         when :tag
         when :comment
         when :feature
@@ -28,7 +42,7 @@ module Gherkin
           @first_scenario_index ||= @current_index
           @next_uncollected_scenario_index = @current_index
         when :examples
-          @examples_ok = line_match
+          # @examples_ok = line_match
           @included_rows = {}
           @table_state = :examples
         when :step
@@ -66,7 +80,7 @@ module Gherkin
       end
 
       def lines
-        @filtered_sexps.map{|sexp| sexp[-1]}
+        @filtered_sexps.map{ |sexp| sexp.line }
       end
 
       def collect_filtered_sexps
@@ -81,8 +95,7 @@ module Gherkin
         @next_uncollected_scenario_index = comments_before(@next_uncollected_scenario_index)
         (@next_uncollected_scenario_index..@current_index).each do |sexp_index|
           sexp = @sexps[sexp_index]
-          event = sexp[0]
-          included = (event != :row) || @included_rows.nil? || @included_rows[sexp_index]
+          included = (sexp.event != :row) || @included_rows.nil? || @included_rows[sexp_index]
           @filtered_sexps << sexp if included
         end
         
@@ -90,7 +103,7 @@ module Gherkin
       end
 
       def comments_before(index)
-        while [:comment, :tag].index(@sexps[index - 1][0])
+        while [:comment, :tag].index(@sexps[index - 1].event)
           index -= 1
         end
         index
