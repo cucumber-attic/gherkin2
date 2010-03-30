@@ -64,9 +64,9 @@ module Gherkin
       |  17|  17|
       |  18|  18|
 
-  Scenario: 17
-    Given 18
-    When 19
+  Scenario: 20
+    Given 21
+    When 22
 }
         end
 
