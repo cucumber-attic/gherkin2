@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gherkin}
-  s.version = "1.0.2"
+  s.version = "1.0.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
-  s.date = %q{2010-03-26}
+  s.date = %q{2010-03-30}
   s.default_executable = %q{gherkin}
   s.description = %q{A fast Gherkin lexer/parser based on the Ragel State Machine Compiler.}
   s.email = %q{cukes@googlegroups.com}
@@ -85,13 +85,21 @@ Gem::Specification.new do |s|
      "java/Gherkin.iml",
      "java/build.xml",
      "java/src/gherkin/FixJava.java",
+     "java/src/gherkin/I18nLexer.java",
      "java/src/gherkin/Lexer.java",
      "java/src/gherkin/LexingError.java",
      "java/src/gherkin/Listener.java",
+     "java/src/gherkin/Main.java",
      "java/src/gherkin/ParseError.java",
      "java/src/gherkin/Parser.java",
+     "java/src/gherkin/formatter/Argument.java",
+     "java/src/gherkin/formatter/ArgumentFormat.java",
+     "java/src/gherkin/formatter/Colors.java",
+     "java/src/gherkin/formatter/Formatter.java",
+     "java/src/gherkin/formatter/PrettyFormatter.java",
      "java/src/gherkin/lexer/.gitignore",
      "java/src/gherkin/parser/StateMachineReader.java",
+     "java/test/gherkin/formatter/ArgumentTest.java",
      "lib/.gitignore",
      "lib/gherkin.rb",
      "lib/gherkin/c_lexer.rb",
@@ -99,10 +107,10 @@ Gem::Specification.new do |s|
      "lib/gherkin/core_ext/array.rb",
      "lib/gherkin/csharp_lexer.rb",
      "lib/gherkin/format/argument.rb",
+     "lib/gherkin/format/monochrome_format.rb",
      "lib/gherkin/i18n.rb",
      "lib/gherkin/i18n.yml",
      "lib/gherkin/i18n_lexer.rb",
-     "lib/gherkin/java_lexer.rb",
      "lib/gherkin/lexer.rb",
      "lib/gherkin/parser.rb",
      "lib/gherkin/parser/meta.txt",
