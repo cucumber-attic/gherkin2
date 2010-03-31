@@ -102,6 +102,16 @@ Feature: 2
         it "should return everything when a line is given in each scenario" do
           verify_lines([1,2,3,4,5,6,8,9,10,11,12,13,:eof], [6,9])
         end
+
+        it "should return a scenario when a line is given for its tag" do
+          pending
+          verify_lines([1,2,8,9,10,11,12,13,:eof], [8])
+        end
+
+        it "should not return a scenario when a line is given for its comment" do
+          pending
+          verify_lines([:eof], [3])
+        end
       end
       
       context "Scenario with Background and Comment" do
