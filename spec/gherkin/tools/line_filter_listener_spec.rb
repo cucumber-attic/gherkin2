@@ -83,7 +83,15 @@ module Gherkin
         end
 
         it "should filter on header row line of second scenario outline" do
-          verify_lines([1,3,4,5,15,17,18,:eof], [16])
+          verify_lines([1,3,4,5,15,16,17,18,:eof], [16])
+        end
+
+        it "should filter on an example row of first scenario outline" do
+          verify_lines([1,3,4,5,7,8,11,:eof], [11])
+        end
+
+        it "should filter on an example row of second scenario outline" do
+          verify_lines([1,3,4,5,15,16,18,:eof], [18])
         end
       end
     end
