@@ -107,9 +107,7 @@ module Gherkin
       end
 
       def replay
-        @filtered_sexps.each do |sexp|
-          @listener.__send__(sexp[0], *sexp[1..-1])
-        end
+        @filtered_sexps.each {|sexp| sexp.replay(@listener)} 
       end
     end
   end

@@ -13,6 +13,14 @@ module Gherkin
       def line
         self[-1]
       end
+
+      def args
+        self[1..-1]
+      end
+
+      def replay(listener)
+        listener.__send__(event, *args)
+      end
     end
   end
 end

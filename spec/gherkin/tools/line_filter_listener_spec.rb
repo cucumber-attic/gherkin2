@@ -19,13 +19,24 @@ module Gherkin
       
       def verify_lines(expected_lines, lines)
         line_listener = LineListener.new
-        line_filter_listener = LineFilterListener.new(line_listener, lines)
+        scan(line_listener, lines)
+        line_listener.lines.should == expected_lines
+      end
+
+      def verify_output(expected_output, lines)
+        io = StringIO.new
+        scan(PrettyListener.new(io, true), lines)
+        io.rewind
+        io.read.should == expected_output
+      end
+
+      def scan(listener, lines)
+        line_filter_listener = LineFilterListener.new(listener, lines)
         parser = Gherkin::Parser.new(line_filter_listener, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser, true)
         lexer.scan(@input)
-        line_listener.lines.should == expected_lines
       end
-      
+
       context "Scenario" do
         before do
           @input = %{Feature: 1
@@ -65,8 +76,8 @@ module Gherkin
   Scenario: 7
     Given 8
     When 9
-     |10|10|
-     |11|11|
+     | 10 | 10 |
+     | 11 | 11 |
 }
         end
 
@@ -96,17 +107,17 @@ module Gherkin
     When <bar> 5
 
     Examples: 7
-      |foo|bar|
-      |  9|  9|
-      | 10| 10|
-      | 11| 11|
-      | 12| 12|
-      | 13| 13|
+      | foo | bar |
+      | 9   | 9   |
+      | 10  | 10  |
+      | 11  | 11  |
+      | 12  | 12  |
+      | 13  | 13  |
 
     Examples: 15
-      |snip|snap|
-      |  17|  17|
-      |  18|  18|
+      | snip | snap |
+      | 17   | 17   |
+      | 18   | 18   |
 
   Scenario: 20
     Given 21
@@ -116,10 +127,6 @@ module Gherkin
 
         it "should filter on step line of first scenario outline" do
           verify_lines([1,3,4,5,7,8,9,10,11,12,13,15,16,17,18,:eof], [5])
-        end
-
-        it "should filter on row line of first scenario outline" do
-          verify_lines([1,3,4,5,7,8,11,:eof], [11])
         end
 
         it "should filter on examples line of second scenario outline" do
@@ -136,6 +143,26 @@ module Gherkin
 
         it "should filter on an example row of second scenario outline" do
           verify_lines([1,3,4,5,15,16,18,:eof], [18])
+        end
+
+        it "should filter on 2 example rows of first scenario outline" do
+          verify_lines([1,3,4,5,7,8,11,13,:eof], [11,13])
+        end
+
+        it "should replay itself properly" do
+          filtered = %{Feature: 1
+
+  Scenario Outline: 3
+    Given <foo> 4
+    When <bar> 5
+
+    Examples: 7
+      | foo | bar |
+      | 11  | 11  |
+      | 13  | 13  |
+}
+
+          verify_output(filtered, [11,13])
         end
       end
     end
