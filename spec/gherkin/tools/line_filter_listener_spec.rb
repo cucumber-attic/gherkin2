@@ -71,34 +71,35 @@ module Gherkin
       
       context "Scenario with Table and Comment" do
         before do
-          @input = %{Feature: 1
-  # 2
-  Scenario: 3
-    Given 4
-    When 5
+          @input = %{#language:en
+Feature: 2
+  # 3
+  Scenario: 4
+    Given 5
+    When 6
 
-  Scenario: 7
-    Given 8
-    When 9
-     | 10 | 10 |
+  Scenario: 8
+    Given 9
+    When 10
      | 11 | 11 |
+     | 12 | 12 |
 }
         end
 
         it "should replay identically when there is no filter" do
-          verify_lines([1,2,3,4,5,7,8,9,10,11,:eof], [])
+          verify_lines([1,2,3,4,5,6,8,9,10,11,12,:eof], [])
         end
 
         it "should filter on step line of first scenario" do
-          verify_lines([1,2,3,4,5,:eof], [5])
+          verify_lines([1,2,3,4,5,6,:eof], [5])
         end
 
         it "should filter on scenario line of second scenario" do
-          verify_lines([1,7,8,9,10,11,:eof], [7])
+          verify_lines([1,2,8,9,10,11,12,:eof], [8])
         end
         
         it "should return everything when a line is given in each scenario" do
-          verify_lines([1,2,3,4,5,7,8,9,10,11,:eof], [5,7])
+          verify_lines([1,2,3,4,5,6,8,9,10,11,12,:eof], [6,8])
         end
       end
 
