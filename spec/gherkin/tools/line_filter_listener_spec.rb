@@ -48,6 +48,10 @@ module Gherkin
 }
         end
 
+        it "should not replay anything if no lines match" do
+          verify_lines([:eof], [90])
+        end
+
         it "should replay identically (except newlines) when there is no filter" do
           verify_lines([1,2,3,5,6,:eof], [])
         end

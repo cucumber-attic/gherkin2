@@ -90,7 +90,12 @@ module Gherkin
       end
 
       def included?(event, index)
-        (event != :row and event != :examples) || !@examples_index || index == @examples_index || @included_rows.nil? || @included_rows[index] || index == @examples_index
+        (event != :row and event != :examples) || 
+        !@examples_index || 
+        index == @examples_index || 
+        @included_rows.nil? || 
+        @included_rows[index] || 
+        index == @examples_index
       end
 
       def comments_before(index)
