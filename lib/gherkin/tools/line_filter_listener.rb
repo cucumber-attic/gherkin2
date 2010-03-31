@@ -30,37 +30,35 @@ module Gherkin
         @sexps << sexp
 
         @current_index += 1
-        line_match = @lines.index(sexp.line)
-
         case(sexp.event)
         when :tag
         when :comment
         when :feature
         when :background
         when :scenario, :scenario_outline
-          @scenario_ok = line_match
+          @scenario_ok = line_match?(sexp)
           @first_scenario_index ||= @current_index
           @next_uncollected_scenario_index = @current_index
         when :examples
-          @examples_ok = line_match
+          @examples_ok = line_match?(sexp)
           @included_rows = {}
           @table_state = :examples
         when :step
-          @scenario_ok ||= line_match
+          @scenario_ok ||= line_match?(sexp)
           @included_rows = nil
           @table_state = :step
         when :row
           case(@table_state)
           when :examples
-            row_ok = line_match
+            row_ok = line_match?(sexp)
             if @included_rows.empty?
               # The header row is always ok
               @included_rows[@current_index] = true
             else
-              @included_rows[@current_index] = @scenario_ok || @examples_ok || line_match
+              @included_rows[@current_index] = @scenario_ok || @examples_ok || line_match?(sexp)
             end
           when :step
-            @scenario_ok ||= line_match
+            @scenario_ok ||= line_match?(sexp)
           else
             raise "BAD STATE"
           end
@@ -77,6 +75,10 @@ module Gherkin
         elsif @scenario_ok || @examples_ok || row_ok
           collect_filtered_sexps
         end
+      end
+      
+      def line_match?(sexp)
+        @lines.index(sexp.line)
       end
 
       def lines
