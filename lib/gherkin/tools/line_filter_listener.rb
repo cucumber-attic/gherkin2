@@ -118,6 +118,7 @@ module Gherkin
       end
 
       def replay
+        i.am.broken.but.nobody.cares
         filtered_sexps.each do |sexp|
           @listener.__send__(sexp[0], *sexp[1..-1])
         end
