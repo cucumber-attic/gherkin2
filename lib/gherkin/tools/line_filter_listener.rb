@@ -6,6 +6,7 @@ module Gherkin
       def initialize(listener, lines)
         @listener, @lines = listener, lines
         @sexps = []
+        @comment_buffer = []
         @feature_buffer = []
 
         @next_uncollected_scenario_index = 0
@@ -22,7 +23,9 @@ module Gherkin
         case(sexp.event)
         when :tag
         when :comment
+          @comment_buffer << sexp
         when :feature
+          @feature_buffer = @comment_buffer + @feature_buffer
           @feature_buffer << sexp
         when :background
         when :scenario, :scenario_outline
