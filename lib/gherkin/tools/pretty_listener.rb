@@ -2,6 +2,7 @@
 
 require 'gherkin/tools/colors'
 require 'gherkin/format/monochrome_format'
+require 'gherkin/format/argument'
 
 module Gherkin
   module Tools

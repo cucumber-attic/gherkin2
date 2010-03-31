@@ -17,8 +17,8 @@ module Gherkin
   Scenario: 7
     Given 8
     When 9
-     |10|10|
-     |11|11|
+     | 10 | 10 |
+     | 11 | 11 |
 }
 
         verify_lines(input, [1,3,4,5,7,8,9,10,11,:eof], [], [], TagExpression.new)

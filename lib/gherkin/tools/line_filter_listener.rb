@@ -1,21 +1,8 @@
+require 'gherkin/tools/sexp'
+
 module Gherkin
   module Tools
     class LineFilterListener
-      class Sexp < Array
-        def initialize(*args)
-          super
-          self[1] = self[1].to_a if event == :row # Special JRuby handling
-        end
-        
-        def event
-          self[0]
-        end
-        
-        def line
-          self[-1]
-        end
-      end
-
       def initialize(listener, lines)
         @listener, @lines = listener, lines
         @sexps = []
@@ -24,9 +11,11 @@ module Gherkin
         @next_uncollected_scenario_index = 0
         @current_index = -1
       end
+      
+      private
 
-      def method_missing(*args)
-        sexp = Sexp.new(args)
+      def method_missing(*sexp_args)
+        sexp = Sexp.new(sexp_args)
         @sexps << sexp
 
         @current_index += 1
@@ -118,8 +107,7 @@ module Gherkin
       end
 
       def replay
-        i.am.broken.but.nobody.cares
-        filtered_sexps.each do |sexp|
+        @filtered_sexps.each do |sexp|
           @listener.__send__(sexp[0], *sexp[1..-1])
         end
       end

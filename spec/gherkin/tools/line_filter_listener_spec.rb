@@ -1,19 +1,31 @@
 # encoding: utf-8
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 require 'gherkin/tools/line_filter_listener'
+require 'gherkin/tools/pretty_listener'
 require 'stringio'
 
 module Gherkin
   module Tools
     describe LineFilterListener do
+      
+      class LineListener
+        attr_reader :lines
+        
+        def method_missing(*sexp_args)
+          @lines ||= []
+          @lines << Sexp.new(sexp_args).line
+        end
+      end
+      
       def verify_lines(expected_lines, lines)
-        fl = LineFilterListener.new(nil, lines)
-        parser = Gherkin::Parser.new(fl, true, "root")
+        line_listener = LineListener.new
+        line_filter_listener = LineFilterListener.new(line_listener, lines)
+        parser = Gherkin::Parser.new(line_filter_listener, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser, true)
         lexer.scan(@input)
-        fl.lines.should == expected_lines
+        line_listener.lines.should == expected_lines
       end
-
+      
       context "Scenario" do
         before do
           @input = %{Feature: 1
