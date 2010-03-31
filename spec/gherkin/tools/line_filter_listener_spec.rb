@@ -53,6 +53,10 @@ module Gherkin
         it "should filter on scenario line of second scenario" do
           verify_lines([1,7,8,9,10,11,:eof], [7])
         end
+        
+        it "should return everything when a line is given in each scenario" do
+          verify_lines([1,2,3,4,5,7,8,9,10,11,:eof], [5,7])
+        end
       end
 
       context "Scenario Outline" do
