@@ -29,6 +29,34 @@ module Gherkin
       context "Scenario" do
         before do
           @input = %{Feature: 1
+  Scenario: 2
+    Given 3
+
+  Scenario: 5
+    Given 6
+}
+        end
+
+        it "should replay identically (except newlines) when there is no filter" do
+          verify_lines([1,2,3,5,6,:eof], [])
+        end
+
+        it "should filter on step line of first scenario" do
+          verify_lines([1,2,3,:eof], [3])
+        end
+
+        it "should filter on step line of second scenario" do
+          verify_lines([1,5,6,:eof], [6])
+        end
+
+        it "should replay identically (except newlines) when the filter matches both scenarios" do
+          verify_lines([1,2,3,5,6,:eof], [3,6])
+        end
+      end
+      
+      context "Scenario with Table and Comment" do
+        before do
+          @input = %{Feature: 1
   # 2
   Scenario: 3
     Given 4
