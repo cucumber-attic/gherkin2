@@ -101,6 +101,10 @@ module Gherkin
         it "should filter on an example row of second scenario outline" do
           verify_lines([1,3,4,5,15,16,18,:eof], [18])
         end
+
+        it "should filter on 2 example rows of first scenario outline" do
+          verify_lines([1,3,4,5,7,8,11,13,:eof], [11,13])
+        end
       end
     end
   end
