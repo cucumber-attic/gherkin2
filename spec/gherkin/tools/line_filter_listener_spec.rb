@@ -25,7 +25,18 @@ module Gherkin
         lexer.scan(@input)
         line_listener.lines.should == expected_lines
       end
-      
+
+      def verify_output(expected_output, lines)
+        io = StringIO.new
+        pretty_listener = PrettyListener.new(io, true)
+        line_filter_listener = LineFilterListener.new(pretty_listener, lines)
+        parser = Gherkin::Parser.new(line_filter_listener, true, "root")
+        lexer  = Gherkin::I18nLexer.new(parser, true)
+        lexer.scan(@input)
+        io.rewind
+        io.read.should == expected_output
+      end
+
       context "Scenario" do
         before do
           @input = %{Feature: 1
@@ -37,8 +48,8 @@ module Gherkin
   Scenario: 7
     Given 8
     When 9
-     |10|10|
-     |11|11|
+     | 10 | 10 |
+     | 11 | 11 |
 }
         end
 
@@ -64,17 +75,17 @@ module Gherkin
     When <bar> 5
 
     Examples: 7
-      |foo|bar|
-      |  9|  9|
-      | 10| 10|
-      | 11| 11|
-      | 12| 12|
-      | 13| 13|
+      | foo | bar |
+      | 9   | 9   |
+      | 10  | 10  |
+      | 11  | 11  |
+      | 12  | 12  |
+      | 13  | 13  |
 
     Examples: 15
-      |snip|snap|
-      |  17|  17|
-      |  18|  18|
+      | snip | snap |
+      | 17   | 17   |
+      | 18   | 18   |
 
   Scenario: 20
     Given 21
@@ -104,6 +115,22 @@ module Gherkin
 
         it "should filter on 2 example rows of first scenario outline" do
           verify_lines([1,3,4,5,7,8,11,13,:eof], [11,13])
+        end
+
+        it "should replay itself properly" do
+          filtered = %{Feature: 1
+
+  Scenario Outline: 3
+    Given <foo> 4
+    When <bar> 5
+
+    Examples: 7
+      | foo | bar |
+      | 11  | 11  |
+      | 13  | 13  |
+}
+
+          verify_output(filtered, [11,13])
         end
       end
     end
