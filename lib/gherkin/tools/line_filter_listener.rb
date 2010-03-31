@@ -8,6 +8,9 @@ module Gherkin
         @sexps = []
         @comment_buffer = []
         @feature_buffer = []
+        @scenario_buffer = []
+        @examples_buffer = []
+        @examples_rows_buffer = []
 
         @next_uncollected_scenario_index = 0
         @current_index = -1
@@ -26,39 +29,45 @@ module Gherkin
           @comment_buffer << sexp
         when :feature
           @feature_buffer = @comment_buffer + @feature_buffer
+          @comment_buffer = []
           @feature_buffer << sexp
         when :background
         when :scenario, :scenario_outline
+          replay_examples_rows_buffer
+          @scenario_buffer = @comment_buffer
+          @comment_buffer = []
+          @scenario_buffer << sexp
           @scenario_ok = line_match?(sexp)
-          @first_scenario_index ||= @current_index
-          @next_uncollected_scenario_index = @current_index
           @examples_ok = false
         when :examples
-          @examples_index = @scenario_ok ? false : @current_index
+          replay_examples_rows_buffer
+          
+          @examples_buffer = @comment_buffer + [sexp]
+          @comment_buffer = []
+          @examples_rows_buffer = []
           @examples_ok = line_match?(sexp)
-          @included_rows = {}
           @table_state = :examples
         when :step
           @scenario_ok ||= line_match?(sexp)
-          @included_rows = nil
+          @scenario_buffer << sexp
           @table_state = :step
         when :row
           case(@table_state)
           when :examples
-            row_ok = line_match?(sexp)
-            if @included_rows.empty?
-              # The header row is always ok
-              @included_rows[@current_index] = true
+            unless header_row_already_buffered?
+              @examples_buffer << sexp
               @examples_ok = true if line_match?(sexp)
             else
-              @included_rows[@current_index] = @scenario_ok || @examples_ok || row_ok
+              @examples_rows_buffer << sexp if @scenario_ok || @examples_ok || line_match?(sexp)
             end
           when :step
+            @scenario_buffer << sexp
             @scenario_ok ||= line_match?(sexp)
           else
             raise "BAD STATE"
           end
         when :eof
+          replay_examples_rows_buffer
           sexp.replay(@listener)
           return
         else
@@ -67,34 +76,48 @@ module Gherkin
 
         if @lines.empty?
           sexp.replay(@listener)
-        elsif @scenario_ok || @examples_ok || row_ok
-          collect_filtered_sexps
+        elsif @scenario_ok || @examples_ok || line_match?(sexp)
+          replay_buffers
         end
       end
       
+      def header_row_already_buffered?
+        return false unless @examples_buffer.any?
+        @examples_buffer[-1].event == :row
+      end
+      
       def line_match?(sexp)
-        @lines.index(sexp.line)
+        !!@lines.index(sexp.line)
+      end
+      
+      def replay_buffers
+        replay_feature_buffer
+        replay_scenario_buffer
       end
 
-      def collect_filtered_sexps
-        # Collect Feature
-        unless feature_already_replayed?
+      def replay_examples_rows_buffer
+        if @examples_rows_buffer.any?
+          (@examples_buffer + @examples_rows_buffer).each do |sexp|
+            sexp.replay(@listener)
+          end
+          @examples_rows_buffer = []
+        end
+      end
+      
+      def replay_feature_buffer
+        if @feature_buffer.any?
           @feature_buffer.each{|sexp| sexp.replay(@listener)}
-          @feature_replayed = true
+          @feature_buffer = []
         end
-
-        # Collect Scenario
-        @next_uncollected_scenario_index = comments_before(@next_uncollected_scenario_index)
-        (@next_uncollected_scenario_index..@current_index).each do |sexp_index|
-          sexp = @sexps[sexp_index]
-          sexp.replay(@listener) if included?(sexp.event, sexp_index)
-        end
-        
-        @next_uncollected_scenario_index = @current_index + 1
       end
-
-      def feature_already_replayed?
-        @feature_replayed
+      
+      def replay_scenario_buffer
+        if @scenario_buffer.any?
+          @scenario_buffer.each do |sexp| 
+            sexp.replay(@listener) if included2?(sexp.event)
+          end
+          @scenario_buffer = [] 
+        end
       end
 
       def included?(event, index)
@@ -104,6 +127,12 @@ module Gherkin
         @included_rows.nil? || 
         @included_rows[index] || 
         index == @examples_index
+      end
+
+      def included2?(event)
+        (event != :row and event != :examples) || 
+        !@examples_index || 
+        @included_rows.nil?
       end
 
       def comments_before(index)
