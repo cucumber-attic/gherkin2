@@ -6,6 +6,7 @@ module Gherkin
       def initialize(listener, lines)
         @listener, @lines = listener, lines
         @sexps = []
+        @feature_buffer = []
 
         @next_uncollected_scenario_index = 0
         @current_index = -1
@@ -22,6 +23,7 @@ module Gherkin
         when :tag
         when :comment
         when :feature
+          @feature_buffer << sexp
         when :background
         when :scenario, :scenario_outline
           @scenario_ok = line_match?(sexp)
@@ -74,8 +76,7 @@ module Gherkin
       def collect_filtered_sexps
         # Collect Feature
         unless feature_already_replayed?
-          @first_scenario_index = comments_before(@first_scenario_index)
-          @sexps[0...@first_scenario_index].each{|sexp| sexp.replay(@listener)}
+          @feature_buffer.each{|sexp| sexp.replay(@listener)}
           @feature_replayed = true
         end
 
