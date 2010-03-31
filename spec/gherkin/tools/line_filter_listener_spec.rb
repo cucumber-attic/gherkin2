@@ -19,22 +19,22 @@ module Gherkin
       
       def verify_lines(expected_lines, lines)
         line_listener = LineListener.new
-        line_filter_listener = LineFilterListener.new(line_listener, lines)
-        parser = Gherkin::Parser.new(line_filter_listener, true, "root")
-        lexer  = Gherkin::I18nLexer.new(parser, true)
-        lexer.scan(@input)
+        scan(line_listener, lines)
         line_listener.lines.should == expected_lines
       end
 
       def verify_output(expected_output, lines)
         io = StringIO.new
-        pretty_listener = PrettyListener.new(io, true)
-        line_filter_listener = LineFilterListener.new(pretty_listener, lines)
+        scan(PrettyListener.new(io, true), lines)
+        io.rewind
+        io.read.should == expected_output
+      end
+
+      def scan(listener, lines)
+        line_filter_listener = LineFilterListener.new(listener, lines)
         parser = Gherkin::Parser.new(line_filter_listener, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser, true)
         lexer.scan(@input)
-        io.rewind
-        io.read.should == expected_output
       end
 
       context "Scenario" do
