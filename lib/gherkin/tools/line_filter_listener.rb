@@ -6,7 +6,6 @@ module Gherkin
       def initialize(listener, lines)
         @listener, @lines = listener, lines
         @sexps = []
-        @filtered_sexps = []
 
         @next_uncollected_scenario_index = 0
         @current_index = -1
@@ -55,15 +54,14 @@ module Gherkin
             raise "BAD STATE"
           end
         when :eof
-          @filtered_sexps << sexp
-          replay if @listener
+          sexp.replay(@listener)
           return
         else
           super
         end
 
         if @lines.empty?
-          @filtered_sexps << sexp
+          sexp.replay(@listener)
         elsif @scenario_ok || @examples_ok || row_ok
           collect_filtered_sexps
         end
@@ -73,15 +71,11 @@ module Gherkin
         @lines.index(sexp.line)
       end
 
-      def lines
-        @filtered_sexps.map{ |sexp| sexp.line }
-      end
-
       def collect_filtered_sexps
         # Collect Feature
         if !@feature_added && @first_scenario_index
           @first_scenario_index = comments_before(@first_scenario_index)
-          @filtered_sexps += @sexps[0...@first_scenario_index]
+          @sexps[0...@first_scenario_index].each{|sexp| sexp.replay(@listener)}
           @feature_added = true
         end
 
@@ -89,7 +83,7 @@ module Gherkin
         @next_uncollected_scenario_index = comments_before(@next_uncollected_scenario_index)
         (@next_uncollected_scenario_index..@current_index).each do |sexp_index|
           sexp = @sexps[sexp_index]
-          @filtered_sexps << sexp if included?(sexp.event, sexp_index)
+          sexp.replay(@listener) if included?(sexp.event, sexp_index)
         end
         
         @next_uncollected_scenario_index = @current_index + 1
@@ -104,10 +98,6 @@ module Gherkin
           index -= 1
         end
         index
-      end
-
-      def replay
-        @filtered_sexps.each {|sexp| sexp.replay(@listener)} 
       end
     end
   end
