@@ -73,10 +73,10 @@ module Gherkin
 
       def collect_filtered_sexps
         # Collect Feature
-        if !@feature_added && @first_scenario_index
+        unless feature_already_replayed?
           @first_scenario_index = comments_before(@first_scenario_index)
           @sexps[0...@first_scenario_index].each{|sexp| sexp.replay(@listener)}
-          @feature_added = true
+          @feature_replayed = true
         end
 
         # Collect Scenario
@@ -87,6 +87,10 @@ module Gherkin
         end
         
         @next_uncollected_scenario_index = @current_index + 1
+      end
+
+      def feature_already_replayed?
+        @feature_replayed
       end
 
       def included?(event, index)
