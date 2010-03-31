@@ -5,24 +5,18 @@ module Gherkin
     class LineFilterListener
       def initialize(listener, lines)
         @listener, @lines = listener, lines
-        @sexps = []
         @comment_buffer = []
         @feature_buffer = []
         @scenario_buffer = []
         @examples_buffer = []
         @examples_rows_buffer = []
-
-        @next_uncollected_scenario_index = 0
-        @current_index = -1
       end
       
       private
 
       def method_missing(*sexp_args)
         sexp = Sexp.new(sexp_args)
-        @sexps << sexp
 
-        @current_index += 1
         case(sexp.event)
         when :tag
         when :comment
@@ -87,7 +81,7 @@ module Gherkin
       end
       
       def line_match?(sexp)
-        !!@lines.index(sexp.line)
+        @lines.include?(sexp.line)
       end
       
       def replay_buffers
@@ -106,40 +100,16 @@ module Gherkin
       
       def replay_feature_buffer
         if @feature_buffer.any?
-          @feature_buffer.each{|sexp| sexp.replay(@listener)}
+          @feature_buffer.each{|sexp| sexp.replay(@listener) }
           @feature_buffer = []
         end
       end
       
       def replay_scenario_buffer
         if @scenario_buffer.any?
-          @scenario_buffer.each do |sexp| 
-            sexp.replay(@listener) if included2?(sexp.event)
-          end
+          @scenario_buffer.each{|sexp| sexp.replay(@listener) }
           @scenario_buffer = [] 
         end
-      end
-
-      def included?(event, index)
-        (event != :row and event != :examples) || 
-        !@examples_index || 
-        index == @examples_index || 
-        @included_rows.nil? || 
-        @included_rows[index] || 
-        index == @examples_index
-      end
-
-      def included2?(event)
-        (event != :row and event != :examples) || 
-        !@examples_index || 
-        @included_rows.nil?
-      end
-
-      def comments_before(index)
-        while [:comment, :tag].index(@sexps[index - 1].event)
-          index -= 1
-        end
-        index
       end
     end
   end
