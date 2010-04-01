@@ -104,9 +104,7 @@ Feature: 2
         end
 
         it "should return a scenario when a line is given for its tag" do
-          pending do
-            verify_lines([1,2,8,9,10,11,12,13,:eof], [8])
-          end
+          verify_lines([1,2,8,9,10,11,12,13,:eof], [8])
         end
 
         it "should return a scenario when a line is given for its comment" do

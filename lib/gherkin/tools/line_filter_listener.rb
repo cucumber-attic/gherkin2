@@ -54,8 +54,8 @@ module Gherkin
             @feature_buffer << sexp
             @meta_buffer = []
           else
-            @scenario_ok ||= line_match?(sexp)
             @scenario_buffer << sexp
+            @scenario_ok ||= line_match?(*@scenario_buffer)
             @table_state = :step
           end
         when :row
@@ -63,13 +63,13 @@ module Gherkin
           when :examples
             unless header_row_already_buffered?
               @examples_buffer << sexp
-              @examples_ok = true if line_match?(sexp)
+              @examples_ok = true if line_match?(*@examples_buffer)
             else
               @examples_rows_buffer << sexp if @scenario_ok || @examples_ok || line_match?(sexp)
             end
           when :step
             @scenario_buffer << sexp
-            @scenario_ok ||= line_match?(sexp)
+            @scenario_ok ||= line_match?(*@scenario_buffer)
           when :background
             @feature_buffer += @meta_buffer
             @feature_buffer << sexp
@@ -87,7 +87,7 @@ module Gherkin
 
         if @lines.empty?
           sexp.replay(@listener)
-        elsif @scenario_ok || @examples_ok || line_match?(sexp)
+        elsif @scenario_ok || @examples_ok
           replay_buffers
         end
       end
@@ -108,6 +108,7 @@ module Gherkin
 
       def replay_examples_rows_buffer
         if @examples_rows_buffer.any?
+          replay_buffers
           (@examples_buffer + @examples_rows_buffer).each do |sexp|
             sexp.replay(@listener)
           end
