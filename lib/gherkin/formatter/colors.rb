@@ -1,7 +1,7 @@
 require 'term/ansicolor'
 
 module Gherkin
-  module Tools
+  module Formatter
     # Defines aliases for coloured output. You don't invoke any methods from this
     # module directly, but you can change the output colours by defining
     # a <tt>GHERKIN_COLORS</tt> variable in your shell, very much like how you can

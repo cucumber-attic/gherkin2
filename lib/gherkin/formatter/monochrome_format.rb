@@ -1,5 +1,5 @@
 module Gherkin
-  module Format
+  module Formatter
     class MonochromeFormat
       def format_argument(arg)
         arg

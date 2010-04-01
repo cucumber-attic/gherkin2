@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static gherkin.FixJava.join;
-import static gherkin.formatter.Colors.*;
+import static gherkin.formatter.Colors.comments;
 
 public class PrettyFormatter implements Formatter {
     private final PrintWriter out;

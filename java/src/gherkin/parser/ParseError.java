@@ -1,4 +1,6 @@
-package gherkin;
+package gherkin.parser;
+
+import gherkin.FixJava;
 
 import java.util.List;
 

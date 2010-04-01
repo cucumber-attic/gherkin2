@@ -1,7 +1,7 @@
-require 'gherkin/tools/sexp'
+require 'gherkin/parser/sexp'
 
 module Gherkin
-  module Tools
+  module Parser
     # This class filters events based on filter criteria.
     class FilterListener
       # Creates a new instance that replays events to +listener+, filtered by +filters+,

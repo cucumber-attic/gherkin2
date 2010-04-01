@@ -1,5 +1,5 @@
 module Gherkin
-  module Tools
+  module Parser
     class TagExpression
       attr_reader :limits
 

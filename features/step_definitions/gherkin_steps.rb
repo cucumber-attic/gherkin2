@@ -1,5 +1,5 @@
 Given /^a "([^\"]*)" "([^\"]*)" parser$/ do |ruby_or_native, parser_name|
-  parser = Gherkin::Parser.new(@listener, false, parser_name)
+  parser = Gherkin::Parser::Parser.new(@listener, false, parser_name)
   @lexer = Gherkin::I18nLexer.new(parser, ruby_or_native == "ruby")
 end
 

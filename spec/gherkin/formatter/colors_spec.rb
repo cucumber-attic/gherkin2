@@ -1,9 +1,9 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
-require 'gherkin/tools/pretty_listener'
+require 'gherkin/formatter/pretty_listener'
 
 
 module Gherkin
-  module Tools
+  module Formatter
     describe Colors do
       include Colors
 

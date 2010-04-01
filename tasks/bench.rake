@@ -106,11 +106,11 @@ class Benchmarker
 
   def run_rb_gherkin    
     require 'gherkin'
-    require 'gherkin/rb_lexer'
+    require 'gherkin/rb_lexer/en'
     require 'null_listener'
     @features.each do |feature|
       parser = Gherkin::Parser.new(NullListener.new, true, "root")
-      lexer = Gherkin::RbLexer['en'].new(parser)
+      lexer = Gherkin::RbLexer::En.new(parser)
       lexer.scan(File.read(feature))
     end
   end

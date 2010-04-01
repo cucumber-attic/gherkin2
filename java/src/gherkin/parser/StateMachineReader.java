@@ -6,8 +6,8 @@ import gherkin.Listener;
 import gherkin.lexer.En;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class StateMachineReader implements Listener {
     private final String machinePath;

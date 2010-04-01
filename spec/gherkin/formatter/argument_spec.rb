@@ -1,9 +1,9 @@
 # encoding: utf-8
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
-require 'gherkin/format/argument'
+require 'gherkin/formatter/argument'
 
 module Gherkin
-  module Format
+  module Formatter
     class BracketFormat
       class << self
         def new

@@ -1,6 +1,7 @@
 package gherkin;
 
 import gherkin.formatter.PrettyFormatter;
+import gherkin.parser.Parser;
 
 import java.io.FileReader;
 import java.io.IOException;

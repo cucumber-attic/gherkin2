@@ -1,11 +1,11 @@
 # encoding: utf-8
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 require 'gherkin/parser/filter_listener'
-require 'gherkin/tools/pretty_listener'
+require 'gherkin/formatter/pretty_listener'
 require 'stringio'
 
 module Gherkin
-  module Tools
+  module Parser
     describe FilterListener do
       
       class LineListener
@@ -25,14 +25,14 @@ module Gherkin
 
       def verify_output(expected_output, filters)
         io = StringIO.new
-        scan(PrettyListener.new(io, true), filters)
+        scan(Gherkin::Formatter::PrettyListener.new(io, true), filters)
         io.rewind
         io.read.should == expected_output
       end
 
       def scan(listener, filters)
         line_filter_listener = FilterListener.new(listener, filters)
-        parser = Gherkin::Parser.new(line_filter_listener, true, "root")
+        parser = Gherkin::Parser::Parser.new(line_filter_listener, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser, true)
         lexer.scan(@input)
       end

@@ -1,5 +1,5 @@
 module Gherkin
-  module Tools
+  module Parser
     class Sexp < Array
       def initialize(*args)
         super

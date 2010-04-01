@@ -48,11 +48,6 @@ module Gherkin
         CLexer
       end
 
-      def csharp
-        require 'gherkin/csharp_lexer'
-        CSharpLexer
-      end
-
       def rb
         require 'gherkin/rb_lexer'
         RbLexer

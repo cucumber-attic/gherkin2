@@ -1,15 +1,13 @@
 # encoding: utf-8
 
-require 'gherkin/tools/colors'
-require 'gherkin/format/monochrome_format'
-require 'gherkin/format/argument'
+require 'gherkin/formatter/colors'
+require 'gherkin/formatter/monochrome_format'
+require 'gherkin/formatter/argument'
 
 module Gherkin
-  module Tools
-    # TODO: Rename to Gherkin::Pretty::PrettyReporter - that's what this class *does*
-    # (The fact that it conforms to the Gherkin Listener interface is secondary)
+  module Formatter
     class PrettyListener
-      include Gherkin::Tools::Colors
+      include Colors
       
       class << self
         def new(io, monochrome=false)
@@ -25,7 +23,7 @@ module Gherkin
       def initialize(io, monochrome=false)
         @io = io
         @monochrome = monochrome
-        @format = @monochrome ? Format::MonochromeFormat.new : Format::AnsiColorFormat.new
+        @format = @monochrome ? MonochromeFormat.new : AnsiColorFormat.new
         @tags = nil
         @comments = nil
       end
@@ -66,7 +64,7 @@ module Gherkin
       def step(keyword, name, line, status=nil, arguments=nil, location=nil)
         flush_table
         status_param = "#{status}_param" if status
-        name = Gherkin::Format::Argument.format(name, @format, (arguments || [])) 
+        name = Gherkin::Formatter::Argument.format(name, @format, (arguments || [])) 
         #{|arg| status_param ? self.__send__(status_param, arg, @monochrome) : arg} if arguments
 
         step = "#{keyword}#{indent(name, '    ')}"

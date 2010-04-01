@@ -1,6 +1,6 @@
-package gherkin;
+package gherkin.parser;
 
-import gherkin.parser.StateMachineReader;
+import gherkin.Listener;
 
 import java.util.*;
 import java.util.regex.Matcher;

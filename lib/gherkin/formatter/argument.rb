@@ -1,5 +1,5 @@
 module Gherkin
-  module Format
+  module Formatter
     class Argument
       attr_reader :byte_offset, :val
 

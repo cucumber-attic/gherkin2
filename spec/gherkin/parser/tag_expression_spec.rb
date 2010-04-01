@@ -1,8 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
-require 'gherkin/tools/tag_expression'
+require 'gherkin/parser/tag_expression'
 
 module Gherkin
-  module Tools
+  module Parser
     describe TagExpression do
       context "no tags" do
         before(:each) do
