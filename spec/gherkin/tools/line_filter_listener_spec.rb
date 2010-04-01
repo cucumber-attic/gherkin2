@@ -17,21 +17,21 @@ module Gherkin
         end
       end
       
-      def verify_lines(expected_lines, lines)
+      def verify_lines(expected_lines, filters)
         line_listener = LineListener.new
-        scan(line_listener, lines)
+        scan(line_listener, filters)
         line_listener.lines.should == expected_lines
       end
 
-      def verify_output(expected_output, lines)
+      def verify_output(expected_output, filters)
         io = StringIO.new
-        scan(PrettyListener.new(io, true), lines)
+        scan(PrettyListener.new(io, true), filters)
         io.rewind
         io.read.should == expected_output
       end
 
-      def scan(listener, lines)
-        line_filter_listener = LineFilterListener.new(listener, lines)
+      def scan(listener, filters)
+        line_filter_listener = LineFilterListener.new(listener, filters)
         parser = Gherkin::Parser.new(line_filter_listener, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser, true)
         lexer.scan(@input)
@@ -49,23 +49,31 @@ module Gherkin
         end
 
         it "should not replay anything if no lines match" do
-          verify_lines([:eof], [90])
+          verify_lines([:eof], :lines=>[90])
         end
 
         it "should replay identically (except newlines) when there is no filter" do
-          verify_lines([1,2,3,5,6,:eof], [])
+          verify_lines([1,2,3,5,6,:eof], {})
+        end
+
+        it "should filter on scenario line of first scenario" do
+          verify_lines([1,2,3,:eof], :lines=>[2])
+        end
+
+        it "should filter on name of first scenario" do
+          verify_lines([1,2,3,:eof], :name_regexen=>[/2/])
         end
 
         it "should filter on step line of first scenario" do
-          verify_lines([1,2,3,:eof], [3])
+          verify_lines([1,2,3,:eof], :lines=>[3])
         end
 
         it "should filter on step line of second scenario" do
-          verify_lines([1,5,6,:eof], [6])
+          verify_lines([1,5,6,:eof], :lines=>[6])
         end
 
         it "should replay identically (except newlines) when the filter matches both scenarios" do
-          verify_lines([1,2,3,5,6,:eof], [3,6])
+          verify_lines([1,2,3,5,6,:eof], :lines=>[3,6])
         end
       end
       
@@ -88,27 +96,27 @@ Feature: 2
         end
 
         it "should replay identically when there is no filter" do
-          verify_lines([1,2,3,4,5,6,8,9,10,11,12,13,:eof], [])
+          verify_lines([1,2,3,4,5,6,8,9,10,11,12,13,:eof], :lines=>[])
         end
 
         it "should filter on step line of first scenario" do
-          verify_lines([1,2,3,4,5,6,:eof], [5])
+          verify_lines([1,2,3,4,5,6,:eof], :lines=>[5])
         end
 
         it "should filter on scenario line of second scenario" do
-          verify_lines([1,2,8,9,10,11,12,13,:eof], [9])
+          verify_lines([1,2,8,9,10,11,12,13,:eof], :lines=>[9])
         end
         
         it "should return everything when a line is given in each scenario" do
-          verify_lines([1,2,3,4,5,6,8,9,10,11,12,13,:eof], [6,9])
+          verify_lines([1,2,3,4,5,6,8,9,10,11,12,13,:eof], :lines=>[6,9])
         end
 
         it "should return a scenario when a line is given for its tag" do
-          verify_lines([1,2,8,9,10,11,12,13,:eof], [8])
+          verify_lines([1,2,8,9,10,11,12,13,:eof], :lines=>[8])
         end
 
         it "should return a scenario when a line is given for its comment" do
-          verify_lines([1,2,3,4,5,6,:eof], [3])
+          verify_lines([1,2,3,4,5,6,:eof], :lines=>[3])
         end
       end
       
@@ -134,11 +142,11 @@ Feature: 2
         end
 
         it "should replay identically when there is no filter" do
-          verify_lines([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], [])
+          verify_lines([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], :lines=>[])
         end
 
         it "should replay the background on step line of first scenario" do
-          verify_lines([1,2,3,4,5,7,8,9,10,:eof],[9])
+          verify_lines([1,2,3,4,5,7,8,9,10,:eof], :lines=>[9])
         end
       end
 
@@ -173,27 +181,27 @@ Feature: 2
         end
 
         it "should filter on step line of first scenario outline" do
-          verify_lines([1,3,4,5,6,8,9,10,11,12,13,14,15,17,18,19,20,21,:eof], [6])
+          verify_lines([1,3,4,5,6,8,9,10,11,12,13,14,15,17,18,19,20,21,:eof], :lines=>[6])
         end
 
         it "should filter on examples line of second scenario outline" do
-          verify_lines([1,3,4,5,6,17,18,19,20,21,:eof], [18])
+          verify_lines([1,3,4,5,6,17,18,19,20,21,:eof], :lines=>[18])
         end
 
         it "should filter on header row line of second scenario outline" do
-          verify_lines([1,3,4,5,6,17,18,19,20,21,:eof], [19])
+          verify_lines([1,3,4,5,6,17,18,19,20,21,:eof], :lines=>[19])
         end
 
         it "should filter on an example row of first scenario outline" do
-          verify_lines([1,3,4,5,6,8,9,10,13,:eof], [13])
+          verify_lines([1,3,4,5,6,8,9,10,13,:eof], :lines=>[13])
         end
 
         it "should filter on an example row of second scenario outline" do
-          verify_lines([1,3,4,5,6,17,18,19,20,:eof], [20])
+          verify_lines([1,3,4,5,6,17,18,19,20,:eof], :lines=>[20])
         end
 
         it "should filter on 2 example rows of first scenario outline" do
-          verify_lines([1,3,4,5,6,8,9,10,12,14,:eof], [12,14])
+          verify_lines([1,3,4,5,6,8,9,10,12,14,:eof], :lines=>[12,14])
         end
 
         it "should replay itself properly" do
@@ -211,7 +219,7 @@ Feature: 2
       | 14  | 14  |
 }
 
-          verify_output(filtered, [12,14])
+          verify_output(filtered, :lines=>[12,14])
         end
       end
     end

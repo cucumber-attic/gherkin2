@@ -3,8 +3,8 @@ require 'gherkin/tools/sexp'
 module Gherkin
   module Tools
     class LineFilterListener
-      def initialize(listener, lines)
-        @listener, @lines = listener, lines
+      def initialize(listener, filters)
+        @listener, @filters = listener, filters
         @meta_buffer = []
         @feature_buffer = []
         @scenario_buffer = []
@@ -85,22 +85,36 @@ module Gherkin
           super
         end
 
-        if @lines.empty?
+        if no_filters?
           sexp.replay(@listener)
         elsif @scenario_ok || @examples_ok
           replay_buffers
         end
       end
-      
+
+      def no_filters?
+        @filters.values.flatten.empty?
+      end
+
       def header_row_already_buffered?
         return false unless @examples_buffer.any?
         @examples_buffer[-1].event == :row
       end
       
       def line_match?(*sexps)
-        sexps.detect{|sexp| sexp.line_match?(@lines)}
+        return true if no_filters?
+        sexps.detect{|sexp| sexp.line_match?(lines)} ||
+        sexps.detect{|sexp| sexp.name_match?(names)}
       end
-      
+
+      def lines
+        @filters[:lines] || []
+      end
+
+      def names
+        @filters[:name_regexen] || []
+      end
+
       def replay_buffers
         replay_feature_buffer
         replay_scenario_buffer
