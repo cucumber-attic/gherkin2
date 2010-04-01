@@ -37,7 +37,7 @@ module Gherkin
       end
 
       def tag_value
-        '@' + self[1]
+        self[1]
       end
 
       def name

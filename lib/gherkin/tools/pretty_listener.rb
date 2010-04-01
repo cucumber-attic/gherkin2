@@ -32,7 +32,7 @@ module Gherkin
 
       def tag(name, line)
         @tags ||= []
-        @tags << "@#{name}"
+        @tags << name
       end
 
       def comment(content, line)

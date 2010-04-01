@@ -5,7 +5,7 @@ module Gherkin
   module Lexer
     shared_examples_for "a Gherkin lexer lexing tags" do
       it "should lex a single tag" do
-        @listener.should_receive(:tag).with("dog", 1)
+        @listener.should_receive(:tag).with("@dog", 1)
         @lexer.scan("@dog\n")
       end
   
@@ -15,13 +15,13 @@ module Gherkin
       end
   
       it "should lex UTF-8 tags" do
-        @listener.should_receive(:tag).with("シナリオテンプレート", 1)
+        @listener.should_receive(:tag).with("@シナリオテンプレート", 1)
         @lexer.scan("@シナリオテンプレート\n")
       end
         
       it "should lex mixed tags" do
-        @listener.should_receive(:tag).with("wip", 1).ordered
-        @listener.should_receive(:tag).with("Значения", 1).ordered
+        @listener.should_receive(:tag).with("@wip", 1).ordered
+        @listener.should_receive(:tag).with("@Значения", 1).ordered
         @lexer.scan("@wip @Значения\n")
       end
   

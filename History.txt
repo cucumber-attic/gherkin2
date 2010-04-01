@@ -1,27 +1,35 @@
 == In Git
 
-== Bugfixes
+=== New features
+* A FilterListener in Ruby that is the last missing piece to plug Gherkin into Cucumber. (Gregory Hnatiuk, Aslak Hellesøy, Matt Wynne, Mike Sassak)
+
+=== Changed features
+* The Lexer now emits the '@' for tags. (Aslak Hellesøy)
+
+== 1.0.3 (2009-03-31)
+
+=== Bugfixes
 * The C lexer correctly instantiates a new array for each table, instead of reusing the old one. (Aslak Hellesøy)
 * Emit keywords with space instead of stripping (< keywords are emmitted without space) (Aslak Hellesøy)
 * gherkin reformat now prints comments, and does it with proper indentation (Aslak Hellesøy)
 * .NET resource files are now automatically copied into the .dll (#46 Aslak Hellesøy)
 
-== New features
+=== New features
 * The Pure Java implementation now has a simple main method that pretty prints a feature. (#39 Aslak Hellesøy) 
 * Writing code generated i18n syntax highlighters for Gherkin is a lot easier thanks to several convenience methods in Gherkin::I18n. (Aslak Hellesøy)
 * .NET (C#) port (#36, #37 Attila Sztupak)
 * Tables parsed and sent by row rather than by table. (Mike Sassak)
 
-== Changed features
+=== Changed features
 * Switced to ISO 639-1 (language) and ISO 3166 alpha-2 (region - if applicable). Applies to Catalan,
   Swedish, Welsh, Romanian and Serbian. (Aslak Hellesøy)
 
 == 1.0.2 (2009-12-30)
 
-== Bugfixes
+=== Bugfixes
 * Build passes on Ruby 1.9.2 (Aslak Hellesøy)
 
-== New features
+=== New features
 * New command line based on trollop. Commands: reformat, stats. (Aslak Hellesøy)
 * I18nLexer#scan sets #language to the I18n for the language scanned (Mike Sassak)
 * I18n#adverbs, brings I18n to parity with Cucumber::Parser::NaturalLanguage (Mike Sassak)

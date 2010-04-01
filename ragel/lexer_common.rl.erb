@@ -27,7 +27,7 @@
   Step = space* I18N_Step %begin_content ^EOL+ %store_step_content :> EOL+;
   Comment = space* '#' >begin_content ^EOL* %store_comment_content :> EOL+;
   
-  Tag = ( '@' [^@\r\n\t ]+ >begin_content ) %store_tag_content;
+  Tag = ( ('@' [^@\r\n\t ]+) >begin_content ) %store_tag_content;
   Tags = space* (Tag space*)+ EOL+;
   
   StartRow = space* '|' >start_row;

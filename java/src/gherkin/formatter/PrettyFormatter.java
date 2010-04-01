@@ -27,7 +27,7 @@ public class PrettyFormatter implements Formatter {
 
     public void tag(String name, int line) {
         if (tags == null) tags = new ArrayList<String>();
-        tags.add('@' + name);
+        tags.add(name);
     }
 
     public void comment(String content, int line) {
