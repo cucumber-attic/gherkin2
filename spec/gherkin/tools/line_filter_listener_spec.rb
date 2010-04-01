@@ -104,13 +104,13 @@ Feature: 2
         end
 
         it "should return a scenario when a line is given for its tag" do
-          pending
-          verify_lines([1,2,8,9,10,11,12,13,:eof], [8])
+          pending do
+            verify_lines([1,2,8,9,10,11,12,13,:eof], [8])
+          end
         end
 
-        it "should not return a scenario when a line is given for its comment" do
-          pending
-          verify_lines([:eof], [3])
+        it "should return a scenario when a line is given for its comment" do
+          verify_lines([1,2,3,4,5,6,:eof], [3])
         end
       end
       

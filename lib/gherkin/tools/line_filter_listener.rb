@@ -35,7 +35,7 @@ module Gherkin
           @scenario_buffer = @meta_buffer
           @meta_buffer = []
           @scenario_buffer << sexp
-          @scenario_ok = line_match?(sexp)
+          @scenario_ok = line_match?(*@scenario_buffer)
           @examples_ok = false
           @table_state = :step
         when :examples
@@ -94,8 +94,8 @@ module Gherkin
         @examples_buffer[-1].event == :row
       end
       
-      def line_match?(sexp)
-        sexp.line_match?(@lines)
+      def line_match?(*sexps)
+        sexps.detect{|sexp| sexp.line_match?(@lines)}
       end
       
       def replay_buffers
