@@ -103,8 +103,7 @@ module Gherkin
       
       def line_match?(*sexps)
         return true if no_filters?
-        sexps.detect{|sexp| sexp.line_match?(lines)} ||
-        sexps.detect{|sexp| sexp.name_match?(names)}
+        sexps.detect{|sexp| sexp.filter_match?(@filters)}
       end
 
       def lines
