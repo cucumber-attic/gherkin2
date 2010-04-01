@@ -52,23 +52,27 @@ module Gherkin
           verify_lines([:eof], :lines=>[90])
         end
 
+        it "should not replay anything if no names match" do
+          verify_lines([:eof], :name_regexen=>[/pudding/])
+        end
+
         it "should replay identically (except newlines) when there is no filter" do
           verify_lines([1,2,3,5,6,:eof], {})
         end
 
-        it "should filter on scenario line of first scenario" do
+        it "should match scenario line of first scenario" do
           verify_lines([1,2,3,:eof], :lines=>[2])
         end
 
-        it "should filter on name of first scenario" do
+        it "should match name of first scenario" do
           verify_lines([1,2,3,:eof], :name_regexen=>[/2/])
         end
 
-        it "should filter on step line of first scenario" do
+        it "should match step line of first scenario" do
           verify_lines([1,2,3,:eof], :lines=>[3])
         end
 
-        it "should filter on step line of second scenario" do
+        it "should match step line of second scenario" do
           verify_lines([1,5,6,:eof], :lines=>[6])
         end
 
@@ -99,11 +103,11 @@ Feature: 2
           verify_lines([1,2,3,4,5,6,8,9,10,11,12,13,:eof], :lines=>[])
         end
 
-        it "should filter on step line of first scenario" do
+        it "should match step line of first scenario" do
           verify_lines([1,2,3,4,5,6,:eof], :lines=>[5])
         end
 
-        it "should filter on scenario line of second scenario" do
+        it "should match scenario line of second scenario" do
           verify_lines([1,2,8,9,10,11,12,13,:eof], :lines=>[9])
         end
         
@@ -180,28 +184,36 @@ Feature: 2
 }
         end
 
-        it "should filter on step line of first scenario outline" do
+        it "should match step line of first scenario outline" do
           verify_lines([1,3,4,5,6,8,9,10,11,12,13,14,15,17,18,19,20,21,:eof], :lines=>[6])
         end
 
-        it "should filter on examples line of second scenario outline" do
+        it "should match examples line of second scenario outline" do
           verify_lines([1,3,4,5,6,17,18,19,20,21,:eof], :lines=>[18])
         end
 
-        it "should filter on header row line of second scenario outline" do
+        it "should match examples name of second scenario outline" do
+          verify_lines([1,3,4,5,6,17,18,19,20,21,:eof], :name_regexen=>[/18/])
+        end
+
+        it "should match header row line of second scenario outline" do
           verify_lines([1,3,4,5,6,17,18,19,20,21,:eof], :lines=>[19])
         end
 
-        it "should filter on an example row of first scenario outline" do
+        it "should match an example row of first scenario outline" do
           verify_lines([1,3,4,5,6,8,9,10,13,:eof], :lines=>[13])
         end
 
-        it "should filter on an example row of second scenario outline" do
+        it "should match an example row of second scenario outline" do
           verify_lines([1,3,4,5,6,17,18,19,20,:eof], :lines=>[20])
         end
 
-        it "should filter on 2 example rows of first scenario outline" do
+        it "should match 2 example rows of first scenario outline" do
           verify_lines([1,3,4,5,6,8,9,10,12,14,:eof], :lines=>[12,14])
+        end
+
+        it "should match example row of second scenario outline and scenario name of first scenario" do
+          verify_lines([1,3,4,5,6,8,9,10,15,23,24,25,:eof], :lines => [15], :name_regexen=>[/23/])
         end
 
         it "should replay itself properly" do
