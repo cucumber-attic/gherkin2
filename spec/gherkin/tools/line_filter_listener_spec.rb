@@ -13,7 +13,7 @@ module Gherkin
         
         def method_missing(*sexp_args)
           @lines ||= []
-          @lines << Sexp.new(sexp_args).line
+          @lines << sexp_args[-1]
         end
       end
       

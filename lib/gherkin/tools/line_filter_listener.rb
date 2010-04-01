@@ -95,7 +95,7 @@ module Gherkin
       end
       
       def line_match?(sexp)
-        @lines.include?(sexp.line)
+        sexp.line_match?(@lines)
       end
       
       def replay_buffers
