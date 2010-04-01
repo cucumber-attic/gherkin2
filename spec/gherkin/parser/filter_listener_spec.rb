@@ -80,7 +80,7 @@ module Gherkin
           verify_filters([1,2,3,5,6,:eof], :lines=>[3,6])
         end
       end
-      
+
       context "Scenario with Table and Comment and Tag" do
         before do
           @input = %{#language:en
@@ -236,6 +236,28 @@ Feature: 2
 }
 
           verify_output(filtered, :lines=>[12,14])
+        end
+      end
+
+      context "Scenarios with tags on both feature and scenarios" do
+        before do
+          @input = %{#language:en
+@two @deux
+Feature: 3
+  @four @quatre
+  Scenario: 5
+    Given 6
+
+  @eight @huit
+  Scenario: 9
+    Given 10
+}
+        end
+
+        it "should match @four" do
+          pending do
+            verify_filters([1,2,3,4,5,6,:eof], :tags=>['@four'])
+          end
         end
       end
     end
