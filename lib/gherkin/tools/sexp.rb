@@ -12,7 +12,8 @@ module Gherkin
       
       def filter_match?(filters)
         line_match?(filters[:lines] || []) ||
-        name_match?(filters[:name_regexen] || [])
+        name_match?(filters[:name_regexen] || []) ||
+        tag_match?(filters[:tags] || [])
       end
 
       def replay(listener)
@@ -28,6 +29,15 @@ module Gherkin
       def name_match?(name_regexen)
         return false unless [:feature, :scenario, :scenario_outline, :examples].include?(event)
         name_regexen.detect{|name_regex| name =~ name_regex}
+      end
+
+      def tag_match?(tags)
+        return false unless :tag == event
+        tags.detect{|tag| tag == tag_value}
+      end
+
+      def tag_value
+        '@' + self[1]
       end
 
       def name

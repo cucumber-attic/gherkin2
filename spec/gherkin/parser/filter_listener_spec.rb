@@ -1,12 +1,12 @@
 # encoding: utf-8
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
-require 'gherkin/tools/line_filter_listener'
+require 'gherkin/parser/filter_listener'
 require 'gherkin/tools/pretty_listener'
 require 'stringio'
 
 module Gherkin
   module Tools
-    describe LineFilterListener do
+    describe FilterListener do
       
       class LineListener
         attr_reader :lines
@@ -31,7 +31,7 @@ module Gherkin
       end
 
       def scan(listener, filters)
-        line_filter_listener = LineFilterListener.new(listener, filters)
+        line_filter_listener = FilterListener.new(listener, filters)
         parser = Gherkin::Parser.new(line_filter_listener, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser, true)
         lexer.scan(@input)
@@ -109,6 +109,10 @@ Feature: 2
 
         it "should match scenario line of second scenario" do
           verify_filters([1,2,8,9,10,11,12,13,:eof], :lines=>[9])
+        end
+
+        it "should match tag of second scenario" do
+          verify_filters([1,2,8,9,10,11,12,13,:eof], :tags=>['@tag8'])
         end
         
         it "should return everything when a line is given in each scenario" do

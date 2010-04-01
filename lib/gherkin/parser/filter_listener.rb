@@ -2,7 +2,15 @@ require 'gherkin/tools/sexp'
 
 module Gherkin
   module Tools
-    class LineFilterListener
+    # This class filters events based on filter criteria.
+    class FilterListener
+      # Creates a new instance that replays events to +listener+, filtered by +filters+,
+      # a Hash that can contain:
+      #
+      # * <tt>:lines</tt> An Array of line numbers to filter on.
+      # * <tt>:name_regexen</tt> An Array of name regexen to filter on. Matches against :feature, :scenario, :scenario_outline and :examples
+      # * <tt>:tags</tt> An Array of tags to filter on.
+      #
       def initialize(listener, filters)
         @listener, @filters = listener, filters
         @meta_buffer = []
