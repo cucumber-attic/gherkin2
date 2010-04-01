@@ -24,32 +24,34 @@ module Gherkin
           @meta_buffer << sexp
         when :feature
           @feature_buffer = @meta_buffer + @feature_buffer
-          @meta_buffer = []
           @feature_buffer << sexp
+          @meta_buffer = []
         when :background
-          @feature_buffer += @meta_buffer + [sexp]
+          @feature_buffer += @meta_buffer
+          @feature_buffer << sexp
           @meta_buffer = []
           @table_state = :background
         when :scenario, :scenario_outline
           replay_examples_rows_buffer
           @scenario_buffer = @meta_buffer
-          @meta_buffer = []
           @scenario_buffer << sexp
+          @meta_buffer = []
           @scenario_ok = line_match?(*@scenario_buffer)
           @examples_ok = false
           @table_state = :step
         when :examples
           replay_examples_rows_buffer
-          
-          @examples_buffer = @meta_buffer + [sexp]
+          @examples_buffer = @meta_buffer
+          @examples_buffer << sexp
           @meta_buffer = []
           @examples_rows_buffer = []
-          @examples_ok = line_match?(sexp)
+          @examples_ok = line_match?(*@examples_buffer)
           @table_state = :examples
         when :step
           case(@table_state)
           when :background
-            @feature_buffer += @meta_buffer + [sexp]
+            @feature_buffer += @meta_buffer
+            @feature_buffer << sexp
             @meta_buffer = []
           else
             @scenario_ok ||= line_match?(sexp)
@@ -69,7 +71,8 @@ module Gherkin
             @scenario_buffer << sexp
             @scenario_ok ||= line_match?(sexp)
           when :background
-            @feature_buffer += @meta_buffer + [sexp]
+            @feature_buffer += @meta_buffer
+            @feature_buffer << sexp
             @meta_buffer = []
           else
             raise "BAD STATE"
