@@ -299,10 +299,8 @@ Feature: 3
           verify_filters([1,2,2,3,4,4,5,6,:eof], :tag_expressions=>['@d'])
         end
 
-        it "should match @a" do
-          pending do
-            verify_filters([1,2,2,3,4,4,5,6,8,8,9,10,12,13,:eof], :tag_expressions=>['@a'])
-          end
+        it "should match everything when feature tag matches" do
+          verify_filters([1,2,2,3,4,4,5,6,8,8,9,10,12,13,:eof], :tag_expressions=>['@a'])
         end
 
         it "should match @a && !@d" do

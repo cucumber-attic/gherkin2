@@ -37,7 +37,7 @@ module Gherkin
           @feature_buffer = @meta_buffer
           @feature_buffer << sexp
           @meta_buffer = []
-          @feature_ok = true if line_match?(sexp)
+          @feature_ok = true if line_match?(sexp) || tag_match?(*@feature_buffer)
         when :background
           @feature_buffer += @meta_buffer
           @feature_buffer << sexp
@@ -127,7 +127,7 @@ module Gherkin
         return true if no_filters?
         sexps.detect do |sexp|
           next if (:tag != sexp.event) || @filters[:tag_expression].nil?
-          @filters[:tag_expression].eval(sexp[1])
+          @filters[:tag_expression].eval(sexp[1]) # tag value
         end
       end
 
