@@ -49,7 +49,7 @@ module Gherkin
           @scenario_buffer = @meta_buffer
           @scenario_buffer << sexp
           @meta_buffer = []
-          @scenario_ok = line_match?(*@scenario_buffer)
+          @scenario_ok = line_match?(*@scenario_buffer) || tag_match?(*@scenario_buffer)
           @examples_ok = false
           @table_state = :step
         when :examples
@@ -121,6 +121,14 @@ module Gherkin
       def line_match?(*sexps)
         return true if no_filters?
         sexps.detect{|sexp| sexp.filter_match?(@filters)}
+      end
+
+      def tag_match?(*sexps)
+        return true if no_filters?
+        sexps.detect do |sexp|
+          next if (:tag != sexp.event) || @filters[:tag_expression].nil?
+          @filters[:tag_expression].eval(sexp[1])
+        end
       end
 
       def lines

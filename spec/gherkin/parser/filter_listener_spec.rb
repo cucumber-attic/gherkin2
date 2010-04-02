@@ -301,7 +301,7 @@ Feature: 3
 
         it "should match @a" do
           pending do
-            verify_filters([1,2,2,3,4,4,5,6,8,8,9,10,:eof], :tag_expressions=>['@a'])
+            verify_filters([1,2,2,3,4,4,5,6,8,8,9,10,12,13,:eof], :tag_expressions=>['@a'])
           end
         end
 
