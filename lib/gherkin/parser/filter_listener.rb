@@ -37,11 +37,13 @@ module Gherkin
           @feature_buffer = @meta_buffer
           @feature_buffer << sexp
           @meta_buffer = []
+          @feature_ok = true if line_match?(sexp)
         when :background
           @feature_buffer += @meta_buffer
           @feature_buffer << sexp
           @meta_buffer = []
           @table_state = :background
+          @feature_ok = true if line_match?(sexp)
         when :scenario, :scenario_outline
           replay_examples_rows_buffer
           @scenario_buffer = @meta_buffer

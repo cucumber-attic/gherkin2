@@ -63,9 +63,7 @@ module Gherkin
         end
 
         it "should replay identically when line filter is feature line" do
-          pending do
-            verify_filters([1,2,3,5,6,:eof], :lines => [1])
-          end
+          verify_filters([1,2,3,5,6,:eof], :lines => [1])
         end
 
         it "should match scenario line of first scenario" do
@@ -189,9 +187,7 @@ Feature: 2
         end
 
         it "should replay identically when filtering on the line of the background" do
-          pending do
-            verify_filters([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], :lines=>[4])
-          end
+          verify_filters([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], :lines=>[4])
         end
 
         it "should replay the background on step line of first scenario" do
