@@ -9,6 +9,10 @@ module Gherkin
       def event
         self[0]
       end
+
+      def keyword
+        self[1]
+      end
       
       def filter_match?(filters)
         line_match?(filters[:lines] || []) ||

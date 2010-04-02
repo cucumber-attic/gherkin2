@@ -20,6 +20,9 @@ module Gherkin
         @examples_buffer = []
         @examples_rows_buffer = []
 
+        @feature_tags = []
+        @scenario_tags = []
+
         @table_state = :step
       end
       
@@ -36,8 +39,9 @@ module Gherkin
         when :feature
           @feature_buffer = @meta_buffer
           @feature_buffer << sexp
+          @feature_tags = extract_tags
           @meta_buffer = []
-          @feature_ok = true if line_match?(sexp) || tag_match?(*@feature_buffer)
+          @feature_ok = true if line_match?(sexp)
         when :background
           @feature_buffer += @meta_buffer
           @feature_buffer << sexp
@@ -48,8 +52,9 @@ module Gherkin
           replay_examples_rows_buffer
           @scenario_buffer = @meta_buffer
           @scenario_buffer << sexp
+          @scenario_tags = extract_tags
           @meta_buffer = []
-          @scenario_ok = line_match?(*@scenario_buffer) || tag_match?(*@scenario_buffer)
+          @scenario_ok = line_match?(*@scenario_buffer) || tag_match?
           @examples_ok = false
           @table_state = :step
         when :examples
@@ -123,12 +128,10 @@ module Gherkin
         sexps.detect{|sexp| sexp.filter_match?(@filters)}
       end
 
-      def tag_match?(*sexps)
+      def tag_match?
         return true if no_filters?
-        sexps.detect do |sexp|
-          next if (:tag != sexp.event) || @filters[:tag_expression].nil?
-          @filters[:tag_expression].eval(sexp[1]) # tag value
-        end
+        return false if @filters[:tag_expression].nil?
+        @filters[:tag_expression].eval(*current_tags)
       end
 
       def lines
@@ -166,6 +169,14 @@ module Gherkin
           @scenario_buffer.each{|sexp| sexp.replay(@listener) }
           @scenario_buffer = [] 
         end
+      end
+
+      def current_tags
+        @feature_tags + @scenario_tags
+      end
+
+      def extract_tags
+        @meta_buffer.select { |sexp| sexp.event == :tag }.map { |sexp| sexp.keyword }
       end
     end
   end
