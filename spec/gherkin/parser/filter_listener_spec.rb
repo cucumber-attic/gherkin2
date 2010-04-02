@@ -185,9 +185,7 @@ Feature: 2
         end
 
         it "should replay identically when filtering on the line of a background step" do
-          pending do
-            verify_filters([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], :lines=>[5])
-          end
+          verify_filters([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], :lines=>[5])
         end
 
         it "should replay identically when filtering on the line of the background" do

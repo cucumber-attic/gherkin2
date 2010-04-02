@@ -34,7 +34,7 @@ module Gherkin
         when :comment
           @meta_buffer << sexp
         when :feature
-          @feature_buffer = @meta_buffer + @feature_buffer
+          @feature_buffer = @meta_buffer
           @feature_buffer << sexp
           @meta_buffer = []
         when :background
@@ -64,6 +64,7 @@ module Gherkin
             @feature_buffer += @meta_buffer
             @feature_buffer << sexp
             @meta_buffer = []
+            @feature_ok = true if line_match?(sexp)
           else
             @scenario_buffer << sexp
             @scenario_ok ||= line_match?(*@scenario_buffer)
@@ -76,7 +77,7 @@ module Gherkin
               @examples_buffer << sexp
               @examples_ok = true if line_match?(*@examples_buffer)
             else
-              @examples_rows_buffer << sexp if @scenario_ok || @examples_ok || line_match?(sexp)
+              @examples_rows_buffer << sexp if @scenario_ok || @examples_ok || @feature_ok || line_match?(sexp)
             end
           when :step
             @scenario_buffer << sexp
@@ -101,7 +102,7 @@ module Gherkin
 
         if no_filters?
           sexp.replay(@listener)
-        elsif @scenario_ok || @examples_ok
+        elsif @scenario_ok || @examples_ok || @feature_ok
           replay_buffers
         end
       end
