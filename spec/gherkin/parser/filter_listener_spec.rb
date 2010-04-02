@@ -56,8 +56,14 @@ module Gherkin
           verify_filters([:eof], :name_regexen=>[/pudding/])
         end
 
-        it "should replay identically (except newlines) when there is no filter" do
+        it "should replay identically when there is no filter" do
           verify_filters([1,2,3,5,6,:eof], {})
+        end
+
+        it "should replay identically when line filter is feature line" do
+          pending do
+            verify_filters([1,2,3,5,6,:eof], :lines => [1])
+          end
         end
 
         it "should match scenario line of first scenario" do
@@ -153,6 +159,18 @@ Feature: 2
           verify_filters([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], :lines=>[])
         end
 
+        it "should replay identically when filtering on the line of a background step" do
+          pending do
+            verify_filters([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], :lines=>[5])
+          end
+        end
+
+        it "should replay identically when filtering on the line of the background" do
+          pending do
+            verify_filters([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], :lines=>[4])
+          end
+        end
+
         it "should replay the background on step line of first scenario" do
           verify_filters([1,2,3,4,5,7,8,9,10,:eof], :lines=>[9])
         end
@@ -241,6 +259,7 @@ Feature: 2
 
       context "Scenarios with tags on both feature and scenarios" do
         before do
+          # Lines with more than one tag per line will be repeated
           @input = %{#language:en
 @two @deux
 Feature: 3
@@ -255,8 +274,12 @@ Feature: 3
         end
 
         it "should match @four" do
+          verify_filters([1,2,2,3,4,4,5,6,:eof], :tags=>['@four'])
+        end
+
+        it "should match @two" do
           pending do
-            verify_filters([1,2,3,4,5,6,:eof], :tags=>['@four'])
+            verify_filters([1,2,2,3,4,4,5,6,8,8,9,10,:eof], :tags=>['@two'])
           end
         end
       end
