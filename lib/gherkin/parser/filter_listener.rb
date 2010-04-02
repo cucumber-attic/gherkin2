@@ -56,6 +56,7 @@ module Gherkin
           @scenario_buffer = @meta_buffer
           @scenario_buffer << sexp
           @scenario_tags = extract_tags
+          @example_tags = []
           @meta_buffer = []
           @scenario_ok = line_match?(*@scenario_buffer) || tag_match?
           @examples_ok = false
@@ -65,6 +66,7 @@ module Gherkin
           @scenario_buffer = @meta_buffer
           @scenario_buffer << sexp
           @scenario_tags = extract_tags
+          @example_tags = []
           @meta_buffer = []
           @scenario_ok = line_match?(*@scenario_buffer)
           @examples_ok = false

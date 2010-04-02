@@ -332,6 +332,9 @@ Feature: 3
     | foo | bar |
     | 16  | 16  | 
     | 17  | 17  |
+
+  Scenario: 19
+    Given 20
 }
         end
 
@@ -348,7 +351,7 @@ Feature: 3
         end
 
         it "should match @a and not @c" do
-          verify_filters([1,2,2,3,4,5,6,13,13,14,15,16,17,:eof], :tag_expressions=>['@a','~@c'])
+          verify_filters([1,2,2,3,4,5,6,13,13,14,15,16,17,19,20,:eof], :tag_expressions=>['@a','~@c'])
         end
 
         it "should match @c or @d" do
