@@ -308,9 +308,7 @@ Feature: 3
         end
 
         it "should match @d || @e" do
-          pending do
-            verify_filters([1,2,2,3,4,4,5,6,8,8,9,10,:eof], :tag_expressions=>['@d', '@e'])
-          end
+          verify_filters([1,2,2,3,4,4,5,6,8,8,9,10,:eof], :tag_expressions=>['@d,@e'])
         end
       end
     end
