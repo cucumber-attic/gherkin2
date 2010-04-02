@@ -89,6 +89,29 @@ module Gherkin
         end
       end
 
+      context "Scenario with py_string" do
+        before do
+          @input = %{Feature: 1
+  Scenario: 2
+    Given 3
+      """
+      5
+      """
+
+  Scenario: 8
+    Given 9
+}
+        end
+
+        it "should replay identically when there is no filter" do
+          verify_filters([1,2,3,4,8,9,:eof], {})
+        end
+
+        it "should filter on py_string line" do
+          verify_filters([1,2,3,4,:eof], :lines => [4])
+        end
+      end
+
       context "Scenario with Table and Comment and Tag" do
         before do
           @input = %{#language:en

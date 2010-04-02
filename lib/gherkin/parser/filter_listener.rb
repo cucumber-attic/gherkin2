@@ -86,6 +86,9 @@ module Gherkin
           else
             raise "BAD STATE"
           end
+        when :py_string
+          @scenario_buffer << sexp
+          @scenario_ok ||= line_match?(*@scenario_buffer)
         when :eof
           replay_examples_rows_buffer
           sexp.replay(@listener)
