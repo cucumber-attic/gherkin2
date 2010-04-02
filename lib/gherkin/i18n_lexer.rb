@@ -20,27 +20,29 @@ module Gherkin
         end
       end
 
-      def lexer_class(i18n_lang, force_ruby)
+      def lexer_class(i18n_language_name, force_ruby)
         begin
           if force_ruby
-            rb[i18n_lang]
+            rb[i18n_language_name]
           else
             begin
-              c[i18n_lang]
+              c[i18n_language_name]
             rescue NameError, LoadError => e
+              puts e.message
+              puts e.backtrace
               warn("WARNING: #{e.message}. Reverting to Ruby lexer.")
-              rb[i18n_lang]
+              rb[i18n_language_name]
             end
           end
         rescue LoadError => e
-          raise I18nLexerNotFound, "No lexer was found for #{i18n_lang} (#{e.message}). Supported languages are listed in gherkin/i18n.yml."
+          raise I18nLexerNotFound, "No lexer was found for #{i18n_language_name} (#{e.message}). Supported languages are listed in gherkin/i18n.yml."
         end
       end
 
       def i18n_language(source)
         line_one = source.split(/\n/)[0]
         match = LANGUAGE_PATTERN.match(line_one)
-        I18n.get(match ? match[1] : 'en').key
+        I18n.get(match ? match[1] : 'en')
       end
 
       def c
@@ -61,7 +63,7 @@ module Gherkin
 
     def scan(source)
       @i18n_language = self.class.i18n_language(source) 
-      delegate = self.class.lexer_class(@i18n_language, @force_ruby).new(@parser)
+      delegate = self.class.lexer_class(@i18n_language.key, @force_ruby).new(@parser)
       delegate.scan(source)
     end
   end

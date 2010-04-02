@@ -14,7 +14,7 @@ module Gherkin
         end
 
         it "should match empty tags" do
-          @e.eval([]).should == true
+          @e.eval().should == true
         end
       end
 

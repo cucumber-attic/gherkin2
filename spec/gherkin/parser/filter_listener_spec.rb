@@ -33,8 +33,8 @@ module Gherkin
       def scan(listener, filters)
         tag_expressions = filters.delete(:tag_expressions)
         filters[:tag_expression] = TagExpression.new(*tag_expressions) if tag_expressions
-        line_filter_listener = FilterListener.new(listener, filters)
-        parser = Gherkin::Parser::Parser.new(line_filter_listener, true, "root")
+        filter_listener = FilterListener.new(listener, filters)
+        parser = Gherkin::Parser::Parser.new(filter_listener, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser, true)
         lexer.scan(@input)
       end
@@ -80,6 +80,12 @@ module Gherkin
 
         it "should match step line of second scenario" do
           verify_filters([1,5,6,:eof], :lines=>[6])
+        end
+
+        it "should match step line of second scenario even when we have a negative tag" do
+          pending("We have to AND results of tag, name and line filters - and each one should pass when criteria are empty.") do
+            verify_filters([1,5,6,:eof], :lines=>[6], :tag_expressions => ['~@foo'])
+          end
         end
 
         it "should replay identically (except newlines) when the filter matches both scenarios" do
