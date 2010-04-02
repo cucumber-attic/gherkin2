@@ -19,6 +19,8 @@ module Gherkin
         @scenario_buffer = []
         @examples_buffer = []
         @examples_rows_buffer = []
+
+        @table_state = :step
       end
       
       private
@@ -84,7 +86,7 @@ module Gherkin
             @feature_buffer << sexp
             @meta_buffer = []
           else
-            raise "BAD STATE"
+            raise "Bad table_state:#{@table_state.inspect}"
           end
         when :py_string
           @scenario_buffer << sexp
