@@ -44,13 +44,13 @@ module Gherkin
           @feature_buffer << sexp
           @feature_tags = extract_tags
           @meta_buffer = []
-          @feature_ok = true if line_match?(sexp)
+          @feature_ok = true if filter_match?(sexp)
         when :background
           @feature_buffer += @meta_buffer
           @feature_buffer << sexp
           @meta_buffer = []
           @table_state = :background
-          @feature_ok = true if line_match?(sexp)
+          @feature_ok = true if filter_match?(sexp)
         when :scenario
           replay_examples_rows_buffer
           @scenario_buffer = @meta_buffer
@@ -58,7 +58,7 @@ module Gherkin
           @scenario_tags = extract_tags
           @example_tags = []
           @meta_buffer = []
-          @scenario_ok = line_match?(*@scenario_buffer) || tag_match?
+          @scenario_ok = filter_match?(*@scenario_buffer) || tag_match?
           @examples_ok = false
           @table_state = :step
         when :scenario_outline
@@ -68,7 +68,7 @@ module Gherkin
           @scenario_tags = extract_tags
           @example_tags = []
           @meta_buffer = []
-          @scenario_ok = line_match?(*@scenario_buffer)
+          @scenario_ok = filter_match?(*@scenario_buffer)
           @examples_ok = false
           @table_state = :step
         when :examples
@@ -78,7 +78,7 @@ module Gherkin
           @example_tags = extract_tags
           @meta_buffer = []
           @examples_rows_buffer = []
-          @examples_ok = line_match?(*@examples_buffer) || tag_match?
+          @examples_ok = filter_match?(*@examples_buffer) || tag_match?
           @table_state = :examples
         when :step
           case(@table_state)
@@ -86,10 +86,10 @@ module Gherkin
             @feature_buffer += @meta_buffer
             @feature_buffer << sexp
             @meta_buffer = []
-            @feature_ok = true if line_match?(sexp)
+            @feature_ok = true if filter_match?(sexp)
           else
             @scenario_buffer << sexp
-            @scenario_ok ||= line_match?(*@scenario_buffer)
+            @scenario_ok ||= filter_match?(*@scenario_buffer)
             @table_state = :step
           end
         when :row
@@ -97,13 +97,13 @@ module Gherkin
           when :examples
             unless header_row_already_buffered?
               @examples_buffer << sexp
-              @examples_ok = true if line_match?(*@examples_buffer)
+              @examples_ok = true if filter_match?(*@examples_buffer)
             else
-              @examples_rows_buffer << sexp if @scenario_ok || @examples_ok || @feature_ok || line_match?(sexp)
+              @examples_rows_buffer << sexp if @scenario_ok || @examples_ok || @feature_ok || filter_match?(sexp)
             end
           when :step
             @scenario_buffer << sexp
-            @scenario_ok ||= line_match?(*@scenario_buffer)
+            @scenario_ok ||= filter_match?(*@scenario_buffer)
           when :background
             @feature_buffer += @meta_buffer
             @feature_buffer << sexp
@@ -113,7 +113,7 @@ module Gherkin
           end
         when :py_string
           @scenario_buffer << sexp
-          @scenario_ok ||= line_match?(*@scenario_buffer)
+          @scenario_ok ||= filter_match?(*@scenario_buffer)
         when :eof
           replay_examples_rows_buffer
           sexp.replay(@listener)
@@ -136,21 +136,13 @@ module Gherkin
         @examples_buffer[-1].event == :row
       end
       
-      def line_match?(*sexps)
+      def filter_match?(*sexps)
         sexps.detect{|sexp| sexp.filter_match?(@filters)}
       end
 
       def tag_match?
         return false if @filters[:tag_expression].nil?
         @filters[:tag_expression].eval(*current_tags)
-      end
-
-      def lines
-        @filters[:lines] || []
-      end
-
-      def names
-        @filters[:name_regexen] || []
       end
 
       def replay_buffers
@@ -169,17 +161,13 @@ module Gherkin
       end
       
       def replay_feature_buffer
-        if @feature_buffer.any?
-          @feature_buffer.each{|sexp| sexp.replay(@listener) }
-          @feature_buffer = []
-        end
+        @feature_buffer.each{|sexp| sexp.replay(@listener) }
+        @feature_buffer = []
       end
       
       def replay_scenario_buffer
-        if @scenario_buffer.any?
-          @scenario_buffer.each{|sexp| sexp.replay(@listener) }
-          @scenario_buffer = [] 
-        end
+        @scenario_buffer.each{|sexp| sexp.replay(@listener) }
+        @scenario_buffer = [] 
       end
 
       def current_tags
