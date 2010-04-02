@@ -311,6 +311,54 @@ Feature: 3
           verify_filters([1,2,2,3,4,4,5,6,8,8,9,10,:eof], :tag_expressions=>['@d,@e'])
         end
       end
+
+      context "Scenario Outlines with tags on examples" do
+        before do
+          # Lines with more than one tag per line will be repeated
+          @input = %{#language:en
+@a @b
+Feature: 3
+  @d
+  Scenario Outline: 5
+    Given 6
+
+  @c @e
+  Examples: 9
+    | foo | bar |
+    | 11  | 11  |
+
+  @d @f
+  Examples: 14
+    | foo | bar |
+    | 16  | 16  | 
+    | 17  | 17  |
+}
+        end
+
+        it "should match @c" do
+          verify_filters([1,2,2,3,4,5,6,8,8,9,10,11,:eof], :tag_expressions=>['@c'])
+        end
+
+        it "should match @d" do
+          verify_filters([1,2,2,3,4,5,6,8,8,9,10,11,13,13,14,15,16,17,:eof], :tag_expressions=>['@d'])
+        end
+
+        it "should match @f" do
+          verify_filters([1,2,2,3,4,5,6,13,13,14,15,16,17,:eof], :tag_expressions=>['@f'])
+        end
+
+        it "should match @a and not @c" do
+          verify_filters([1,2,2,3,4,5,6,13,13,14,15,16,17,:eof], :tag_expressions=>['@a','~@c'])
+        end
+
+        it "should match @c or @d" do
+          verify_filters([1,2,2,3,4,5,6,8,8,9,10,11,13,13,14,15,16,17,:eof], :tag_expressions=>['@c,@d'])
+        end
+
+        it "should not match @m" do
+          verify_filters([:eof], :tag_expressions=>['@m'])
+        end
+      end
     end
   end
 end

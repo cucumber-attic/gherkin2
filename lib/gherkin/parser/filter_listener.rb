@@ -22,6 +22,7 @@ module Gherkin
 
         @feature_tags = []
         @scenario_tags = []
+        @example_tags = []
 
         @table_state = :step
       end
@@ -30,6 +31,8 @@ module Gherkin
 
       def method_missing(*sexp_args)
         sexp = Sexp.new(sexp_args)
+
+        return sexp.replay(@listener) if no_filters?
 
         case(sexp.event)
         when :tag
@@ -48,7 +51,7 @@ module Gherkin
           @meta_buffer = []
           @table_state = :background
           @feature_ok = true if line_match?(sexp)
-        when :scenario, :scenario_outline
+        when :scenario
           replay_examples_rows_buffer
           @scenario_buffer = @meta_buffer
           @scenario_buffer << sexp
@@ -57,13 +60,23 @@ module Gherkin
           @scenario_ok = line_match?(*@scenario_buffer) || tag_match?
           @examples_ok = false
           @table_state = :step
+        when :scenario_outline
+          replay_examples_rows_buffer
+          @scenario_buffer = @meta_buffer
+          @scenario_buffer << sexp
+          @scenario_tags = extract_tags
+          @meta_buffer = []
+          @scenario_ok = line_match?(*@scenario_buffer)
+          @examples_ok = false
+          @table_state = :step
         when :examples
           replay_examples_rows_buffer
           @examples_buffer = @meta_buffer
           @examples_buffer << sexp
+          @example_tags = extract_tags
           @meta_buffer = []
           @examples_rows_buffer = []
-          @examples_ok = line_match?(*@examples_buffer)
+          @examples_ok = line_match?(*@examples_buffer) || tag_match?
           @table_state = :examples
         when :step
           case(@table_state)
@@ -107,9 +120,7 @@ module Gherkin
           super
         end
 
-        if no_filters?
-          sexp.replay(@listener)
-        elsif @scenario_ok || @examples_ok || @feature_ok
+        if @scenario_ok || @examples_ok || @feature_ok
           replay_buffers
         end
       end
@@ -124,12 +135,10 @@ module Gherkin
       end
       
       def line_match?(*sexps)
-        return true if no_filters?
         sexps.detect{|sexp| sexp.filter_match?(@filters)}
       end
 
       def tag_match?
-        return true if no_filters?
         return false if @filters[:tag_expression].nil?
         @filters[:tag_expression].eval(*current_tags)
       end
@@ -172,7 +181,7 @@ module Gherkin
       end
 
       def current_tags
-        @feature_tags + @scenario_tags
+        @feature_tags + @scenario_tags + @example_tags
       end
 
       def extract_tags
