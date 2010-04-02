@@ -1,4 +1,5 @@
 require 'gherkin/parser/sexp'
+require 'gherkin/parser/tag_expression'
 
 module Gherkin
   module Parser
@@ -9,7 +10,7 @@ module Gherkin
       #
       # * <tt>:lines</tt> An Array of line numbers to filter on.
       # * <tt>:name_regexen</tt> An Array of name regexen to filter on. Matches against :feature, :scenario, :scenario_outline and :examples
-      # * <tt>:tags</tt> An Array of tags to filter on.
+      # * <tt>:tag_expression</tt> A TagExpression to filter on.
       #
       def initialize(listener, filters)
         @listener, @filters = listener, filters

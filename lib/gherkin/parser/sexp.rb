@@ -13,7 +13,7 @@ module Gherkin
       def filter_match?(filters)
         line_match?(filters[:lines] || []) ||
         name_match?(filters[:name_regexen] || []) ||
-        tag_match?(filters[:tags] || [])
+        tag_match?(filters[:tag_expression])
       end
 
       def replay(listener)
@@ -31,9 +31,12 @@ module Gherkin
         name_regexen.detect{|name_regex| name =~ name_regex}
       end
 
-      def tag_match?(tags)
-        return false unless :tag == event
-        tags.detect{|tag| tag == tag_value}
+      # TODO: This is the wrong design!
+      # We need to pass all the tags to the tag expression, including any
+      # tags we inherit from Feature.
+      def tag_match?(tag_expression)
+        return false if (:tag != event) || tag_expression.nil?
+        tag_expression.eval(tag_value)
       end
 
       def tag_value

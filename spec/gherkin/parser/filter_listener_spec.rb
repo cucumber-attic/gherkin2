@@ -31,6 +31,8 @@ module Gherkin
       end
 
       def scan(listener, filters)
+        tag_expressions = filters.delete(:tag_expressions)
+        filters[:tag_expression] = TagExpression.new(*tag_expressions) if tag_expressions
         line_filter_listener = FilterListener.new(listener, filters)
         parser = Gherkin::Parser::Parser.new(line_filter_listener, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser, true)
@@ -118,7 +120,7 @@ Feature: 2
         end
 
         it "should match tag of second scenario" do
-          verify_filters([1,2,8,9,10,11,12,13,:eof], :tags=>['@tag8'])
+          verify_filters([1,2,8,9,10,11,12,13,:eof], :tag_expressions=>['@tag8'])
         end
         
         it "should return everything when a line is given in each scenario" do
@@ -261,25 +263,40 @@ Feature: 2
         before do
           # Lines with more than one tag per line will be repeated
           @input = %{#language:en
-@two @deux
+@a @b
 Feature: 3
-  @four @quatre
+  @c @d
   Scenario: 5
     Given 6
 
-  @eight @huit
+  @c @e
   Scenario: 9
     Given 10
+
+  Scenario: 12
+    Given 13
 }
         end
 
-        it "should match @four" do
-          verify_filters([1,2,2,3,4,4,5,6,:eof], :tags=>['@four'])
+        it "should match @d" do
+          verify_filters([1,2,2,3,4,4,5,6,:eof], :tag_expressions=>['@d'])
         end
 
-        it "should match @two" do
+        it "should match @a" do
           pending do
-            verify_filters([1,2,2,3,4,4,5,6,8,8,9,10,:eof], :tags=>['@two'])
+            verify_filters([1,2,2,3,4,4,5,6,8,8,9,10,:eof], :tag_expressions=>['@a'])
+          end
+        end
+
+        it "should match @a && !@d" do
+          pending do
+            verify_filters([1,2,2,3,8,8,9,10,:eof], :tag_expressions=>['@a,~@d'])
+          end
+        end
+
+        it "should match @d || @e" do
+          pending do
+            verify_filters([1,2,2,3,4,4,5,6,8,8,9,10,:eof], :tag_expressions=>['@d', '@e'])
           end
         end
       end
