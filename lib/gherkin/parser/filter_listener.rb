@@ -146,8 +146,11 @@ module Gherkin
       end
 
       def replay_buffers
-        replay_feature_buffer
-        replay_scenario_buffer
+        (@feature_buffer + @scenario_buffer).each do |sexp| 
+          sexp.replay(@listener)
+        end
+        @feature_buffer = []
+        @scenario_buffer = [] 
       end
 
       def replay_examples_rows_buffer
@@ -160,16 +163,6 @@ module Gherkin
         end
       end
       
-      def replay_feature_buffer
-        @feature_buffer.each{|sexp| sexp.replay(@listener) }
-        @feature_buffer = []
-      end
-      
-      def replay_scenario_buffer
-        @scenario_buffer.each{|sexp| sexp.replay(@listener) }
-        @scenario_buffer = [] 
-      end
-
       def current_tags
         @feature_tags + @scenario_tags + @example_tags
       end
