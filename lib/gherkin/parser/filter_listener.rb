@@ -13,20 +13,9 @@ module Gherkin
       # * <tt>:tag_expression</tt> A TagExpression to filter on.
       #
       def initialize(listener, filters)
-        @listener, @filters = listener, filters
+        @listener = listener
+        @filter_method = detect_filter(filters)
         
-        raise "Bad filter: #{filters.inspect}" if filters.map{|filter| filter.class}.uniq.length > 1
-        @filter_method = case(filters[0])
-        when Fixnum 
-          :line_match?
-        when Regexp 
-          :name_match?
-        when String 
-          TagExpression.new(*filters)
-        else
-          nil
-        end
-
         @meta_buffer = []
         @feature_buffer = []
         @scenario_buffer = []
@@ -137,6 +126,19 @@ module Gherkin
 
         if @scenario_ok || @examples_ok || @feature_ok
           replay_buffers
+        end
+      end
+
+      def detect_filter(filters)
+        @filters = filters
+        raise "Bad filter: #{filters.inspect}" if filters.map{|filter| filter.class}.uniq.length > 1
+        @filter_method = case(filters[0])
+        when Fixnum 
+          :line_match?
+        when Regexp 
+          :name_match?
+        when String 
+          TagExpression.new(*filters)
         end
       end
 
