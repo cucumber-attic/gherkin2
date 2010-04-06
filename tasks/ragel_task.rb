@@ -28,7 +28,7 @@ class RagelTask
   def target
     {
       'c'    => "ext/gherkin_lexer_#{@i18n.sanitized_key}/gherkin_lexer_#{@i18n.sanitized_key}.c",
-      'java' => "java/src/gherkin/lexer/#{@i18n.sanitized_key.capitalize}.java",
+      'java' => "java/src/main/java/gherkin/lexer/#{@i18n.sanitized_key.capitalize}.java",
       'rb'   => "lib/gherkin/rb_lexer/#{@i18n.sanitized_key}.rb",
       'csharp'   => "tmp/#{@i18n.sanitized_key}.cs"
     }[@lang]

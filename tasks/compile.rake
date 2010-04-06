@@ -16,7 +16,7 @@ CLEAN.include [
 
 desc "Compile the Java extensions"
 task :jar do
-  sh("ant -f java/build.xml")
+  sh("mvn -f java/pom.xml package")
 end
 
 namespace :dotnet do

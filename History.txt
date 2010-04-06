@@ -1,6 +1,7 @@
 == In Git
 
 === New features
+* Pure java releases of Gherkin at http://cukes.info/maven
 * A FilterListener in Ruby that is the last missing piece to plug Gherkin into Cucumber. (Gregory Hnatiuk, Aslak Hellesøy, Matt Wynne, Mike Sassak)
 
 === Changed features

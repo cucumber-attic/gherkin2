@@ -28,8 +28,6 @@ module Gherkin
             begin
               c[i18n_language_name]
             rescue NameError, LoadError => e
-              puts e.message
-              puts e.backtrace
               warn("WARNING: #{e.message}. Reverting to Ruby lexer.")
               rb[i18n_language_name]
             end
