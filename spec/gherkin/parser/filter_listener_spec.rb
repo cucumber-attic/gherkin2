@@ -51,45 +51,39 @@ module Gherkin
         end
 
         it "should not replay anything if no lines match" do
-          verify_filters([:eof], :lines=>[90])
+          verify_filters([:eof], [90])
         end
 
         it "should not replay anything if no names match" do
-          verify_filters([:eof], :name_regexen=>[/pudding/])
+          verify_filters([:eof], [/pudding/])
         end
 
         it "should replay identically when there is no filter" do
-          verify_filters([1,2,3,5,6,:eof], {})
+          verify_filters([1,2,3,5,6,:eof], [])
         end
 
         it "should replay identically when line filter is feature line" do
-          verify_filters([1,2,3,5,6,:eof], :lines => [1])
+          verify_filters([1,2,3,5,6,:eof], [1])
         end
 
         it "should match scenario line of first scenario" do
-          verify_filters([1,2,3,:eof], :lines=>[2])
+          verify_filters([1,2,3,:eof], [2])
         end
 
         it "should match name of first scenario" do
-          verify_filters([1,2,3,:eof], :name_regexen=>[/2/])
+          verify_filters([1,2,3,:eof], [/2/])
         end
 
         it "should match step line of first scenario" do
-          verify_filters([1,2,3,:eof], :lines=>[3])
+          verify_filters([1,2,3,:eof], [3])
         end
 
         it "should match step line of second scenario" do
-          verify_filters([1,5,6,:eof], :lines=>[6])
-        end
-
-        it "should match step line of second scenario even when we have a negative tag" do
-          pending("We have to AND results of tag, name and line filters - and each one should pass when criteria are empty.") do
-            verify_filters([1,5,6,:eof], :lines=>[6], :tag_expressions => ['~@foo'])
-          end
+          verify_filters([1,5,6,:eof], [6])
         end
 
         it "should replay identically (except newlines) when the filter matches both scenarios" do
-          verify_filters([1,2,3,5,6,:eof], :lines=>[3,6])
+          verify_filters([1,2,3,5,6,:eof], [3,6])
         end
       end
 
@@ -112,7 +106,7 @@ module Gherkin
         end
 
         it "should filter on py_string line" do
-          verify_filters([1,2,3,4,:eof], :lines => [4])
+          verify_filters([1,2,3,4,:eof], [4])
         end
       end
 
@@ -135,31 +129,31 @@ Feature: 2
         end
 
         it "should replay identically when there is no filter" do
-          verify_filters([1,2,3,4,5,6,8,9,10,11,12,13,:eof], :lines=>[])
+          verify_filters([1,2,3,4,5,6,8,9,10,11,12,13,:eof], [])
         end
 
         it "should match step line of first scenario" do
-          verify_filters([1,2,3,4,5,6,:eof], :lines=>[5])
+          verify_filters([1,2,3,4,5,6,:eof], [5])
         end
 
         it "should match scenario line of second scenario" do
-          verify_filters([1,2,8,9,10,11,12,13,:eof], :lines=>[9])
+          verify_filters([1,2,8,9,10,11,12,13,:eof], [9])
         end
 
         it "should match tag of second scenario" do
-          verify_filters([1,2,8,9,10,11,12,13,:eof], :tag_expressions=>['@tag8'])
+          verify_filters([1,2,8,9,10,11,12,13,:eof], ['@tag8'])
         end
         
         it "should return everything when a line is given in each scenario" do
-          verify_filters([1,2,3,4,5,6,8,9,10,11,12,13,:eof], :lines=>[6,9])
+          verify_filters([1,2,3,4,5,6,8,9,10,11,12,13,:eof], [6,9])
         end
 
         it "should return a scenario when a line is given for its tag" do
-          verify_filters([1,2,8,9,10,11,12,13,:eof], :lines=>[8])
+          verify_filters([1,2,8,9,10,11,12,13,:eof], [8])
         end
 
         it "should return a scenario when a line is given for its comment" do
-          verify_filters([1,2,3,4,5,6,:eof], :lines=>[3])
+          verify_filters([1,2,3,4,5,6,:eof], [3])
         end
       end
       
@@ -185,19 +179,19 @@ Feature: 2
         end
 
         it "should replay identically when there is no filter" do
-          verify_filters([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], :lines=>[])
+          verify_filters([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], [])
         end
 
         it "should replay identically when filtering on the line of a background step" do
-          verify_filters([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], :lines=>[5])
+          verify_filters([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], [5])
         end
 
         it "should replay identically when filtering on the line of the background" do
-          verify_filters([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], :lines=>[4])
+          verify_filters([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], [4])
         end
 
         it "should replay the background on step line of first scenario" do
-          verify_filters([1,2,3,4,5,7,8,9,10,:eof], :lines=>[9])
+          verify_filters([1,2,3,4,5,7,8,9,10,:eof], [9])
         end
       end
 
@@ -232,35 +226,31 @@ Feature: 2
         end
 
         it "should match step line of first scenario outline" do
-          verify_filters([1,3,4,5,6,8,9,10,11,12,13,14,15,17,18,19,20,21,:eof], :lines=>[6])
+          verify_filters([1,3,4,5,6,8,9,10,11,12,13,14,15,17,18,19,20,21,:eof], [6])
         end
 
         it "should match examples line of second scenario outline" do
-          verify_filters([1,3,4,5,6,17,18,19,20,21,:eof], :lines=>[18])
+          verify_filters([1,3,4,5,6,17,18,19,20,21,:eof], [18])
         end
 
         it "should match examples name of second scenario outline" do
-          verify_filters([1,3,4,5,6,17,18,19,20,21,:eof], :name_regexen=>[/18/])
+          verify_filters([1,3,4,5,6,17,18,19,20,21,:eof], [/18/])
         end
 
         it "should match header row line of second scenario outline" do
-          verify_filters([1,3,4,5,6,17,18,19,20,21,:eof], :lines=>[19])
+          verify_filters([1,3,4,5,6,17,18,19,20,21,:eof], [19])
         end
 
         it "should match an example row of first scenario outline" do
-          verify_filters([1,3,4,5,6,8,9,10,13,:eof], :lines=>[13])
+          verify_filters([1,3,4,5,6,8,9,10,13,:eof], [13])
         end
 
         it "should match an example row of second scenario outline" do
-          verify_filters([1,3,4,5,6,17,18,19,20,:eof], :lines=>[20])
+          verify_filters([1,3,4,5,6,17,18,19,20,:eof], [20])
         end
 
         it "should match 2 example rows of first scenario outline" do
-          verify_filters([1,3,4,5,6,8,9,10,12,14,:eof], :lines=>[12,14])
-        end
-
-        it "should match example row of second scenario outline and scenario name of first scenario" do
-          verify_filters([1,3,4,5,6,8,9,10,15,23,24,25,:eof], :lines => [15], :name_regexen=>[/23/])
+          verify_filters([1,3,4,5,6,8,9,10,12,14,:eof], [12,14])
         end
 
         it "should replay itself properly" do
@@ -278,7 +268,7 @@ Feature: 2
       | 14  | 14  |
 }
 
-          verify_output(filtered, :lines=>[12,14])
+          verify_output(filtered, [12,14])
         end
       end
 
@@ -302,19 +292,19 @@ Feature: 3
         end
 
         it "should match @d" do
-          verify_filters([1,2,2,3,4,4,5,6,:eof], :tag_expressions=>['@d'])
+          verify_filters([1,2,2,3,4,4,5,6,:eof], ['@d'])
         end
 
         it "should match everything when feature tag matches" do
-          verify_filters([1,2,2,3,4,4,5,6,8,8,9,10,12,13,:eof], :tag_expressions=>['@a'])
+          verify_filters([1,2,2,3,4,4,5,6,8,8,9,10,12,13,:eof], ['@a'])
         end
 
         it "should match @a && !@d" do
-          verify_filters([1,2,2,3,8,8,9,10,12,13,:eof], :tag_expressions=>['@a','~@d'])
+          verify_filters([1,2,2,3,8,8,9,10,12,13,:eof], ['@a','~@d'])
         end
 
         it "should match @d || @e" do
-          verify_filters([1,2,2,3,4,4,5,6,8,8,9,10,:eof], :tag_expressions=>['@d,@e'])
+          verify_filters([1,2,2,3,4,4,5,6,8,8,9,10,:eof], ['@d,@e'])
         end
       end
 
@@ -345,27 +335,27 @@ Feature: 3
         end
 
         it "should match @c" do
-          verify_filters([1,2,2,3,4,5,6,8,8,9,10,11,:eof], :tag_expressions=>['@c'])
+          verify_filters([1,2,2,3,4,5,6,8,8,9,10,11,:eof], ['@c'])
         end
 
         it "should match @d" do
-          verify_filters([1,2,2,3,4,5,6,8,8,9,10,11,13,13,14,15,16,17,:eof], :tag_expressions=>['@d'])
+          verify_filters([1,2,2,3,4,5,6,8,8,9,10,11,13,13,14,15,16,17,:eof], ['@d'])
         end
 
         it "should match @f" do
-          verify_filters([1,2,2,3,4,5,6,13,13,14,15,16,17,:eof], :tag_expressions=>['@f'])
+          verify_filters([1,2,2,3,4,5,6,13,13,14,15,16,17,:eof], ['@f'])
         end
 
         it "should match @a and not @c" do
-          verify_filters([1,2,2,3,4,5,6,13,13,14,15,16,17,19,20,:eof], :tag_expressions=>['@a','~@c'])
+          verify_filters([1,2,2,3,4,5,6,13,13,14,15,16,17,19,20,:eof], ['@a','~@c'])
         end
 
         it "should match @c or @d" do
-          verify_filters([1,2,2,3,4,5,6,8,8,9,10,11,13,13,14,15,16,17,:eof], :tag_expressions=>['@c,@d'])
+          verify_filters([1,2,2,3,4,5,6,8,8,9,10,11,13,13,14,15,16,17,:eof], ['@c,@d'])
         end
 
         it "should not match @m" do
-          verify_filters([:eof], :tag_expressions=>['@m'])
+          verify_filters([:eof], ['@m'])
         end
       end
     end

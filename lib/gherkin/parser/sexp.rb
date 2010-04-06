@@ -14,17 +14,6 @@ module Gherkin
         self[1]
       end
       
-      def filter_match?(filters)
-        line_match?(filters[:lines] || []) ||
-          name_match?(filters[:name_regexen] || []) 
-      end
-
-      def replay(listener)
-        listener.__send__(event, *args)
-      end
-
-    private
-
       def line_match?(lines)
         lines.include?(line)
       end
@@ -33,6 +22,12 @@ module Gherkin
         return false unless [:feature, :scenario, :scenario_outline, :examples].include?(event)
         name_regexen.detect{|name_regex| name =~ name_regex}
       end
+
+      def replay(listener)
+        listener.__send__(event, *args)
+      end
+
+    private
 
       def name
         self[2]

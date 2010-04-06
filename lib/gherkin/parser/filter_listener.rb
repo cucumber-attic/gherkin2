@@ -14,6 +14,19 @@ module Gherkin
       #
       def initialize(listener, filters)
         @listener, @filters = listener, filters
+        
+        raise "Bad filter: #{filters.inspect}" if filters.map{|filter| filter.class}.uniq.length > 1
+        @filter_method = case(filters[0])
+        when Fixnum 
+          :line_match?
+        when Regexp 
+          :name_match?
+        when String 
+          TagExpression.new(*filters)
+        else
+          nil
+        end
+
         @meta_buffer = []
         @feature_buffer = []
         @scenario_buffer = []
@@ -128,7 +141,7 @@ module Gherkin
       end
 
       def no_filters?
-        @filters.values.flatten.empty?
+        @filters.empty?
       end
 
       def header_row_already_buffered?
@@ -137,12 +150,13 @@ module Gherkin
       end
       
       def filter_match?(*sexps)
-        sexps.detect{|sexp| sexp.filter_match?(@filters)}
+        return false unless[:name_match?, :line_match?].include?(@filter_method)
+        sexps.detect{|sexp| sexp.__send__(@filter_method, @filters)}
       end
 
       def tag_match?
-        return false if @filters[:tag_expression].nil?
-        @filters[:tag_expression].eval(*current_tags)
+        return false unless TagExpression === @filter_method
+        @filter_method.eval(*current_tags)
       end
 
       def replay_buffers
