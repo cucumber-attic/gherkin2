@@ -37,6 +37,7 @@ E.g. in Bash, export RL_LANG="en,fr,no". This can be quite helpful when modifyin
 * rake gemcutter:release
 * ./nativegems.sh
 * gem push pkg/... (for each native gem)
+* cd java && mvn deploy
 
 == Configuring Rake-Compiler for cross compilation
 In order to build Windows binaries (so we can release Windows gems from OS X/Linux) we need to set up rake-compiler.

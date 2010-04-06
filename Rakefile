@@ -21,6 +21,7 @@ begin
     gem.add_development_dependency "albacore", ">= 0.1.0"
     
     gem.files -= FileList['dotnet/**/*']
+    gem.files -= FileList['java/**/*']
     case ENV['PLATFORM']
     when 'java'
       gem.platform = 'java'
