@@ -24,11 +24,11 @@ public class I18nLexer implements Lexer {
     }
 
     private Lexer createDelegate(CharSequence source) {
-        i18nLanguage = lang(source);
+        i18nLanguage = i18nLanguage(source);
         return i18nLanguage.lexer(listener);
     }
 
-    private I18nLanguage lang(CharSequence source) {
+    private I18nLanguage i18nLanguage(CharSequence source) {
         String lineOne = source.toString().split("\\n")[0];
         Matcher matcher = LANGUAGE_PATTERN.matcher(lineOne);
         String key = "en";

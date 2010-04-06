@@ -46,6 +46,33 @@ module Gherkin
       @keywords['grammar_name'] = @keywords['name'].gsub(/\s/, '')
     end
 
+    def lexer(listener, force_ruby)
+      begin
+        if force_ruby
+          rb(listener)
+        else
+          begin
+            c(listener)
+          rescue NameError, LoadError => e
+            warn("WARNING: #{e.message}. Reverting to Ruby lexer.")
+            rb(listener)
+          end
+        end
+      rescue LoadError => e
+        raise I18nLexerNotFound, "No lexer was found for #{i18n_language_name} (#{e.message}). Supported languages are listed in gherkin/i18n.yml."
+      end
+    end
+
+    def c(listener)
+      require 'gherkin/c_lexer'
+      CLexer[@key].new(listener)
+    end
+
+    def rb(listener)
+      require 'gherkin/rb_lexer'
+      RbLexer[@key].new(listener)
+    end
+
     def sanitized_key
       @key.gsub(/[\s-]/, '')
     end

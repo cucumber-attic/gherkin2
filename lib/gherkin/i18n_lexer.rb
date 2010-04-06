@@ -11,58 +11,37 @@ module Gherkin
     attr_reader :i18n_language
 
     class << self
-      def new(parser, force_ruby)
+      def new(listener, force_ruby)
         if !force_ruby && defined?(JRUBY_VERSION)
           require 'gherkin.jar'
-          Java::Gherkin::I18nLexer.new(parser)
+          Java::Gherkin::I18nLexer.new(listener)
         else
           super
         end
       end
-
-      def lexer_class(i18n_language_name, force_ruby)
-        begin
-          if force_ruby
-            rb[i18n_language_name]
-          else
-            begin
-              c[i18n_language_name]
-            rescue NameError, LoadError => e
-              warn("WARNING: #{e.message}. Reverting to Ruby lexer.")
-              rb[i18n_language_name]
-            end
-          end
-        rescue LoadError => e
-          raise I18nLexerNotFound, "No lexer was found for #{i18n_language_name} (#{e.message}). Supported languages are listed in gherkin/i18n.yml."
-        end
-      end
-
-      def i18n_language(source)
-        line_one = source.split(/\n/)[0]
-        match = LANGUAGE_PATTERN.match(line_one)
-        I18n.get(match ? match[1] : 'en')
-      end
-
-      def c
-        require 'gherkin/c_lexer'
-        CLexer
-      end
-
-      def rb
-        require 'gherkin/rb_lexer'
-        RbLexer
-      end
     end
 
-    def initialize(parser, force_ruby)
-      @parser = parser
+    def initialize(listener, force_ruby)
+      @listener = listener
       @force_ruby = force_ruby
     end
 
     def scan(source)
-      @i18n_language = self.class.i18n_language(source) 
-      delegate = self.class.lexer_class(@i18n_language.key, @force_ruby).new(@parser)
-      delegate.scan(source)
+      create_delegate(source).scan(source)
     end
+
+  private
+
+    def create_delegate(source)
+      @i18n_language = lang(source)
+      @i18n_language.lexer(@listener, @force_ruby)
+    end
+
+    def lang(source)
+      line_one = source.split(/\n/)[0]
+      match = LANGUAGE_PATTERN.match(line_one)
+      I18n.get(match ? match[1] : 'en')
+    end
+
   end
 end
