@@ -95,11 +95,6 @@ module Gherkin
       @keywords[key].split('|').map{|kw| space ? keyword_space(kw) : kw}
     end
 
-    def adverbs
-      # TODO: looks very similar to #step_keywords. Lose this? Where is it used from?
-      %w{given when then and but}.map{|keyword| @keywords[keyword].split('|').map{|w| w.gsub(/[\s<']/, '')}}.flatten
-    end
-
     private
 
     def keyword_space(val)
