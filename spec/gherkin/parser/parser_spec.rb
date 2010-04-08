@@ -30,6 +30,21 @@ module Gherkin
         @parser = Parser.new(@listener, false)
         @parser.background("Background", "Content", 1)
       end
+
+      [true, false].each do |native|
+        it "should be reusable for several feature files (native lexer: #{native})" do
+          listener = mock('listener', :null_object => true)
+          parser = Parser.new(listener, true)
+          lexer = I18nLexer.new(parser, native)
+          feature = <<-EOF
+Feature: foo
+  Scenario: bar
+    Given zap
+EOF
+          lexer.scan(feature)
+          lexer.scan(feature)
+        end
+      end
     end
   end
 end

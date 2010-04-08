@@ -1,3 +1,8 @@
+== In Git
+
+=== Bugfixes
+* Made parsers reusable so that the same instance can parse several features. (Aslak Hellesøy)
+
 == 1.0.4 (2009-04-07)
 
 === New features

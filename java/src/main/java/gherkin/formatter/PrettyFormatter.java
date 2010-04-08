@@ -1,7 +1,6 @@
 package gherkin.formatter;
 
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,9 +19,13 @@ public class PrettyFormatter implements Formatter {
     private List<String> comments;
     private List<String> tags;
 
-    public PrettyFormatter(OutputStream out, boolean monochrome) {
+    public PrettyFormatter(Writer out, boolean monochrome) {
         this.out = new PrintWriter(out);
         this.monochrome = monochrome;
+    }
+
+    public PrettyFormatter(OutputStream out, boolean monochrome) throws UnsupportedEncodingException {
+        this(new OutputStreamWriter(out, "UTF-8"), monochrome);
     }
 
     public void tag(String name, int line) {

@@ -15,7 +15,9 @@ CLEAN.include [
 ]
 
 desc "Compile the Java extensions"
-task :jar do
+task :jar => 'lib/gherkin.jar'
+
+file 'lib/gherkin.jar' => Dir['java/src/main/java/**/*.java'] do
   sh("mvn -f java/pom.xml package")
 end
 

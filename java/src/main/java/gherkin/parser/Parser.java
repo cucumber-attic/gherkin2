@@ -9,8 +9,9 @@ import java.util.regex.Pattern;
 public class Parser implements Listener {
     List<Machine> machines = new ArrayList<Machine>();
 
-    private Listener listener;
-    private boolean throwOnError;
+    private final Listener listener;
+    private final boolean throwOnError;
+    private final String machineName;
 
     public Parser(Listener listener) {
         this(listener, true);
@@ -23,6 +24,7 @@ public class Parser implements Listener {
     public Parser(Listener listener, boolean throwOnError, String machineName) {
         this.listener = listener;
         this.throwOnError = throwOnError;
+        this.machineName = machineName;
         pushMachine(machineName);
     }
 
@@ -87,6 +89,8 @@ public class Parser implements Listener {
     public void eof() {
         if (event("eof", 1))
             listener.eof();
+        popMachine();
+        pushMachine(machineName);
     }
     
     public void syntax_error(String name, String event, List<String> strings, int line) {

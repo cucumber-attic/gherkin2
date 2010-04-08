@@ -1,18 +1,49 @@
 package gherkin;
 
+import gherkin.formatter.Formatter;
+import gherkin.formatter.NullFormatter;
 import gherkin.formatter.PrettyFormatter;
+import gherkin.parser.ParseError;
 import gherkin.parser.Parser;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        Parser p = new Parser(new PrettyFormatter(System.out, true));
-        Lexer l = new I18nLexer(p);
+    private FileFilter featureFilter = new FileFilter() {
+        public boolean accept(File file) {
+            return file.isDirectory() || file.getName().endsWith(".feature");
+        }
+    };
 
-        CharSequence input = FixJava.readReader(new FileReader(args[0]));
-        l.scan(input);
+    private Lexer lexer;
+
+    public Main(OutputStream out, boolean prettyOrNull) throws UnsupportedEncodingException {
+        Formatter formatter = prettyOrNull ? new PrettyFormatter(out, true) : new NullFormatter();
+        Parser parser = new Parser(formatter);
+        lexer = new I18nLexer(parser);
     }
 
+    private void walk(File file) throws IOException {
+        if(file.isDirectory()) {
+            for(File child: file.listFiles(featureFilter)) {
+                walk(child);
+            }
+        } else {
+            parse(file);
+        }
+    }
+
+    private void parse(File file) throws IOException {
+        CharSequence input = FixJava.readReader(new FileReader(file));
+        try {
+            lexer.scan(input);
+        } catch(ParseError e) {
+            System.err.println(e.getMessage());
+            System.err.println(input);
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        new Main(System.out, args.length > 1).walk(new File(args[0]));
+    }
 }

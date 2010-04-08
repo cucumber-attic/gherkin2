@@ -21,7 +21,8 @@ module Gherkin
         @listener = listener
         @raise_on_error = raise_on_error
         @machines = []
-        push_machine(machine_name)
+        @machine_name = machine_name
+        push_machine(@machine_name)
       end
 
       # Doesn't yet fall back to super
@@ -29,6 +30,10 @@ module Gherkin
         # TODO: Catch exception and call super
         if(event(method.to_s, args[-1]))
           @listener.send(method, *args)
+        end
+        if method == :eof
+          pop_machine
+          push_machine(@machine_name)
         end
       end
 
