@@ -19,7 +19,7 @@ public class I18nLexer implements Lexer {
         return i18nLanguage;
     }
 
-    public void scan(CharSequence source) {
+    public void scan(CharSequence source) throws Exception {
         createDelegate(source).scan(source);
     }
 
@@ -32,7 +32,7 @@ public class I18nLexer implements Lexer {
         String lineOne = source.toString().split("\\n")[0];
         Matcher matcher = LANGUAGE_PATTERN.matcher(lineOne);
         String key = "en";
-        if(matcher.find()) {
+        if (matcher.find()) {
             key = matcher.group(1);
         }
         return new I18nLanguage(key);

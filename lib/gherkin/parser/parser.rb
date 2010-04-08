@@ -7,7 +7,7 @@ module Gherkin
     end
 
     class Parser
-      def self.new(listener, raise_on_error=false, machine_name='root')
+      def self.new(listener, raise_on_error=true, machine_name='root')
         if defined?(JRUBY_VERSION)
           require 'gherkin.jar'
           Java::GherkinParser::Parser.new(listener, raise_on_error, machine_name)

@@ -25,8 +25,8 @@ public class Argument {
                 int delta = replacement.length - argument.val.length;
                 byte[] newResult = new byte[result.length + delta];
 
-                System.arraycopy(result, 0, newResult, 0, argument.byteOffset+offset);
-                System.arraycopy(replacement, 0, newResult, argument.byteOffset+offset, replacement.length);
+                System.arraycopy(result, 0, newResult, 0, argument.byteOffset + offset);
+                System.arraycopy(replacement, 0, newResult, argument.byteOffset + offset, replacement.length);
                 int n = argument.byteOffset + argument.val.length + offset;
                 System.arraycopy(result, n, newResult, argument.byteOffset + replacement.length, result.length - n);
 

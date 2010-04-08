@@ -13,22 +13,22 @@ public class Parser implements Listener {
     private final boolean throwOnError;
     private final String machineName;
 
-    public Parser(Listener listener) {
+    public Parser(Listener listener) throws Exception {
         this(listener, true);
     }
 
-    public Parser(Listener listener, boolean throwOnError) {
+    public Parser(Listener listener, boolean throwOnError) throws Exception {
         this(listener, throwOnError, "root");
     }
 
-    public Parser(Listener listener, boolean throwOnError, String machineName) {
+    public Parser(Listener listener, boolean throwOnError, String machineName) throws Exception {
         this.listener = listener;
         this.throwOnError = throwOnError;
         this.machineName = machineName;
         pushMachine(machineName);
     }
 
-    private void pushMachine(String machineName) {
+    private void pushMachine(String machineName) throws Exception {
         machines.add(new Machine(this, machineName));
     }
 
@@ -36,67 +36,78 @@ public class Parser implements Listener {
         machines.remove(machines.size() - 1);
     }
 
-    public void tag(String name, int line) {
-        if (event("tag", line))
+    public void tag(String name, int line) throws Exception {
+        if (event("tag", line)) {
             listener.tag(name, line);
+        }
     }
 
-    public void py_string(String string, int line) {
-        if (event("py_string", line))
+    public void py_string(String string, int line) throws Exception {
+        if (event("py_string", line)) {
             listener.py_string(string, line);
+        }
     }
 
-    public void feature(String keyword, String name, int line) {
-        if (event("feature", line))
+    public void feature(String keyword, String name, int line) throws Exception {
+        if (event("feature", line)) {
             listener.feature(keyword, name, line);
+        }
     }
 
-    public void background(String keyword, String name, int line) {
-        if (event("background", line))
+    public void background(String keyword, String name, int line) throws Exception {
+        if (event("background", line)) {
             listener.background(keyword, name, line);
+        }
     }
 
-    public void scenario(String keyword, String name, int line) {
-        if (event("scenario", line))
+    public void scenario(String keyword, String name, int line) throws Exception {
+        if (event("scenario", line)) {
             listener.scenario(keyword, name, line);
+        }
     }
 
-    public void scenario_outline(String keyword, String name, int line) {
-        if (event("scenario_outline", line))
+    public void scenario_outline(String keyword, String name, int line) throws Exception {
+        if (event("scenario_outline", line)) {
             listener.scenario_outline(keyword, name, line);
+        }
     }
 
-    public void examples(String keyword, String name, int line) {
-        if (event("examples", line))
+    public void examples(String keyword, String name, int line) throws Exception {
+        if (event("examples", line)) {
             listener.examples(keyword, name, line);
+        }
     }
 
-    public void step(String keyword, String name, int line) {
-        if (event("step", line))
+    public void step(String keyword, String name, int line) throws Exception {
+        if (event("step", line)) {
             listener.step(keyword, name, line);
+        }
     }
 
-    public void comment(String content, int line) {
-        if (event("comment", line))
+    public void comment(String content, int line) throws Exception {
+        if (event("comment", line)) {
             listener.comment(content, line);
+        }
     }
 
-    public void row(List<String> row, int line) {
-        if (event("row", line))
+    public void row(List<String> row, int line) throws Exception {
+        if (event("row", line)) {
             listener.row(row, line);
+        }
     }
 
-    public void eof() {
-        if (event("eof", 1))
+    public void eof() throws Exception {
+        if (event("eof", 1)) {
             listener.eof();
+        }
         popMachine();
         pushMachine(machineName);
     }
-    
+
     public void syntax_error(String name, String event, List<String> strings, int line) {
     }
 
-    private boolean event(String event, int line) {
+    private boolean event(String event, int line) throws Exception {
         try {
             machine().event(event, line);
             return true;
@@ -123,14 +134,14 @@ public class Parser implements Listener {
         private String state;
         private Map<String, Map<String, String>> transitionMap;
 
-        public Machine(Parser parser, String name) {
+        public Machine(Parser parser, String name) throws Exception {
             this.parser = parser;
             this.name = name;
             this.state = name;
             this.transitionMap = transitionMap(name);
         }
 
-        public void event(String event, int line) {
+        public void event(String event, int line) throws Exception {
             Map<String, String> states = transitionMap.get(state);
             if (states == null) {
                 throw new RuntimeException("Unknown state: " + state + " for machine " + name);
@@ -167,16 +178,16 @@ public class Parser implements Listener {
             return result;
         }
 
-        private Map<String, Map<String, String>> transitionMap(String name) {
+        private Map<String, Map<String, String>> transitionMap(String name) throws Exception {
             Map<String, Map<String, String>> map = TRANSITION_MAPS.get(name);
-            if(map == null) {
+            if (map == null) {
                 map = buildTransitionMap(name);
                 TRANSITION_MAPS.put(name, map);
             }
             return map;
         }
 
-        private Map<String, Map<String, String>> buildTransitionMap(String name) {
+        private Map<String, Map<String, String>> buildTransitionMap(String name) throws Exception {
             Map<String, Map<String, String>> result = new HashMap<String, Map<String, String>>();
             List<List<String>> transitionTable = new StateMachineReader(name).transitionTable();
             List<String> events = transitionTable.get(0).subList(1, transitionTable.get(0).size());

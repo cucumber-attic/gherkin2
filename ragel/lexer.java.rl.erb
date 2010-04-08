@@ -140,7 +140,7 @@ public class <%= @i18n.sanitized_key.capitalize %> implements Lexer {
 
   %% write data noerror;
 
-  public void scan(CharSequence inputSequence) {
+  public void scan(CharSequence inputSequence) throws Exception {
     String input = inputSequence.toString() + "\n%_FEATURE_END_%";
     byte[] data = input.getBytes();
     int cs, p = 0, pe = data.length;

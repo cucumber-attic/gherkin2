@@ -3,7 +3,6 @@ package gherkin;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.NullFormatter;
 import gherkin.formatter.PrettyFormatter;
-import gherkin.parser.ParseError;
 import gherkin.parser.Parser;
 
 import java.io.*;
@@ -16,16 +15,29 @@ public class Main {
     };
 
     private Lexer lexer;
+    private final Writer out;
 
-    public Main(OutputStream out, boolean prettyOrNull) throws UnsupportedEncodingException {
-        Formatter formatter = prettyOrNull ? new PrettyFormatter(out, true) : new NullFormatter();
+    public Main(final Writer out, boolean prettyOrNull) throws Exception {
+        this.out = out;
+        final Formatter formatter = prettyOrNull ? new PrettyFormatter(out, true) : new NullFormatter() {
+            @Override
+            public void step(String keyword, String name, int line) throws IOException {
+                out.append('.').flush();
+            }
+        };
         Parser parser = new Parser(formatter);
         lexer = new I18nLexer(parser);
     }
 
-    private void walk(File file) throws IOException {
-        if(file.isDirectory()) {
-            for(File child: file.listFiles(featureFilter)) {
+    private void scanAll(File file) throws IOException {
+        walk(file);
+        out.append('\n');
+        out.close();
+    }
+
+    private void walk(File file) {
+        if (file.isDirectory()) {
+            for (File child : file.listFiles(featureFilter)) {
                 walk(child);
             }
         } else {
@@ -33,17 +45,17 @@ public class Main {
         }
     }
 
-    private void parse(File file) throws IOException {
-        CharSequence input = FixJava.readReader(new FileReader(file));
+    private void parse(File file) {
         try {
+            CharSequence input = FixJava.readReader(new FileReader(file));
             lexer.scan(input);
-        } catch(ParseError e) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
-            System.err.println(input);
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        new Main(System.out, args.length > 1).walk(new File(args[0]));
+    public static void main(String[] args) throws Exception {
+        new Main(new OutputStreamWriter(System.out), args.length > 1).scanAll(new File(args[0]));
     }
+
 }

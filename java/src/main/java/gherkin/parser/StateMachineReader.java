@@ -5,7 +5,6 @@ import gherkin.Lexer;
 import gherkin.Listener;
 import gherkin.lexer.En;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,14 +16,10 @@ public class StateMachineReader implements Listener {
         machinePath = "/gherkin/parser/" + name + ".txt";
     }
 
-    public List<List<String>> transitionTable() {
-		transitionTable = new ArrayList<List<String>>();
+    public List<List<String>> transitionTable() throws Exception {
+        transitionTable = new ArrayList<List<String>>();
         Lexer lexer = new En(this);
-        try {
-            lexer.scan(FixJava.readResource(machinePath));
-        } catch (IOException e) {
-            throw new RuntimeException("Fatal error. Couldn't read " + machinePath);
-        }
+        lexer.scan(FixJava.readResource(machinePath));
         return transitionTable;
     }
 
