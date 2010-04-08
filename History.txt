@@ -1,4 +1,7 @@
-== In Git
+== 1.0.5 (2009-04-08)
+
+=== New Features
+* New .NET build of gherkin - an ikvmc build of gherkin.jar to gherkin.dll. (Aslak Hellesøy)
 
 === Bugfixes
 * Made parsers reusable so that the same instance can parse several features. (Aslak Hellesøy)

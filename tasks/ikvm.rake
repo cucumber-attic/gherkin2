@@ -27,12 +27,12 @@ namespace :ikvm do
 
   file 'pkg/gherkin.exe' => 'lib/gherkin.jar' do
     mkdir_p 'pkg' unless File.directory?('pkg')
-    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:exe lib/gherkin.jar -out:pkg/gherkin.exe")
+    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:exe lib/gherkin.jar -out:pkg/gherkin-#{GHERKIN_VERSION}.exe")
   end
 
   file 'pkg/gherkin.dll' => 'lib/gherkin.jar' do
     mkdir_p 'pkg' unless File.directory?('pkg')
-    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:library lib/gherkin.jar -out:pkg/gherkin.dll")
+    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:library lib/gherkin.jar -out:pkg/gherkin-#{GHERKIN_VERSION}.dll")
   end
 
   desc 'Copy the IKVM .dll files over to the pkg dir'

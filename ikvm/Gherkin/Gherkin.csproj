@@ -31,10 +31,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="gherkin, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\pkg\gherkin.dll</HintPath>
-    </Reference>
     <Reference Include="IKVM.Runtime, Version=0.42.0.3, Culture=neutral, PublicKeyToken=13235d27fcbfff58">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\pkg\IKVM.Runtime.dll</HintPath>
@@ -46,6 +42,10 @@
     <Reference Include="IKVM.OpenJDK.Text, Version=0.42.0.3, Culture=neutral, PublicKeyToken=13235d27fcbfff58">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\pkg\IKVM.OpenJDK.Text.dll</HintPath>
+    </Reference>
+    <Reference Include="gherkin-1.0.5, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\pkg\gherkin-1.0.5.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,10 @@ require 'rbconfig'
 require 'rubygems'
 require 'rake'
 require 'rake/clean'
+require 'yaml'
+
+config = YAML.load_file('VERSION.yml')
+GHERKIN_VERSION = "#{config[:major]}.#{config[:minor]}.#{config[:patch]}"
 
 begin
   require 'jeweler'
@@ -21,6 +25,7 @@ begin
     gem.add_development_dependency "albacore", ">= 0.1.2"
     
     gem.files -= FileList['dotnet/**/*']
+    gem.files -= FileList['ikvm/**/*']
     gem.files -= FileList['java/**/*']
     case ENV['PLATFORM']
     when 'java'

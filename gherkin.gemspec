@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gherkin}
-  s.version = "1.0.4"
+  s.version = "1.0.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Helles\303\270y"]
-  s.date = %q{2010-04-07}
+  s.date = %q{2010-04-08}
   s.default_executable = %q{gherkin}
   s.description = %q{A fast Gherkin lexer/parser based on the Ragel State Machine Compiler.}
   s.email = %q{cukes@googlegroups.com}
@@ -81,6 +81,7 @@ Gem::Specification.new do |s|
      "features/steps_parser.feature",
      "features/support/env.rb",
      "gherkin.gemspec",
+     "ikvm/.gitignore",
      "java/.gitignore",
      "java/Gherkin.iml",
      "java/src/main/java/gherkin/lexer/.gitignore",
@@ -194,6 +195,7 @@ Gem::Specification.new do |s|
      "tasks/bench/null_listener.rb",
      "tasks/compile.rake",
      "tasks/cucumber.rake",
+     "tasks/ikvm.rake",
      "tasks/ragel_task.rb",
      "tasks/rdoc.rake",
      "tasks/rspec.rake"
@@ -231,22 +233,22 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<trollop>, [">= 1.15"])
       s.add_development_dependency(%q<rspec>, [">= 1.3.0"])
-      s.add_development_dependency(%q<cucumber>, [">= 0.6.2"])
+      s.add_development_dependency(%q<cucumber>, [">= 0.6.4"])
       s.add_development_dependency(%q<rake-compiler>, [">= 0.7.0"])
-      s.add_development_dependency(%q<albacore>, [">= 0.1.0"])
+      s.add_development_dependency(%q<albacore>, [">= 0.1.2"])
     else
       s.add_dependency(%q<trollop>, [">= 1.15"])
       s.add_dependency(%q<rspec>, [">= 1.3.0"])
-      s.add_dependency(%q<cucumber>, [">= 0.6.2"])
+      s.add_dependency(%q<cucumber>, [">= 0.6.4"])
       s.add_dependency(%q<rake-compiler>, [">= 0.7.0"])
-      s.add_dependency(%q<albacore>, [">= 0.1.0"])
+      s.add_dependency(%q<albacore>, [">= 0.1.2"])
     end
   else
     s.add_dependency(%q<trollop>, [">= 1.15"])
     s.add_dependency(%q<rspec>, [">= 1.3.0"])
-    s.add_dependency(%q<cucumber>, [">= 0.6.2"])
+    s.add_dependency(%q<cucumber>, [">= 0.6.4"])
     s.add_dependency(%q<rake-compiler>, [">= 0.7.0"])
-    s.add_dependency(%q<albacore>, [">= 0.1.0"])
+    s.add_dependency(%q<albacore>, [">= 0.1.2"])
   end
 end
 
