@@ -28,21 +28,10 @@ E.g. in Bash, export RL_LANG="en,fr,no". This can be quite helpful when modifyin
 
 == Release process
 
-* Bump version in the VERSION file
-* Do a file search and replace from old version number to new one.
-* Run "rake clean spec cucumber" for each platform (1.8.6, 1.8.7, 1.9, jruby) to make sure all is green.
-* rvm 1.8.7
-* rake clean jar compile
-* rake gemspec
-* git commit -a -m "Release vX.Y.Z"
-* rake gemcutter:release
-* rake git:release
-* ./nativegems.sh
-* gem push pkg/... (for each native gem)
-* cd java && mvn deploy
-* rake ikvm
-* Upload pkg/gherkin-X.Y.Z.dll to Github: http://github.com/aslakhellesoy/gherkin/downloads
-
+* Bump version in the VERSION.yml file and:
+** java/pom.xml
+** ikvm/Gherkin/Gherkin,csproj
+* rake release:ALL
 * Announce on Cucumber list, IRC and Twitter.
 
 == Configuring Rake-Compiler for cross compilation

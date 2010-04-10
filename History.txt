@@ -1,4 +1,15 @@
-== 1.0.5 (2009-04-08)
+== 1.0.6 (2010-04-10)
+
+=== New Features
+* Fully automated release process. (Aslak Hellesøy)
+
+=== Changed Features
+* Made generated classes use a more uniform naming convention. (Aslak Hellesøy)
+
+=== Removed Features
+* Removed C# port, obsoleted by IKVM build from 1.0.5. (Aslak Hellesøy)
+
+== 1.0.5 (2010-04-08)
 
 === New Features
 * New .NET build of gherkin - an ikvmc build of gherkin.jar to gherkin.dll. (Aslak Hellesøy)
@@ -6,7 +17,7 @@
 === Bugfixes
 * Made parsers reusable so that the same instance can parse several features. (Aslak Hellesøy)
 
-== 1.0.4 (2009-04-07)
+== 1.0.4 (2010-04-07)
 
 === New features
 * Pure java releases of Gherkin at http://cukes.info/maven
@@ -15,7 +26,7 @@
 === Changed features
 * The Lexer now emits the '@' for tags. (Aslak Hellesøy)
 
-== 1.0.3 (2009-03-31)
+== 1.0.3 (2010-03-31)
 
 === Bugfixes
 * The C lexer correctly instantiates a new array for each table, instead of reusing the old one. (Aslak Hellesøy)
