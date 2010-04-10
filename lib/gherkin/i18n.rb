@@ -65,16 +65,16 @@ module Gherkin
 
     def c(listener)
       require 'gherkin/c_lexer'
-      CLexer[@key].new(listener)
+      CLexer[sanitized_key].new(listener)
     end
 
     def rb(listener)
       require 'gherkin/rb_lexer'
-      RbLexer[@key].new(listener)
+      RbLexer[sanitized_key].new(listener)
     end
 
     def sanitized_key
-      @key.gsub(/[\s-]/, '')
+      @key.gsub(/[\s-]/, '_').downcase
     end
 
     def incomplete?

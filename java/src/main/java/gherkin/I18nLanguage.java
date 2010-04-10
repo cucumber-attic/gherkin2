@@ -12,7 +12,7 @@ public class I18nLanguage {
     }
 
     public Lexer lexer(Listener listener) {
-        String i18nLanguage = key.replaceAll("[\\s-]", "").toLowerCase();
+        String i18nLanguage = key.replaceAll("[\\s-]", "_").toUpperCase();
         String i18nLexerClassName = i18nLanguage.substring(0, 1).toUpperCase() + i18nLanguage.substring(1);
         String qualifiedI18nLexerClassName = "gherkin.lexer." + i18nLexerClassName;
         try {

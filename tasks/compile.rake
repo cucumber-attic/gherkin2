@@ -8,10 +8,7 @@ CLEAN.include [
   'ragel/i18n/*.rl',
   'lib/gherkin/rb_lexer/*.rb',
   'ext/**/*.c',
-  'java/src/gherkin/lexer/*.java',
-  'dotnet/Gherkin/Lexer',
-  'dotnet/Gherkin/obj',
-  'dotnet/Gherkin/bin'
+  'java/src/gherkin/lexer/*.java'
 ]
 
 desc "Compile the Java extensions"
@@ -21,83 +18,14 @@ file 'lib/gherkin.jar' => Dir['java/src/main/java/**/*.java'] do
   sh("mvn -f java/pom.xml package")
 end
 
-namespace :dotnet do
-  require 'albacore'
-
-  FileList['lib/gherkin/parser/*'].each do |src|
-    dst = "dotnet/Gherkin/StateMachine/#{File.basename(src)}"
-    file dst => src do
-      cp src, dst, :verbose => true    
-    end
-    task :compile => dst
-  end
-
-  task :compile => :lexer
-
-  if (`which mono` rescue "") =~ /mono/
-    xbuild :compile do |msb|
-      msb.properties :configuration => :Release
-      msb.targets :Build
-      msb.solution = 'dotnet/Gherkin.sln'
-    end
-
-    require 'rake/xunittask'
-    class XUnitTestRunner
-      def execute
-        system("mono dotnet/lib/xunit/xunit.console.exe dotnet/Gherkin.Tests/bin/Release/Gherkin.Tests.dll")
-        exit 1 if $? != 0
-      end
-    end
-  else
-    msbuild :compile do |msb|
-      msb.properties :configuration => :Release
-      msb.targets :Build
-      msb.solution = 'dotnet/Gherkin.sln'
-    end
-  end
-
-  xunit :test => :compile do |xunit|
-    xunit.path_to_command = "dotnet/lib/xunit/xunit.console.exe"
-    xunit.assembly = "dotnet/Gherkin.Tests/bin/Release/Gherkin.Tests.dll"
-  end
-
-  task :package => :test do
-    cp 'dotnet/Gherkin/bin/Release/Gherkin.dll', 'lib/Gherkin.dll'
-  end
-end
-
-desc "Compile and package the .NET extensions"
-task :dotnet => ['dotnet:package']
-
-class CSharpSByteFixTask
-  def initialize(source)
-    @source = source
-    define_tasks
-  end
-
-  def define_tasks
-    directory File.dirname(target)
-    file target => [File.dirname(target), @source] do
-      sh "cat #{@source} | sed ""s/sbyte/short/g"" > #{target}"
-    end
-  end
-
-  def target
-    "dotnet/Gherkin/Lexer/#{File.basename(@source)}"
-  end
-end
-
 rl_langs = ENV['RL_LANGS'] ? ENV['RL_LANGS'].split(',') : []
 langs = Gherkin::I18n.all.select { |lang| rl_langs.empty? || rl_langs.include?(lang.key) }
 
 langs.each do |i18n|
   java       = RagelTask.new('java', i18n)
   rb         = RagelTask.new('rb', i18n)
-  csharp_tmp = RagelTask.new('csharp', i18n)
-  csharp     = CSharpSByteFixTask.new(csharp_tmp.target)
 
-  task :jar             => [java.target, rb.target]
-  task 'dotnet:lexer'   => csharp.target
+  file 'lib/gherkin.jar' => [java.target, rb.target]
 
   begin
   unless defined?(JRUBY_VERSION)

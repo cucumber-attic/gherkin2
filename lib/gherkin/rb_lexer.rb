@@ -1,10 +1,8 @@
 module Gherkin
   module RbLexer
-    def self.[](i18n_language_name)
-      name = i18n_language_name.gsub(/[\s-]/, '')
-      require "gherkin/rb_lexer/#{name}"
-      i18n_lexer_class_name = name.capitalize
-      const_get(i18n_lexer_class_name)
+    def self.[](i18n_sanitized_key)
+      require "gherkin/rb_lexer/#{i18n_sanitized_key}"
+      const_get(i18n_sanitized_key.capitalize)
     end
   end
 end
