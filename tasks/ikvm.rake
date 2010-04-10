@@ -43,5 +43,7 @@ namespace :ikvm do
   end
 end
 
-task :ikvm => ['ikvm:exe', 'ikvm:dll', 'ikvm:copy_ikvm_dlls']
+task :ikvm => ['ikvm:exe', 'ikvm:dll', 'ikvm:copy_ikvm_dlls'] do
+  sh "mono release/gherkin-#{GHERKIN_VERSION}.exe features"
+end
 

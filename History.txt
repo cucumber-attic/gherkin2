@@ -1,3 +1,8 @@
+== 1.0.7 (2010-04-10)
+
+=== Bugfixes
+* Fixed problems with packaging of 1.0.6 release. (Aslak Hellesøy)
+
 == 1.0.6 (2010-04-10)
 
 === New Features

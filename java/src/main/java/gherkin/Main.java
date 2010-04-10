@@ -51,6 +51,7 @@ public class Main {
             lexer.scan(input);
         } catch (Exception e) {
             System.err.println(e.getMessage());
+						System.exit(1);
         }
     }
 
