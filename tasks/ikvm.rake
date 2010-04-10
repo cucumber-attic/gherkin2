@@ -26,19 +26,19 @@ namespace :ikvm do
   task :dll => 'pkg/gherkin.dll'
 
   file 'pkg/gherkin.exe' => 'lib/gherkin.jar' do
-    mkdir_p 'pkg' unless File.directory?('pkg')
-    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:exe lib/gherkin.jar -out:pkg/gherkin-#{GHERKIN_VERSION}.exe")
+    mkdir_p 'release' unless File.directory?('release')
+    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:exe lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.exe")
   end
 
   file 'pkg/gherkin.dll' => 'lib/gherkin.jar' do
-    mkdir_p 'pkg' unless File.directory?('pkg')
-    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:library lib/gherkin.jar -out:pkg/gherkin-#{GHERKIN_VERSION}.dll")
+    mkdir_p 'release' unless File.directory?('release')
+    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:library lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.dll")
   end
 
   desc 'Copy the IKVM .dll files over to the pkg dir'
   task :copy_ikvm_dlls do
     Dir['/usr/local/ikvm/bin/{IKVM.OpenJDK.Core,IKVM.OpenJDK.Text,IKVM.Runtime}.dll'].each do |dll|
-      cp dll, 'pkg'
+      cp dll, 'release'
     end
   end
 end

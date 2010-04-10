@@ -8,7 +8,7 @@ CLEAN.include [
   'ragel/i18n/*.rl',
   'lib/gherkin/rb_lexer/*.rb',
   'ext/**/*.c',
-  'java/src/gherkin/lexer/*.java'
+  'java/src/main/java/gherkin/lexer/*.java'
 ]
 
 desc "Compile the Java extensions"
