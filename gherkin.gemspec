@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{gherkin}
-  s.version = "1.0.6"
+  s.version = "1.0.7"
   s.platform = %q{java}
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
@@ -38,6 +38,7 @@ Gem::Specification.new do |s|
      "features/step_definitions/pretty_listener_step.rb",
      "features/steps_parser.feature",
      "features/support/env.rb",
+     "gherkin.gemspec",
      "ikvm/.gitignore",
      "java/.gitignore",
      "java/src/main/java/gherkin/lexer/.gitignore",
@@ -70,7 +71,6 @@ Gem::Specification.new do |s|
      "lib/gherkin/tools/reformat.rb",
      "lib/gherkin/tools/stats.rb",
      "lib/gherkin/tools/stats_listener.rb",
-     "nativegems.sh",
      "ragel/i18n/.gitignore",
      "ragel/lexer.c.rl.erb",
      "ragel/lexer.java.rl.erb",
