@@ -6,3 +6,4 @@ pkg
 ext
 tmp
 release
+gherkin.gemspec
