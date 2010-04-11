@@ -46,7 +46,7 @@ module Gherkin
       @keywords['grammar_name'] = @keywords['name'].gsub(/\s/, '')
     end
 
-    def lexer(listener, force_ruby)
+    def lexer(listener, force_ruby=false)
       begin
         if force_ruby
           rb(listener)
@@ -54,7 +54,7 @@ module Gherkin
           begin
             c(listener)
           rescue NameError, LoadError => e
-            warn("WARNING: #{e.message}. Reverting to Ruby lexer.")
+            raise("WARNING: #{e.message}. Reverting to Ruby lexer.")
             rb(listener)
           end
         end

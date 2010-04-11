@@ -1,12 +1,12 @@
 # encoding: utf-8
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
-require 'gherkin/formatter/pretty_listener'
+require 'gherkin/formatter/pretty_formatter'
 require 'gherkin/formatter/argument'
 require 'stringio'
 
 module Gherkin
   module Formatter
-    describe PrettyListener do
+    describe PrettyFormatter do
       def assert_io(s)
         @io.rewind
         actual = @io.read
@@ -15,7 +15,7 @@ module Gherkin
       
       def assert_pretty(text)
         io = StringIO.new
-        l = PrettyListener.new(io, true)
+        l = PrettyFormatter.new(io, true)
         parser = Gherkin::Parser::Parser.new(l, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser, true)
         lexer.scan(text)
@@ -26,7 +26,7 @@ module Gherkin
 
       before do
         @io = StringIO.new
-        @l = PrettyListener.new(@io, true)
+        @l = PrettyFormatter.new(@io, true)
       end
 
       it "should print comments when scenario is longer" do

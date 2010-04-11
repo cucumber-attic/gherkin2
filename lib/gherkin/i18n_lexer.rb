@@ -6,20 +6,11 @@ module Gherkin
 
   # The main entry point to lexing Gherkin source.
   class I18nLexer
+    require 'gherkin/java_impl'
+    java_impl('gherkin.jar')
+
     LANGUAGE_PATTERN = /language\s*:\s*(.*)/ #:nodoc:
-
     attr_reader :i18n_language
-
-    class << self
-      def new(listener, force_ruby)
-        if !force_ruby && defined?(JRUBY_VERSION)
-          require 'gherkin.jar'
-          Java::Gherkin::I18nLexer.new(listener)
-        else
-          super
-        end
-      end
-    end
 
     def initialize(listener, force_ruby)
       @listener = listener

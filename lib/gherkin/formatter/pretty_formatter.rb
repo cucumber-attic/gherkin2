@@ -6,19 +6,11 @@ require 'gherkin/formatter/argument'
 
 module Gherkin
   module Formatter
-    class PrettyListener
+    class PrettyFormatter
+      require 'gherkin/java_impl'
+      java_impl('gherkin.jar')
+
       include Colors
-      
-      class << self
-        def new(io, monochrome=false)
-          if defined?(JRUBY_VERSION)
-            require 'gherkin.jar'
-            Java::GherkinFormatter::PrettyFormatter.new(io, monochrome)
-          else
-            super
-          end
-        end
-      end
 
       def initialize(io, monochrome=false)
         @io = io

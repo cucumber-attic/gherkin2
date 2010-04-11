@@ -7,17 +7,11 @@ module Gherkin
     end
 
     class Parser
-      def self.new(listener, raise_on_error=true, machine_name='root')
-        if defined?(JRUBY_VERSION)
-          require 'gherkin.jar'
-          Java::GherkinParser::Parser.new(listener, raise_on_error, machine_name)
-        else
-          super
-        end
-      end
+      require 'gherkin/java_impl'
+      java_impl('gherkin.jar')
 
       # Initialize the parser. +machine_name+ refers to a state machine table.
-      def initialize(listener, raise_on_error, machine_name)
+      def initialize(listener, raise_on_error=true, machine_name='root')
         @listener = listener
         @raise_on_error = raise_on_error
         @machines = []

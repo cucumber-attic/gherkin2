@@ -1,18 +1,10 @@
 module Gherkin
   module Formatter
     class Argument
-      attr_reader :byte_offset, :val
+      require 'gherkin/java_impl'
+      java_impl('gherkin.jar')
 
-      class << self
-        def new(byte_offset, val)
-          if defined?(JRUBY_VERSION)
-            require 'gherkin.jar'
-            Java::GherkinFormatter::Argument.new(byte_offset, val)
-          else
-            super
-          end
-        end
-      end
+      attr_reader :byte_offset, :val
 
       def initialize(byte_offset, val)
         @byte_offset, @val = byte_offset, val

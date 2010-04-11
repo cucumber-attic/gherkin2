@@ -1,11 +1,11 @@
 require 'stringio'
 require 'gherkin'
-require 'gherkin/formatter/pretty_listener'
+require 'gherkin/formatter/pretty_formatter'
 
 module PrettyPlease
   def pretty(source)
     io       = StringIO.new
-    listener = Gherkin::Formatter::PrettyListener.new(io)
+    listener = Gherkin::Formatter::PrettyFormatter.new(io)
     parser   = Gherkin::Parser.new(listener, true)
     lexer    = Gherkin::I18nLexer.new(parser)
     lexer.scan(source)

@@ -9,6 +9,10 @@ public class I18nLexer implements Lexer {
     private I18nLanguage i18nLanguage;
 
     public I18nLexer(Listener listener) {
+        this(listener, false);
+    }
+
+    public I18nLexer(Listener listener, boolean ignored) {
         this.listener = listener;
     }
 

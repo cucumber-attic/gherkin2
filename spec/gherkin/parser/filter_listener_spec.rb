@@ -1,7 +1,7 @@
 # encoding: utf-8
 require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
 require 'gherkin/parser/filter_listener'
-require 'gherkin/formatter/pretty_listener'
+require 'gherkin/formatter/pretty_formatter'
 require 'stringio'
 
 module Gherkin
@@ -25,7 +25,7 @@ module Gherkin
 
       def verify_output(expected_output, filters)
         io = StringIO.new
-        scan(Gherkin::Formatter::PrettyListener.new(io, true), filters)
+        scan(Gherkin::Formatter::PrettyFormatter.new(io, true), filters)
         io.rewind
         io.read.should == expected_output
       end

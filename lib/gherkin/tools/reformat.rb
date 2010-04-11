@@ -1,6 +1,6 @@
 require 'stringio'
 require 'gherkin/tools/files'
-require 'gherkin/tools/pretty_listener'
+require 'gherkin/formatter/pretty_formatter'
 
 module Gherkin
   module Tools
@@ -8,7 +8,7 @@ module Gherkin
       def run
         each do |file|
           purdy = StringIO.new
-          listener = PrettyListener.new(purdy)
+          listener = PrettyFormatter.new(purdy)
           scan(file, listener)
           purdy.rewind
           File.open(file, 'w') {|io| io.write(purdy.read)}
