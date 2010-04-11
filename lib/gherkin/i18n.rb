@@ -109,12 +109,20 @@ module Gherkin
       keywords('and', space)
     end
 
+    # Keywords that can be used in Gherkin source
     def step_keywords
       %w{given when then and but}.map{|key| keywords(key, true)}.flatten.uniq
     end
 
     def gwt_keywords
       %w{given when then}.map{|key| keywords(key, true)}.flatten.uniq
+    end
+
+    # Keywords that can be used in code
+    def code_keywords
+      result = step_keywords.map{|keyword| keyword.gsub(/[\s']/, '').strip}
+      result.delete('*')
+      result
     end
 
     def keywords(key, space=false)
