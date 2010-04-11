@@ -120,7 +120,7 @@ module Gherkin
 
     # Keywords that can be used in code
     def code_keywords
-      result = step_keywords.map{|keyword| keyword.gsub(/[\s',]/, '').strip}
+      result = gwt_keywords.map{|keyword| keyword.gsub(/[\s',]/, '').strip}
       result.delete('*')
       result
     end
