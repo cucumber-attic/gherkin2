@@ -293,8 +293,10 @@ store_pystring_content(VALUE listener,
   snprintf(pat, 32, "^ {0,%d}", start_col); 
   VALUE re = rb_reg_regcomp(rb_str_new2(pat));
   VALUE re2 = rb_reg_regcomp(rb_str_new2("\r\\Z"));
+  VALUE unescape_escaped_quotes = rb_reg_regcomp(rb_str_new2("\\\\\"\\\\\"\\\\\""));
   rb_funcall(con, rb_intern("gsub!"), 2, re, rb_str_new2(""));
   rb_funcall(con, rb_intern("sub!"), 2, re2, rb_str_new2(""));
+  rb_funcall(con, rb_intern("gsub!"), 2, unescape_escaped_quotes, rb_str_new2("\"\"\""));
   rb_funcall(listener, rb_intern("py_string"), 2, con, INT2FIX(current_line));
 }
 

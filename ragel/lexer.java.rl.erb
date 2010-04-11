@@ -28,7 +28,7 @@ public class <%= @i18n.sanitized_key.upcase %> implements Lexer {
     }
 
     action store_pystring_content {
-      String con = unindent(startCol, substring(data, contentStart, nextKeywordStart-1).replaceFirst("(\\r?\\n)?( )*\\Z", ""));
+      String con = unindent(startCol, substring(data, contentStart, nextKeywordStart-1).replaceFirst("(\\r?\\n)?( )*\\Z", "").replaceAll("\\\\\"\\\\\"\\\\\"", "\"\"\""));
       listener.py_string(con, currentLine);
     }
 

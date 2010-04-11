@@ -125,6 +125,26 @@ EOS
         @listener.should_receive(:py_string).with("Line one\r\nLine two\r\n", 1)
         @lexer.scan("\"\"\"\r\nLine one\r\nLine two\r\n\r\n\"\"\"")
       end
+
+      it "should unescape escaped triple quotes" do
+str = <<EOS
+    """
+    \\"\\"\\"
+    """
+EOS
+        @listener.should_receive(:py_string).with('"""', 1)
+        @lexer.scan(str)
+      end
+
+      it "should not unescape escaped single quotes" do
+str = <<EOS
+    """
+    \\" \\"\\"
+    """
+EOS
+        @listener.should_receive(:py_string).with('\" \"\"', 1)
+        @lexer.scan(str)
+      end
     end
   end
 end
