@@ -5,16 +5,8 @@ module Gherkin
   module Parser
     # This class filters events based on filter criteria.
     class FilterListener
-      class << self
-        def new(listener, filters)
-          if defined?(JRUBY_VERSION)
-            require 'gherkin.jar'
-            Java::GherkinParser::FilterListener.new(listener, filters)
-          else
-            super
-          end
-        end
-      end
+      require 'gherkin/java_impl'
+      java_impl('gherkin.jar')
     
       # Creates a new instance that replays events to +listener+, filtered by +filters+,
       # a Hash that can contain:
