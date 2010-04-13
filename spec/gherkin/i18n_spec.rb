@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 module Gherkin
   module Lexer
-    describe "i18n parsing" do
+    describe I18n do
       before do
         @listener = Gherkin::SexpRecorder.new
       end
@@ -59,6 +59,14 @@ module Gherkin
           [:row, %w{2 3 5}, 13],
           [:eof]
         ]
+      end
+
+      describe 'keywords' do
+        it "should have code keywords without space, comma or apostrophe" do
+          ['Akkor', 'Etantdonné', 'Lorsque', '假設'].each do |code_keyword|
+            I18n.code_keywords.should include(code_keyword)
+          end
+        end
       end
     end
   end
