@@ -4,7 +4,6 @@ import java.util.List;
 
 public class NameFilterMethod implements IFilterMethod {
 
-	private Sexp sexp;
 	private List filters;
 
 	@Override
@@ -20,9 +19,9 @@ public class NameFilterMethod implements IFilterMethod {
 
 	@Override
 	public boolean filter(Sexp sexp) {
-//		for ( iterable_element : iterable) {
-//			
-//		}
+		for (Object item : filters) {
+			System.out.println("NameFilterMethod: " + item.getClass().getName() + ", " + item);
+		}
 		return false;
 	}
 
