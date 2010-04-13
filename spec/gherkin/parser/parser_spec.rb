@@ -35,7 +35,7 @@ module Gherkin
         it "should be reusable for several feature files (native lexer: #{native})" do
           listener = mock('listener', :null_object => true)
           parser = Parser.new(listener, true)
-          lexer = I18nLexer.new(parser, native)
+          lexer = Gherkin::I18nLexer.new(parser, native)
           feature = <<-EOF
 Feature: foo
   Scenario: bar

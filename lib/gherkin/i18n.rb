@@ -35,6 +35,14 @@ module Gherkin
         
         unique_keywords.flatten.compact.sort.reverse.uniq.join('|').gsub(/\*/, '\*')
       end
+
+      def code_keywords
+        all.map{|i18n| i18n.code_keywords}.flatten.uniq.sort
+      end
+
+      def code_keyword_for(gherkin_keyword)
+        gherkin_keyword.gsub(/[\s',]/, '').strip
+      end
     end
 
     attr_reader :key
@@ -120,7 +128,7 @@ module Gherkin
 
     # Keywords that can be used in code
     def code_keywords
-      result = gwt_keywords.map{|keyword| keyword.gsub(/[\s',]/, '').strip}
+      result = gwt_keywords.map{|keyword| self.class.code_keyword_for(keyword)}
       result.delete('*')
       result
     end
