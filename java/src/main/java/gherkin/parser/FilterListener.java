@@ -294,15 +294,7 @@ public class FilterListener implements Listener {
 		return filterMethod.eval(currentTags());
 	}
 
-	private void replayBuffers() {
-		// TODO Auto-generated method stub
-	}
-
-	private List extractTags() {
-		return new ArrayList();
-	}
-
-	private void replayExamplesRowsBuffer() throws Exception {
+	private void replayBuffers() throws Exception {
 		List<Sexp> allItems = new ArrayList<Sexp>();
 		allItems.addAll(featureBuffer);
 		allItems.addAll(scenarioBuffer);
@@ -313,7 +305,30 @@ public class FilterListener implements Listener {
 		scenarioBuffer.clear();
 	}
 
-	private void replayBuffersIfAllOk() {
+	private List<String> extractTags() {
+		List<String> retVal = new ArrayList<String>();
+		for (Sexp sexp : metaBuffer) {
+			if (sexp.getEvent() == Sexp.Events.TAG){;
+				retVal.add(sexp.getKeyword());
+			}
+		}
+		return retVal;
+	}
+
+	private void replayExamplesRowsBuffer() throws Exception {
+		if (!examplesRowsBuffer.isEmpty()){
+			replayBuffers();
+			List<Sexp> exampleItems = new ArrayList<Sexp>();
+			exampleItems.addAll(examplesBuffer);
+			exampleItems.addAll(examplesRowsBuffer);
+			for (Sexp sexp : exampleItems) {
+				sexp.replay(listener);
+			}
+			examplesRowsBuffer.clear();
+		}
+	}
+
+	private void replayBuffersIfAllOk() throws Exception {
 		if (scenarioOk || examplesOk || featureOk){
 			replayBuffers();
 		}
