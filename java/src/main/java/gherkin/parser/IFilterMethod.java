@@ -5,6 +5,7 @@ import java.util.List;
 public interface IFilterMethod {
 
 	void setFilters(List filters);
-	boolean eval(List currentTags);
+	boolean filterTags(List currentTags);
+	boolean filter(Sexp sexp);
 
 }

@@ -286,17 +286,19 @@ public class FilterListener implements Listener {
 	}
 
 	private boolean filterMatch(List<Sexp> buffer) {
-		if (filterMethod.getClass() == TagFilterMethod.class){
-			return false;
+		for (Sexp sexp : buffer) {
+			if (filterMethod.filter(sexp)){
+				return true;
+			}
 		}
-		return true;
+		return false;
 	}
 
 	private boolean tagMatch() {
 		if (filterMethod.getClass() != TagFilterMethod.class){
 			return false;
 		}
-		return filterMethod.eval(currentTags());
+		return filterMethod.filterTags(currentTags());
 	}
 
 	private void replayBuffers() throws Exception {

@@ -7,7 +7,7 @@ public class TagFilterMethod implements IFilterMethod {
 	private List filters;
 
 	@Override
-	public boolean eval(List currentTags) {
+	public boolean filterTags(List currentTags) {
 		List<String> tags = (List<String>)currentTags;
 		for (String tag : tags) {
 			if (filters.contains(tag)){
@@ -21,6 +21,11 @@ public class TagFilterMethod implements IFilterMethod {
 	@Override
 	public void setFilters(List filters) {
 		this.filters = filters;
+	}
+
+	@Override
+	public boolean filter(Sexp sexp) {
+		return false;
 	}
 
 }
