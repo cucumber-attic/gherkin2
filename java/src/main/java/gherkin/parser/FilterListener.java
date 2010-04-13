@@ -2,7 +2,9 @@ package gherkin.parser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import gherkin.Listener;
 
@@ -24,11 +26,13 @@ public class FilterListener implements Listener {
 	private TableState tableState = TableState.STEP;
 	private boolean scenarioOk = false;
 	private boolean examplesOk = false;
+	private IFilterMethod filterMethod;
 
 	@SuppressWarnings("unchecked")
 	public FilterListener(Listener listener, List filters) {
 		this.listener = listener;
 		this.filters = filters;
+		detectFilters(filters);
 	}
 
 	@Override
@@ -37,7 +41,7 @@ public class FilterListener implements Listener {
 			listener.tag(name, line);
 		}
 		else{
-			metaBuffer.add(new Sexp(name, line));
+			metaBuffer.add(new Sexp(Sexp.Events.TAG, name, line));
 		}
 		replayBuffersIfAllOk();
 	}
@@ -48,7 +52,7 @@ public class FilterListener implements Listener {
 			listener.comment(content, line);
 		}
 		else{
-			metaBuffer.add(new Sexp(content, line));
+			metaBuffer.add(new Sexp(Sexp.Events.COMMENT, content, line));
 		}
 		replayBuffersIfAllOk();
 	}
@@ -59,7 +63,7 @@ public class FilterListener implements Listener {
 			listener.feature(keyword, name, line);
 		}
 		else{
-			Sexp sexp = new Sexp(keyword, name, line);
+			Sexp sexp = new Sexp(Sexp.Events.FEATURE, keyword, name, line);
 			featureBuffer.clear();
 			featureBuffer.addAll(metaBuffer);
 			featureBuffer.add(sexp);
@@ -79,7 +83,7 @@ public class FilterListener implements Listener {
 			listener.background(keyword, name, line);
 		}
 		else{
-			Sexp sexp = new Sexp(keyword, name, line);
+			Sexp sexp = new Sexp(Sexp.Events.BACKGROUND, keyword, name, line);
 			featureBuffer.addAll(metaBuffer);
 			featureBuffer.add(sexp);
 			metaBuffer.clear();
@@ -98,7 +102,7 @@ public class FilterListener implements Listener {
 			listener.scenario(keyword, name, line);
 		}
 		else{
-			Sexp sexp = new Sexp(keyword, name, line);
+			Sexp sexp = new Sexp(Sexp.Events.SCENARIO, keyword, name, line);
 			replayExamplesRowsBuffer();
 			scenarioBuffer.clear();
 			scenarioBuffer.addAll(metaBuffer);
@@ -122,7 +126,7 @@ public class FilterListener implements Listener {
 			listener.scenario_outline(keyword, name, line);
 		}
 		else{
-			Sexp sexp = new Sexp(keyword, name, line);
+			Sexp sexp = new Sexp(Sexp.Events.SCENARIO_OUTLINE, keyword, name, line);
 			replayExamplesRowsBuffer();
 			scenarioBuffer.clear();
 			scenarioBuffer.addAll(metaBuffer);
@@ -146,7 +150,7 @@ public class FilterListener implements Listener {
 			listener.examples(keyword, name, line);
 		}
 		else{
-			Sexp sexp = new Sexp(keyword, name, line);
+			Sexp sexp = new Sexp(Sexp.Events.EXAMPLES, keyword, name, line);
 			replayExamplesRowsBuffer();
 			examplesBuffer.clear();
 			examplesBuffer.addAll(metaBuffer);
@@ -169,7 +173,7 @@ public class FilterListener implements Listener {
 			listener.step(keyword, name, line);
 		}
 		else{
-			Sexp sexp = new Sexp(keyword, name, line);
+			Sexp sexp = new Sexp(Sexp.Events.STEP, keyword, name, line);
 			if (tableState.equals(TableState.BACKGROUND)){
 				featureBuffer.addAll(metaBuffer);
 				featureBuffer.add(sexp);
@@ -193,7 +197,7 @@ public class FilterListener implements Listener {
 			listener.row(row, line);
 		}
 		else{
-			Sexp sexp = new Sexp(row, line);
+			Sexp sexp = new Sexp(Sexp.Events.ROW, row, line);
 			if (tableState.equals(TableState.EXAMPLES)){
 				if (!headerRowAllreadyBuffered()){
 					examplesBuffer.add(sexp);
@@ -229,7 +233,7 @@ public class FilterListener implements Listener {
 			listener.py_string(string, line);
 		}
 		else{
-			scenarioBuffer.add(new Sexp(string, line));
+			scenarioBuffer.add(new Sexp(Sexp.Events.PY_STRING, string, line));
 			scenarioOk |= filterMatch(scenarioBuffer);
 		}
 		replayBuffersIfAllOk();
@@ -244,6 +248,22 @@ public class FilterListener implements Listener {
 	@Override
 	public void syntax_error(String state, String event,
 			List<String> legalEvents, int line) throws Exception {
+	}
+
+	private void detectFilters(List filters) {
+		checkIfMoreThanOneFilterType(filters);
+		this.filterMethod = new FilterMethodFactory().getFilterMethod(filters.get(0).getClass());
+		this.filterMethod.setFilters(filters);
+	}
+
+	private void checkIfMoreThanOneFilterType(List filters) {
+		Set<Class> filterTypes = new HashSet<Class>();
+		for (Object object : filters) {
+			filterTypes.add(object.getClass());
+		}
+		if (filterTypes.size() > 1){
+			throw new RuntimeException("Bad Filter: " + filterTypes);
+		}
 	}
 
 	private boolean hasNoFilters() {
@@ -267,30 +287,44 @@ public class FilterListener implements Listener {
 		return false;
 	}
 
-	private List extractTags() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private void replayExamplesRowsBuffer() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	private boolean tagMatch() {
-		// TODO Auto-generated method stub
-		return false;
+		if (filterMethod.getClass() != TagFilterMethod.class){
+			return false;
+		}
+		return filterMethod.eval(currentTags());
 	}
-
 
 	private void replayBuffers() {
 		// TODO Auto-generated method stub
+	}
+
+	private List extractTags() {
+		return new ArrayList();
+	}
+
+	private void replayExamplesRowsBuffer() throws Exception {
+		List<Sexp> allItems = new ArrayList<Sexp>();
+		allItems.addAll(featureBuffer);
+		allItems.addAll(scenarioBuffer);
+		for (Sexp item : featureBuffer) {
+			item.replay(listener);
+		}
+		featureBuffer.clear();
+		scenarioBuffer.clear();
 	}
 
 	private void replayBuffersIfAllOk() {
 		if (scenarioOk || examplesOk || featureOk){
 			replayBuffers();
 		}
+	}
+
+	private List currentTags() {
+		List retVal = new ArrayList();
+		retVal.addAll(featureTags);
+		retVal.addAll(scenarioTags);
+		retVal.addAll(exampleTags);
+		return retVal;
 	}
 
 }
