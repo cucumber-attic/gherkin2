@@ -2,6 +2,7 @@ package gherkin.parser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -251,6 +252,9 @@ public class FilterListener implements Listener {
 	}
 
 	private void detectFilters(List filters) {
+		if (hasNoFilters()){
+			return;
+		}
 		checkIfMoreThanOneFilterType(filters);
 		this.filterMethod = new FilterMethodFactory().getFilterMethod(filters.get(0).getClass());
 		this.filterMethod.setFilters(filters);
@@ -278,13 +282,14 @@ public class FilterListener implements Listener {
 	}
 
 	private boolean filterMatch(Sexp sexp) {
-		// TODO Auto-generated method stub
-		return false;
+		return filterMatch(Arrays.asList(sexp));
 	}
 
 	private boolean filterMatch(List<Sexp> buffer) {
-		// TODO Auto-generated method stub
-		return false;
+		if (filterMethod.getClass() == TagFilterMethod.class){
+			return false;
+		}
+		return true;
 	}
 
 	private boolean tagMatch() {
