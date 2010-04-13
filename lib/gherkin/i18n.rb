@@ -35,6 +35,10 @@ module Gherkin
         
         unique_keywords.flatten.compact.sort.reverse.uniq.join('|').gsub(/\*/, '\*')
       end
+
+      def code_keywords
+        all.map{|i18n| i18n.code_keywords}.flatten.uniq
+      end
     end
 
     attr_reader :key
