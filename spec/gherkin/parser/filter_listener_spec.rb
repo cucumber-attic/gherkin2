@@ -31,8 +31,6 @@ module Gherkin
       end
 
       def scan(listener, filters)
-        tag_expressions = filters.delete(:tag_expressions)
-        filters[:tag_expression] = TagExpression.new(*tag_expressions) if tag_expressions
         filter_listener = FilterListener.new(listener, filters)
         parser = Gherkin::Parser::Parser.new(filter_listener, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser, true)
