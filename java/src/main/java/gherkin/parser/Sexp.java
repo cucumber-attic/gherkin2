@@ -91,4 +91,8 @@ public class Sexp {
 		return line;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 }

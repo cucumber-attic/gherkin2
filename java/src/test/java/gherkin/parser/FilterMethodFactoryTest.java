@@ -2,6 +2,8 @@ package gherkin.parser;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.regex.Pattern;
+
 import org.junit.Test;
 
 
@@ -21,7 +23,7 @@ public class FilterMethodFactoryTest {
 
 	@Test
 	public void getFilterMethod_withOther_returnsNameFilterMethod() throws Exception {
-		IFilterMethod method = new FilterMethodFactory().getFilterMethod(Object.class);
+		IFilterMethod method = new FilterMethodFactory().getFilterMethod(Pattern.class);
 		assertEquals(NameFilterMethod.class, method.getClass());
 	}
 	

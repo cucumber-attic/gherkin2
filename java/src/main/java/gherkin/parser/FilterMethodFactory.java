@@ -1,5 +1,7 @@
 package gherkin.parser;
 
+import java.util.regex.Pattern;
+
 public class FilterMethodFactory {
 
 	public IFilterMethod getFilterMethod(Class<? extends Object> typeOfFilter) {
@@ -9,12 +11,11 @@ public class FilterMethodFactory {
 		else if (Long.class == typeOfFilter){
 			return new LineFilterMethod();
 		}
-//		else if (RubyRegexp.class == typeOfFilter){
-//			return new NameFilterMethod();
-//		}
-		else{
+		else if (Pattern.class == typeOfFilter){
 			return new NameFilterMethod();
-//			throw new RuntimeException("Could not create filter method for unknown filter of type: " + typeOfFilter);
+		}
+		else{
+			throw new RuntimeException("Could not create filter method for unknown filter of type: " + typeOfFilter);
 		}
 	}
 
