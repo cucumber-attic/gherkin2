@@ -30,6 +30,10 @@ module Gherkin
         it "should not match @bar" do
           @e.eval(['@bar']).should == false
         end
+
+        it "should not match no tags" do
+          @e.eval([]).should == false
+        end
       end
 
       context "!@foo" do

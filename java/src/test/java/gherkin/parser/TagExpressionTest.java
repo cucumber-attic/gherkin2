@@ -19,4 +19,10 @@ public class TagExpressionTest {
         TagExpression e = new TagExpression(Collections.singletonList("~@foo"));
         assertFalse(e.eval(Collections.singletonList("@foo")));
     }
+
+    @Test
+    public void fooShouldNotMatchEmptyTags() {
+        TagExpression e = new TagExpression(Collections.singletonList("@foo"));
+        assertFalse(e.eval(Collections.<String>emptyList()));
+    }
 }

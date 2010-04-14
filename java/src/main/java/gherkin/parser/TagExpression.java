@@ -16,7 +16,7 @@ public class TagExpression {
     }
 
     public boolean eval(List<String> tags) {
-        return tags.isEmpty() || and.eval(tags);
+        return and.isEmpty() || and.eval(tags);
     }
 
     public Map<String,Integer> limits() {
@@ -71,6 +71,10 @@ public class TagExpression {
                 result = result && expression.eval(tags);
             }
             return result;
+        }
+
+        public boolean isEmpty() {
+            return expressions.isEmpty();
         }
     }
 
