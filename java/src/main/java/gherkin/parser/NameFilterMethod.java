@@ -1,10 +1,11 @@
 package gherkin.parser;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class NameFilterMethod implements IFilterMethod {
 
-	private List filters;
+	private List<Pattern> filters;
 
 	@Override
 	public boolean filterTags(List currentTags) {
@@ -19,8 +20,12 @@ public class NameFilterMethod implements IFilterMethod {
 
 	@Override
 	public boolean filter(Sexp sexp) {
-		for (Object item : filters) {
-			System.out.println("NameFilterMethod: " + item.getClass().getName() + ", " + item);
+		for (Pattern filter : filters) {
+			if (filter.matcher(sexp.getName()).matches()){
+				System.out.println("Filter [" + filter + "] Matched: [" + sexp.getName() + "]");
+				return true;
+			}
+			System.out.println("Filter [" + filter + "] No Match Matched: [" + sexp.getName() + "]");
 		}
 		return false;
 	}
