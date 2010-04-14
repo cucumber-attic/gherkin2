@@ -95,4 +95,10 @@ public class Sexp {
 		return name;
 	}
 
+	@Override
+	public String toString() {
+		return "Sexp [event=" + event + ", keyword=" + keyword + ", line="
+				+ line + ", name=" + name + ", row=" + row + "]";
+	}
+
 }
