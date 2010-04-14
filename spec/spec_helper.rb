@@ -39,6 +39,16 @@ module GherkinSpecHelper
   def scan_file(file)
     @lexer.scan(File.new(File.dirname(__FILE__) + "/gherkin/fixtures/" + file).read)
   end
+
+  def rubify_hash(hash)
+    if defined?(JRUBY_VERSION)
+      h = {}
+      hash.keySet.each{|key| h[key] = hash[key]}
+      h
+    else
+      hash
+    end
+  end
 end
 
 Spec::Runner.configure do |c|
