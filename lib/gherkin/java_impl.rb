@@ -20,14 +20,22 @@ class Class
           end
         end
 
-        define_method(:new) do |*args|
+        def new(*args)
+          java_class.new(*javaify(args))
+        end
+
+        def ===(object)
+          super || object.java_kind_of?(java_class)
+        end
+
+        def java_class
           names = self.name.split('::')
           package = Java
           names[0..-2].each do |module_name|
             package = package.__send__(module_name.downcase)
           end
 
-          package.__send__(names[-1]).new(*javaify(args))
+          package.__send__(names[-1])
         end
       end
     end

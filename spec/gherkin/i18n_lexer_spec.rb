@@ -18,5 +18,9 @@ module Gherkin
       @lexer.scan("Feature: foo\n")
       @lexer.i18n_language.key.should == "en"
     end
+
+    it "should === its ruby class, even when the impl is Java" do
+      I18nLexer.should === I18nLexer.new(SexpRecorder.new, true)
+    end
   end
 end

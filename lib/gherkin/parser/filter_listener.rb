@@ -141,7 +141,7 @@ module Gherkin
         when Regexp 
           :name_match?
         when String 
-          TagExpression.new(*filters)
+          TagExpression.new(filters)
         end
       end
 
@@ -161,7 +161,7 @@ module Gherkin
 
       def tag_match?
         return false unless TagExpression === @filter_method
-        @filter_method.eval(*current_tags)
+        @filter_method.eval(current_tags)
       end
 
       def replay_buffers
