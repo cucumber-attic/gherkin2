@@ -15,9 +15,9 @@ public class FilterListener implements Listener {
 	private final Listener listener;
 	private final List<Sexp> metaBuffer = new ArrayList<Sexp>();
 	private final List<Sexp> featureBuffer = new ArrayList<Sexp>();
-	private final List<Sexp> scenarioBuffer = new ArrayList();
-	private final List<Sexp> examplesBuffer = new ArrayList();
-	private final List<Sexp> examplesRowsBuffer = new ArrayList();
+	private final List<Sexp> scenarioBuffer = new ArrayList<Sexp>();
+	private final List<Sexp> examplesBuffer = new ArrayList<Sexp>();
+	private final List<Sexp> examplesRowsBuffer = new ArrayList<Sexp>();
 	
 	private List featureTags = new ArrayList();
 	private List scenarioTags = new ArrayList();
