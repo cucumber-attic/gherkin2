@@ -60,6 +60,7 @@ public class FilterListener implements Listener {
 
 	@Override
 	public void feature(String keyword, String name, int line) throws Exception {
+		System.out.println("Feature Line: " + line);
 		if (hasNoFilters()){
 			listener.feature(keyword, name, line);
 		}
@@ -99,6 +100,7 @@ public class FilterListener implements Listener {
 	@Override
 	public void scenario(String keyword, String name, int line)
 			throws Exception {
+		System.out.println("Scenario: " + keyword + ", " + name + "," + line);
 		if (hasNoFilters()){
 			listener.scenario(keyword, name, line);
 		}
@@ -170,6 +172,7 @@ public class FilterListener implements Listener {
 	@Override
 	public void step(String keyword, String name, int line) throws IOException,
 			Exception {
+		System.out.printf("Step %s, %s, %d\n", keyword, name, line);
 		if (hasNoFilters()){
 			listener.step(keyword, name, line);
 		}
@@ -305,7 +308,8 @@ public class FilterListener implements Listener {
 		List<Sexp> allItems = new ArrayList<Sexp>();
 		allItems.addAll(featureBuffer);
 		allItems.addAll(scenarioBuffer);
-		for (Sexp item : featureBuffer) {
+		for (Sexp item : allItems) {
+			System.out.println("Replay: " + item);
 			item.replay(listener);
 		}
 		featureBuffer.clear();
@@ -329,6 +333,7 @@ public class FilterListener implements Listener {
 			exampleItems.addAll(examplesBuffer);
 			exampleItems.addAll(examplesRowsBuffer);
 			for (Sexp sexp : exampleItems) {
+				System.out.println("replayExamplesRowsBuffer: " + sexp);
 				sexp.replay(listener);
 			}
 			examplesRowsBuffer.clear();
@@ -337,6 +342,7 @@ public class FilterListener implements Listener {
 
 	private void replayBuffersIfAllOk() throws Exception {
 		if (scenarioOk || examplesOk || featureOk){
+			System.out.println("replayBuffersIfAllOk");
 			replayBuffers();
 		}
 	}
