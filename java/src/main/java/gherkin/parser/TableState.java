@@ -1,5 +1,5 @@
 package gherkin.parser;
 
 public enum TableState {
-	BACKGROUND, STEP, EXAMPLES
+    BACKGROUND, STEP, EXAMPLES
 }

@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 public class TagExpression {
-    private final Map<String, Integer> limits = new HashMap<String,Integer>();
+    private final Map<String, Integer> limits = new HashMap<String, Integer>();
     private And and = new And();
 
     public TagExpression(List<String> tagExpressions) {
-        for(String tagExpression: tagExpressions) {
+        for (String tagExpression : tagExpressions) {
             add(tagExpression.split("\\s*,\\s*"));
         }
     }
@@ -19,19 +19,19 @@ public class TagExpression {
         return and.isEmpty() || and.eval(tags);
     }
 
-    public Map<String,Integer> limits() {
+    public Map<String, Integer> limits() {
         return limits;
     }
 
     private void add(String[] tags) {
         Or or = new Or();
-        for(String tag : tags) {
+        for (String tag : tags) {
             tag = tag.trim();
-            if(tag.startsWith("~")) {
+            if (tag.startsWith("~")) {
                 or.add(new Not(new Var(tag.substring(1))));
             } else {
                 String[] tagAndLimit = tag.split(":");
-                if(tagAndLimit.length == 2) {
+                if (tagAndLimit.length == 2) {
                     tag = tagAndLimit[0];
                     int limit = Integer.parseInt(tagAndLimit[1]);
                     limits.put(tag, limit);
@@ -67,7 +67,7 @@ public class TagExpression {
 
         public boolean eval(List<String> tags) {
             boolean result = true;
-            for(Expression expression: expressions) {
+            for (Expression expression : expressions) {
                 result = result && expression.eval(tags);
             }
             return result;
@@ -87,7 +87,7 @@ public class TagExpression {
 
         public boolean eval(List<String> tags) {
             boolean result = false;
-            for(Expression expression : expressions) {
+            for (Expression expression : expressions) {
                 result = result || expression.eval(tags);
             }
             return result;
@@ -102,8 +102,8 @@ public class TagExpression {
         }
 
         public boolean eval(List<String> tags) {
-            for(String tag: tags) {
-                if(tagName.equals(tag)) {
+            for (String tag : tags) {
+                if (tagName.equals(tag)) {
                     return true;
                 }
             }
