@@ -3,7 +3,6 @@ package gherkin.parser;
 import gherkin.I18nLexer;
 import gherkin.Lexer;
 import gherkin.Listener;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationHandler;
@@ -12,10 +11,14 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
 
-public class FilterListenerScenarioTest {
+/**
+ * Just a couple of translated RSpec specs, making it easier to fix problems in an IDE.
+ */
+public class FilterListenerTest {
     private String input;
     private List<Object[]> argumentList = new ArrayList<Object[]>();
 
@@ -26,19 +29,48 @@ public class FilterListenerScenarioTest {
             }
     }
 
-    @Before
-    public void setInput() {
+    @Test
+    public void shouldReplayIdenticallyWhenLineFilterIsFeatureLine() throws Exception {
         input = "Feature: 1\n" +
                 "  Scenario: 2\n" +
                 "    Given 3\n" +
                 "\n" +
                 "  Scenario: 5\n" +
-                "    Given 6";
+                "    Given 6" +
+                "";
+        verifyFilters(Arrays.asList(1,2,3,5,6, -1), Arrays.asList(1));
     }
 
+
     @Test
-    public void shouldReplayIdenticallyWhenLineFilterIsFeatureLine() throws Exception {
-        verifyFilters(Arrays.asList(1,2,3,5,6, -1), Arrays.asList(1));
+    public void scenarioOutlineShouldMatchExamplesNameOfSecondScenarioOutline() throws Exception {
+        input = "Feature: 1\n" +
+                "\n" +
+                "  @tag3\n" +
+                "  Scenario Outline: 4\n" +
+                "    Given <foo> 5\n" +
+                "    When <bar> 6\n" +
+                "\n" +
+                "    @tag8\n" +
+                "    Examples: 9\n" +
+                "      | foo | bar |\n" +
+                "      | 11  | 11  |\n" +
+                "      | 12  | 12  |\n" +
+                "      | 13  | 13  |\n" +
+                "      | 14  | 14  |\n" +
+                "      | 15  | 15  |\n" +
+                "\n" +
+                "    @tag17\n" +
+                "    Examples: 18\n" +
+                "      | snip | snap |\n" +
+                "      | 20   | 20   |\n" +
+                "      | 21   | 21   |\n" +
+                "\n" +
+                "  Scenario: 23\n" +
+                "    Given 24\n" +
+                "    When 25" +
+                "";
+        verifyFilters(Arrays.asList(1,3,4,5,6,17,18,19,20,21, -1), Arrays.asList(Pattern.compile("18")));
     }
 
     private void verifyFilters(List<Integer> expectedLines, List filters) throws Exception {
