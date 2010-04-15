@@ -150,8 +150,7 @@ module Gherkin
       end
 
       def header_row_already_buffered?
-        return false unless @examples_buffer.any?
-        @examples_buffer[-1].event == :row
+        return @examples_buffer.any? && @examples_buffer[-1].event == :row
       end
       
       def filter_match?(*sexps)
@@ -160,8 +159,7 @@ module Gherkin
       end
 
       def tag_match?
-        return false unless TagExpression === @filter_method
-        @filter_method.eval(current_tags)
+        return TagExpression === @filter_method && @filter_method.eval(current_tags)
       end
 
       def replay_buffers

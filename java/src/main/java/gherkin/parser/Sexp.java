@@ -13,34 +13,31 @@ public class Sexp {
 		PY_STRING
 	}
 
-	private int line;
-	private String name;
-	private String keyword;
-	private List<String> row;
-	private Events event;
+	private final Events event;
+    private final String keyword;
+    private final String name;
+    private final List<String> row;
+    private final int line;
 
 	public Sexp(Events event, String name, int line) {
-		this.event = event;
-		this.name = name;
-		this.line = line;
+        this(event, null, name, line);
 	}
 
 	public Sexp(Events event, String keyword, String name, int line) {
-		this.event = event;
-		this.keyword = keyword;
-		this.name = name;
-		this.line = line;
+        this(event, keyword, name, null, line);
 	}
 
 	public Sexp(Events event, List<String> row, int line) {
-		this.event = event;
-		this.row = row;
-		this.line = line;
+		this(event, null, null, row, line);
 	}
 
-	// null event
-	public Sexp() {
-	}
+    private Sexp(Events event, String keyword, String name, List<String> row, int line) {
+        this.event = event;
+        this.keyword = keyword;
+        this.name = name;
+        this.row = row;
+        this.line = line;
+    }
 
 	public Events getEvent() {
 		return this.event;
@@ -50,41 +47,37 @@ public class Sexp {
 		switch (this.event) {
 		case ROW:
 			listener.row(row, line);
-			;
+            break;
 		case TAG:
 			listener.tag(name, line);
-			;
-		case COMMENT: 
+            break;
+		case COMMENT:
 			listener.comment(name, line);
-			;
+            break;
 		case FEATURE:
 			listener.feature(keyword, name, line);
-			;
+            break;
 		case BACKGROUND:
 			listener.background(keyword, name, line);
-			;
+            break;
 		case SCENARIO:
 			listener.scenario(keyword, name, line);
-			;
+            break;
 		case SCENARIO_OUTLINE:
 			listener.scenario_outline(keyword, name, line);
-			;
+            break;
 		case EXAMPLES:
 			listener.examples(keyword, name, line);
-			;
+            break;
 		case STEP:
 			listener.step(keyword, name, line);
-			;
+            break;
 		case PY_STRING:
 			listener.py_string(name, line);
-			;
+            break;
 		default:
-			break;
+			throw new RuntimeException("Bad event");
 		}
-	}
-
-	public String getKeyword() {
-		return keyword;
 	}
 
 	public Integer getLine() {

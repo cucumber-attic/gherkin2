@@ -4,14 +4,14 @@ import java.util.regex.Pattern;
 
 public class FilterMethodFactory {
 
-	public IFilterMethod getFilterMethod(Class<? extends Object> typeOfFilter) {
-		if (String.class == typeOfFilter){
+	public IFilterMethod getFilterMethod(Class<?> typeOfFilter) {
+		if (String.class.isAssignableFrom(typeOfFilter)){
 			return new TagFilterMethod();
 		}
-		else if (Long.class == typeOfFilter){
+		else if (Number.class.isAssignableFrom(typeOfFilter)){
 			return new LineFilterMethod();
 		}
-		else if (Pattern.class == typeOfFilter){
+		else if (Pattern.class.isAssignableFrom(typeOfFilter)){
 			return new NameFilterMethod();
 		}
 		else{

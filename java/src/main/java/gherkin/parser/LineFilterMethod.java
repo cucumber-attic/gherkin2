@@ -4,21 +4,19 @@ import java.util.List;
 
 public class LineFilterMethod implements IFilterMethod {
 
-	private List<Long> filters;
+	private List<Number> filters;
 
-	@Override
 	public boolean filterTags(List currentTags) {
 		return false;
 	}
 
-	@Override
+    @SuppressWarnings("unchecked")
 	public void setFilters(List filters) {
-		this.filters = (List<Long>)filters;
+		this.filters = (List<Number>)filters;
 	}
 
-	@Override
 	public boolean filter(Sexp sexp) {
-		for (Long filterItem : filters) {
+		for (Number filterItem : filters) {
 			if (filterItem.toString().equals(sexp.getLine().toString())){
 				return true;
 			}
