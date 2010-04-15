@@ -18,9 +18,9 @@ public class NameFilterMethod implements IFilterMethod {
 
 	public boolean filter(Sexp sexp) {
 		for (Pattern filter : filters) {
-			if (filter.matcher(sexp.getName()).matches()){
-				return true;
-			}
+            if(sexp.matches(filter)) {
+                return true;
+            }
 		}
 		return false;
 	}

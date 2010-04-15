@@ -3,10 +3,10 @@ package gherkin.parser;
 import gherkin.Listener;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class Sexp {
-	
-	enum Events{
+    enum Events{
 		ROW, TAG, COMMENT, 
 		FEATURE, BACKGROUND, SCENARIO, 
 		SCENARIO_OUTLINE, EXAMPLES, STEP, 
@@ -80,11 +80,23 @@ public class Sexp {
 		}
 	}
 
+    public boolean matches(Pattern filter) {
+        switch(event) {
+            case FEATURE:
+            case SCENARIO:
+            case SCENARIO_OUTLINE:
+            case EXAMPLES:
+                return filter.matcher(name).matches();
+            default:
+                return false;
+        }
+    }
+
+    public String getName() {
+        return name;
+    }
+    
 	public Integer getLine() {
 		return line;
-	}
-
-	public String getName() {
-		return name;
 	}
 }
