@@ -320,7 +320,7 @@ public class FilterListener implements Listener {
 		List<String> retVal = new ArrayList<String>();
 		for (Sexp sexp : metaBuffer) {
 			if (sexp.getEvent() == Sexp.Events.TAG){;
-				retVal.add(sexp.getKeyword());
+				retVal.add(sexp.getName());
 			}
 		}
 		return retVal;

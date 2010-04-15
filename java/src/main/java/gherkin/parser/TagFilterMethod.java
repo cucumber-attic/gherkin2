@@ -4,23 +4,18 @@ import java.util.List;
 
 public class TagFilterMethod implements IFilterMethod {
 
-	private List filters;
+	private TagExpression tagExpression;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean filterTags(List currentTags) {
-		List<String> tags = (List<String>)currentTags;
-		for (String tag : tags) {
-			if (filters.contains(tag)){
-				return true;
-			}
-		}
-		return false;
+		return tagExpression.eval(currentTags);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setFilters(List filters) {
-		this.filters = filters;
+		this.tagExpression = new TagExpression(filters);
 	}
 
 	@Override
