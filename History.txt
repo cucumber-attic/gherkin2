@@ -1,6 +1,11 @@
 == 1.0.10 (2010-04-16)
 
-=== Added Esperanto and added a Russian synonym for Feature.
+=== New Features
+* Added Esperanto and added a Russian synonym for Feature. (Antono Vasiljev)
+* Pure Java implementation of FilterListener and TagExpression (Mike Gaffney, Aslak Hellesøy)
+
+=== Changed Features
+* TagExpression takes array args instead of varargs. (Aslak Hellesøy)
 
 == 1.0.9 (2010-04-12)
 

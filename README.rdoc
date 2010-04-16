@@ -30,7 +30,7 @@ E.g. in Bash, export RL_LANG="en,fr,no". This can be quite helpful when modifyin
 
 * Bump version in the VERSION.yml file and:
 ** java/pom.xml
-** ikvm/Gherkin/Gherkin,csproj
+** ikvm/Gherkin/Gherkin.csproj
 * rake release:ALL
 * Announce on Cucumber list, IRC and Twitter.
 
