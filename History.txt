@@ -1,3 +1,7 @@
+== 1.0.10 (2010-04-16)
+
+=== Added Esperanto and added a Russian synonym for Feature.
+
 == 1.0.9 (2010-04-12)
 
 === Bugfixes
