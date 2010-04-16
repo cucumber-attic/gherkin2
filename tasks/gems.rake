@@ -1,7 +1,8 @@
 namespace :gems do
   desc "Build MRI/C POSIX gem"
   task :posix => :release_dir  do
-    sh "rake clean spec gemspec build"
+    sh "rake clean spec"
+    sh "rake gemspec build"
     mv "pkg/gherkin-#{GHERKIN_VERSION}.gem", 'release'
   end
 
@@ -16,7 +17,8 @@ namespace :gems do
 
   desc 'Build JRuby gem'
   task :jruby => :release_dir do
-    sh "rvm jruby rake spec gemspec build PLATFORM=java"
+    sh "rvm jruby rake spec"
+    sh "rvm jruby rake gemspec build PLATFORM=java"
     mv "pkg/gherkin-#{GHERKIN_VERSION}-java.gem", 'release'
   end
 
