@@ -117,8 +117,13 @@ module Gherkin
             raise "Bad table_state:#{@table_state.inspect}"
           end
         when :py_string
-          @scenario_buffer << sexp
-          @scenario_ok ||= filter_match?(*@scenario_buffer)
+          if @table_state == :background
+            @feature_buffer << sexp
+            @feature_ok ||= filter_match?(*@feature_buffer)
+          else
+            @scenario_buffer << sexp
+            @scenario_ok ||= filter_match?(*@scenario_buffer)
+          end
         when :eof
           replay_examples_rows_buffer
           sexp.replay(@listener)
