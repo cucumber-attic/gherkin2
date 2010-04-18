@@ -15,10 +15,6 @@ module Gherkin
         languages[key] ||= new(key)
       end
 
-      def languages
-        @languages ||= {}
-      end
-
       # Returns all keyword translations and aliases of +keywords+, escaped and joined with <tt>|</tt>.
       # This method is convenient for editor support and syntax highlighting engines for Gherkin, where
       # there is typically a code generation tool to generate regular expressions for recognising the
@@ -42,6 +38,23 @@ module Gherkin
 
       def code_keyword_for(gherkin_keyword)
         gherkin_keyword.gsub(/[\s',]/, '').strip
+      end
+
+      def language_table
+        require 'stringio'
+        require 'gherkin/formatter/pretty_formatter'
+        io = StringIO.new
+        pf = Gherkin::Formatter::PrettyFormatter.new(io, true)
+        all.each{|i18n| pf.row([i18n.key, i18n.name, i18n.native], 0)}
+        pf.flush_table
+        io.rewind
+        io.read
+      end
+
+      private
+
+      def languages
+        @languages ||= {}
       end
     end
 
@@ -131,6 +144,14 @@ module Gherkin
       result = gwt_keywords.map{|keyword| self.class.code_keyword_for(keyword)}
       result.delete('*')
       result
+    end
+
+    def name
+      @keywords['name']
+    end
+
+    def native
+      @keywords['native']
     end
 
     def keywords(key, space=false)
