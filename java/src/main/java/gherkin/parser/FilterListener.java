@@ -193,8 +193,13 @@ public class FilterListener implements Listener {
         if (hasNoFilters()) {
             listener.py_string(string, line);
         } else {
-            scenarioBuffer.add(new Sexp(Sexp.Events.PY_STRING, string, line));
-            scenarioOk |= filterMatch(scenarioBuffer);
+            if(tableState.equals(TableState.BACKGROUND)) {
+                featureBuffer.add(new Sexp(Sexp.Events.PY_STRING, string, line));
+                featureOk |= filterMatch(featureBuffer);
+            } else {
+                scenarioBuffer.add(new Sexp(Sexp.Events.PY_STRING, string, line));
+                scenarioOk |= filterMatch(scenarioBuffer);
+            }
         }
         replayBuffersIfAllOk();
     }

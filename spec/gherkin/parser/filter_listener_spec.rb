@@ -359,7 +359,6 @@ Feature: 3
 
       context "Background with PyString" do
         it "should replay itself properly" do
-        pending do
           @input = %{#language:en
 Feature: 2
   Background: 3
@@ -381,8 +380,7 @@ Feature: 2
       """
 }
 
-          verify_filters([1,2,3,4,5,15,16,17], [15])
-        end
+          verify_filters([1,2,3,4,5,15,16,17,:eof], [15])
         end
       end
     end

@@ -1,3 +1,8 @@
+== 1.0.12 (2010-04-18)
+
+=== Bugfixes
+* Fixed incorrect filtering of pystring in Background. (Mike Sassak)
+
 == 1.0.11 (2010-04-16)
 
 === Bugfixes
