@@ -4,6 +4,7 @@ module Gherkin
   class I18n
     KEYWORD_KEYS = %w{name native feature background scenario scenario_outline examples given when then and but}
     STEP_KEYWORD_KEYS = %w{given when then and but}
+    GWT_KEYWORD_KEYS = %w{given when then}
     LANGUAGES    = YAML.load_file(File.dirname(__FILE__) + '/i18n.yml')
 
     class << self
@@ -133,11 +134,11 @@ module Gherkin
 
     # Keywords that can be used in Gherkin source
     def step_keywords
-      %w{given when then and but}.map{|key| keywords(key)}.flatten.uniq
+      STEP_KEYWORD_KEYS.map{|key| keywords(key)}.flatten.uniq
     end
 
     def gwt_keywords
-      %w{given when then}.map{|key| keywords(key)}.flatten.uniq
+      GWT_KEYWORD_KEYS.map{|key| keywords(key)}.flatten.uniq
     end
 
     # Keywords that can be used in code
