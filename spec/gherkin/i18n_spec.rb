@@ -118,19 +118,19 @@ module Gherkin
 
         it "should print keywords for a given language" do
           ("\n" + I18n.get('fr').keyword_table).should == %{
-      | feature          | "Fonctionnalité "                        |
-      | background       | "Contexte "                              |
-      | scenario         | "Scénario "                              |
-      | scenario_outline | "Plan du scénario ", "Plan du Scénario " |
-      | examples         | "Exemples "                              |
-      | given            | "* ", "Soit ", "Etant donné "            |
-      | when             | "* ", "Quand ", "Lorsque ", "Lorsqu'"    |
-      | then             | "* ", "Alors "                           |
-      | and              | "* ", "Et "                              |
-      | but              | "* ", "Mais "                            |
-      | given (code)     | "Soit", "Etantdonné"                     |
-      | when (code)      | "Quand", "Lorsque", "Lorsqu"             |
-      | then (code)      | "Alors"                                  |
+      | feature          | "Fonctionnalité"                       |
+      | background       | "Contexte"                             |
+      | scenario         | "Scénario"                             |
+      | scenario_outline | "Plan du scénario", "Plan du Scénario" |
+      | examples         | "Exemples"                             |
+      | given            | "* ", "Soit ", "Etant donné "          |
+      | when             | "* ", "Quand ", "Lorsque ", "Lorsqu'"  |
+      | then             | "* ", "Alors "                         |
+      | and              | "* ", "Et "                            |
+      | but              | "* ", "Mais "                          |
+      | given (code)     | "Soit", "Etantdonné"                   |
+      | when (code)      | "Quand", "Lorsque", "Lorsqu"           |
+      | then (code)      | "Alors"                                |
 }
         end
       end

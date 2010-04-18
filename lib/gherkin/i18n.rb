@@ -3,6 +3,7 @@ require 'yaml'
 module Gherkin
   class I18n
     KEYWORD_KEYS = %w{name native feature background scenario scenario_outline examples given when then and but}
+    STEP_KEYWORD_KEYS = %w{given when then and but}
     LANGUAGES    = YAML.load_file(File.dirname(__FILE__) + '/i18n.yml')
 
     class << self
@@ -156,7 +157,7 @@ module Gherkin
 
     def keywords(key)
       raise "No #{key} in #{@keywords.inspect}" if @keywords[key].nil?
-      @keywords[key].split('|').map{|kw| keyword_space(kw)}
+      @keywords[key].split('|').map{|keyword| keyword_space(key, keyword)}
     end
 
     def keyword_table
@@ -182,8 +183,12 @@ module Gherkin
 
     private
 
-    def keyword_space(val)
-      (val + ' ').sub(/< $/,'')
+    def keyword_space(key, keyword)
+      if(STEP_KEYWORD_KEYS.index(key))
+        (keyword + ' ').sub(/< $/,'')
+      else
+        keyword
+      end
     end
   end
 end
