@@ -356,6 +356,35 @@ Feature: 3
           verify_filters([:eof], ['@m'])
         end
       end
+
+      context "Background with PyString" do
+        it "should replay itself properly" do
+        pending do
+          @input = %{#language:en
+Feature: 2
+  Background: 3
+    Given 4
+      """
+      6
+      """
+
+  Scenario: 9
+    Given 10
+      """
+      12
+      """
+
+  Scenario: 15
+    Given 16
+      """
+      18
+      """
+}
+
+          verify_filters([1,2,3,4,5,15,16,17], [15])
+        end
+        end
+      end
     end
   end
 end
