@@ -19,7 +19,7 @@ module Gherkin
       end
 
       def name_match?(name_regexen)
-        return false unless [:feature, :scenario, :scenario_outline, :examples].include?(event)
+        return false unless [:feature, :background, :scenario, :scenario_outline, :examples].include?(event)
         name_regexen.detect{|name_regex| name =~ name_regex}
       end
 

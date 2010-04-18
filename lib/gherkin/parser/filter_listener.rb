@@ -9,11 +9,11 @@ module Gherkin
       java_impl('gherkin.jar')
     
       # Creates a new instance that replays events to +listener+, filtered by +filters+,
-      # a Hash that can contain:
+      # an Array that can contain one of the following:
       #
-      # * <tt>:lines</tt> An Array of line numbers to filter on.
-      # * <tt>:name_regexen</tt> An Array of name regexen to filter on. Matches against :feature, :scenario, :scenario_outline and :examples
-      # * <tt>:tag_expression</tt> A TagExpression to filter on.
+      # * Line numbers (Fixnum) to filter on.
+      # * Name regexen (Regexp) to filter on. Matches against :feature, :background, :scenario, :scenario_outline and :examples
+      # * Tag expressions (String) to filter on.
       #
       def initialize(listener, filters)
         @listener = listener
@@ -55,7 +55,7 @@ module Gherkin
           @feature_buffer << sexp
           @meta_buffer = []
           @table_state = :background
-          @feature_ok = true if filter_match?(sexp)
+          @background_ok = true if filter_match?(sexp)
         when :scenario
           replay_examples_rows_buffer
           @scenario_buffer = @meta_buffer
@@ -65,6 +65,7 @@ module Gherkin
           @meta_buffer = []
           @scenario_ok = filter_match?(*@scenario_buffer) || tag_match?
           @examples_ok = false
+          @background_ok = false
           @table_state = :step
         when :scenario_outline
           replay_examples_rows_buffer
@@ -75,6 +76,7 @@ module Gherkin
           @meta_buffer = []
           @scenario_ok = filter_match?(*@scenario_buffer)
           @examples_ok = false
+          @background_ok = false
           @table_state = :step
         when :examples
           replay_examples_rows_buffer
@@ -91,7 +93,7 @@ module Gherkin
             @feature_buffer += @meta_buffer
             @feature_buffer << sexp
             @meta_buffer = []
-            @feature_ok = true if filter_match?(sexp)
+            @background_ok = true if filter_match?(sexp)
           else
             @scenario_buffer << sexp
             @scenario_ok ||= filter_match?(*@scenario_buffer)
@@ -132,7 +134,7 @@ module Gherkin
           super
         end
 
-        if @scenario_ok || @examples_ok || @feature_ok
+        if @scenario_ok || @examples_ok || @feature_ok || @background_ok
           replay_buffers
         end
       end

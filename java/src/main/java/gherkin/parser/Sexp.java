@@ -83,6 +83,7 @@ public class Sexp {
     public boolean matches(Pattern filter) {
         switch (event) {
             case FEATURE:
+            case BACKGROUND:
             case SCENARIO:
             case SCENARIO_OUTLINE:
             case EXAMPLES:

@@ -1,3 +1,8 @@
+== In Git
+
+=== New Features
+* Filter on Background name. (Aslak Hellesøy)
+
 == 1.0.12 (2010-04-18)
 
 === Bugfixes

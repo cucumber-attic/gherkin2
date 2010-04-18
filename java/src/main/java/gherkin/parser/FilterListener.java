@@ -18,8 +18,9 @@ public class FilterListener implements Listener {
     private List<String> scenarioTags = new ArrayList<String>();
     private List<String> exampleTags = new ArrayList<String>();
 
-    private boolean featureOk = false;
     private TableState tableState = TableState.STEP;
+    private boolean featureOk = false;
+    private boolean backgroundOk = false;
     private boolean scenarioOk = false;
     private boolean examplesOk = false;
     private IFilterMethod filterMethod;
@@ -76,7 +77,7 @@ public class FilterListener implements Listener {
             metaBuffer = new ArrayList<Sexp>();
             tableState = TableState.BACKGROUND;
             if (filterMatch(sexp)) {
-                featureOk = true;
+                backgroundOk = true;
             }
         }
         replayBuffersIfAllOk();
@@ -96,6 +97,7 @@ public class FilterListener implements Listener {
             metaBuffer = new ArrayList<Sexp>();
             scenarioOk = filterMatch(scenarioBuffer) || tagMatch();
             examplesOk = false;
+            backgroundOk = false;
             tableState = TableState.STEP;
         }
         replayBuffersIfAllOk();
@@ -115,6 +117,7 @@ public class FilterListener implements Listener {
             metaBuffer = new ArrayList<Sexp>();
             scenarioOk = filterMatch(scenarioBuffer);
             examplesOk = false;
+            backgroundOk = false;
             tableState = TableState.STEP;
         }
         replayBuffersIfAllOk();
@@ -148,7 +151,7 @@ public class FilterListener implements Listener {
                 featureBuffer.add(sexp);
                 metaBuffer = new ArrayList<Sexp>();
                 if (filterMatch(sexp)) {
-                    featureOk = true;
+                    backgroundOk = true;
                 }
             } else {
                 scenarioBuffer.add(sexp);
@@ -292,7 +295,7 @@ public class FilterListener implements Listener {
     }
 
     private void replayBuffersIfAllOk() throws Exception {
-        if (scenarioOk || examplesOk || featureOk) {
+        if (scenarioOk || examplesOk || featureOk || backgroundOk) {
             replayBuffers();
         }
     }

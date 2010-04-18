@@ -180,12 +180,12 @@ Feature: 2
           verify_filters([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], [])
         end
 
-        it "should replay identically when filtering on the line of a background step" do
-          verify_filters([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], [5])
+        it "should not replay any scenarios when filtering on the line of a background step" do
+          verify_filters([1,2,3,4,5,:eof], [5])
         end
 
-        it "should replay identically when filtering on the line of the background" do
-          verify_filters([1,2,3,4,5,7,8,9,10,12,13,14,15,16,:eof], [4])
+        it "should not replay any scenarios when filtering on the line of the background" do
+          verify_filters([1,2,3,4,5,:eof], [4])
         end
 
         it "should replay the background on step line of first scenario" do
@@ -358,7 +358,7 @@ Feature: 3
       end
 
       context "Background with PyString" do
-        it "should replay itself properly" do
+        before do
           @input = %{#language:en
 Feature: 2
   Background: 3
@@ -379,7 +379,9 @@ Feature: 2
       18
       """
 }
+        end
 
+        it "should replay itself properly" do
           verify_filters([1,2,3,4,5,15,16,17,:eof], [15])
         end
       end
