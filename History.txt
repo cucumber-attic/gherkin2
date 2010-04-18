@@ -1,4 +1,4 @@
-== In Git
+== 1.0.13 (2010-04-18)
 
 === New Features
 * Filter on Background name. (Aslak Hellesøy)

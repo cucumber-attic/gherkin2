@@ -122,21 +122,21 @@ module Gherkin
       keywords('examples')
     end
 
-    def but_keywords(space=true)
-      keywords('but', space)
+    def but_keywords
+      keywords('but')
     end
 
-    def and_keywords(space=true)
-      keywords('and', space)
+    def and_keywords
+      keywords('and')
     end
 
     # Keywords that can be used in Gherkin source
     def step_keywords
-      %w{given when then and but}.map{|key| keywords(key, true)}.flatten.uniq
+      %w{given when then and but}.map{|key| keywords(key)}.flatten.uniq
     end
 
     def gwt_keywords
-      %w{given when then}.map{|key| keywords(key, true)}.flatten.uniq
+      %w{given when then}.map{|key| keywords(key)}.flatten.uniq
     end
 
     # Keywords that can be used in code
@@ -154,9 +154,30 @@ module Gherkin
       @keywords['native']
     end
 
-    def keywords(key, space=false)
+    def keywords(key)
       raise "No #{key} in #{@keywords.inspect}" if @keywords[key].nil?
-      @keywords[key].split('|').map{|kw| space ? keyword_space(kw) : kw}
+      @keywords[key].split('|').map{|kw| keyword_space(kw)}
+    end
+
+    def keyword_table
+      require 'stringio'
+      require 'gherkin/formatter/pretty_formatter'
+      io = StringIO.new
+      pf = Gherkin::Formatter::PrettyFormatter.new(io, true)
+
+      (KEYWORD_KEYS - %w{name native}).each do |key|
+        pf.row([key, keywords(key).map{|keyword| %{"#{keyword}"}}.join(', ')], 0)
+      end
+      %w{given when then}.each do |key|
+        code_keywords = keywords(key).reject{|kw| kw == '* '}.map do |kw|
+          %{"#{self.class.code_keyword_for(kw)}"}
+        end.join(', ')
+        pf.row(["#{key} (code)", code_keywords], 0)
+      end
+      
+      pf.flush_table
+      io.rewind
+      io.read
     end
 
     private
