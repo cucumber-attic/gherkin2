@@ -1,8 +1,8 @@
 namespace :release do
   desc 'Uplad all packages and tag git'
-  task :ALL => [:_gems, :dll, :jar, 'git:release']
+  task :ALL => [:gems, :push_dll, :push_jar, :push_gems, 'git:release']
 
-  task :_gems => :gems do
+  task :push_gems do
     Dir.chdir('release') do
       Dir['*.gem'].each do |gem_file|
         sh("gem push #{gem_file}")
@@ -10,7 +10,7 @@ namespace :release do
     end
   end
 
-  task :dll => :ikvm do
+  task :push_dll => :ikvm do
     Dir.chdir('release') do
       # This requires aslakhellesoy's build of the github gem,
       # which has tekkub's upload command.
@@ -18,7 +18,7 @@ namespace :release do
     end
   end
 
-  task :jar do
+  task :push_jar do
     Dir.chdir('java') do
       sh("mvn deploy")
     end
