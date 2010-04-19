@@ -32,7 +32,7 @@ public class FilterListener implements Listener {
         detectFilters(filters);
     }
 
-    public void tag(String name, int line) throws Exception {
+    public void tag(String name, int line) {
         if (hasNoFilters()) {
             listener.tag(name, line);
         } else {
@@ -41,7 +41,7 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void comment(String content, int line) throws Exception {
+    public void comment(String content, int line) {
         if (hasNoFilters()) {
             listener.comment(content, line);
         } else {
@@ -50,7 +50,7 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void feature(String keyword, String name, int line) throws Exception {
+    public void feature(String keyword, String name, int line) {
         if (hasNoFilters()) {
             listener.feature(keyword, name, line);
         } else {
@@ -66,8 +66,7 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void background(String keyword, String name, int line)
-            throws Exception {
+    public void background(String keyword, String name, int line) {
         if (hasNoFilters()) {
             listener.background(keyword, name, line);
         } else {
@@ -83,8 +82,7 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void scenario(String keyword, String name, int line)
-            throws Exception {
+    public void scenario(String keyword, String name, int line) {
         if (hasNoFilters()) {
             listener.scenario(keyword, name, line);
         } else {
@@ -103,8 +101,7 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void scenario_outline(String keyword, String name, int line)
-            throws Exception {
+    public void scenario_outline(String keyword, String name, int line) {
         if (hasNoFilters()) {
             listener.scenario_outline(keyword, name, line);
         } else {
@@ -123,8 +120,7 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void examples(String keyword, String name, int line)
-            throws Exception {
+    public void examples(String keyword, String name, int line) {
         if (hasNoFilters()) {
             listener.examples(keyword, name, line);
         } else {
@@ -141,7 +137,7 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void step(String keyword, String name, int line) throws Exception {
+    public void step(String keyword, String name, int line) {
         if (hasNoFilters()) {
             listener.step(keyword, name, line);
         } else {
@@ -162,7 +158,7 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void row(List<String> row, int line) throws Exception {
+    public void row(List<String> row, int line) {
         if (hasNoFilters()) {
             listener.row(row, line);
         } else {
@@ -192,11 +188,11 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void py_string(String string, int line) throws Exception {
+    public void py_string(String string, int line) {
         if (hasNoFilters()) {
             listener.py_string(string, line);
         } else {
-            if(tableState.equals(TableState.BACKGROUND)) {
+            if (tableState.equals(TableState.BACKGROUND)) {
                 featureBuffer.add(new Sexp(Sexp.Events.PY_STRING, string, line));
                 featureOk |= filterMatch(featureBuffer);
             } else {
@@ -207,13 +203,13 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void eof() throws Exception {
+    public void eof() {
         replayExamplesRowsBuffer();
         listener.eof();
     }
 
     public void syntax_error(String state, String event,
-                             List<String> legalEvents, int line) throws Exception {
+                             List<String> legalEvents, int line) {
     }
 
     private void detectFilters(List filters) {
@@ -260,7 +256,7 @@ public class FilterListener implements Listener {
         return filterMethod.getClass() == TagFilterMethod.class && filterMethod.filterTags(currentTags());
     }
 
-    private void replayBuffers() throws Exception {
+    private void replayBuffers() {
         List<Sexp> allItems = new ArrayList<Sexp>();
         allItems.addAll(featureBuffer);
         allItems.addAll(scenarioBuffer);
@@ -281,7 +277,7 @@ public class FilterListener implements Listener {
         return retVal;
     }
 
-    private void replayExamplesRowsBuffer() throws Exception {
+    private void replayExamplesRowsBuffer() {
         if (!examplesRowsBuffer.isEmpty()) {
             replayBuffers();
             List<Sexp> exampleItems = new ArrayList<Sexp>();
@@ -294,7 +290,7 @@ public class FilterListener implements Listener {
         }
     }
 
-    private void replayBuffersIfAllOk() throws Exception {
+    private void replayBuffersIfAllOk() {
         if (scenarioOk || examplesOk || featureOk || backgroundOk) {
             replayBuffers();
         }

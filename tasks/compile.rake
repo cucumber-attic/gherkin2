@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + '/ragel_task'
+BYPASS_JAVA_IMPL = true
 require 'gherkin/i18n'
 
 CLEAN.include [
@@ -8,7 +9,8 @@ CLEAN.include [
   'ragel/i18n/*.rl',
   'lib/gherkin/rb_lexer/*.rb',
   'ext/**/*.c',
-  'java/src/main/java/gherkin/lexer/*.java'
+  'java/src/main/java/gherkin/lexer/*.java',
+  'java/src/main/resources/gherkin/*.properties',
 ]
 
 desc "Compile the Java extensions"
@@ -22,32 +24,44 @@ rl_langs = ENV['RL_LANGS'] ? ENV['RL_LANGS'].split(',') : []
 langs = Gherkin::I18n.all.select { |lang| rl_langs.empty? || rl_langs.include?(lang.key) }
 
 langs.each do |i18n|
-  java       = RagelTask.new('java', i18n)
-  rb         = RagelTask.new('rb', i18n)
+  java = RagelTask.new('java', i18n)
+  rb   = RagelTask.new('rb', i18n)
 
   file 'lib/gherkin.jar' => [java.target, rb.target]
 
   begin
-  unless defined?(JRUBY_VERSION)
+  if defined?(JRUBY_VERSION)
+    java_properties = "java/src/main/resources/gherkin/I18nKeywords_#{i18n.iso_code.gsub(/-/, '_')}.properties"
+    file java_properties => 'lib/gherkin/i18n.yml' do
+      File.open(java_properties, 'wb') do |io|
+        io.puts("# Generated file. Do not edit.")
+        Gherkin::I18n::KEYWORD_KEYS.each do |key|
+          value = Gherkin::I18n.unicode_escape(i18n.keywords(key).join("|"))
+          io.puts("#{key}:#{value}")
+        end
+      end
+    end
+    file 'lib/gherkin.jar' => java_properties
+  else
     require 'rake/extensiontask'
 
     c = RagelTask.new('c', i18n)
 
-    extconf = "ext/gherkin_lexer_#{i18n.sanitized_key}/extconf.rb"
+    extconf = "ext/gherkin_lexer_#{i18n.underscored_iso_code}/extconf.rb"
     file extconf do
       FileUtils.mkdir(File.dirname(extconf)) unless File.directory?(File.dirname(extconf))
       File.open(extconf, "w") do |io|
         io.write(<<-EOF)
 require 'mkmf'
 $CFLAGS << ' -O0 -Wall -Werror'
-dir_config("gherkin_lexer_#{i18n.sanitized_key}")
+dir_config("gherkin_lexer_#{i18n.underscored_iso_code}")
 have_library("c", "main")
-create_makefile("gherkin_lexer_#{i18n.sanitized_key}")
+create_makefile("gherkin_lexer_#{i18n.underscored_iso_code}")
 EOF
       end
     end
 
-    Rake::ExtensionTask.new("gherkin_lexer_#{i18n.sanitized_key}") do |ext|
+    Rake::ExtensionTask.new("gherkin_lexer_#{i18n.underscored_iso_code}") do |ext|
       if ENV['RUBY_CC_VERSION']
         ext.cross_compile = true
         ext.cross_platform = 'i386-mingw32'
@@ -56,9 +70,9 @@ EOF
 
     # The way tasks are defined with compile:xxx (but without namespace) in rake-compiler forces us
     # to use these hacks for setting up dependencies. Ugly!
-    Rake::Task["compile:gherkin_lexer_#{i18n.sanitized_key}"].prerequisites.unshift(extconf)
-    Rake::Task["compile:gherkin_lexer_#{i18n.sanitized_key}"].prerequisites.unshift(c.target)
-    Rake::Task["compile:gherkin_lexer_#{i18n.sanitized_key}"].prerequisites.unshift(rb.target)
+    Rake::Task["compile:gherkin_lexer_#{i18n.underscored_iso_code}"].prerequisites.unshift(extconf)
+    Rake::Task["compile:gherkin_lexer_#{i18n.underscored_iso_code}"].prerequisites.unshift(c.target)
+    Rake::Task["compile:gherkin_lexer_#{i18n.underscored_iso_code}"].prerequisites.unshift(rb.target)
 
     Rake::Task["compile"].prerequisites.unshift(extconf)
     Rake::Task["compile"].prerequisites.unshift(c.target)

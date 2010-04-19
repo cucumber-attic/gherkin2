@@ -43,7 +43,7 @@ public class Sexp {
         return this.event;
     }
 
-    public void replay(Listener listener) throws Exception {
+    public void replay(Listener listener) {
         switch (this.event) {
             case ROW:
                 listener.row(row, line);

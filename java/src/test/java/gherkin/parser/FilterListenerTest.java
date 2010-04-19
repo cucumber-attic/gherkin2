@@ -23,14 +23,14 @@ public class FilterListenerTest {
     private List<Object[]> argumentList = new ArrayList<Object[]>();
 
     private class LineListenerInvocationHandler implements InvocationHandler {
-            public Object invoke(Object target, Method method, Object[] arguments) throws Throwable {
+            public Object invoke(Object target, Method method, Object[] arguments)  {
                 argumentList.add(arguments);
                 return null;
             }
     }
 
     @Test
-    public void shouldReplayIdenticallyWhenLineFilterIsFeatureLine() throws Exception {
+    public void shouldReplayIdenticallyWhenLineFilterIsFeatureLine()  {
         input = "Feature: 1\n" +
                 "  Scenario: 2\n" +
                 "    Given 3\n" +
@@ -43,7 +43,7 @@ public class FilterListenerTest {
 
 
     @Test
-    public void scenarioOutlineShouldMatchExamplesNameOfSecondScenarioOutline() throws Exception {
+    public void scenarioOutlineShouldMatchExamplesNameOfSecondScenarioOutline()  {
         input = "Feature: 1\n" +
                 "\n" +
                 "  @tag3\n" +
@@ -73,7 +73,7 @@ public class FilterListenerTest {
         verifyFilters(Arrays.asList(1,3,4,5,6,17,18,19,20,21, -1), Arrays.asList(Pattern.compile("18")));
     }
 
-    private void verifyFilters(List<Integer> expectedLines, List filters) throws Exception {
+    private void verifyFilters(List<Integer> expectedLines, List filters)  {
         Listener lineListener = (Listener) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{Listener.class}, new LineListenerInvocationHandler());
         scan(lineListener, filters);
         assertEquals(expectedLines, filteredLines());
@@ -91,7 +91,7 @@ public class FilterListenerTest {
         return lines;
     }
 
-    private void scan(Listener listener, List filters) throws Exception {
+    private void scan(Listener listener, List filters)  {
         Listener filterListener = new FilterListener(listener, filters);
         Parser parser = new Parser(filterListener);
         Lexer lexer = new I18nLexer(parser);

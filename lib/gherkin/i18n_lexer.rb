@@ -12,7 +12,7 @@ module Gherkin
     LANGUAGE_PATTERN = /language\s*:\s*(.*)/ #:nodoc:
     attr_reader :i18n_language
 
-    def initialize(listener, force_ruby)
+    def initialize(listener, force_ruby=false)
       @listener = listener
       @force_ruby = force_ruby
     end

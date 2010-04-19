@@ -16,7 +16,7 @@ public class StateMachineReader implements Listener {
         machinePath = "/gherkin/parser/" + name + ".txt";
     }
 
-    public List<List<String>> transitionTable() throws Exception {
+    public List<List<String>> transitionTable() {
         transitionTable = new ArrayList<List<String>>();
         Lexer lexer = new EN(this);
         lexer.scan(FixJava.readResource(machinePath));

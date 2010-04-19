@@ -6,7 +6,7 @@
 
   <groupId>gherkin</groupId>
   <artifactId>gherkin</artifactId>
-  <version>1.0.14</version>
+  <version>1.0.15</version>
 
   <packaging>jar</packaging>
   <name>Gherkin</name>
@@ -44,6 +44,12 @@
         <directory>${basedir}/../lib</directory>
         <includes>
           <include>gherkin/parser/*.txt</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+        <includes>
+          <include>gherkin/*.properties</include>
         </includes>
       </resource>
     </resources>

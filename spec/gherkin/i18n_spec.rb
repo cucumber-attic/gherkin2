@@ -68,6 +68,7 @@ module Gherkin
           end
         end
 
+        unless defined?(JRUBY_VERSION)
         it "should print available languages" do
           ("\n" + I18n.language_table).should == %{
       | ar        | Arabic                 | العربية              |
@@ -114,6 +115,7 @@ module Gherkin
       | zh-CN     | Chinese simplified     | 简体中文                 |
       | zh-TW     | Chinese traditional    | 繁體中文                 |
 }
+        end
         end
 
         it "should print keywords for a given language" do

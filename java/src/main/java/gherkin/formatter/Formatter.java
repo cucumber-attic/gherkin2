@@ -9,9 +9,9 @@ import java.util.List;
  * Gherkin features during execution.
  */
 public interface Formatter extends Listener {
-    void scenario(String keyword, String name, int line, String location) throws Exception;
+    void scenario(String keyword, String name, int line, String location);
 
-    void step(String keyword, String name, int line, String status, List<Argument> arguments, String location) throws Exception;
+    void step(String keyword, String name, int line, String status, List<Argument> arguments, String location);
 
-    void flushTable() throws Exception;
+    void flushTable();
 }

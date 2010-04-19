@@ -8,7 +8,7 @@ import gherkin.Lexer;
 import gherkin.Listener;
 import gherkin.LexingError;
 
-public class <%= @i18n.sanitized_key.upcase %> implements Lexer {
+public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
   %%{
     machine lexer;
     alphtype byte;
@@ -129,18 +129,18 @@ public class <%= @i18n.sanitized_key.upcase %> implements Lexer {
       }
     }
 
-    include lexer_common "lexer_common.<%= @i18n.sanitized_key %>.rl"; 
+    include lexer_common "lexer_common.<%= @i18n.underscored_iso_code %>.rl"; 
   }%%
 
   private final Listener listener;
 
-  public <%= @i18n.sanitized_key.upcase %>(Listener listener) {
+  public <%= @i18n.underscored_iso_code.upcase %>(Listener listener) {
     this.listener = listener;
   }
 
   %% write data noerror;
 
-  public void scan(CharSequence inputSequence) throws Exception {
+  public void scan(CharSequence inputSequence)  {
     String input = inputSequence.toString() + "\n%_FEATURE_END_%";
     byte[] data = input.getBytes();
     int cs, p = 0, pe = data.length;

@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class I18nLexer implements Lexer {
     private static final Pattern LANGUAGE_PATTERN = Pattern.compile("language\\s*:\\s*(.*)");
     private final Listener listener;
-    private I18nLanguage i18nLanguage;
+    private I18n i18n;
 
     public I18nLexer(Listener listener) {
         this(listener, false);
@@ -19,26 +19,26 @@ public class I18nLexer implements Lexer {
     /**
      * @return the i18n language from the previous scanned source.
      */
-    public I18nLanguage getI18nLanguage() {
-        return i18nLanguage;
+    public I18n getI18nLanguage() {
+        return i18n;
     }
 
-    public void scan(CharSequence source) throws Exception {
+    public void scan(CharSequence source) {
         createDelegate(source).scan(source);
     }
 
     private Lexer createDelegate(CharSequence source) {
-        i18nLanguage = i18nLanguage(source);
-        return i18nLanguage.lexer(listener);
+        i18n = i18nLanguage(source);
+        return i18n.lexer(listener);
     }
 
-    private I18nLanguage i18nLanguage(CharSequence source) {
+    private I18n i18nLanguage(CharSequence source) {
         String lineOne = source.toString().split("\\n")[0];
         Matcher matcher = LANGUAGE_PATTERN.matcher(lineOne);
         String key = "en";
         if (matcher.find()) {
             key = matcher.group(1);
         }
-        return new I18nLanguage(key);
+        return new I18n(key);
     }
 }

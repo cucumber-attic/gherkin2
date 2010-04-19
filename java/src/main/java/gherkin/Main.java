@@ -17,12 +17,16 @@ public class Main {
     private Lexer lexer;
     private final Writer out;
 
-    public Main(final Writer out, boolean prettyOrNull) throws Exception {
+    public Main(final Writer out, boolean prettyOrNull) {
         this.out = out;
         final Formatter formatter = prettyOrNull ? new PrettyFormatter(out, true) : new NullFormatter() {
             @Override
-            public void step(String keyword, String name, int line) throws IOException {
-                out.append('.').flush();
+            public void step(String keyword, String name, int line) {
+                try {
+                    out.append('.').flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         };
         Parser parser = new Parser(formatter);
@@ -51,11 +55,11 @@ public class Main {
             lexer.scan(input);
         } catch (Exception e) {
             System.err.println(e.getMessage());
-						System.exit(1);
+            System.exit(1);
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
         new Main(new OutputStreamWriter(System.out), args.length > 1).scanAll(new File(args[0]));
     }
 

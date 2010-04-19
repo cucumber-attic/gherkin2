@@ -1,20 +1,29 @@
 require 'yaml'
+require 'gherkin/rubify'
 
 module Gherkin
   class I18n
-    KEYWORD_KEYS = %w{name native feature background scenario scenario_outline examples given when then and but}
+    unless defined?(BYPASS_JAVA_IMPL)
+      require 'gherkin/java_impl'
+      java_impl('gherkin.jar')
+    end
+
+    ALL_KEYS = %w{name native feature background scenario scenario_outline examples given when then and but}
+    KEYWORD_KEYS = ALL_KEYS - %w{name native}
     STEP_KEYWORD_KEYS = %w{given when then and but}
     GWT_KEYWORD_KEYS = %w{given when then}
     LANGUAGES    = YAML.load_file(File.dirname(__FILE__) + '/i18n.yml')
 
     class << self
+      include Rubify
+
       # Used by code generators for other lexer tools like pygments lexer and textmate bundle
       def all
-        LANGUAGES.keys.sort.map{|key| get(key)}
+        LANGUAGES.keys.sort.map{|iso_code| get(iso_code)}
       end
 
-      def get(key)
-        languages[key] ||= new(key)
+      def get(iso_code)
+        languages[iso_code] ||= new(iso_code)
       end
 
       # Returns all keyword translations and aliases of +keywords+, escaped and joined with <tt>|</tt>.
@@ -25,9 +34,9 @@ module Gherkin
       # The +keywords+ arguments can be one of <tt>:feature</tt>, <tt>:background</tt>, <tt>:scenario</tt>, 
       # <tt>:scenario_outline</tt>, <tt>:examples</tt>, <tt>:step</tt>.
       def keyword_regexp(*keywords)
-        unique_keywords = all.map do |lang|
+        unique_keywords = all.map do |i18n|
           keywords.map do |keyword|
-            lang.__send__("#{keyword}_keywords".to_sym)
+            i18n.__send__("#{keyword}_keywords".to_sym)
           end
         end
         
@@ -35,7 +44,7 @@ module Gherkin
       end
 
       def code_keywords
-        all.map{|i18n| i18n.code_keywords}.flatten.uniq.sort
+        rubify(all.map{|i18n| i18n.code_keywords}).flatten.uniq.sort
       end
 
       def code_keyword_for(gherkin_keyword)
@@ -45,12 +54,26 @@ module Gherkin
       def language_table
         require 'stringio'
         require 'gherkin/formatter/pretty_formatter'
-        io = StringIO.new
+        io = defined?(JRUBY_VERSION) ? Java.java.io.StringWriter.new : StringIO.new
         pf = Gherkin::Formatter::PrettyFormatter.new(io, true)
-        all.each{|i18n| pf.row([i18n.key, i18n.name, i18n.native], 0)}
+        all.each{|i18n| pf.row([i18n.iso_code, i18n.keywords('name')[0], i18n.keywords('native')[0]], 0)}
         pf.flush_table
-        io.rewind
-        io.read
+        if defined?(JRUBY_VERSION)
+          io.getBuffer.toString
+        else
+          io.rewind
+          io.read
+        end
+      end
+
+      def unicode_escape(word, prefix="\\u")
+        word = word.unpack("U*").map do |c|
+          if c > 127 || c == 32
+            "#{prefix}%04x" % c
+          else
+            c.chr
+          end
+        end.join
       end
 
       private
@@ -60,12 +83,12 @@ module Gherkin
       end
     end
 
-    attr_reader :key
+    attr_reader :iso_code
 
-    def initialize(key)
-      @key = key
-      @keywords = LANGUAGES[key]
-      raise "Language not supported: #{key.inspect}" if @key.nil?
+    def initialize(iso_code)
+      @iso_code = iso_code
+      @keywords = LANGUAGES[iso_code]
+      raise "Language not supported: #{iso_code.inspect}" if @iso_code.nil?
       @keywords['grammar_name'] = @keywords['name'].gsub(/\s/, '')
     end
 
@@ -88,57 +111,25 @@ module Gherkin
 
     def c(listener)
       require 'gherkin/c_lexer'
-      CLexer[sanitized_key].new(listener)
+      CLexer[underscored_iso_code].new(listener)
     end
 
     def rb(listener)
       require 'gherkin/rb_lexer'
-      RbLexer[sanitized_key].new(listener)
+      RbLexer[underscored_iso_code].new(listener)
     end
 
-    def sanitized_key
-      @key.gsub(/[\s-]/, '_').downcase
-    end
-
-    def incomplete?
-      KEYWORD_KEYS.detect{|key| @keywords[key].nil?}
-    end
-
-    def feature_keywords
-      keywords('feature')
-    end
-
-    def scenario_keywords
-      keywords('scenario')
-    end
-
-    def scenario_outline_keywords
-      keywords('scenario_outline')
-    end
-
-    def background_keywords
-      keywords('background')
-    end
-
-    def examples_keywords
-      keywords('examples')
-    end
-
-    def but_keywords
-      keywords('but')
-    end
-
-    def and_keywords
-      keywords('and')
+    def underscored_iso_code
+      @iso_code.gsub(/[\s-]/, '_').downcase
     end
 
     # Keywords that can be used in Gherkin source
     def step_keywords
-      STEP_KEYWORD_KEYS.map{|key| keywords(key)}.flatten.uniq
+      STEP_KEYWORD_KEYS.map{|iso_code| keywords(iso_code)}.flatten.uniq
     end
 
     def gwt_keywords
-      GWT_KEYWORD_KEYS.map{|key| keywords(key)}.flatten.uniq
+      GWT_KEYWORD_KEYS.map{|iso_code| keywords(iso_code)}.flatten.uniq
     end
 
     # Keywords that can be used in code
@@ -148,17 +139,9 @@ module Gherkin
       result
     end
 
-    def name
-      @keywords['name']
-    end
-
-    def native
-      @keywords['native']
-    end
-
-    def keywords(key)
-      raise "No #{key} in #{@keywords.inspect}" if @keywords[key].nil?
-      @keywords[key].split('|').map{|keyword| keyword_space(key, keyword)}
+    def keywords(iso_code)
+      raise "No #{iso_code} in #{@keywords.inspect}" if @keywords[iso_code].nil?
+      @keywords[iso_code].split('|').map{|keyword| keyword_space(iso_code, keyword)}
     end
 
     def keyword_table
@@ -167,12 +150,12 @@ module Gherkin
       io = StringIO.new
       pf = Gherkin::Formatter::PrettyFormatter.new(io, true)
 
-      (KEYWORD_KEYS - %w{name native}).each do |key|
+      KEYWORD_KEYS.each do |key|
         pf.row([key, keywords(key).map{|keyword| %{"#{keyword}"}}.join(', ')], 0)
       end
-      %w{given when then}.each do |key|
-        code_keywords = keywords(key).reject{|kw| kw == '* '}.map do |kw|
-          %{"#{self.class.code_keyword_for(kw)}"}
+      GWT_KEYWORD_KEYS.each do |key|
+        code_keywords = keywords(key).reject{|keyword| keyword == '* '}.map do |keyword|
+          %{"#{self.class.code_keyword_for(keyword)}"}
         end.join(', ')
         pf.row(["#{key} (code)", code_keywords], 0)
       end
@@ -184,8 +167,8 @@ module Gherkin
 
     private
 
-    def keyword_space(key, keyword)
-      if(STEP_KEYWORD_KEYS.index(key))
+    def keyword_space(iso_code, keyword)
+      if(STEP_KEYWORD_KEYS.index(iso_code))
         (keyword + ' ').sub(/< $/,'')
       else
         keyword

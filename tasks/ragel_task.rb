@@ -27,15 +27,15 @@ class RagelTask
 
   def target
     {
-      'c'    => "ext/gherkin_lexer_#{@i18n.sanitized_key}/gherkin_lexer_#{@i18n.sanitized_key}.c",
-      'java' => "java/src/main/java/gherkin/lexer/#{@i18n.sanitized_key.upcase}.java",
-      'rb'   => "lib/gherkin/rb_lexer/#{@i18n.sanitized_key}.rb",
-      'csharp'   => "tmp/#{@i18n.sanitized_key}.cs"
+      'c'    => "ext/gherkin_lexer_#{@i18n.underscored_iso_code}/gherkin_lexer_#{@i18n.underscored_iso_code}.c",
+      'java' => "java/src/main/java/gherkin/lexer/#{@i18n.underscored_iso_code.upcase}.java",
+      'rb'   => "lib/gherkin/rb_lexer/#{@i18n.underscored_iso_code}.rb",
+      'csharp'   => "tmp/#{@i18n.underscored_iso_code}.cs"
     }[@lang]
   end
 
   def common_ragel
-    RL_OUTPUT_DIR + "/lexer_common.#{@i18n.sanitized_key}.rl"
+    RL_OUTPUT_DIR + "/lexer_common.#{@i18n.underscored_iso_code}.rl"
   end
 
   def common_erb
@@ -43,7 +43,7 @@ class RagelTask
   end
 
   def lang_ragel
-    RL_OUTPUT_DIR + "/#{@i18n.sanitized_key}.#{@lang}.rl"
+    RL_OUTPUT_DIR + "/#{@i18n.underscored_iso_code}.#{@lang}.rl"
   end
 
   def lang_erb

@@ -9,14 +9,14 @@ module Gherkin
 
     it "should store the i18n language of the last scanned feature" do
       @lexer.scan("# language: fr\n")
-      @lexer.i18n_language.key.should == "fr"
+      @lexer.i18n_language.iso_code.should == "fr"
       @lexer.scan("# language: no\n")
-      @lexer.i18n_language.key.should == "no"
+      @lexer.i18n_language.iso_code.should == "no"
     end
 
     it "should use English i18n by default" do
       @lexer.scan("Feature: foo\n")
-      @lexer.i18n_language.key.should == "en"
+      @lexer.i18n_language.iso_code.should == "en"
     end
 
     it "should === its ruby class, even when the impl is Java" do
