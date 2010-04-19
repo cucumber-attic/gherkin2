@@ -37,13 +37,13 @@ namespace :ikvm do
 
   desc 'Copy the IKVM .dll files over to the pkg dir'
   task :copy_ikvm_dlls do
-    Dir['/usr/local/ikvm/bin/{IKVM.OpenJDK.Core,IKVM.OpenJDK.Text,IKVM.Runtime}.dll'].each do |dll|
+    Dir['/usr/local/ikvm/bin/{IKVM.OpenJDK.Core,IKVM.OpenJDK.Text,IKVM.OpenJDK.Security,IKVM.Runtime}.dll'].each do |dll|
       cp dll, 'release'
     end
   end
 end
 
-task :ikvm => ['ikvm:exe', 'ikvm:dll', 'ikvm:copy_ikvm_dlls'] do
+task :ikvm => ['ikvm:copy_ikvm_dlls', 'ikvm:exe', 'ikvm:dll'] do
   sh "mono release/gherkin-#{GHERKIN_VERSION}.exe features"
 end
 
