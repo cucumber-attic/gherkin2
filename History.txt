@@ -1,3 +1,8 @@
+== 1.0.17 (2010-04-19)
+
+=== Bugfixes
+* Gherkin::I18n.keyword_regexp was broken (used for 3rd party code generation). (#51 Aslak Hellesøy)
+
 == 1.0.16 (2010-04-19)
 (Something went wrong when releasing 1.0.15)
 

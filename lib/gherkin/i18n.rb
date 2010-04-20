@@ -36,7 +36,11 @@ module Gherkin
       def keyword_regexp(*keywords)
         unique_keywords = all.map do |i18n|
           keywords.map do |keyword|
-            i18n.__send__("#{keyword}_keywords".to_sym)
+            if keyword.to_s == 'step'
+              i18n.step_keywords
+            else
+              i18n.keywords(keyword)
+            end
           end
         end
         
@@ -140,7 +144,8 @@ module Gherkin
     end
 
     def keywords(iso_code)
-      raise "No #{iso_code} in #{@keywords.inspect}" if @keywords[iso_code].nil?
+      iso_code = iso_code.to_s
+      raise "No #{iso_code.inspect} in #{@keywords.inspect}" if @keywords[iso_code].nil?
       @keywords[iso_code].split('|').map{|keyword| keyword_space(iso_code, keyword)}
     end
 
