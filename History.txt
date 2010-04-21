@@ -1,3 +1,8 @@
+== 1.0.18 (2010-04-21)
+
+=== Bugfixes
+* Explicitly use UTF-8 encoding when scanning source with Java lexer. (Aslak Hellesøy)
+
 == 1.0.17 (2010-04-19)
 
 === Bugfixes

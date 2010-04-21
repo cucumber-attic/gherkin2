@@ -1,5 +1,6 @@
 package gherkin.lexer;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -142,7 +143,12 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
 
   public void scan(CharSequence inputSequence)  {
     String input = inputSequence.toString() + "\n%_FEATURE_END_%";
-    byte[] data = input.getBytes();
+    byte[] data = null;
+    try {
+      data = input.getBytes("UTF-8");
+    } catch(UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
     int cs, p = 0, pe = data.length;
     int eof = pe;
 

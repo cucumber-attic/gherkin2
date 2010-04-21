@@ -31,9 +31,9 @@ public class FixJava {
         return result;
     }
 
-    public static String readResource(String filePath) throws RuntimeException {
+    public static String readResource(String resourcePath) throws RuntimeException {
         try {
-            Reader reader = new InputStreamReader(FixJava.class.getResourceAsStream(filePath), "UTF-8");
+            Reader reader = new InputStreamReader(FixJava.class.getResourceAsStream(resourcePath), "UTF-8");
             return readReader(reader);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
