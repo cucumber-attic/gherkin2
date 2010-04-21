@@ -3,6 +3,7 @@ package gherkin;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +32,12 @@ public class FixJava {
     }
 
     public static String readResource(String filePath) throws RuntimeException {
-        Reader reader = new InputStreamReader(FixJava.class.getResourceAsStream(filePath));
-        return readReader(reader);
+        try {
+            Reader reader = new InputStreamReader(FixJava.class.getResourceAsStream(filePath), "UTF-8");
+            return readReader(reader);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static String readReader(Reader reader) throws RuntimeException {

@@ -60,7 +60,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        new Main(new OutputStreamWriter(System.out), args.length > 1).scanAll(new File(args[0]));
+        new Main(new OutputStreamWriter(System.out, "UTF-8"), args.length > 1).scanAll(new File(args[0]));
     }
 
 }
