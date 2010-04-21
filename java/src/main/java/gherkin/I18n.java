@@ -2,24 +2,25 @@ package gherkin;
 
 import gherkin.formatter.Formatter;
 import gherkin.formatter.PrettyFormatter;
+import gherkin.util.Mapper;
 
 import java.io.StringWriter;
 import java.util.*;
 
-import static gherkin.FixJava.join;
-import static gherkin.FixJava.map;
+import static gherkin.util.FixJava.join;
+import static gherkin.util.FixJava.map;
 
 public class I18n {
     private static final List<String> ALL_KEYS = Arrays.asList("name", "native", "feature", "background", "scenario", "scenario_outline", "examples", "given", "when", "then", "and", "but");
     private static final List<String> KEYWORD_KEYS = Arrays.asList("feature", "background", "scenario", "scenario_outline", "examples", "given", "when", "then", "and", "but");
     private static final List<String> STEP_KEYWORD_KEYS = Arrays.asList("given", "when", "then", "and", "but");
     private static final List<String> GWT_KEYWORD_KEYS = Arrays.asList("given", "when", "then");
-    private static final FixJava.Mapper QUOTE_MAPPER = new FixJava.Mapper() {
+    private static final Mapper QUOTE_MAPPER = new Mapper() {
         public String map(String string) {
             return '"' + string + '"';
         }
     };
-    private static final FixJava.Mapper CODE_KEYWORD_MAPPER = new FixJava.Mapper() {
+    private static final Mapper CODE_KEYWORD_MAPPER = new Mapper() {
         public String map(String keyword) {
             return codeKeywordFor(keyword);
         }

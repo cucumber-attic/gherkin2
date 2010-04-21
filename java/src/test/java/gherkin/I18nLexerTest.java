@@ -1,5 +1,6 @@
 package gherkin;
 
+import gherkin.util.FixJava;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;

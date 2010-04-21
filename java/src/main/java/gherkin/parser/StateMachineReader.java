@@ -1,6 +1,6 @@
 package gherkin.parser;
 
-import gherkin.FixJava;
+import gherkin.util.FixJava;
 import gherkin.Lexer;
 import gherkin.Listener;
 import gherkin.lexer.EN;

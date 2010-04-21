@@ -1,4 +1,4 @@
-package gherkin;
+package gherkin.util;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FixJava {
-    public interface Mapper {
-        String map(String string);
-    }
 
     public static String join(List<String> strings, String separator) {
         StringBuilder sb = new StringBuilder();

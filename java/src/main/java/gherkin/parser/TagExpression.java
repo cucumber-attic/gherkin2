@@ -28,7 +28,8 @@ public class TagExpression {
         for (String tag : tags) {
             tag = tag.trim();
             if (tag.startsWith("~")) {
-                or.add(new Not(new Var(tag.substring(1))));
+                tag = tag.substring(1);
+                or.add(new Not(new Tag(tag)));
             } else {
                 String[] tagAndLimit = tag.split(":");
                 if (tagAndLimit.length == 2) {
@@ -36,7 +37,7 @@ public class TagExpression {
                     int limit = Integer.parseInt(tagAndLimit[1]);
                     limits.put(tag, limit);
                 }
-                or.add(new Var(tag));
+                or.add(new Tag(tag));
             }
         }
         and.add(or);
@@ -94,10 +95,13 @@ public class TagExpression {
         }
     }
 
-    private class Var implements Expression {
+    private class Tag implements Expression {
         private final String tagName;
 
-        public Var(String tagName) {
+        public Tag(String tagName) {
+            if(!tagName.startsWith("@")) {
+                throw new BadTagException(tagName);
+            }
             this.tagName = tagName;
         }
 
@@ -108,6 +112,12 @@ public class TagExpression {
                 }
             }
             return false;
+        }
+    }
+
+    private class BadTagException extends RuntimeException {
+        public BadTagException(String tagName) {
+            super("Bad tag: \"" + tagName + "\"");
         }
     }
 }

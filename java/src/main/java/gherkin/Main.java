@@ -4,6 +4,7 @@ import gherkin.formatter.Formatter;
 import gherkin.formatter.NullFormatter;
 import gherkin.formatter.PrettyFormatter;
 import gherkin.parser.Parser;
+import gherkin.util.FixJava;
 
 import java.io.*;
 
