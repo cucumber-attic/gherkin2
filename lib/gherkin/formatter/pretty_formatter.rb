@@ -15,7 +15,7 @@ module Gherkin
       def initialize(io, monochrome=false)
         @io = io
         @monochrome = monochrome
-        @format = @monochrome ? MonochromeFormat.new : AnsiColorFormat.new
+        @format = MonochromeFormat.new #@monochrome ? MonochromeFormat.new : AnsiColorFormat.new
         @tags = nil
         @comments = nil
       end
@@ -71,7 +71,7 @@ module Gherkin
       end
 
       def py_string(string, line)
-        @io.puts "      \"\"\"\n" + string.gsub(START, '      ') + "\n      \"\"\""
+        @io.puts "      \"\"\"\n" + string.gsub(START, '      ').gsub(/"""/,'\"\"\"') + "\n      \"\"\""
       end
 
       def syntax_error(state, event, legal_events, line)

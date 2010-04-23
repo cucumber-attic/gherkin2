@@ -21,8 +21,8 @@ module Gherkin
       end
 
       def scan(file, listener)
-        parser = Parser.new(listener, true)
-        lexer = I18nLexer.new(parser)
+        parser = Gherkin::Parser::Parser.new(listener, true, "root")
+        lexer = Gherkin::I18nLexer.new(parser, false)
         begin
           lexer.scan(IO.read(file))
         rescue => e

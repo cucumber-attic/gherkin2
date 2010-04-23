@@ -37,13 +37,16 @@ module Gherkin
         @steps += 1
       end
 
-      def table(rows, line)
+      def row(row, line)
       end
 
       def py_string(string, line)
       end
 
       def syntax_error(state, event, legal_events, line)
+      end
+
+      def eof
       end
     end
   end

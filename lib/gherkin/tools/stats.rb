@@ -8,7 +8,7 @@ module Gherkin
       def run
         listener = StatsListener.new
         each do |f|
-          parser = Gherkin::Parser.new(listener, true)
+          parser = Gherkin::Parser::Parser.new(listener, true)
           lexer = Gherkin::I18nLexer.new(parser)
           lexer.scan(IO.read(f))
         end

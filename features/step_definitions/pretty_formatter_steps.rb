@@ -6,7 +6,7 @@ module PrettyPlease
   def pretty(source)
     io       = StringIO.new
     listener = Gherkin::Formatter::PrettyFormatter.new(io)
-    parser   = Gherkin::Parser.new(listener, true)
+    parser   = Gherkin::Parser::Parser.new(listener, true)
     lexer    = Gherkin::I18nLexer.new(parser)
     lexer.scan(source)
     io.rewind

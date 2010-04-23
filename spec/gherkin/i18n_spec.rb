@@ -64,13 +64,13 @@ module Gherkin
       describe 'keywords' do
         it "should have code keywords without space, comma or apostrophe" do
           ['Akkor', 'Etantdonné', 'Lorsque', '假設'].each do |code_keyword|
-            I18n.code_keywords.should include(code_keyword)
+            Gherkin::I18n.code_keywords.should include(code_keyword)
           end
         end
 
         unless defined?(JRUBY_VERSION)
         it "should print available languages" do
-          ("\n" + I18n.language_table).should == %{
+          ("\n" + Gherkin::I18n.language_table).should == %{
       | ar        | Arabic                 | العربية              |
       | bg        | Bulgarian              | български            |
       | ca        | Catalan                | català               |
@@ -119,7 +119,7 @@ module Gherkin
         end
 
         it "should print keywords for a given language" do
-          ("\n" + I18n.get('fr').keyword_table).should == %{
+          ("\n" + Gherkin::I18n.get('fr').keyword_table).should == %{
       | feature          | "Fonctionnalité"                       |
       | background       | "Contexte"                             |
       | scenario         | "Scénario"                             |
