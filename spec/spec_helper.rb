@@ -13,7 +13,7 @@ require 'shared/py_string_spec'
 require 'shared/row_spec'
 
 if defined?(JRUBY_VERSION)
-  class OutputStreamStringIO < java.io.ByteArrayOutputStream
+  class OutputStreamStringIO < Java.java.io.ByteArrayOutputStream
     def rewind
     end
 

@@ -14,7 +14,6 @@ public class I18n {
     private static final List<String> ALL_KEYS = Arrays.asList("name", "native", "feature", "background", "scenario", "scenario_outline", "examples", "given", "when", "then", "and", "but");
     private static final List<String> KEYWORD_KEYS = Arrays.asList("feature", "background", "scenario", "scenario_outline", "examples", "given", "when", "then", "and", "but");
     private static final List<String> STEP_KEYWORD_KEYS = Arrays.asList("given", "when", "then", "and", "but");
-    private static final List<String> GWT_KEYWORD_KEYS = Arrays.asList("given", "when", "then");
     private static final Mapper QUOTE_MAPPER = new Mapper() {
         public String map(String string) {
             return '"' + string + '"';
@@ -76,24 +75,24 @@ public class I18n {
     }
 
     public List<String> getCodeKeywords() {
-        return map(getGwtKeywords(), CODE_KEYWORD_MAPPER);
+        return map(getStepKeywords(), CODE_KEYWORD_MAPPER);
     }
 
-    public List<String> getGwtKeywords() {
+    public List<String> getStepKeywords() {
         SortedSet<String> result = new TreeSet<String>();
-        for (String keyword : GWT_KEYWORD_KEYS) {
+        for (String keyword : STEP_KEYWORD_KEYS) {
             result.addAll(keywords.get(keyword));
         }
         return new ArrayList<String>(result);
     }
 
-    public String keywordTable() {
+    public String getKeywordTable() {
         StringWriter writer = new StringWriter();
         Formatter pf = new PrettyFormatter(writer, true);
         for (String key : KEYWORD_KEYS) {
             pf.row(Arrays.asList(key, join(map(keywords(key), QUOTE_MAPPER), ", ")), 0);
         }
-        for (String key : GWT_KEYWORD_KEYS) {
+        for (String key : STEP_KEYWORD_KEYS) {
             List<String> codeKeywordList = new ArrayList<String>(keywords.get(key));
             codeKeywordList.remove("* ");
             String codeKeywords = join(map(map(codeKeywordList, CODE_KEYWORD_MAPPER), QUOTE_MAPPER), ", ");

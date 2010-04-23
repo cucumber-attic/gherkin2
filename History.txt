@@ -1,5 +1,8 @@
 == 1.0.19 (In Git)
 
+=== New Features
+* Works with JRuby 1.5.0.RC1 (Aslak Hellesøy)
+
 === Changed Features
 * I18n.code_keywords now return And and But as well, making Cucumber StepDefs a little more flexible (Aslak Hellesøy)
 

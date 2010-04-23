@@ -11,7 +11,6 @@ module Gherkin
     ALL_KEYS = %w{name native feature background scenario scenario_outline examples given when then and but}
     KEYWORD_KEYS = ALL_KEYS - %w{name native}
     STEP_KEYWORD_KEYS = %w{given when then and but}
-    GWT_KEYWORD_KEYS = %w{given when then}
     LANGUAGES    = YAML.load_file(File.dirname(__FILE__) + '/i18n.yml')
 
     class << self
@@ -132,10 +131,6 @@ module Gherkin
       STEP_KEYWORD_KEYS.map{|iso_code| keywords(iso_code)}.flatten.uniq
     end
 
-    def gwt_keywords
-      GWT_KEYWORD_KEYS.map{|iso_code| keywords(iso_code)}.flatten.uniq
-    end
-
     # Keywords that can be used in code
     def code_keywords
       result = step_keywords.map{|keyword| self.class.code_keyword_for(keyword)}
@@ -158,7 +153,7 @@ module Gherkin
       KEYWORD_KEYS.each do |key|
         pf.row([key, keywords(key).map{|keyword| %{"#{keyword}"}}.join(', ')], 0)
       end
-      GWT_KEYWORD_KEYS.each do |key|
+      STEP_KEYWORD_KEYS.each do |key|
         code_keywords = keywords(key).reject{|keyword| keyword == '* '}.map do |keyword|
           %{"#{self.class.code_keyword_for(keyword)}"}
         end.join(', ')

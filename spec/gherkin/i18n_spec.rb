@@ -133,6 +133,8 @@ module Gherkin
       | given (code)     | "Soit", "Etantdonné"                   |
       | when (code)      | "Quand", "Lorsque", "Lorsqu"           |
       | then (code)      | "Alors"                                |
+      | and (code)       | "Et"                                   |
+      | but (code)       | "Mais"                                 |
 }
         end
       end
