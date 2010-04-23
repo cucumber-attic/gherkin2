@@ -1,4 +1,4 @@
-== 1.0.19 (In Git)
+== 1.0.19
 
 === New Features
 * Works with JRuby 1.5.0.RC1 (Aslak Hellesøy)
