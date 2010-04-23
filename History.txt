@@ -1,3 +1,8 @@
+== 1.0.20
+
+=== Bugfixes
+* The gherkin CLI is working again (Gregory Hnatiuk)
+
 == 1.0.19
 
 === New Features
