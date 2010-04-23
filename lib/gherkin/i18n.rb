@@ -138,7 +138,7 @@ module Gherkin
 
     # Keywords that can be used in code
     def code_keywords
-      result = gwt_keywords.map{|keyword| self.class.code_keyword_for(keyword)}
+      result = step_keywords.map{|keyword| self.class.code_keyword_for(keyword)}
       result.delete('*')
       result
     end

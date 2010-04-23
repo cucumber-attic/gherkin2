@@ -1,3 +1,8 @@
+== 1.0.19 (In Git)
+
+=== Changed Features
+* I18n.code_keywords now return And and But as well, making Cucumber StepDefs a little more flexible (Aslak Hellesøy)
+
 == 1.0.18 (2010-04-21)
 
 === Bugfixes
