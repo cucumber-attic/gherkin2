@@ -8,7 +8,7 @@ module Gherkin
       def run
         each do |file|
           purdy = StringIO.new
-          listener = PrettyFormatter.new(purdy)
+          listener = Formatter::PrettyFormatter.new(purdy)
           scan(file, listener)
           purdy.rewind
           File.open(file, 'w') {|io| io.write(purdy.read)}
