@@ -53,7 +53,7 @@ langs.each do |i18n|
       File.open(extconf, "w") do |io|
         io.write(<<-EOF)
 require 'mkmf'
-CONFIG['warnflags'].gsub!(/-Wshorten-64-to-32/, '')
+CONFIG['warnflags'].gsub!(/-Wshorten-64-to-32/, '') if CONFIG['warnflags']
 $CFLAGS << ' -O0 -Wall -Werror'
 dir_config("gherkin_lexer_#{i18n.underscored_iso_code}")
 have_library("c", "main")
