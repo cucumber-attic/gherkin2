@@ -1,4 +1,4 @@
-== (In Git)
+== 1.0.21 (2010-04-27)
 
 === Bugfixes
 * Fix compile warning on ruby 1.9.2dev (2009-07-18 trunk 24186) (#53 Aslak Hellesøy)
