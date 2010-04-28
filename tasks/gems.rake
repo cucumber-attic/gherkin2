@@ -9,7 +9,12 @@ namespace :gems do
   [:mswin32, :mingw32].each do |win_compiler|
     desc "Build MRI/C precompiled #{win_compiler} gem"
     task win_compiler do
-      sh "rake cross compile RUBY_CC_VERSION=1.8.6"
+      # Bootstrap with:
+      #
+      #   rake-compiler cross-ruby VERSION=1.9.1-p243
+      #   rake-compiler cross-ruby VERSION=1.8.6-p114
+      #
+      sh "rake cross compile RUBY_CC_VERSION=1.8.6:1.9.1"
       sh "rake gemspec build PLATFORM=i386-#{win_compiler}"
       mv "pkg/gherkin-#{GHERKIN_VERSION}-x86-#{win_compiler}.gem", 'release'
     end

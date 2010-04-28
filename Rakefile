@@ -22,7 +22,7 @@ begin
     gem.add_development_dependency "rspec", ">= 1.3.0"
     gem.add_development_dependency "cucumber", ">= 0.7.0.beta.1"
     gem.add_development_dependency "rake-compiler", ">= 0.7.0" unless defined?(JRUBY_VERSION)
-    
+
     gem.files -= FileList['ikvm/**/*']
     gem.files -= FileList['java/**/*']
     case ENV['PLATFORM']
@@ -32,7 +32,7 @@ begin
       gem.extensions = []
     when 'i386-mswin32', 'i386-mingw32'
       gem.platform = ENV['PLATFORM']
-      gem.files += FileList['lib/*.so']
+      gem.files += FileList['lib/*/*.so']
       gem.extensions = []
     else
       gem.files += FileList['lib/gherkin/rb_lexer/*.rb']

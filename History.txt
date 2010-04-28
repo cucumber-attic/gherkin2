@@ -1,3 +1,8 @@
+== In Git
+
+=== Bugfixes
+* Make prebuilt binaries work on both Ruby 1.8.x and 1.9.x on Windows (#54 Luis Lavena, Aslak Hellesøy)
+
 == 1.0.21 (2010-04-27)
 
 === Bugfixes
