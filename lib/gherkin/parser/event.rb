@@ -1,6 +1,6 @@
 module Gherkin
   module Parser
-    class Sexp < Array
+    class Event < Array
       def initialize(*args)
         super
         self[1] = self[1].to_a if event == :row # Special JRuby handling

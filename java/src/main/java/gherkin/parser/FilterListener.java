@@ -8,11 +8,11 @@ public class FilterListener implements Listener {
 
     private final List filters;
     private final Listener listener;
-    private List<Sexp> metaBuffer = new ArrayList<Sexp>();
-    private List<Sexp> featureBuffer = new ArrayList<Sexp>();
-    private List<Sexp> scenarioBuffer = new ArrayList<Sexp>();
-    private List<Sexp> examplesBuffer = new ArrayList<Sexp>();
-    private List<Sexp> examplesRowsBuffer = new ArrayList<Sexp>();
+    private List<Event> metaBuffer = new ArrayList<Event>();
+    private List<Event> featureBuffer = new ArrayList<Event>();
+    private List<Event> scenarioBuffer = new ArrayList<Event>();
+    private List<Event> examplesBuffer = new ArrayList<Event>();
+    private List<Event> examplesRowsBuffer = new ArrayList<Event>();
 
     private List<String> featureTags = new ArrayList<String>();
     private List<String> scenarioTags = new ArrayList<String>();
@@ -23,7 +23,7 @@ public class FilterListener implements Listener {
     private boolean backgroundOk = false;
     private boolean scenarioOk = false;
     private boolean examplesOk = false;
-    private IFilterMethod filterMethod;
+    private FilterMethod filterMethod;
 
     @SuppressWarnings("unchecked")
     public FilterListener(Listener listener, List filters) {
@@ -36,7 +36,7 @@ public class FilterListener implements Listener {
         if (hasNoFilters()) {
             listener.tag(name, line);
         } else {
-            metaBuffer.add(new Sexp(Sexp.Events.TAG, name, line));
+            metaBuffer.add(new Event(Event.Type.TAG, name, line));
         }
         replayBuffersIfAllOk();
     }
@@ -45,7 +45,7 @@ public class FilterListener implements Listener {
         if (hasNoFilters()) {
             listener.comment(content, line);
         } else {
-            metaBuffer.add(new Sexp(Sexp.Events.COMMENT, content, line));
+            metaBuffer.add(new Event(Event.Type.COMMENT, content, line));
         }
         replayBuffersIfAllOk();
     }
@@ -54,12 +54,12 @@ public class FilterListener implements Listener {
         if (hasNoFilters()) {
             listener.feature(keyword, name, line);
         } else {
-            Sexp sexp = new Sexp(Sexp.Events.FEATURE, keyword, name, line);
+            Event event = new Event(Event.Type.FEATURE, keyword, name, line);
             featureBuffer = metaBuffer;
-            featureBuffer.add(sexp);
+            featureBuffer.add(event);
             featureTags = extractTags();
-            metaBuffer = new ArrayList<Sexp>();
-            if (filterMatch(sexp)) {
+            metaBuffer = new ArrayList<Event>();
+            if (filterMatch(event)) {
                 featureOk = true;
             }
         }
@@ -70,12 +70,12 @@ public class FilterListener implements Listener {
         if (hasNoFilters()) {
             listener.background(keyword, name, line);
         } else {
-            Sexp sexp = new Sexp(Sexp.Events.BACKGROUND, keyword, name, line);
+            Event event = new Event(Event.Type.BACKGROUND, keyword, name, line);
             featureBuffer.addAll(metaBuffer);
-            featureBuffer.add(sexp);
-            metaBuffer = new ArrayList<Sexp>();
+            featureBuffer.add(event);
+            metaBuffer = new ArrayList<Event>();
             tableState = TableState.BACKGROUND;
-            if (filterMatch(sexp)) {
+            if (filterMatch(event)) {
                 backgroundOk = true;
             }
         }
@@ -86,13 +86,13 @@ public class FilterListener implements Listener {
         if (hasNoFilters()) {
             listener.scenario(keyword, name, line);
         } else {
-            Sexp sexp = new Sexp(Sexp.Events.SCENARIO, keyword, name, line);
+            Event event = new Event(Event.Type.SCENARIO, keyword, name, line);
             replayExamplesRowsBuffer();
             scenarioBuffer = metaBuffer;
-            scenarioBuffer.add(sexp);
+            scenarioBuffer.add(event);
             scenarioTags = extractTags();
             exampleTags = new ArrayList<String>();
-            metaBuffer = new ArrayList<Sexp>();
+            metaBuffer = new ArrayList<Event>();
             scenarioOk = filterMatch(scenarioBuffer) || tagMatch();
             examplesOk = false;
             backgroundOk = false;
@@ -101,17 +101,17 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void scenario_outline(String keyword, String name, int line) {
+    public void scenarioOutline(String keyword, String name, int line) {
         if (hasNoFilters()) {
-            listener.scenario_outline(keyword, name, line);
+            listener.scenarioOutline(keyword, name, line);
         } else {
-            Sexp sexp = new Sexp(Sexp.Events.SCENARIO_OUTLINE, keyword, name, line);
+            Event event = new Event(Event.Type.SCENARIO_OUTLINE, keyword, name, line);
             replayExamplesRowsBuffer();
             scenarioBuffer = metaBuffer;
-            scenarioBuffer.add(sexp);
+            scenarioBuffer.add(event);
             scenarioTags = extractTags();
             exampleTags = new ArrayList<String>();
-            metaBuffer = new ArrayList<Sexp>();
+            metaBuffer = new ArrayList<Event>();
             scenarioOk = filterMatch(scenarioBuffer);
             examplesOk = false;
             backgroundOk = false;
@@ -124,13 +124,13 @@ public class FilterListener implements Listener {
         if (hasNoFilters()) {
             listener.examples(keyword, name, line);
         } else {
-            Sexp sexp = new Sexp(Sexp.Events.EXAMPLES, keyword, name, line);
+            Event event = new Event(Event.Type.EXAMPLES, keyword, name, line);
             replayExamplesRowsBuffer();
             examplesBuffer = metaBuffer;
-            examplesBuffer.add(sexp);
+            examplesBuffer.add(event);
             exampleTags = extractTags();
-            metaBuffer = new ArrayList<Sexp>();
-            examplesRowsBuffer = new ArrayList<Sexp>();
+            metaBuffer = new ArrayList<Event>();
+            examplesRowsBuffer = new ArrayList<Event>();
             examplesOk = filterMatch(examplesBuffer) || tagMatch();
             tableState = TableState.EXAMPLES;
         }
@@ -141,16 +141,16 @@ public class FilterListener implements Listener {
         if (hasNoFilters()) {
             listener.step(keyword, name, line);
         } else {
-            Sexp sexp = new Sexp(Sexp.Events.STEP, keyword, name, line);
+            Event event = new Event(Event.Type.STEP, keyword, name, line);
             if (tableState.equals(TableState.BACKGROUND)) {
                 featureBuffer.addAll(metaBuffer);
-                featureBuffer.add(sexp);
-                metaBuffer = new ArrayList<Sexp>();
-                if (filterMatch(sexp)) {
+                featureBuffer.add(event);
+                metaBuffer = new ArrayList<Event>();
+                if (filterMatch(event)) {
                     backgroundOk = true;
                 }
             } else {
-                scenarioBuffer.add(sexp);
+                scenarioBuffer.add(event);
                 scenarioOk |= filterMatch(scenarioBuffer);
                 tableState = TableState.STEP;
             }
@@ -162,25 +162,25 @@ public class FilterListener implements Listener {
         if (hasNoFilters()) {
             listener.row(row, line);
         } else {
-            Sexp sexp = new Sexp(Sexp.Events.ROW, row, line);
+            Event event = new Event(Event.Type.ROW, row, line);
             if (tableState.equals(TableState.EXAMPLES)) {
                 if (!headerRowAllreadyBuffered()) {
-                    examplesBuffer.add(sexp);
+                    examplesBuffer.add(event);
                     if (filterMatch(examplesBuffer)) {
                         examplesOk = true;
                     }
                 } else {
-                    if (scenarioOk || examplesOk || featureOk || filterMatch(sexp)) {
-                        examplesRowsBuffer.add(sexp);
+                    if (scenarioOk || examplesOk || featureOk || filterMatch(event)) {
+                        examplesRowsBuffer.add(event);
                     }
                 }
             } else if (tableState.equals(TableState.STEP)) {
-                scenarioBuffer.add(sexp);
+                scenarioBuffer.add(event);
                 scenarioOk |= filterMatch(scenarioBuffer);
             } else if (tableState.equals(TableState.BACKGROUND)) {
                 featureBuffer.addAll(metaBuffer);
-                featureBuffer.add(sexp);
-                metaBuffer = new ArrayList<Sexp>();
+                featureBuffer.add(event);
+                metaBuffer = new ArrayList<Event>();
             } else {
                 throw new RuntimeException("Bad table_state:" + tableState);
             }
@@ -188,15 +188,15 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void py_string(String string, int line) {
+    public void pyString(String string, int line) {
         if (hasNoFilters()) {
-            listener.py_string(string, line);
+            listener.pyString(string, line);
         } else {
             if (tableState.equals(TableState.BACKGROUND)) {
-                featureBuffer.add(new Sexp(Sexp.Events.PY_STRING, string, line));
+                featureBuffer.add(new Event(Event.Type.PY_STRING, string, line));
                 featureOk |= filterMatch(featureBuffer);
             } else {
-                scenarioBuffer.add(new Sexp(Sexp.Events.PY_STRING, string, line));
+                scenarioBuffer.add(new Event(Event.Type.PY_STRING, string, line));
                 scenarioOk |= filterMatch(scenarioBuffer);
             }
         }
@@ -208,7 +208,7 @@ public class FilterListener implements Listener {
         listener.eof();
     }
 
-    public void syntax_error(String state, String event,
+    public void syntaxError(String state, String event,
                              List<String> legalEvents, int line) {
     }
 
@@ -217,8 +217,7 @@ public class FilterListener implements Listener {
             return;
         }
         checkIfMoreThanOneFilterType(filters);
-        this.filterMethod = new FilterMethodFactory().getFilterMethod(filters.get(0).getClass());
-        this.filterMethod.setFilters(filters);
+        this.filterMethod = new FilterMethodFactory().getFilterMethod(filters);
     }
 
     private void checkIfMoreThanOneFilterType(List filters) {
@@ -236,16 +235,16 @@ public class FilterListener implements Listener {
     }
 
     private boolean headerRowAllreadyBuffered() {
-        return !examplesBuffer.isEmpty() && examplesBuffer.get(examplesBuffer.size() - 1).getEvent() == Sexp.Events.ROW;
+        return !examplesBuffer.isEmpty() && examplesBuffer.get(examplesBuffer.size() - 1).getType() == Event.Type.ROW;
     }
 
-    private boolean filterMatch(Sexp sexp) {
-        return filterMatch(Arrays.asList(sexp));
+    private boolean filterMatch(Event event) {
+        return filterMatch(Arrays.asList(event));
     }
 
-    private boolean filterMatch(List<Sexp> buffer) {
-        for (Sexp sexp : buffer) {
-            if (filterMethod.filter(sexp)) {
+    private boolean filterMatch(List<Event> buffer) {
+        for (Event event : buffer) {
+            if (filterMethod.filter(event)) {
                 return true;
             }
         }
@@ -257,10 +256,10 @@ public class FilterListener implements Listener {
     }
 
     private void replayBuffers() {
-        List<Sexp> allItems = new ArrayList<Sexp>();
+        List<Event> allItems = new ArrayList<Event>();
         allItems.addAll(featureBuffer);
         allItems.addAll(scenarioBuffer);
-        for (Sexp item : allItems) {
+        for (Event item : allItems) {
             item.replay(listener);
         }
         featureBuffer.clear();
@@ -269,9 +268,9 @@ public class FilterListener implements Listener {
 
     private List<String> extractTags() {
         List<String> retVal = new ArrayList<String>();
-        for (Sexp sexp : metaBuffer) {
-            if (sexp.getEvent() == Sexp.Events.TAG) {
-                retVal.add(sexp.getName());
+        for (Event event : metaBuffer) {
+            if (event.getType() == Event.Type.TAG) {
+                retVal.add(event.getName());
             }
         }
         return retVal;
@@ -280,11 +279,11 @@ public class FilterListener implements Listener {
     private void replayExamplesRowsBuffer() {
         if (!examplesRowsBuffer.isEmpty()) {
             replayBuffers();
-            List<Sexp> exampleItems = new ArrayList<Sexp>();
+            List<Event> exampleItems = new ArrayList<Event>();
             exampleItems.addAll(examplesBuffer);
             exampleItems.addAll(examplesRowsBuffer);
-            for (Sexp sexp : exampleItems) {
-                sexp.replay(listener);
+            for (Event event : exampleItems) {
+                event.replay(listener);
             }
             examplesRowsBuffer.clear();
         }

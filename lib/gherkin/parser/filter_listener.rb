@@ -1,4 +1,4 @@
-require 'gherkin/parser/sexp'
+require 'gherkin/parser/event'
 require 'gherkin/parser/tag_expression'
 
 module Gherkin
@@ -34,32 +34,32 @@ module Gherkin
       
       private
 
-      def method_missing(*sexp_args)
-        sexp = Sexp.new(sexp_args)
+      def method_missing(*event_args)
+        event = Event.new(event_args)
 
-        return sexp.replay(@listener) if no_filters?
+        return event.replay(@listener) if no_filters?
 
-        case(sexp.event)
+        case(event.event)
         when :tag
-          @meta_buffer << sexp
+          @meta_buffer << event
         when :comment
-          @meta_buffer << sexp
+          @meta_buffer << event
         when :feature
           @feature_buffer = @meta_buffer
-          @feature_buffer << sexp
+          @feature_buffer << event
           @feature_tags = extract_tags
           @meta_buffer = []
-          @feature_ok = true if filter_match?(sexp)
+          @feature_ok = true if filter_match?(event)
         when :background
           @feature_buffer += @meta_buffer
-          @feature_buffer << sexp
+          @feature_buffer << event
           @meta_buffer = []
           @table_state = :background
-          @background_ok = true if filter_match?(sexp)
+          @background_ok = true if filter_match?(event)
         when :scenario
           replay_examples_rows_buffer
           @scenario_buffer = @meta_buffer
-          @scenario_buffer << sexp
+          @scenario_buffer << event
           @scenario_tags = extract_tags
           @example_tags = []
           @meta_buffer = []
@@ -70,7 +70,7 @@ module Gherkin
         when :scenario_outline
           replay_examples_rows_buffer
           @scenario_buffer = @meta_buffer
-          @scenario_buffer << sexp
+          @scenario_buffer << event
           @scenario_tags = extract_tags
           @example_tags = []
           @meta_buffer = []
@@ -81,7 +81,7 @@ module Gherkin
         when :examples
           replay_examples_rows_buffer
           @examples_buffer = @meta_buffer
-          @examples_buffer << sexp
+          @examples_buffer << event
           @example_tags = extract_tags
           @meta_buffer = []
           @examples_rows_buffer = []
@@ -91,11 +91,11 @@ module Gherkin
           case(@table_state)
           when :background
             @feature_buffer += @meta_buffer
-            @feature_buffer << sexp
+            @feature_buffer << event
             @meta_buffer = []
-            @background_ok = true if filter_match?(sexp)
+            @background_ok = true if filter_match?(event)
           else
-            @scenario_buffer << sexp
+            @scenario_buffer << event
             @scenario_ok ||= filter_match?(*@scenario_buffer)
             @table_state = :step
           end
@@ -103,32 +103,32 @@ module Gherkin
           case(@table_state)
           when :examples
             unless header_row_already_buffered?
-              @examples_buffer << sexp
+              @examples_buffer << event
               @examples_ok = true if filter_match?(*@examples_buffer)
             else
-              @examples_rows_buffer << sexp if @scenario_ok || @examples_ok || @feature_ok || filter_match?(sexp)
+              @examples_rows_buffer << event if @scenario_ok || @examples_ok || @feature_ok || filter_match?(event)
             end
           when :step
-            @scenario_buffer << sexp
+            @scenario_buffer << event
             @scenario_ok ||= filter_match?(*@scenario_buffer)
           when :background
             @feature_buffer += @meta_buffer
-            @feature_buffer << sexp
+            @feature_buffer << event
             @meta_buffer = []
           else
             raise "Bad table_state:#{@table_state.inspect}"
           end
         when :py_string
           if @table_state == :background
-            @feature_buffer << sexp
+            @feature_buffer << event
             @feature_ok ||= filter_match?(*@feature_buffer)
           else
-            @scenario_buffer << sexp
+            @scenario_buffer << event
             @scenario_ok ||= filter_match?(*@scenario_buffer)
           end
         when :eof
           replay_examples_rows_buffer
-          sexp.replay(@listener)
+          event.replay(@listener)
           return
         else
           super
@@ -160,9 +160,9 @@ module Gherkin
         return @examples_buffer.any? && @examples_buffer[-1].event == :row
       end
       
-      def filter_match?(*sexps)
+      def filter_match?(*events)
         return false unless[:name_match?, :line_match?].include?(@filter_method)
-        sexps.detect{|sexp| sexp.__send__(@filter_method, @filters)}
+        events.detect{|event| event.__send__(@filter_method, @filters)}
       end
 
       def tag_match?
@@ -170,8 +170,8 @@ module Gherkin
       end
 
       def replay_buffers
-        (@feature_buffer + @scenario_buffer).each do |sexp| 
-          sexp.replay(@listener)
+        (@feature_buffer + @scenario_buffer).each do |event| 
+          event.replay(@listener)
         end
         @feature_buffer = []
         @scenario_buffer = [] 
@@ -180,8 +180,8 @@ module Gherkin
       def replay_examples_rows_buffer
         if @examples_rows_buffer.any?
           replay_buffers
-          (@examples_buffer + @examples_rows_buffer).each do |sexp|
-            sexp.replay(@listener)
+          (@examples_buffer + @examples_rows_buffer).each do |event|
+            event.replay(@listener)
           end
           @examples_rows_buffer = []
         end
@@ -192,7 +192,7 @@ module Gherkin
       end
 
       def extract_tags
-        @meta_buffer.select { |sexp| sexp.event == :tag }.map { |sexp| sexp.keyword }
+        @meta_buffer.select { |event| event.event == :tag }.map { |event| event.keyword }
       end
     end
   end

@@ -5,46 +5,46 @@ import gherkin.Listener;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class Sexp {
-    enum Events {
+public class Event {
+    enum Type {
         ROW, TAG, COMMENT,
         FEATURE, BACKGROUND, SCENARIO,
         SCENARIO_OUTLINE, EXAMPLES, STEP,
         PY_STRING
     }
 
-    private final Events event;
+    private final Type type;
     private final String keyword;
     private final String name;
     private final List<String> row;
     private final int line;
 
-    public Sexp(Events event, String name, int line) {
-        this(event, null, name, line);
+    public Event(Type type, String name, int line) {
+        this(type, null, name, line);
     }
 
-    public Sexp(Events event, String keyword, String name, int line) {
-        this(event, keyword, name, null, line);
+    public Event(Type type, String keyword, String name, int line) {
+        this(type, keyword, name, null, line);
     }
 
-    public Sexp(Events event, List<String> row, int line) {
-        this(event, null, null, row, line);
+    public Event(Type type, List<String> row, int line) {
+        this(type, null, null, row, line);
     }
 
-    private Sexp(Events event, String keyword, String name, List<String> row, int line) {
-        this.event = event;
+    private Event(Type type, String keyword, String name, List<String> row, int line) {
+        this.type = type;
         this.keyword = keyword;
         this.name = name;
         this.row = row;
         this.line = line;
     }
 
-    public Events getEvent() {
-        return this.event;
+    public Type getType() {
+        return type;
     }
 
     public void replay(Listener listener) {
-        switch (this.event) {
+        switch (type) {
             case ROW:
                 listener.row(row, line);
                 break;
@@ -64,7 +64,7 @@ public class Sexp {
                 listener.scenario(keyword, name, line);
                 break;
             case SCENARIO_OUTLINE:
-                listener.scenario_outline(keyword, name, line);
+                listener.scenarioOutline(keyword, name, line);
                 break;
             case EXAMPLES:
                 listener.examples(keyword, name, line);
@@ -73,15 +73,13 @@ public class Sexp {
                 listener.step(keyword, name, line);
                 break;
             case PY_STRING:
-                listener.py_string(name, line);
+                listener.pyString(name, line);
                 break;
-            default:
-                throw new RuntimeException("Bad event");
         }
     }
 
     public boolean matches(Pattern filter) {
-        switch (event) {
+        switch (type) {
             case FEATURE:
             case BACKGROUND:
             case SCENARIO:

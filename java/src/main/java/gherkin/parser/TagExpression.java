@@ -69,7 +69,8 @@ public class TagExpression {
         public boolean eval(List<String> tags) {
             boolean result = true;
             for (Expression expression : expressions) {
-                result = result && expression.eval(tags);
+                result = expression.eval(tags);
+                if(!result) break;
             }
             return result;
         }
@@ -89,7 +90,8 @@ public class TagExpression {
         public boolean eval(List<String> tags) {
             boolean result = false;
             for (Expression expression : expressions) {
-                result = result || expression.eval(tags);
+                result = expression.eval(tags);
+                if(result) break;
             }
             return result;
         }

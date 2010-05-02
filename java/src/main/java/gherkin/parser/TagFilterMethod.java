@@ -2,21 +2,20 @@ package gherkin.parser;
 
 import java.util.List;
 
-public class TagFilterMethod implements IFilterMethod {
+public class TagFilterMethod implements FilterMethod {
 
-    private TagExpression tagExpression;
+    private final TagExpression tagExpression;
+
+    public TagFilterMethod(List<String> filters) {
+        this.tagExpression = new TagExpression(filters);
+    }
 
     @SuppressWarnings("unchecked")
     public boolean filterTags(List currentTags) {
         return tagExpression.eval(currentTags);
     }
 
-    @SuppressWarnings("unchecked")
-    public void setFilters(List filters) {
-        this.tagExpression = new TagExpression(filters);
-    }
-
-    public boolean filter(Sexp sexp) {
+    public boolean filter(Event event) {
         return false;
     }
 

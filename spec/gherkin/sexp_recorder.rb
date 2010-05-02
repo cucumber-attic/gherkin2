@@ -5,6 +5,9 @@ module Gherkin
     end
 
     def method_missing(event, *args)
+      event = :scenario_outline if event == :scenarioOutline # Special Java Lexer handling
+      event = :py_string if event == :pyString # Special Java Lexer handling
+      event = :syntax_error if event == :syntaxError # Special Java Lexer handling
       args[0] = args[0].to_a if event == :row # Special JRuby handling
       @sexps << [event] + args
     end

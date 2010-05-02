@@ -13,7 +13,7 @@ public interface Listener {
 
     void scenario(String keyword, String name, int line);
 
-    void scenario_outline(String keyword, String name, int line);
+    void scenarioOutline(String keyword, String name, int line);
 
     void examples(String keyword, String name, int line);
 
@@ -21,9 +21,9 @@ public interface Listener {
 
     void row(List<String> row, int line);
 
-    void py_string(String string, int line);
+    void pyString(String string, int line);
 
     void eof();
 
-    void syntax_error(String state, String event, List<String> legalEvents, int line);
+    void syntaxError(String state, String event, List<String> legalEvents, int line);
 }

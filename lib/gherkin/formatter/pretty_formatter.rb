@@ -53,7 +53,7 @@ module Gherkin
         @io.puts "\n#{grab_comments!('    ')}#{grab_tags!('    ')}    #{keyword}: #{indent(name, '    ')}"
       end
 
-      def step(keyword, name, line, status=nil, arguments=nil, location=nil)
+      def step(keyword, name, line, status=nil, exception=nil, arguments=nil, location=nil)
         flush_table
         status_param = "#{status}_param" if status
         name = Gherkin::Formatter::Argument.format(name, @format, (arguments || [])) 

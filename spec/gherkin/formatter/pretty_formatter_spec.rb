@@ -36,8 +36,8 @@ module Gherkin
           ['When ', 'foo']
         ])
         @l.scenario("Scenario", "The scenario", 4, "features/foo.feature:4")
-        @l.step("Given ", "some stuff", 5, nil, nil, "features/step_definitions/bar.rb:56")
-        @l.step("When ", "foo", 6, nil, nil, "features/step_definitions/bar.rb:96")
+        @l.step("Given ", "some stuff", 5, nil, nil, nil, "features/step_definitions/bar.rb:56")
+        @l.step("When ", "foo", 6, nil, nil, nil, "features/step_definitions/bar.rb:96")
 
         assert_io(%{Feature: Hello
   World
@@ -54,7 +54,7 @@ module Gherkin
           ['Given ', 'some stuff that is longer']
         ])
         @l.scenario("Scenario", "The scenario", 4, "features/foo.feature:4")
-        @l.step("Given ", "some stuff that is longer", 5, nil, nil, "features/step_definitions/bar.rb:56")
+        @l.step("Given ", "some stuff that is longer", 5, nil, nil, nil, "features/step_definitions/bar.rb:56")
 
         assert_io(%{Feature: Hello
   World
@@ -70,7 +70,7 @@ module Gherkin
           ['Given ', 'some stuff that is longer']
         ])
         @l.scenario("Scenario", "The scenario", 4, "features/foo.feature:4")
-        @l.step("Given ", "some stuff that is longer", 5, nil, nil, "features/step_definitions/bar.rb:56")
+        @l.step("Given ", "some stuff that is longer", 5, nil, nil, nil, "features/step_definitions/bar.rb:56")
 
         assert_io(%{Feature: Hello
   World
@@ -95,7 +95,7 @@ module Gherkin
 
       it "should highlight arguments for regular steps" do
         passed = defined?(JRUBY_VERSION) ? 'passed' : :passed
-        @l.step("Given ", "I have 999 cukes in my belly", 3, passed, [Gherkin::Formatter::Argument.new(7, '999')], nil)
+        @l.step("Given ", "I have 999 cukes in my belly", 3, passed, nil, [Gherkin::Formatter::Argument.new(7, '999')], nil)
         assert_io("    Given I have 999 cukes in my belly\n")
       end
 

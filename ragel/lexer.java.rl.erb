@@ -30,7 +30,7 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
 
     action store_pystring_content {
       String con = unindent(startCol, substring(data, contentStart, nextKeywordStart-1).replaceFirst("(\\r?\\n)?( )*\\Z", "").replaceAll("\\\\\"\\\\\"\\\\\"", "\"\"\""));
-      listener.py_string(con, currentLine);
+      listener.pyString(con, currentLine);
     }
 
     action store_feature_content {
@@ -56,7 +56,7 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
 
     action store_scenario_outline_content {
       String con = multilineStrip(keywordContent(data, p, eof, nextKeywordStart, contentStart));
-      listener.scenario_outline(keyword, con, currentLine);
+      listener.scenarioOutline(keyword, con, currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }

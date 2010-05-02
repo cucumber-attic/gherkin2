@@ -9,6 +9,12 @@ import java.util.regex.Pattern;
 import static gherkin.util.FixJava.join;
 import static gherkin.formatter.Colors.comments;
 
+/**
+ * This class pretty prints feature files like they were in the source, only
+ * prettier. That is, with consistent indentation. This class is also a {@link Formatter},
+ * which means it can be used to print execution results - highlighting arguments,
+ * printing source information and exception information.
+ */
 public class PrettyFormatter implements Formatter {
     private final PrintWriter out;
     private final boolean monochrome;
@@ -62,7 +68,7 @@ public class PrettyFormatter implements Formatter {
         out.flush();
     }
 
-    public void scenario_outline(String keyword, String name, int line) {
+    public void scenarioOutline(String keyword, String name, int line) {
         flushTable();
         out.println();
         printCommentsAndTags("  ");
@@ -76,9 +82,9 @@ public class PrettyFormatter implements Formatter {
         out.println("    " + keyword + ": " + name);
     }
 
-    public void step(String keyword, String name, int line, String status, List<Argument> arguments, String location) {
+    public void step(String keyword, String name, int line, String status, Throwable thrown, List<Argument> arguments, String sourceLocation) {
         flushTable();
-        out.println("    " + keyword + indent(name, "    ") + indentedStepLocation(location));
+        out.println("    " + keyword + indent(name, "    ") + indentedStepLocation(sourceLocation));
         out.flush();
     }
 
@@ -113,7 +119,7 @@ public class PrettyFormatter implements Formatter {
     }
 
     public void step(String keyword, String name, int line) {
-        step(keyword, name, line, null, Collections.<Argument>emptyList(), null);
+        step(keyword, name, line, null, null, Collections.<Argument>emptyList(), null);
     }
 
     public void row(List<String> row, int line) {
@@ -121,7 +127,7 @@ public class PrettyFormatter implements Formatter {
         rows.add(row);
     }
 
-    public void py_string(String string, int line) {
+    public void pyString(String string, int line) {
         out.println("      \"\"\"");
         out.print(Pattern.compile("^", Pattern.MULTILINE).matcher(string).replaceAll("      "));
         out.println("\n      \"\"\"");
@@ -132,7 +138,7 @@ public class PrettyFormatter implements Formatter {
         out.flush();
     }
 
-    public void syntax_error(String state, String event, List<String> legalEvents, int line) {
+    public void syntaxError(String state, String event, List<String> legalEvents, int line) {
         out.println("Syntax error:" + state + ' ' + event);
     }
 

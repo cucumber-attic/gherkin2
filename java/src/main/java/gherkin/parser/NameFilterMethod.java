@@ -3,22 +3,21 @@ package gherkin.parser;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class NameFilterMethod implements IFilterMethod {
+public class NameFilterMethod implements FilterMethod {
 
-    private List<Pattern> filters;
+    private final List<Pattern> filters;
+
+    public NameFilterMethod(List<Pattern> filters) {
+        this.filters = filters;
+    }
 
     public boolean filterTags(List currentTags) {
         return false;
     }
 
-    @SuppressWarnings("unchecked")
-    public void setFilters(List filters) {
-        this.filters = filters;
-    }
-
-    public boolean filter(Sexp sexp) {
+    public boolean filter(Event event) {
         for (Pattern filter : filters) {
-            if (sexp.matches(filter)) {
+            if (event.matches(filter)) {
                 return true;
             }
         }

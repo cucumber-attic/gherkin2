@@ -2,22 +2,21 @@ package gherkin.parser;
 
 import java.util.List;
 
-public class LineFilterMethod implements IFilterMethod {
+public class LineFilterMethod implements FilterMethod {
 
-    private List<Number> filters;
+    private final List<Number> filters;
+
+    public LineFilterMethod(List<Number> filters) {
+        this.filters = filters;
+    }
 
     public boolean filterTags(List currentTags) {
         return false;
     }
 
-    @SuppressWarnings("unchecked")
-    public void setFilters(List filters) {
-        this.filters = (List<Number>) filters;
-    }
-
-    public boolean filter(Sexp sexp) {
+    public boolean filter(Event event) {
         for (Number filterItem : filters) {
-            if (filterItem.toString().equals(sexp.getLine().toString())) {
+            if (filterItem.toString().equals(event.getLine().toString())) {
                 return true;
             }
         }

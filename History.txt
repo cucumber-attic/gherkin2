@@ -1,3 +1,8 @@
+== 1.0.23 (2010-05-02)
+
+=== Changed Features
+* Java API now uses camelCased method names instead of underscored (more Java-like) (Aslak Hellesøy)
+
 == 1.0.22 (2010-04-28)
 
 === Bugfixes
@@ -8,12 +13,12 @@
 === Bugfixes
 * Fix compile warning on ruby 1.9.2dev (2009-07-18 trunk 24186) (#53 Aslak Hellesøy)
 
-== 1.0.20
+== 1.0.20 (2010-04-20)
 
 === Bugfixes
 * The gherkin CLI is working again (Gregory Hnatiuk)
 
-== 1.0.19
+== 1.0.19 (2010-04-20)
 
 === New Features
 * Works with JRuby 1.5.0.RC1 (Aslak Hellesøy)
@@ -21,7 +26,7 @@
 === Changed Features
 * I18n.code_keywords now return And and But as well, making Cucumber StepDefs a little more flexible (Aslak Hellesøy)
 
-== 1.0.18 (2010-04-21)
+== 1.0.18 (2010-04-20)
 
 === Bugfixes
 * Explicitly use UTF-8 encoding when scanning source with Java lexer. (Aslak Hellesøy)

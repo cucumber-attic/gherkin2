@@ -6,7 +6,7 @@ public class NullFormatter implements Formatter {
     public void scenario(String keyword, String name, int line, String location) {
     }
 
-    public void step(String keyword, String name, int line, String status, List<Argument> arguments, String location) {
+    public void step(String keyword, String name, int line, String status, Throwable thrown, List<Argument> arguments, String sourceLocation) {
     }
 
     public void flushTable() {
@@ -27,7 +27,7 @@ public class NullFormatter implements Formatter {
     public void scenario(String keyword, String name, int line) {
     }
 
-    public void scenario_outline(String keyword, String name, int line) {
+    public void scenarioOutline(String keyword, String name, int line) {
     }
 
     public void examples(String keyword, String name, int line) {
@@ -39,12 +39,12 @@ public class NullFormatter implements Formatter {
     public void row(List<String> row, int line) {
     }
 
-    public void py_string(String string, int line) {
+    public void pyString(String string, int line) {
     }
 
     public void eof() {
     }
 
-    public void syntax_error(String state, String event, List<String> legalEvents, int line) {
+    public void syntaxError(String state, String event, List<String> legalEvents, int line) {
     }
 }

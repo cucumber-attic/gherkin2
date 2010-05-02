@@ -42,9 +42,9 @@ public class Parser implements Listener {
         }
     }
 
-    public void py_string(String string, int line) {
+    public void pyString(String string, int line) {
         if (event("py_string", line)) {
-            listener.py_string(string, line);
+            listener.pyString(string, line);
         }
     }
 
@@ -66,9 +66,9 @@ public class Parser implements Listener {
         }
     }
 
-    public void scenario_outline(String keyword, String name, int line) {
+    public void scenarioOutline(String keyword, String name, int line) {
         if (event("scenario_outline", line)) {
-            listener.scenario_outline(keyword, name, line);
+            listener.scenarioOutline(keyword, name, line);
         }
     }
 
@@ -104,7 +104,7 @@ public class Parser implements Listener {
         pushMachine(machineName);
     }
 
-    public void syntax_error(String name, String event, List<String> strings, int line) {
+    public void syntaxError(String name, String event, List<String> strings, int line) {
     }
 
     private boolean event(String event, int line) {
@@ -115,7 +115,7 @@ public class Parser implements Listener {
             if (throwOnError) {
                 throw e;
             } else {
-                listener.syntax_error(e.state(), event, e.expectedEvents(), line);
+                listener.syntaxError(e.state(), event, e.expectedEvents(), line);
                 return false;
             }
         }
