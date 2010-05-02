@@ -290,7 +290,7 @@ store_pystring_content(VALUE listener,
   VALUE con = ENCODED_STR_NEW(at, length);
   // Gherkin will crash gracefully if the string representation of start_col pushes the pattern past 32 characters
   char pat[32]; 
-  snprintf(pat, 32, "^ {0,%d}", start_col); 
+  snprintf(pat, 32, "^[\t ]{0,%d}", start_col); 
   VALUE re = rb_reg_regcomp(rb_str_new2(pat));
   VALUE re2 = rb_reg_regcomp(rb_str_new2("\r\\Z"));
   VALUE unescape_escaped_quotes = rb_reg_regcomp(rb_str_new2("\\\\\"\\\\\"\\\\\""));

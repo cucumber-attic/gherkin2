@@ -21,7 +21,7 @@ module Gherkin
         }
 
         action store_pystring_content {
-          con = unindent(@start_col, data[@content_start...@next_keyword_start-1].utf8_pack("c*").sub(/(\r?\n)?( )*\Z/, '').gsub(/\\"\\"\\"/, '"""'))
+          con = unindent(@start_col, utf8_pack(data[@content_start...@next_keyword_start-1]).sub(/(\r?\n)?([\t ])*\Z/, '').gsub(/\\"\\"\\"/, '"""'))
           @listener.py_string(con, @current_line) 
         }
  
@@ -56,18 +56,18 @@ module Gherkin
         }
 
         action store_step_content {
-          con = data[@content_start...p].utf8_pack("c*").strip
+          con = utf8_pack(data[@content_start...p]).strip
           @listener.step(@keyword, con, @current_line)
         }
  
         action store_comment_content {
-          con = data[@content_start...p].utf8_pack("c*").strip
+          con = utf8_pack(data[@content_start...p]).strip
           @listener.comment(con, @line_number)
           @keyword_start = nil
         }
  
         action store_tag_content {
-          con = data[@content_start...p].utf8_pack("c*").strip
+          con = utf8_pack(data[@content_start...p]).strip
           @listener.tag(con, @current_line)
           @keyword_start = nil
         }
@@ -85,7 +85,7 @@ module Gherkin
         }
  
         action end_keyword {
-          @keyword = data[@keyword_start...p].utf8_pack("c*").sub(/:$/,'')
+          @keyword = utf8_pack(data[@keyword_start...p]).sub(/:$/,'')
           @keyword_start = nil
         }
  
@@ -104,7 +104,7 @@ module Gherkin
         }
 
         action store_cell_content {
-          con = data[@content_start...p].utf8_pack("c*").strip
+          con = utf8_pack(data[@content_start...p]).strip
           current_row << con
         }
 
@@ -153,18 +153,22 @@ module Gherkin
       end
 
       def unindent(startcol, text)
-        text.gsub(/^ {0,#{startcol}}/, "")
+        text.gsub(/^[\t ]{0,#{startcol}}/, "")
       end
  
       def store_keyword_content(event, data, p, eof)
         end_point = (!@next_keyword_start or (p == eof)) ? p : @next_keyword_start
-        con = yield data[@content_start...end_point].utf8_pack("c*")
+        con = yield utf8_pack(data[@content_start...end_point])
         @listener.send(event, @keyword, con, @current_line)
       end
       
       def current_line_content(data, p)
         rest = data[@last_newline..-1]
-        rest[0..rest.index(10)||-1].utf8_pack("c*").strip
+        utf8_pack(rest[0..rest.index(10)||-1]).strip
+      end
+
+      def utf8_pack(array)
+        (RUBY_VERSION =~ /^1\.9/) ? array.pack("c*").force_encoding("UTF-8") : array.pack("c*")
       end
     end
   end

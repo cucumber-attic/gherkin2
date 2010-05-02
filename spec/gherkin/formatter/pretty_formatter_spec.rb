@@ -13,15 +13,17 @@ module Gherkin
         actual.should == s
       end
       
-      def assert_pretty(text)
-        io = StringIO.new
-        l = PrettyFormatter.new(io, true)
-        parser = Gherkin::Parser::Parser.new(l, true, "root")
-        lexer  = Gherkin::I18nLexer.new(parser, true)
-        lexer.scan(text)
-        io.rewind
-        actual = io.read
-        actual.should == text
+      def assert_pretty(input, output=input)
+        [true, false].each do |force_ruby|
+          io = StringIO.new
+          l = PrettyFormatter.new(io, true)
+          parser = Gherkin::Parser::Parser.new(l, true, "root")
+          lexer  = Gherkin::I18nLexer.new(parser, force_ruby)
+          lexer.scan(input)
+          io.rewind
+          actual = io.read
+          actual.should == output
+        end
       end
 
       before do
@@ -141,6 +143,10 @@ Feature: Feature Description
       | Beer   | You  | are thirsty |
       | Bed    | They | are tired   |
 })
+      end
+
+      it "should preserve tabs" do
+        assert_pretty(IO.read(File.dirname(__FILE__) + '/tabs.feature'), IO.read(File.dirname(__FILE__) + '/spaces.feature'))
       end
     end
   end

@@ -29,7 +29,7 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
     }
 
     action store_pystring_content {
-      String con = unindent(startCol, substring(data, contentStart, nextKeywordStart-1).replaceFirst("(\\r?\\n)?( )*\\Z", "").replaceAll("\\\\\"\\\\\"\\\\\"", "\"\"\""));
+      String con = unindent(startCol, substring(data, contentStart, nextKeywordStart-1).replaceFirst("(\\r?\\n)?([\\t ])*\\Z", "").replaceAll("\\\\\"\\\\\"\\\\\"", "\"\"\""));
       listener.pyString(con, currentLine);
     }
 
@@ -198,7 +198,7 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
   }
 
   private String unindent(int startCol, String text) {
-    return Pattern.compile("^ {0," + startCol + "}", Pattern.MULTILINE).matcher(text).replaceAll("");
+    return Pattern.compile("^[\t ]{0," + startCol + "}", Pattern.MULTILINE).matcher(text).replaceAll("");
   }
 
   private String currentLineContent(byte[] data, int lastNewline) {
