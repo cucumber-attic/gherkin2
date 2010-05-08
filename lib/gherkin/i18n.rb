@@ -103,7 +103,7 @@ module Gherkin
           begin
             c(listener)
           rescue NameError, LoadError => e
-            raise("WARNING: #{e.message}. Reverting to Ruby lexer.")
+            warn("WARNING: #{e.message}. Reverting to Ruby lexer.")
             rb(listener)
           end
         end
