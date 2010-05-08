@@ -1,6 +1,7 @@
 == 1.0.25 (2010-05-02)
 
 === Bugfixes
+* Allow fallback to a slower ruby lexer if the C lexer can't be loaded for some reason.
 * Can't run specs in gherkin 1.0.24 (#59 Aslak Hellesøy)
 
 == 1.0.24 (2010-05-02)
