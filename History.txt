@@ -1,3 +1,8 @@
+== 1.0.26 (2010-05-09)
+
+=== New Features
+* Ignore the BOM that many retarded Windows editors insist on sticking in the beginning of a file. (Aslak Hellesøy)
+
 == 1.0.25 (2010-05-02)
 
 === Bugfixes

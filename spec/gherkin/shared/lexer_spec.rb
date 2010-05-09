@@ -477,48 +477,56 @@ Given I am a step
         end        
       end
       
-      context "DOS line endings" do
-        describe "A complex feature with tags, comments, multiple scenarios, and multiple steps and tables" do
-          it "should find things in the right order" do
-            scan_file("dos_line_endings.feature")
-            @listener.to_sexp.should == [
-              [:comment, "#Comment on line 1", 1],
-              [:comment, "#Comment on line 2", 2],
-              [:tag, "@tag1", 3],
-              [:tag, "@tag2", 3],
-              [:feature, "Feature", "Feature Text\r\nIn order to test multiline forms\r\nAs a ragel writer\r\nI need to check for complex combinations", 4],
-              [:comment, "#Comment on line 9", 9],
-              [:comment, "#Comment on line 11", 11],
-              [:background, "Background", "", 13],
-              [:step, "Given ", "this is a background step", 14],
-              [:step, "And ", "this is another one", 15],
-              [:tag, "@tag3", 17],
-              [:tag, "@tag4", 17],
-              [:scenario, "Scenario", "Reading a Scenario", 18],
-              [:step, "Given ", "there is a step", 19],
-              [:step, "But ", "not another step", 20],
-              [:tag, "@tag3", 22],
-              [:scenario, "Scenario", "Reading a second scenario\r\nWith two lines of text", 23],
-              [:comment, "#Comment on line 24", 25],
-              [:step, "Given ", "a third step with a table", 26],
-              [:row, %w{a b}, 27],
-              [:row, %w{c d}, 28],
-              [:row, %w{e f}, 29],
-              [:step, "And ", "I am still testing things", 30],
-              [:row, %w{g h}, 31],
-              [:row, %w{e r}, 32],
-              [:row, %w{k i}, 33],
-              [:row, ['n', ''], 34], 
-              [:step, "And ", "I am done testing these tables", 35],
-              [:comment, "#Comment on line 29", 36],
-              [:step, "Then ", "I am happy", 37],
-              [:scenario, "Scenario", "Hammerzeit", 39],
-              [:step, "Given ", "All work and no play", 40],
-              [:py_string, "Makes Homer something something\r\nAnd something else", 41],
-              [:step, "Then ", "crazy", 45],
-              [:eof]
-            ]
-          end        
+      describe "Windows stuff" do
+        it "should find things in the right order for CRLF features" do
+          scan_file("dos_line_endings.feature")
+          @listener.to_sexp.should == [
+            [:comment, "#Comment on line 1", 1],
+            [:comment, "#Comment on line 2", 2],
+            [:tag, "@tag1", 3],
+            [:tag, "@tag2", 3],
+            [:feature, "Feature", "Feature Text\r\nIn order to test multiline forms\r\nAs a ragel writer\r\nI need to check for complex combinations", 4],
+            [:comment, "#Comment on line 9", 9],
+            [:comment, "#Comment on line 11", 11],
+            [:background, "Background", "", 13],
+            [:step, "Given ", "this is a background step", 14],
+            [:step, "And ", "this is another one", 15],
+            [:tag, "@tag3", 17],
+            [:tag, "@tag4", 17],
+            [:scenario, "Scenario", "Reading a Scenario", 18],
+            [:step, "Given ", "there is a step", 19],
+            [:step, "But ", "not another step", 20],
+            [:tag, "@tag3", 22],
+            [:scenario, "Scenario", "Reading a second scenario\r\nWith two lines of text", 23],
+            [:comment, "#Comment on line 24", 25],
+            [:step, "Given ", "a third step with a table", 26],
+            [:row, %w{a b}, 27],
+            [:row, %w{c d}, 28],
+            [:row, %w{e f}, 29],
+            [:step, "And ", "I am still testing things", 30],
+            [:row, %w{g h}, 31],
+            [:row, %w{e r}, 32],
+            [:row, %w{k i}, 33],
+            [:row, ['n', ''], 34], 
+            [:step, "And ", "I am done testing these tables", 35],
+            [:comment, "#Comment on line 29", 36],
+            [:step, "Then ", "I am happy", 37],
+            [:scenario, "Scenario", "Hammerzeit", 39],
+            [:step, "Given ", "All work and no play", 40],
+            [:py_string, "Makes Homer something something\r\nAnd something else", 41],
+            [:step, "Then ", "crazy", 45],
+            [:eof]
+          ]
+        end
+
+        it "should cope with the retarded BOM that many Windows editors insert at the beginning of a file" do
+          scan_file("with_bom.feature")
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "Feature Text", 1],
+            [:scenario, "Scenario", "Reading a Scenario", 2],
+            [:step, "Given ", "there is a step", 3],
+            [:eof]
+          ]
         end
       end
 
