@@ -11,6 +11,10 @@
 
   EOF = '%_FEATURE_END_%'; # Explicit EOF added before scanning begins 
   EOL = ('\n' | '\r\n') @inc_line_number @last_newline;
+  BOM = 0xEF 0xBB 0xBF; # http://en.wikipedia.org/wiki/Byte_order_mark
+
+  PIPE = '|';
+  ESCAPED_PIPE = '\\|';
 
   FeatureHeadingEnd = EOL+ space* (I18N_Background | I18N_Scenario | I18N_ScenarioOutline | '@' | '#' | EOF) >next_keyword_start;
   ScenarioHeadingEnd = EOL+ space* ( I18N_Scenario | I18N_ScenarioOutline | I18N_Step | '@' | '#' | EOF ) >next_keyword_start;
@@ -30,16 +34,15 @@
   Tag = ( ('@' [^@\r\n\t ]+) >begin_content ) %store_tag_content;
   Tags = space* (Tag space*)+ EOL+;
   
-  StartRow = space* '|' >start_row;
-  EndRow = EOL space* ^('|') >next_keyword_start;    
-  Cell = '|' (any - '|')* >begin_cell_content %store_cell_content;
-  RowBody = space* Cell* '|' :>> (space* EOL+ space*) %store_row;
+  StartRow = space* PIPE >start_row;
+  EndRow = EOL space* ^PIPE >next_keyword_start;    
+  Cell = PIPE (ESCAPED_PIPE | (any - PIPE)+ )* >begin_cell_content %store_cell_content;
+  RowBody = space* Cell** PIPE :>> (space* EOL+ space*) %store_row;
   Row = StartRow :>> RowBody <: EndRow?;
   
   StartPyString = '"""' >start_pystring space* :>> EOL; 
   EndPyString = (space* '"""') >next_keyword_start; 
   PyString = space* StartPyString %begin_pystring_content (^EOL | EOL)* :>> EndPyString %store_pystring_content space* EOL+;
-  BOM = 0xEF 0xBB 0xBF; # http://en.wikipedia.org/wiki/Byte_order_mark
   
   Tokens = BOM? (space | EOL)* (Tags | Comment | FeatureHeading | BackgroundHeading | ScenarioHeading | ScenarioOutlineHeading | ExamplesHeading | Step | Row | PyString)* (space | EOL)* EOF;
 

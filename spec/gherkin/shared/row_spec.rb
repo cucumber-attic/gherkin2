@@ -25,6 +25,11 @@ module Gherkin
         @listener.should_receive(:row).with(r(%w{foo bar}), 1)
         @lexer.scan("| foo | bar |\n")
       end
+
+      it "should escape backslashed pipes" do
+        @listener.should_receive(:row).with(['|', 'the', '\a', '\\', '|\|'], 1)
+        @lexer.scan('| \| | the | \a | \\ |   \|\\|    |' + "\n")
+      end
     
       it "should parse cells with spaces within the content" do
         @listener.should_receive(:row).with(r(["Dill pickle", "Valencia orange"]), 1)
@@ -32,14 +37,6 @@ module Gherkin
       end
       
       it "should allow utf-8" do
-        #  Fails in 1.9.1! 
-        #  'Gherkin::Lexer::Table should allow utf-8 with using == to evaluate' FAILED 
-        #    expected: [[:row, [["ůﻚ", "2"]], 1]],
-        #         got: [[:row, [["\xC5\xAF\xEF\xBB\x9A", "2"]], 1]] (using ==)
-        #  BUT, simply running:
-        #     [[:row, [["ůﻚ", "2"]], 1]].should == [[:row, [["\xC5\xAF\xEF\xBB\x9A", "2"]], 1]] 
-        #  passes
-        #
         @lexer.scan(" | ůﻚ | 2 | \n")
         @listener.to_sexp.should == [
           [:row, ["ůﻚ", "2"], 1],

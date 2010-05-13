@@ -103,7 +103,7 @@ module Gherkin
 
         action store_cell_content {
           con = utf8_pack(data[@content_start...p]).strip
-          current_row << con
+          current_row << con.gsub(/\\\|/, "|")
         }
 
         action store_row {
