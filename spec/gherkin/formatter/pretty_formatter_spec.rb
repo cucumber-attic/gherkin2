@@ -112,8 +112,8 @@ module Gherkin
         pystrings
       """
     And there is another step
-      | æ | o |
-      | a | ø |
+      | æ   | \\|o |
+      | \\|a | ø   |
     Then we will see steps
 })
       end
