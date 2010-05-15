@@ -29,8 +29,7 @@ class RagelTask
     {
       'c'    => "ext/gherkin_lexer_#{@i18n.underscored_iso_code}/gherkin_lexer_#{@i18n.underscored_iso_code}.c",
       'java' => "java/src/main/java/gherkin/lexer/#{@i18n.underscored_iso_code.upcase}.java",
-      'rb'   => "lib/gherkin/rb_lexer/#{@i18n.underscored_iso_code}.rb",
-      'csharp'   => "tmp/#{@i18n.underscored_iso_code}.cs"
+      'rb'   => "lib/gherkin/rb_lexer/#{@i18n.underscored_iso_code}.rb"
     }[@lang]
   end
 
@@ -54,8 +53,7 @@ class RagelTask
     {
       'c'      => '-C',
       'java'   => '-J',
-      'rb'     => '-R',
-      'csharp' => '-A -L -T0'
+      'rb'     => '-R'
     }[@lang]
   end
 

@@ -11,9 +11,14 @@ import static gherkin.util.FixJava.join;
 import static gherkin.util.FixJava.map;
 
 public class I18n {
-    private static final List<String> ALL_KEYS = Arrays.asList("name", "native", "feature", "background", "scenario", "scenario_outline", "examples", "given", "when", "then", "and", "but");
-    private static final List<String> KEYWORD_KEYS = Arrays.asList("feature", "background", "scenario", "scenario_outline", "examples", "given", "when", "then", "and", "but");
-    private static final List<String> STEP_KEYWORD_KEYS = Arrays.asList("given", "when", "then", "and", "but");
+    private static final List<String> FEATURE_ELEMENT_KEYWORD_KEYS = Arrays.asList("feature", "background", "scenario", "scenario_outline", "examples");
+    private static final List<String> STEP_KEYWORD_KEYS            = Arrays.asList("given", "when", "then", "and", "but");
+    private static final List<String> KEYWORD_KEYS                 = new ArrayList();
+    static {
+        KEYWORD_KEYS.addAll(FEATURE_ELEMENT_KEYWORD_KEYS);
+        KEYWORD_KEYS.addAll(STEP_KEYWORD_KEYS);
+    }
+
     private static final Mapper QUOTE_MAPPER = new Mapper() {
         public String map(String string) {
             return '"' + string + '"';

@@ -8,10 +8,10 @@ module Gherkin
       java_impl('gherkin.jar')
     end
 
-    ALL_KEYS = %w{name native feature background scenario scenario_outline examples given when then and but}
-    KEYWORD_KEYS = ALL_KEYS - %w{name native}
-    STEP_KEYWORD_KEYS = %w{given when then and but}
-    LANGUAGES    = YAML.load_file(File.dirname(__FILE__) + '/i18n.yml')
+    FEATURE_ELEMENT_KEYS = %w{feature background scenario scenario_outline examples}
+    STEP_KEYWORD_KEYS    = %w{given when then and but}
+    KEYWORD_KEYS         = FEATURE_ELEMENT_KEYS + STEP_KEYWORD_KEYS
+    LANGUAGES            = YAML.load_file(File.dirname(__FILE__) + '/i18n.yml')
 
     class << self
       include Rubify
@@ -141,7 +141,7 @@ module Gherkin
     def keywords(iso_code)
       iso_code = iso_code.to_s
       raise "No #{iso_code.inspect} in #{@keywords.inspect}" if @keywords[iso_code].nil?
-      @keywords[iso_code].split('|').map{|keyword| keyword_space(iso_code, keyword)}
+      @keywords[iso_code].split('|').map{|keyword| real_keyword(iso_code, keyword)}
     end
 
     def keyword_table
@@ -167,9 +167,9 @@ module Gherkin
 
     private
 
-    def keyword_space(iso_code, keyword)
+    def real_keyword(iso_code, keyword)
       if(STEP_KEYWORD_KEYS.index(iso_code))
-        (keyword + ' ').sub(/< $/,'')
+        (keyword + ' ').sub(/< $/, '')
       else
         keyword
       end
