@@ -181,6 +181,8 @@ static VALUE rb_eGherkinLexingError;
   action store_cell_content {
     VALUE con = ENCODED_STR_NEW(PTR_TO(content_start), LEN(content_start, p));
     rb_funcall(con, rb_intern("strip!"), 0);
+    VALUE re = rb_reg_regcomp(rb_str_new2("\\\\\\|"));
+    rb_funcall(con, rb_intern("gsub!"), 2, re, rb_str_new2("|"));
 
     rb_ary_push(current_row, con);
   }

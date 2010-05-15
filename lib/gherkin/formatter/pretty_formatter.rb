@@ -67,7 +67,7 @@ module Gherkin
 
       def row(row, line)
         @rows ||= []
-        @rows << row
+        @rows << row.map{|cell| cell.gsub(/\|/, "\\|")}
       end
 
       def py_string(string, line)

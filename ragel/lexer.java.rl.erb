@@ -114,7 +114,8 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
     }
 
     action store_cell_content {
-      currentRow.add(substring(data, contentStart, p).trim());
+      String con = substring(data, contentStart, p).trim();
+      currentRow.add(con.replaceAll("\\\\\\|", "|"));
     }
 
     action store_row {
