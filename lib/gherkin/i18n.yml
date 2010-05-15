@@ -339,6 +339,19 @@
   then: "*|Tada"
   and: "*|Ir"
   but: "*|Bet"
+"lu":
+  name: Luxemburgish
+  native: Lëtzebuergesch
+  feature: Funktionalitéit
+  background: Hannergrond
+  scenario: Szenario
+  scenario_outline: Plang vum Szenario
+  examples: Beispiller
+  given: "*|ugeholl"
+  when: "*|wann"
+  then: "*|dann"
+  and: "*|an|a"
+  but: "*|awer|mä"
 "lv":
   name: Latvian
   native: latviešu
