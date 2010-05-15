@@ -28,7 +28,7 @@ module Gherkin
 
       it "should escape backslashed pipes" do
         @listener.should_receive(:row).with(['|', 'the', '\a', '\\', '|\|'], 1)
-        @lexer.scan('| \| | the | \a | \\ |   \|\\|    |' + "\n")
+        @lexer.scan('| \| | the | \a | \\ |   \|\\\|    |' + "\n")
       end
     
       it "should parse cells with spaces within the content" do
