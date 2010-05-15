@@ -96,6 +96,7 @@ module Gherkin
       | ja        | Japanese               | 日本語                  |
       | ko        | Korean                 | 한국어                  |
       | lt        | Lithuanian             | lietuvių kalba       |
+      | lu        | Luxemburgish           | Lëtzebuergesch       |
       | lv        | Latvian                | latviešu             |
       | nl        | Dutch                  | Nederlands           |
       | no        | Norwegian              | norsk                |

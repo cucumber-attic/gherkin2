@@ -2,6 +2,7 @@
 
 === New Features
 * Table cells can now contain escaped bars - \|. (#48. Gregory Hnatiuk)
+* Luxemburgish (lu) added. (Christoph König)
 
 == 1.0.26 (2010-05-09)
 
