@@ -113,7 +113,7 @@ module Gherkin
       """
     And there is another step
       | æ   | \\|o |
-      | \\|a | ø   |
+      | \\|a | ø\\\\ |
     Then we will see steps
 })
       end
@@ -147,6 +147,15 @@ Feature: Feature Description
 
       it "should preserve tabs" do
         assert_pretty(IO.read(File.dirname(__FILE__) + '/tabs.feature'), IO.read(File.dirname(__FILE__) + '/spaces.feature'))
+      end
+
+      it "should escape backslashes and pipes" do
+        io = StringIO.new
+        l = PrettyFormatter.new(io, true)
+        l.row(['|', '\\'], 1)
+        l.flush_table
+        io.rewind
+        io.read.should == '      | \\| | \\\\ |' + "\n"
       end
     end
   end

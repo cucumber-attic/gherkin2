@@ -3,6 +3,7 @@
 require 'gherkin/formatter/colors'
 require 'gherkin/formatter/monochrome_format'
 require 'gherkin/formatter/argument'
+require 'gherkin/formatter/escaping'
 
 module Gherkin
   module Formatter
@@ -11,6 +12,7 @@ module Gherkin
       java_impl('gherkin.jar')
 
       include Colors
+      include Escaping
 
       def initialize(io, monochrome=false)
         @io = io
@@ -67,7 +69,7 @@ module Gherkin
 
       def row(row, line)
         @rows ||= []
-        @rows << row.map{|cell| cell.gsub(/\|/, "\\|")}
+        @rows << row.map{|cell| escape_cell(cell)}
       end
 
       def py_string(string, line)

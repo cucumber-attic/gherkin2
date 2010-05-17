@@ -124,7 +124,11 @@ public class PrettyFormatter implements Formatter {
 
     public void row(List<String> row, int line) {
         if (rows == null) rows = new ArrayList<List<String>>();
-        rows.add(row);
+        List<String> escapedRow = new ArrayList<String>(row.size());
+        for(String cell : row) {
+            escapedRow.add(cell.replaceAll("\\|", "\\\\|").replaceAll("\\\\(?!\\|)", "\\\\\\\\"));
+        }
+        rows.add(escapedRow);
     }
 
     public void pyString(String string, int line) {
