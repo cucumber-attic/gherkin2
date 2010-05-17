@@ -27,7 +27,7 @@ module Gherkin
       end
 
       it "should escape backslashed pipes" do
-        @listener.should_receive(:row).with(r(['|', 'the', '\a', '\\', '|\|']), 1)
+        @listener.should_receive(:row).with(r(['|', 'the', '\a', '\\', '|\\|']), 1)
         @lexer.scan('| \| | the | \a | \\ |   \|\\\|    |' + "\n")
       end
     
