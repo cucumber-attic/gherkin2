@@ -6,7 +6,7 @@
 
   <groupId>gherkin</groupId>
   <artifactId>gherkin</artifactId>
-  <version>1.0.27</version>
+  <version>1.0.28</version>
 
   <packaging>jar</packaging>
   <name>Gherkin</name>

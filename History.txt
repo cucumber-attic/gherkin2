@@ -1,6 +1,7 @@
-== In Git
+== 1.0.28 (2010-05-18)
 
 === Bugfixes
+* Use context class loader instead of boot class loader to load Java lexers. (Aslak Hellesøy)
 * Only add gcc flags when the compiler is gcc. (#60 Aslak Hellesøy, Christian Höltje)
 
 == 1.0.27 (2010-05-17)

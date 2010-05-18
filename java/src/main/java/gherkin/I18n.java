@@ -13,7 +13,7 @@ import static gherkin.util.FixJava.map;
 public class I18n {
     private static final List<String> FEATURE_ELEMENT_KEYWORD_KEYS = Arrays.asList("feature", "background", "scenario", "scenario_outline", "examples");
     private static final List<String> STEP_KEYWORD_KEYS            = Arrays.asList("given", "when", "then", "and", "but");
-    private static final List<String> KEYWORD_KEYS                 = new ArrayList();
+    private static final List<String> KEYWORD_KEYS                 = new ArrayList<String>();
     static {
         KEYWORD_KEYS.addAll(FEATURE_ELEMENT_KEYWORD_KEYS);
         KEYWORD_KEYS.addAll(STEP_KEYWORD_KEYS);
@@ -54,9 +54,7 @@ public class I18n {
             String key = keys.nextElement();
 
             String value = keywordBundle.getString(key);
-            for (String keyword : value.split("\\|")) {
-                keywordList.add(keyword);
-            }
+            keywordList.addAll(Arrays.asList(value.split("\\|")));
             keywords.put(key, Collections.unmodifiableList(keywordList));
         }
     }
@@ -68,7 +66,7 @@ public class I18n {
     public Lexer lexer(Listener listener) {
         String qualifiedI18nLexerClassName = "gherkin.lexer." + locale.toString().toUpperCase();
         try {
-            Class<?> delegateClass = Class.forName(qualifiedI18nLexerClassName);
+            Class<?> delegateClass = Thread.currentThread().getContextClassLoader().loadClass(qualifiedI18nLexerClassName);
             return (Lexer) delegateClass.getConstructor(Listener.class).newInstance(listener);
         } catch (Exception e) {
             throw new RuntimeException("Couldn't load lexer class: " + qualifiedI18nLexerClassName, e);
