@@ -1,3 +1,8 @@
+== In Git
+
+=== Bugfixes
+* Don't add gcc flags when the compiler is cl (Microsoft Visual Studio). (#60 Aslak Hellesøy)
+
 == 1.0.27 (2010-05-17)
 
 === New Features
