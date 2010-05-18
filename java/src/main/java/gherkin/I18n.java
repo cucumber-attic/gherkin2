@@ -66,7 +66,7 @@ public class I18n {
     public Lexer lexer(Listener listener) {
         String qualifiedI18nLexerClassName = "gherkin.lexer." + locale.toString().toUpperCase();
         try {
-            Class<?> delegateClass = Thread.currentThread().getContextClassLoader().loadClass(qualifiedI18nLexerClassName);
+            Class<?> delegateClass = getClass().getClassLoader().loadClass(qualifiedI18nLexerClassName);
             return (Lexer) delegateClass.getConstructor(Listener.class).newInstance(listener);
         } catch (Exception e) {
             throw new RuntimeException("Couldn't load lexer class: " + qualifiedI18nLexerClassName, e);

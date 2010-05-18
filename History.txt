@@ -1,3 +1,8 @@
+== 1.0.29 (2010-05-18)
+
+=== Bugfixes
+* Use I18n.class' class loader instead of context class loader to load Java lexers. Hoping this fixes loading bug for good. (Aslak Hellesøy)
+
 == 1.0.28 (2010-05-18)
 
 === Bugfixes
