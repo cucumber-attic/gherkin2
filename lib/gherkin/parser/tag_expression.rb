@@ -3,6 +3,8 @@ module Gherkin
     class TagExpression
       require 'gherkin/java_impl'
       java_impl('gherkin.jar')
+      require 'gherkin/ikvm_impl'
+      ikvm_impl('gherkin')
 
       attr_reader :limits
 

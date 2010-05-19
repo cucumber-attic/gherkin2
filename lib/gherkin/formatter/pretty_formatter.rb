@@ -10,6 +10,8 @@ module Gherkin
     class PrettyFormatter
       require 'gherkin/java_impl'
       java_impl('gherkin.jar')
+      require 'gherkin/ikvm_impl'
+      ikvm_impl('gherkin')
 
       include Colors
       include Escaping

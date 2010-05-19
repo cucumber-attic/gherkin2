@@ -6,6 +6,8 @@ module Gherkin
     unless defined?(BYPASS_JAVA_IMPL)
       require 'gherkin/java_impl'
       java_impl('gherkin.jar')
+      require 'gherkin/ikvm_impl'
+      ikvm_impl('gherkin')
     end
 
     FEATURE_ELEMENT_KEYS = %w{feature background scenario scenario_outline examples}

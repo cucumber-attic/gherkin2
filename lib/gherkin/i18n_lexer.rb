@@ -8,6 +8,8 @@ module Gherkin
   class I18nLexer
     require 'gherkin/java_impl'
     java_impl('gherkin.jar')
+    require 'gherkin/ikvm_impl'
+    ikvm_impl('gherkin')
 
     LANGUAGE_PATTERN = /language\s*:\s*(.*)/ #:nodoc:
     attr_reader :i18n_language

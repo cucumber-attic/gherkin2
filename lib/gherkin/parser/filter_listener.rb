@@ -7,6 +7,8 @@ module Gherkin
     class FilterListener
       require 'gherkin/java_impl'
       java_impl('gherkin.jar')
+      require 'gherkin/ikvm_impl'
+      ikvm_impl('gherkin')
     
       # Creates a new instance that replays events to +listener+, filtered by +filters+,
       # an Array that can contain one of the following:

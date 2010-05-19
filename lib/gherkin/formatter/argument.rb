@@ -3,6 +3,8 @@ module Gherkin
     class Argument
       require 'gherkin/java_impl'
       java_impl('gherkin.jar')
+      require 'gherkin/ikvm_impl'
+      ikvm_impl('gherkin')
 
       attr_reader :byte_offset, :val
 

@@ -9,6 +9,8 @@ module Gherkin
     class Parser
       require 'gherkin/java_impl'
       java_impl('gherkin.jar')
+      require 'gherkin/ikvm_impl'
+      ikvm_impl('gherkin')
 
       # Initialize the parser. +machine_name+ refers to a state machine table.
       def initialize(listener, raise_on_error=true, machine_name='root')
