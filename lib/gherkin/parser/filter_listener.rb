@@ -1,6 +1,6 @@
 require 'gherkin/parser/event'
 require 'gherkin/parser/tag_expression'
-require 'gherkin/bridge'
+require 'gherkin/native'
 
 module Gherkin
   module Parser

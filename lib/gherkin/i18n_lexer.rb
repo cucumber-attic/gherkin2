@@ -1,5 +1,5 @@
 require 'gherkin/i18n'
-require 'gherkin/bridge'
+require 'gherkin/native'
 
 module Gherkin
   I18nLexerNotFound = Class.new(LoadError)

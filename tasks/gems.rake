@@ -27,6 +27,12 @@ namespace :gems do
     mv "pkg/gherkin-#{GHERKIN_VERSION}-java.gem", 'release'
   end
 
+  desc 'Build IronRuby gem'
+  task :ironruby => [:jruby, 'ikvm:dll', 'ikvm:copy_ikvm_dlls'] do
+    sh "rake gemspec build PLATFORM=universal-dotnet"
+    mv "pkg/gherkin-#{GHERKIN_VERSION}-universal-dotnet.gem", 'release'
+  end
+
   task :release_dir do
     mkdir 'release' unless File.directory?('release')
   end
@@ -36,4 +42,4 @@ namespace :gems do
   end
 end
 
-task :gems => ['gems:clean_release_dir', 'gems:posix', 'gems:mswin32', 'gems:mingw32', 'gems:jruby']
+task :gems => ['gems:clean_release_dir', 'gems:posix', 'gems:mswin32', 'gems:mingw32', 'gems:jruby', 'gems:ironruby']

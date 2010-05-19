@@ -1,4 +1,4 @@
-require 'gherkin/bridge'
+require 'gherkin/native'
 
 # encoding: utf-8
 module Gherkin

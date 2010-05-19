@@ -3,7 +3,7 @@ require 'gherkin/formatter/colors'
 require 'gherkin/formatter/monochrome_format'
 require 'gherkin/formatter/argument'
 require 'gherkin/formatter/escaping'
-require 'gherkin/bridge'
+require 'gherkin/native'
 
 module Gherkin
   module Formatter

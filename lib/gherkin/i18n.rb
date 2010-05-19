@@ -1,6 +1,6 @@
 require 'yaml'
 require 'gherkin/rubify'
-require 'gherkin/bridge'
+require 'gherkin/native'
 
 module Gherkin
   class I18n

@@ -1,4 +1,4 @@
-require 'gherkin/bridge'
+require 'gherkin/native'
 
 module Gherkin
   module Formatter
