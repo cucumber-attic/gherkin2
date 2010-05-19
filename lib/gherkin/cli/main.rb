@@ -17,11 +17,11 @@ module Gherkin
 
         cmd_name = args.shift
         die("Missing command") if cmd_name.nil?
-        cmd = Tools.const_get(cmd_name.capitalize.to_sym).new(args) rescue die("Unknown command #{cmd_name}")
         begin
+          cmd = Tools.const_get(cmd_name.capitalize.to_sym).new(args)
           cmd.run
         rescue => e
-          Trollop::die(e.message)
+          Trollop::die(e.message + "\nCommand: #{cmd_name}")
         end
       end
 

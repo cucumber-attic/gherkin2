@@ -1,17 +1,14 @@
 # encoding: utf-8
-
 require 'gherkin/formatter/colors'
 require 'gherkin/formatter/monochrome_format'
 require 'gherkin/formatter/argument'
 require 'gherkin/formatter/escaping'
+require 'gherkin/bridge'
 
 module Gherkin
   module Formatter
     class PrettyFormatter
-      require 'gherkin/java_impl'
-      java_impl('gherkin.jar')
-      require 'gherkin/ikvm_impl'
-      ikvm_impl('gherkin')
+      native_impl('gherkin')
 
       include Colors
       include Escaping

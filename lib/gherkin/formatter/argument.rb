@@ -1,11 +1,9 @@
+require 'gherkin/bridge'
+
 module Gherkin
   module Formatter
     class Argument
-      require 'gherkin/java_impl'
-      java_impl('gherkin.jar')
-      require 'gherkin/ikvm_impl'
-      ikvm_impl('gherkin')
-
+      native_impl('gherkin')
       attr_reader :byte_offset, :val
 
       def initialize(byte_offset, val)

@@ -1,14 +1,10 @@
 require 'yaml'
 require 'gherkin/rubify'
+require 'gherkin/bridge'
 
 module Gherkin
   class I18n
-    unless defined?(BYPASS_JAVA_IMPL)
-      require 'gherkin/java_impl'
-      java_impl('gherkin.jar')
-      require 'gherkin/ikvm_impl'
-      ikvm_impl('gherkin')
-    end
+    native_impl('gherkin') unless defined?(BYPASS_NATIVE_IMPL)
 
     FEATURE_ELEMENT_KEYS = %w{feature background scenario scenario_outline examples}
     STEP_KEYWORD_KEYS    = %w{given when then and but}

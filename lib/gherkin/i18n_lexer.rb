@@ -1,4 +1,5 @@
 require 'gherkin/i18n'
+require 'gherkin/bridge'
 
 module Gherkin
   I18nLexerNotFound = Class.new(LoadError)
@@ -6,10 +7,7 @@ module Gherkin
 
   # The main entry point to lexing Gherkin source.
   class I18nLexer
-    require 'gherkin/java_impl'
-    java_impl('gherkin.jar')
-    require 'gherkin/ikvm_impl'
-    ikvm_impl('gherkin')
+    native_impl('gherkin')
 
     LANGUAGE_PATTERN = /language\s*:\s*(.*)/ #:nodoc:
     attr_reader :i18n_language

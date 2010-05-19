@@ -1,10 +1,9 @@
+require 'gherkin/bridge'
+
 module Gherkin
   module Parser
     class TagExpression
-      require 'gherkin/java_impl'
-      java_impl('gherkin.jar')
-      require 'gherkin/ikvm_impl'
-      ikvm_impl('gherkin')
+      native_impl('gherkin')
 
       attr_reader :limits
 

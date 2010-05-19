@@ -1,8 +1,10 @@
+require 'gherkin/bridge'
+
 # encoding: utf-8
 module Gherkin
   module Tools
     class StatsListener
-      include Object.const_get('gherkin').const_get('Listener') if defined?(RUBY_ENGINE) && RUBY_ENGINE == "ironruby"
+      implements 'gherkin.Listener'
 
       attr_reader :features, :scenarios, :steps
 

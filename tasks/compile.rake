@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/ragel_task'
-BYPASS_JAVA_IMPL = true
+BYPASS_NATIVE_IMPL = true
 require 'gherkin/i18n'
 
 CLEAN.include [

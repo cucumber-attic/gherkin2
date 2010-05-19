@@ -1,14 +1,12 @@
 require 'gherkin/parser/event'
 require 'gherkin/parser/tag_expression'
+require 'gherkin/bridge'
 
 module Gherkin
   module Parser
     # This class filters events based on filter criteria.
     class FilterListener
-      require 'gherkin/java_impl'
-      java_impl('gherkin.jar')
-      require 'gherkin/ikvm_impl'
-      ikvm_impl('gherkin')
+      native_impl('gherkin')
     
       # Creates a new instance that replays events to +listener+, filtered by +filters+,
       # an Array that can contain one of the following:
