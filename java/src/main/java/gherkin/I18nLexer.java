@@ -23,16 +23,16 @@ public class I18nLexer implements Lexer {
         return i18n;
     }
 
-    public void scan(CharSequence source) {
+    public void scan(String source) {
         createDelegate(source).scan(source);
     }
 
-    private Lexer createDelegate(CharSequence source) {
+    private Lexer createDelegate(String source) {
         i18n = i18nLanguage(source);
         return i18n.lexer(listener);
     }
 
-    private I18n i18nLanguage(CharSequence source) {
+    private I18n i18nLanguage(String source) {
         String lineOne = source.toString().split("\\n")[0];
         Matcher matcher = LANGUAGE_PATTERN.matcher(lineOne);
         String key = "en";

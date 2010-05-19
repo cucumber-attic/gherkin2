@@ -1,5 +1,5 @@
 package gherkin;
 
 public interface Lexer {
-    public void scan(CharSequence gherkinSource);
+    public void scan(String gherkinSource);
 }

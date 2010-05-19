@@ -52,7 +52,7 @@ public class Main {
 
     private void parse(File file) {
         try {
-            CharSequence input = FixJava.readReader(new FileReader(file));
+            String input = FixJava.readReader(new FileReader(file));
             lexer.scan(input);
         } catch (Exception e) {
             System.err.println(e.getMessage());
