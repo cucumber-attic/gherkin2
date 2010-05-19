@@ -1,3 +1,8 @@
+== 1.0.30 (2010-05-18)
+
+=== New Features
+* Native gems for IronRuby. Bundles IKVM OpenJDK dlls as well as ikvmc-compiled gherkin.dll. Experimental! (Aslak Hellesøy)
+
 == 1.0.29 (2010-05-18)
 
 === Bugfixes
