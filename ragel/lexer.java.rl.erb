@@ -125,7 +125,7 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
     action end_feature {
       if(cs < lexer_first_final) {
         String content = currentLineContent(data, lastNewline);
-        throw new LexingError("Lexing error on line " + lineNumber + ": '" + content + "'");
+        throw new LexingError("Lexing error on line " + lineNumber + ": '" + content + "'. See http://wiki.github.com/aslakhellesoy/gherkin/lexingerror for more information.");
       } else {
         listener.eof();
       }
