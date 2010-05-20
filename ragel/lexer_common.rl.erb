@@ -36,7 +36,7 @@
   
   StartRow = space* PIPE >start_row;
   EndRow = EOL space* ^PIPE >next_keyword_start;    
-  Cell = PIPE (ESCAPED_PIPE | (any - PIPE)+ )* >begin_cell_content %store_cell_content;
+  Cell = PIPE (ESCAPED_PIPE | (any - (PIPE|EOL))+ )* >begin_cell_content %store_cell_content;
   RowBody = space* Cell** PIPE :>> (space* EOL+ space*) %store_row;
   Row = StartRow :>> RowBody <: EndRow?;
   

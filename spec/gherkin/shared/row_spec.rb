@@ -99,6 +99,12 @@ module Gherkin
           @lexer.scan("|| oh hello \n") 
         }.should raise_error(/Parsing error on line 1: '|| oh hello/)
       end
+
+      it "should raise LexingError for rows that aren't closed" do
+        lambda { 
+          @lexer.scan("|| oh hello \n  |Shoudn't Get|Here|") 
+        }.should raise_error(/Parsing error on line 1: '|| oh hello/)
+      end
     end
   end
 end
