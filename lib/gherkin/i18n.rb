@@ -136,10 +136,10 @@ module Gherkin
       result
     end
 
-    def keywords(iso_code)
-      iso_code = iso_code.to_s
-      raise "No #{iso_code.inspect} in #{@keywords.inspect}" if @keywords[iso_code].nil?
-      @keywords[iso_code].split('|').map{|keyword| real_keyword(iso_code, keyword)}
+    def keywords(key)
+      key = key.to_s
+      raise "No #{key.inspect} in #{@keywords.inspect}" if @keywords[key].nil?
+      @keywords[key].split('|').map{|keyword| real_keyword(key, keyword)}
     end
 
     def keyword_table
@@ -165,8 +165,8 @@ module Gherkin
 
     private
 
-    def real_keyword(iso_code, keyword)
-      if(STEP_KEYWORD_KEYS.index(iso_code))
+    def real_keyword(key, keyword)
+      if(STEP_KEYWORD_KEYS.index(key))
         (keyword + ' ').sub(/< $/, '')
       else
         keyword
