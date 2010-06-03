@@ -307,7 +307,7 @@ store_pystring_content(VALUE listener,
 static void 
 raise_lexer_error(const char * at, int line)
 { 
-  rb_raise(rb_eGherkinLexingError, "Lexing error on line %d: '%s'.", line, at);
+  rb_raise(rb_eGherkinLexingError, "Lexing error on line %d: '%s'. See http://wiki.github.com/aslakhellesoy/gherkin/lexingerror for more information.", line, at);
 }
 
 static int 
