@@ -3,7 +3,7 @@ require 'gherkin/native'
 module Gherkin
   module Formatter
     class Argument
-      native_impl('gherkin')
+      native_impl('gherkin_native')
       attr_reader :byte_offset, :val
 
       def initialize(byte_offset, val)

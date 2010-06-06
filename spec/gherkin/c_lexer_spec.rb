@@ -1,5 +1,5 @@
 #encoding: utf-8
-unless defined?(JRUBY_VERSION)
+unless defined?(JRUBY_VERSION) || (defined?(RUBY_ENGINE) && RUBY_ENGINE == "ironruby")
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require 'gherkin_lexer_en'
 

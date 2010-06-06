@@ -8,7 +8,7 @@ require 'gherkin/native'
 module Gherkin
   module Formatter
     class PrettyFormatter
-      native_impl('gherkin')
+      native_impl('gherkin_native')
 
       include Colors
       include Escaping

@@ -3,7 +3,7 @@ require 'gherkin/native'
 module Gherkin
   module Parser
     class TagExpression
-      native_impl('gherkin')
+      native_impl('gherkin_native')
 
       attr_reader :limits
 

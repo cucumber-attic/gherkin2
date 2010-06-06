@@ -5,23 +5,19 @@ class Class
   end
 
   # Causes a Java class to be instantiated instead of the Ruby class when 
-  # running on JRuby. This is used to test both pure Java and pure Ruby classes 
-  # from the same Ruby based test suite. The Java Class must have a package name
-  # that corresponds with the Ruby class.
+  # running on JRuby.
   def native_impl(lib)
     require "#{lib}.jar"
 
     class << self
       def javaify(arg)
-        if Array === arg
+        case(arg)
+        when Array
           arg.map{|a| javaify(a)}
+        when Regexp
+          java.util.regex.Pattern.compile(arg.source)
         else
-          case(arg)
-          when Regexp
-            java.util.regex.Pattern.compile(arg.source)
-          else
-            arg
-          end
+          arg
         end
       end
 

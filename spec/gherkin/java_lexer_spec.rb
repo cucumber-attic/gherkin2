@@ -1,7 +1,6 @@
 #encoding: utf-8
 if defined?(JRUBY_VERSION)
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
-require 'gherkin.jar'
 
 module Gherkin
   module JavaLexer

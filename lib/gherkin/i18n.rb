@@ -4,7 +4,7 @@ require 'gherkin/native'
 
 module Gherkin
   class I18n
-    native_impl('gherkin') unless defined?(BYPASS_NATIVE_IMPL)
+    native_impl('gherkin_native') unless defined?(BYPASS_NATIVE_IMPL)
 
     FEATURE_ELEMENT_KEYS = %w{feature background scenario scenario_outline examples}
     STEP_KEYWORD_KEYS    = %w{given when then and but}

@@ -9,7 +9,7 @@ module Gherkin
     end
 
     class Parser
-      native_impl('gherkin')
+      native_impl('gherkin_native')
 
       # Initialize the parser. +machine_name+ refers to a state machine table.
       def initialize(listener, raise_on_error=true, machine_name='root')

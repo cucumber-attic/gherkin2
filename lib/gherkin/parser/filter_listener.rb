@@ -6,7 +6,7 @@ module Gherkin
   module Parser
     # This class filters events based on filter criteria.
     class FilterListener
-      native_impl('gherkin')
+      native_impl('gherkin_native')
     
       # Creates a new instance that replays events to +listener+, filtered by +filters+,
       # an Array that can contain one of the following:

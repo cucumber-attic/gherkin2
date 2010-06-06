@@ -104,7 +104,7 @@
             <phase>package</phase>
             <configuration>
               <tasks>
-                <copy file="${project.build.directory}/${project.build.finalName}.jar" tofile="${basedir}/../lib/gherkin.jar" />
+                <copy file="${project.build.directory}/${project.build.finalName}.jar" tofile="${basedir}/../lib/gherkin_native.jar" />
               </tasks>
             </configuration>
             <goals>

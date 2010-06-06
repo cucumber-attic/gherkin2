@@ -7,7 +7,7 @@ module Gherkin
 
   # The main entry point to lexing Gherkin source.
   class I18nLexer
-    native_impl('gherkin')
+    native_impl('gherkin_native')
 
     LANGUAGE_PATTERN = /language\s*:\s*(.*)/ #:nodoc:
     attr_reader :i18n_language

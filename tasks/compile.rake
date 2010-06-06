@@ -8,15 +8,16 @@ CLEAN.include [
   'java/target',
   'ragel/i18n/*.rl',
   'lib/gherkin/rb_lexer/*.rb',
+  'lib/*.dll',
   'ext/**/*.c',
   'java/src/main/java/gherkin/lexer/*.java',
   'java/src/main/resources/gherkin/*.properties',
 ]
 
 desc "Compile the Java extensions"
-task :jar => 'lib/gherkin.jar'
+task :jar => 'lib/gherkin_native.jar'
 
-file 'lib/gherkin.jar' => Dir['java/src/main/java/**/*.java'] do
+file 'lib/gherkin_native.jar' => Dir['java/src/main/java/**/*.java'] do
   sh("mvn -f java/pom.xml package")
 end
 
@@ -27,7 +28,7 @@ langs.each do |i18n|
   java = RagelTask.new('java', i18n)
   rb   = RagelTask.new('rb', i18n)
 
-  file 'lib/gherkin.jar' => [java.target, rb.target]
+  file 'lib/gherkin_native.jar' => [java.target, rb.target]
 
   begin
   if defined?(JRUBY_VERSION)
@@ -41,7 +42,7 @@ langs.each do |i18n|
         end
       end
     end
-    file 'lib/gherkin.jar' => java_properties
+    file 'lib/gherkin_native.jar' => java_properties
   else
     require 'rake/extensiontask'
 

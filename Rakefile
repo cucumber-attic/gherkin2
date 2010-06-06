@@ -28,7 +28,7 @@ begin
     case ENV['PLATFORM']
     when 'java'
       gem.platform = 'java'
-      gem.files += FileList['lib/gherkin.jar']
+      gem.files += FileList['lib/*.jar']
       gem.extensions = []
     when 'i386-mswin32', 'i386-mingw32'
       gem.platform = ENV['PLATFORM']
