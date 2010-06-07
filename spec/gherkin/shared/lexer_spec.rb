@@ -544,6 +544,22 @@ Given I am a step
             @lexer.scan("Feature: hello\nScenario: My scenario\nGiven foo\nAand blah\nHmmm wrong\nThen something something")
           }.should raise_error(/Lexing error on line 4/)
         end
+
+        it "Feature keyword should terminate narratives for multiline capable tokens" do
+          @lexer.scan("Feature:\nBackground:\nFeature:\nScenario Outline:\nFeature:\nScenario:\nFeature:\nExamples:\nFeature:\n")
+          @listener.to_sexp.should == [
+            [:feature, "Feature", "", 1],
+            [:background, "Background", "", 2],
+            [:feature, "Feature", "" ,3],
+            [:scenario_outline, "Scenario Outline", "", 4],
+            [:feature, "Feature", "", 5],
+            [:scenario, "Scenario", "", 6],
+            [:feature, "Feature", "", 7],
+            [:examples, "Examples", "", 8],
+            [:feature, "Feature", "", 9],
+            [:eof]
+          ]
+        end
       end
     end
   end
