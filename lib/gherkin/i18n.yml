@@ -269,8 +269,8 @@
   scenario: Forgatókönyv
   scenario_outline: Forgatókönyv vázlat
   examples: Példák
-  given: "*|Ha"
-  when: "*|Majd"
+  given: "*|Amennyiben|Adott"
+  when: "*|Majd|Ha|Amikor"
   then: "*|Akkor"
   and: "*|És"
   but: "*|De"
