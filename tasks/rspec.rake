@@ -1,15 +1,10 @@
-require 'spec/rake/spectask'
+require 'rspec/core/rake_task'
 
-Spec::Rake::SpecTask.new(:spec) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.spec_opts << '--color --diff'
-end
+RSpec::Core::RakeTask.new(:spec)
 task :spec => [:check_dependencies]
 
-Spec::Rake::SpecTask.new(:rcov) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.spec_opts << '--color --diff'
-  spec.pattern = 'spec/**/*_spec.rb'
-  spec.rcov = true
-  spec.rcov_opts = %w{--exclude spec\/}
+RSpec::Core::RakeTask.new(:rcov) do |t|
+  t.pattern = 'spec/**/*_spec.rb'
+  t.rcov = true
+  t.rcov_opts = %w{--exclude spec\/}
 end

@@ -2,6 +2,7 @@
 
 === New Features
 * New synonyms for Hungarian (Bence Golda)
+* Upgraded to use RSpec 2.0.0 (Aslak Hellesøy)
 
 === Bugfixes
 * Include link to explanation of LexingError (Mike Sassak)

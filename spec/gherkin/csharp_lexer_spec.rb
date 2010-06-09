@@ -1,6 +1,6 @@
 #encoding: utf-8
 if defined?(RUBY_ENGINE) && RUBY_ENGINE == "ironruby"
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 module Gherkin
   module Lexer

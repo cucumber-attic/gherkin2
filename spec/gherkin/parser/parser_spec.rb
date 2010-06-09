@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require 'spec_helper'
 require 'gherkin/parser/parser'
 
 module Gherkin
@@ -33,7 +33,7 @@ module Gherkin
 
       [true, false].each do |native|
         it "should be reusable for several feature files (native lexer: #{native})" do
-          listener = mock('listener', :null_object => true)
+          listener = mock('listener').as_null_object
           parser = Parser.new(listener, true)
           lexer = Gherkin::I18nLexer.new(parser, native)
           feature = <<-EOF
