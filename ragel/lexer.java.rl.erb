@@ -180,11 +180,20 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
   
   
   private String nameFromContents(String contents) {
-    return contents; // TODO
+    if (contents.isEmpty()) return "";
+    String[] lines = contents.split("\r?\n");
+    return lines[0];
   }
   
   private String descriptionFromContents(String contents) {
-    return contents; // TODO
+    String[] lines = contents.split("\r?\n");
+    if (lines.length < 2) return "";
+    
+    StringBuilder out = new StringBuilder();
+    out.append(lines[1]);
+    for (int i = 2; i < lines.length; ++i)
+      out.append("\n").append(lines[i]);
+    return out.toString();
   }
 
   private String multilineStrip(String text) {

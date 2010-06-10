@@ -10,6 +10,23 @@ import static org.mockito.Mockito.verify;
 
 public class I18nLexerTest {
     @Test
+    public void shouldScanMultiLineFeature() {
+        Listener listener = mock(Listener.class);
+        Lexer lexer = new I18nLexer(listener);
+
+        String feature = "Feature: Hello\n" +
+                "  World\n" +
+                "  Scenario Outline:\n" +
+                "    Given I have an empty stack\n" +
+                "    When I pøsh <x> onto the stack";
+
+        lexer.scan(feature);
+
+        verify(listener).feature("Feature", "Hello", "World", 1);
+        verify(listener).step("When ", "I pøsh <x> onto the stack", 5);
+    }
+
+    @Test
     public void shouldScanUtf8FeatureInSourceProperly() {
         Listener listener = mock(Listener.class);
         Lexer lexer = new I18nLexer(listener);
