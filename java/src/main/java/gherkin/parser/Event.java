@@ -16,25 +16,30 @@ public class Event {
     private final Type type;
     private final String keyword;
     private final String name;
+    private final String description;
     private final List<String> row;
     private final int line;
 
     public Event(Type type, String name, int line) {
-        this(type, null, name, line);
+        this(type, null, name, null, null, line);
     }
 
     public Event(Type type, String keyword, String name, int line) {
-        this(type, keyword, name, null, line);
+        this(type, keyword, name, null, null, line);
+    }
+    public Event(Type type, String keyword, String name, String description, int line) {
+        this(type, keyword, name, description, null, line);
     }
 
     public Event(Type type, List<String> row, int line) {
-        this(type, null, null, row, line);
+        this(type, null, null, null, row, line);
     }
 
-    private Event(Type type, String keyword, String name, List<String> row, int line) {
+    private Event(Type type, String keyword, String name, String description, List<String> row, int line) {
         this.type = type;
         this.keyword = keyword;
         this.name = name;
+        this.description = description;
         this.row = row;
         this.line = line;
     }
@@ -55,19 +60,19 @@ public class Event {
                 listener.comment(name, line);
                 break;
             case FEATURE:
-                listener.feature(keyword, name, line);
+                listener.feature(keyword, name, description, line);
                 break;
             case BACKGROUND:
-                listener.background(keyword, name, line);
+                listener.background(keyword, name, description, line);
                 break;
             case SCENARIO:
-                listener.scenario(keyword, name, line);
+                listener.scenario(keyword, name, description, line);
                 break;
             case SCENARIO_OUTLINE:
-                listener.scenarioOutline(keyword, name, line);
+                listener.scenarioOutline(keyword, name, description, line);
                 break;
             case EXAMPLES:
-                listener.examples(keyword, name, line);
+                listener.examples(keyword, name, description, line);
                 break;
             case STEP:
                 listener.step(keyword, name, line);

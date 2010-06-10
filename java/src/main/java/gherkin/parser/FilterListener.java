@@ -50,11 +50,11 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void feature(String keyword, String name, int line) {
+    public void feature(String keyword, String name, String description, int line) {
         if (hasNoFilters()) {
-            listener.feature(keyword, name, line);
+            listener.feature(keyword, name, description, line);
         } else {
-            Event event = new Event(Event.Type.FEATURE, keyword, name, line);
+            Event event = new Event(Event.Type.FEATURE, keyword, description, name, line);
             featureBuffer = metaBuffer;
             featureBuffer.add(event);
             featureTags = extractTags();
@@ -66,11 +66,11 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void background(String keyword, String name, int line) {
+    public void background(String keyword, String name, String description, int line) {
         if (hasNoFilters()) {
-            listener.background(keyword, name, line);
+            listener.background(keyword, name, description, line);
         } else {
-            Event event = new Event(Event.Type.BACKGROUND, keyword, name, line);
+            Event event = new Event(Event.Type.BACKGROUND, keyword, name, description, line);
             featureBuffer.addAll(metaBuffer);
             featureBuffer.add(event);
             metaBuffer = new ArrayList<Event>();
@@ -82,11 +82,11 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void scenario(String keyword, String name, int line) {
+    public void scenario(String keyword, String name, String description, int line) {
         if (hasNoFilters()) {
-            listener.scenario(keyword, name, line);
+            listener.scenario(keyword, name, description, line);
         } else {
-            Event event = new Event(Event.Type.SCENARIO, keyword, name, line);
+            Event event = new Event(Event.Type.SCENARIO, keyword, name, description, line);
             replayExamplesRowsBuffer();
             scenarioBuffer = metaBuffer;
             scenarioBuffer.add(event);
@@ -101,11 +101,11 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void scenarioOutline(String keyword, String name, int line) {
+    public void scenarioOutline(String keyword, String name, String description, int line) {
         if (hasNoFilters()) {
-            listener.scenarioOutline(keyword, name, line);
+            listener.scenarioOutline(keyword, name, description, line);
         } else {
-            Event event = new Event(Event.Type.SCENARIO_OUTLINE, keyword, name, line);
+            Event event = new Event(Event.Type.SCENARIO_OUTLINE, keyword, name, description, line);
             replayExamplesRowsBuffer();
             scenarioBuffer = metaBuffer;
             scenarioBuffer.add(event);
@@ -120,11 +120,11 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void examples(String keyword, String name, int line) {
+    public void examples(String keyword, String name, String description, int line) {
         if (hasNoFilters()) {
-            listener.examples(keyword, name, line);
+            listener.examples(keyword, name, description, line);
         } else {
-            Event event = new Event(Event.Type.EXAMPLES, keyword, name, line);
+            Event event = new Event(Event.Type.EXAMPLES, keyword, name, description, line);
             replayExamplesRowsBuffer();
             examplesBuffer = metaBuffer;
             examplesBuffer.add(event);

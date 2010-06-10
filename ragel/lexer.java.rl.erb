@@ -35,35 +35,35 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
 
     action store_feature_content {
       String con = multilineStrip(keywordContent(data, p, eof, nextKeywordStart, contentStart).trim());
-      listener.feature(keyword, con, currentLine);
+      listener.feature(keyword, nameFromContents(con), descriptionFromContents(con), currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
 
     action store_background_content {
       String con = multilineStrip(keywordContent(data, p, eof, nextKeywordStart, contentStart));
-      listener.background(keyword, con, currentLine);
+      listener.background(keyword, nameFromContents(con), descriptionFromContents(con), currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
 
     action store_scenario_content {
       String con = multilineStrip(keywordContent(data, p, eof, nextKeywordStart, contentStart));
-      listener.scenario(keyword, con, currentLine);
+      listener.scenario(keyword, nameFromContents(con), descriptionFromContents(con), currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
 
     action store_scenario_outline_content {
       String con = multilineStrip(keywordContent(data, p, eof, nextKeywordStart, contentStart));
-      listener.scenarioOutline(keyword, con, currentLine);
+      listener.scenarioOutline(keyword, nameFromContents(con), descriptionFromContents(con), currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
 
     action store_examples_content {
       String con = multilineStrip(keywordContent(data, p, eof, nextKeywordStart, contentStart));
-      listener.examples(keyword, con, currentLine);
+      listener.examples(keyword, nameFromContents(con), descriptionFromContents(con), currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
@@ -177,6 +177,15 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
   private static final Pattern LF_RE = Pattern.compile("[^\r]\n");
   private static final String CRLF = "\r\n";
   private static final String LF = "\n";
+  
+  
+  private String nameFromContents(String contents) {
+    return contents; // TODO
+  }
+  
+  private String descriptionFromContents(String contents) {
+    return contents; // TODO
+  }
 
   private String multilineStrip(String text) {
     int crlfCount = matchCount(CRLF_RE.matcher(text));

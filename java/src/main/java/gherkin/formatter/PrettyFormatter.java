@@ -44,23 +44,23 @@ public class PrettyFormatter implements Formatter {
         comments.add(content);
     }
 
-    public void feature(String keyword, String name, int line) {
+    public void feature(String keyword, String name, String description, int line) {
         printCommentsAndTags("");
         out.println(keyword + ": " + indent(name, "  "));
         out.flush();
     }
 
-    public void background(String keyword, String name, int line) {
+    public void background(String keyword, String name, String description, int line) {
         out.println();
         printCommentsAndTags("  ");
         out.println("  " + keyword + ": " + name);
     }
 
-    public void scenario(String keyword, String name, int line) {
-        scenario(keyword, name, line, null);
+    public void scenario(String keyword, String name, String description, int line) {
+        scenario(keyword, name, description, line, null);
     }
 
-    public void scenario(String keyword, String name, int line, String location) {
+    public void scenario(String keyword, String name, String description, int line, String location) {
         flushTable();
         out.println();
         printCommentsAndTags("  ");
@@ -68,14 +68,14 @@ public class PrettyFormatter implements Formatter {
         out.flush();
     }
 
-    public void scenarioOutline(String keyword, String name, int line) {
+    public void scenarioOutline(String keyword, String name, String description, int line) {
         flushTable();
         out.println();
         printCommentsAndTags("  ");
         out.println("  " + keyword + ": " + name);
     }
 
-    public void examples(String keyword, String name, int line) {
+    public void examples(String keyword, String name, String description, int line) {
         flushTable();
         out.println();
         printCommentsAndTags("    ");

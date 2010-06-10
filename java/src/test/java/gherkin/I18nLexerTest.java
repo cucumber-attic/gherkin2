@@ -22,7 +22,7 @@ public class I18nLexerTest {
 
         lexer.scan(feature);
 
-        verify(listener).feature("Feature", "ÆØÅ", 1);
+        verify(listener).feature("Feature", "ÆØÅ", "", 1);
         verify(listener).step("When ", "I pøsh <x> onto the stack", 5);
     }
 
@@ -35,7 +35,7 @@ public class I18nLexerTest {
 
         lexer.scan(feature);
 
-        verify(listener).feature("Feature", "ÆØÅ", 1);
+        verify(listener).feature("Feature", "ÆØÅ", "", 1);
         verify(listener).step("When ", "I pøsh <x> onto the stack", 5);
     }
 }

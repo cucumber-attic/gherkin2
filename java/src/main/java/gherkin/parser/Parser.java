@@ -48,33 +48,33 @@ public class Parser implements Listener {
         }
     }
 
-    public void feature(String keyword, String name, int line) {
+    public void feature(String keyword, String name, String description, int line) {
         if (event("feature", line)) {
-            listener.feature(keyword, name, line);
+            listener.feature(keyword, name, description, line);
         }
     }
 
-    public void background(String keyword, String name, int line) {
+    public void background(String keyword, String name, String description, int line) {
         if (event("background", line)) {
-            listener.background(keyword, name, line);
+            listener.background(keyword, name, description, line);
         }
     }
 
-    public void scenario(String keyword, String name, int line) {
+    public void scenario(String keyword, String name, String description, int line) {
         if (event("scenario", line)) {
-            listener.scenario(keyword, name, line);
+            listener.scenario(keyword, name, description, line);
         }
     }
 
-    public void scenarioOutline(String keyword, String name, int line) {
+    public void scenarioOutline(String keyword, String name, String description, int line) {
         if (event("scenario_outline", line)) {
-            listener.scenarioOutline(keyword, name, line);
+            listener.scenarioOutline(keyword, name, description, line);
         }
     }
 
-    public void examples(String keyword, String name, int line) {
+    public void examples(String keyword, String name, String description, int line) {
         if (event("examples", line)) {
-            listener.examples(keyword, name, line);
+            listener.examples(keyword, name, description, line);
         }
     }
 

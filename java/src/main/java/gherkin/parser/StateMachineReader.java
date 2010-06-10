@@ -29,19 +29,19 @@ public class StateMachineReader implements Listener {
     public void comment(String content, int line) {
     }
 
-    public void feature(String keyword, String name, int line) {
+    public void feature(String keyword, String name, String description, int line) {
     }
 
-    public void background(String keyword, String name, int line) {
+    public void background(String keyword, String name, String description, int line) {
     }
 
-    public void scenario(String keyword, String name, int line) {
+    public void scenario(String keyword, String name, String description, int line) {
     }
 
-    public void scenarioOutline(String keyword, String name, int line) {
+    public void scenarioOutline(String keyword, String name, String description, int line) {
     }
 
-    public void examples(String keyword, String name, int line) {
+    public void examples(String keyword, String name, String description, int line) {
     }
 
     public void step(String keyword, String name, int line) {

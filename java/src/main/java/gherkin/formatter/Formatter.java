@@ -9,7 +9,7 @@ import java.util.List;
  * Gherkin features during execution.
  */
 public interface Formatter extends Listener {
-    void scenario(String keyword, String name, int line, String location);
+    void scenario(String keyword, String name, String description, int line, String location);
 
     /**
      * Invoked after a step has been executed.
