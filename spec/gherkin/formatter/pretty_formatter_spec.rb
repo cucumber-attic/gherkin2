@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require 'spec_helper'
 require 'gherkin/formatter/pretty_formatter'
 require 'gherkin/formatter/argument'
 require 'stringio'
@@ -16,7 +16,7 @@ module Gherkin
       def assert_pretty(input, output=input)
         [true, false].each do |force_ruby|
           io = StringIO.new
-          l = PrettyFormatter.new(io, true)
+          l = Gherkin::Formatter::PrettyFormatter.new(io, true)
           parser = Gherkin::Parser::Parser.new(l, true, "root")
           lexer  = Gherkin::I18nLexer.new(parser, force_ruby)
           lexer.scan(input)
@@ -28,7 +28,7 @@ module Gherkin
 
       before do
         @io = StringIO.new
-        @l = PrettyFormatter.new(@io, true)
+        @l = Gherkin::Formatter::PrettyFormatter.new(@io, true)
       end
 
       it "should print comments when scenario is longer" do
@@ -151,7 +151,7 @@ Feature: Feature Description
 
       it "should escape backslashes and pipes" do
         io = StringIO.new
-        l = PrettyFormatter.new(io, true)
+        l = Gherkin::Formatter::PrettyFormatter.new(io, true)
         l.row(['|', '\\'], 1)
         l.flush_table
         io.rewind

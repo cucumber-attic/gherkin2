@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require 'spec_helper'
 require 'gherkin/parser/parser'
 
 module Gherkin
@@ -6,7 +6,7 @@ module Gherkin
     describe Parser do
       before do
         @listener = mock('listener')
-        @parser = Parser.new(@listener, true)
+        @parser = Gherkin::Parser::Parser.new(@listener, true)
       end
 
       it "should delegate events to the listener" do
@@ -27,14 +27,14 @@ module Gherkin
 
       it "should delegate an error message when raise on error is false" do
         @listener.should_receive(:syntax_error).with(sym(:root), sym(:background), a([:comment, :feature, :tag]), 1)
-        @parser = Parser.new(@listener, false)
+        @parser = Gherkin::Parser::Parser.new(@listener, false)
         @parser.background("Background", "Content", 1)
       end
 
       [true, false].each do |native|
         it "should be reusable for several feature files (native lexer: #{native})" do
-          listener = mock('listener', :null_object => true)
-          parser = Parser.new(listener, true)
+          listener = mock('listener').as_null_object
+          parser = Gherkin::Parser::Parser.new(listener, true)
           lexer = Gherkin::I18nLexer.new(parser, native)
           feature = <<-EOF
 Feature: foo

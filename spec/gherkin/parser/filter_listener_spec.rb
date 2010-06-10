@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require 'spec_helper'
 require 'gherkin/parser/filter_listener'
 require 'gherkin/formatter/pretty_formatter'
 require 'stringio'
@@ -31,7 +31,7 @@ module Gherkin
       end
 
       def scan(listener, filters)
-        filter_listener = FilterListener.new(listener, filters)
+        filter_listener = Gherkin::Parser::FilterListener.new(listener, filters)
         parser = Gherkin::Parser::Parser.new(filter_listener, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser, true)
         lexer.scan(@input)
