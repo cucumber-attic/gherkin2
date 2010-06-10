@@ -156,8 +156,11 @@ module Gherkin
  
       def store_keyword_content(event, data, p, eof)
         end_point = (!@next_keyword_start or (p == eof)) ? p : @next_keyword_start
-        con = yield utf8_pack(data[@content_start...end_point])
-        @listener.send(event, @keyword, con, @current_line)
+        content = yield utf8_pack(data[@content_start...end_point])
+        content_lines = content.split("\n")
+        name = content_lines.shift || ""
+        description = content_lines.join("\n")
+        @listener.send(event, @keyword, name, description, @current_line)
       end
       
       def current_line_content(data, p)
