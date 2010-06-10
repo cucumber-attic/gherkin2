@@ -66,7 +66,7 @@ static VALUE rb_eGherkinLexingError;
 #define PTR_TO(P) (data + lexer->P)
 
 #define STORE_KW_END_CON(EVENT) \
-  store_kw_con(listener, # EVENT, \
+  store_multiline_kw_con(listener, # EVENT, \
     PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), \
     PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), \
     lexer->current_line, lexer->eol); \
@@ -251,15 +251,14 @@ strip_i(VALUE str, VALUE ary)
 }
 
 static VALUE 
-multiline_strip(VALUE text, int eol)
+multiline_strip(VALUE text)
 {
   VALUE map = rb_ary_new();
   VALUE split = rb_str_split(text, "\n");
   
   rb_iterate(rb_each, split, strip_i, map);
   
-  return rb_ary_join(split, rb_str_new2( \
-          eol == CRLF_FLAG ? CRLF : LF ));
+  return split;
 }
 
 static void 
@@ -271,9 +270,38 @@ store_kw_con(VALUE listener, const char * event_name,
   VALUE con = Qnil, kw = Qnil;
   kw = ENCODED_STR_NEW(keyword_at, keyword_length);
   con = ENCODED_STR_NEW(at, length);
-  con = multiline_strip(con, eol);
   rb_funcall(con, rb_intern("strip!"), 0);
   rb_funcall(listener, rb_intern(event_name), 3, kw, con, INT2FIX(current_line)); 
+}
+
+static void
+store_multiline_kw_con(VALUE listener, const char * event_name,
+                      const char * keyword_at, size_t keyword_length,
+                      const char * at,         size_t length,
+                      int current_line, int eol)
+{
+  VALUE con = Qnil, kw = Qnil, name = Qnil, desc = Qnil;
+
+  kw = ENCODED_STR_NEW(keyword_at, keyword_length);
+  con = ENCODED_STR_NEW(at, length);
+
+  VALUE split = multiline_strip(con);
+  
+  name = rb_funcall(split, rb_intern("shift"), 0);
+  desc = rb_ary_join(split, rb_str_new2( \
+          eol == CRLF_FLAG ? CRLF : LF ));
+
+  if( name == Qnil ) 
+  {
+    name = rb_str_new2("");
+  }
+  if( rb_funcall(desc, rb_intern("size"), 0) == 0) 
+  {
+    desc = rb_str_new2("");
+  }
+  rb_funcall(name, rb_intern("strip!"), 0);
+  rb_funcall(desc, rb_intern("strip!"), 0);
+  rb_funcall(listener, rb_intern(event_name), 4, kw, name, desc, INT2FIX(current_line)); 
 }
 
 static void 

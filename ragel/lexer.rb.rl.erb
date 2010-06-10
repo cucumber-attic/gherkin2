@@ -159,6 +159,7 @@ module Gherkin
         content = yield utf8_pack(data[@content_start...end_point])
         content_lines = content.split("\n")
         name = content_lines.shift || ""
+        name.strip!
         description = content_lines.join("\n")
         @listener.send(event, @keyword, name, description, @current_line)
       end
