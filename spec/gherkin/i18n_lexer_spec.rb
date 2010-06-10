@@ -1,10 +1,10 @@
 #encoding: utf-8
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec_helper'
 
 module Gherkin
   describe I18nLexer do
     before do
-      @lexer = I18nLexer.new(SexpRecorder.new, false)
+      @lexer = Gherkin::I18nLexer.new(Gherkin::SexpRecorder.new, false)
     end
 
     it "should store the i18n language of the last scanned feature" do
@@ -20,7 +20,7 @@ module Gherkin
     end
 
     it "should === its ruby class, even when the impl is Java" do
-      I18nLexer.should === I18nLexer.new(SexpRecorder.new, true)
+      Gherkin::I18nLexer.should === Gherkin::I18nLexer.new(Gherkin::SexpRecorder.new, true)
     end
   end
 end

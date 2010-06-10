@@ -1,11 +1,10 @@
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
-require 'gherkin/formatter/pretty_formatter'
-
+require 'spec_helper'
+require 'gherkin/formatter/colors'
 
 module Gherkin
   module Formatter
     describe Colors do
-      include Colors
+      include Gherkin::Formatter::Colors
 
       it "should colour stuff red" do
         failed("hello").should == "\e[31mhello\e[0m"
