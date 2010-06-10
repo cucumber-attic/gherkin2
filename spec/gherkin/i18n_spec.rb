@@ -17,8 +17,8 @@ module Gherkin
         scan_file(lexer, "i18n_no.feature")
         @listener.to_sexp.should == [
           [:comment, "#language:no", 1],
-          [:feature, "Egenskap", "i18n support", 2],
-          [:scenario, "Scenario", "Parsing many languages", 4],
+          [:feature, "Egenskap", "i18n support", "", 2],
+          [:scenario, "Scenario", "Parsing many languages", "", 4],
           [:step, "Gitt ", "Gherkin supports many languages", 5],
           [:step, "Når ",  "Norwegian keywords are parsed", 6],
           [:step, "Så ", "they should be recognized", 7],
@@ -31,8 +31,8 @@ module Gherkin
         scan_file(lexer, "i18n_zh-CN.feature")
         @listener.to_sexp.should == [
           [:comment, "#language:zh-CN", 1],
-          [:feature, "功能", "加法", 2],
-          [:scenario, "场景", "两个数相加", 4],
+          [:feature, "功能", "加法", "", 2],
+          [:scenario, "场景", "两个数相加", "", 4],
           [:step, "假如", "我已经在计算器里输入6", 5],
           [:step, "而且", "我已经在计算器里输入7", 6],
           [:step, "当", "我按相加按钮", 7],
@@ -46,14 +46,14 @@ module Gherkin
         scan_file(lexer, "i18n_fr.feature")
         @listener.to_sexp.should == [
           [:comment, "#language:fr", 1],
-          [:feature, "Fonctionnalité", "Addition", 2],
-          [:scenario_outline, "Plan du scénario", "Addition de produits dérivés", 3],
+          [:feature, "Fonctionnalité", "Addition", "", 2],
+          [:scenario_outline, "Plan du scénario", "Addition de produits dérivés", "", 3],
           [:step, "Soit ", "une calculatrice", 4],
           [:step, "Etant donné ", "qu'on tape <a>", 5],
           [:step, "Et ", "qu'on tape <b>", 6],
           [:step, "Lorsqu'", "on tape additionner", 7],
           [:step, "Alors ", "le résultat doit être <somme>", 8],
-          [:examples, "Exemples", "", 10],
+          [:examples, "Exemples", "", "", 10],
           [:row, %w{a b somme}, 11],
           [:row, %w{2 2 4}, 12],
           [:row, %w{2 3 5}, 13],
