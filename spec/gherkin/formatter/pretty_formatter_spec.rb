@@ -32,12 +32,12 @@ module Gherkin
       end
 
       it "should print comments when scenario is longer" do
-        @l.feature("Feature", "Hello\nWorld", 1)
+        @l.feature("Feature", "Hello", "World", 1)
         @l.steps([
           ['Given ', 'some stuff'],
           ['When ', 'foo']
         ])
-        @l.scenario("Scenario", "The scenario", 4, "features/foo.feature:4")
+        @l.scenario("Scenario", "The scenario", "", 4, "features/foo.feature:4")
         @l.step("Given ", "some stuff", 5, nil, nil, nil, "features/step_definitions/bar.rb:56")
         @l.step("When ", "foo", 6, nil, nil, nil, "features/step_definitions/bar.rb:96")
 
@@ -51,11 +51,11 @@ module Gherkin
       end
 
       it "should print comments when step is longer" do
-        @l.feature("Feature", "Hello\nWorld", 1)
+        @l.feature("Feature", "Hello", "World", 1)
         @l.steps([
           ['Given ', 'some stuff that is longer']
         ])
-        @l.scenario("Scenario", "The scenario", 4, "features/foo.feature:4")
+        @l.scenario("Scenario", "The scenario", "", 4, "features/foo.feature:4")
         @l.step("Given ", "some stuff that is longer", 5, nil, nil, nil, "features/step_definitions/bar.rb:56")
 
         assert_io(%{Feature: Hello
@@ -67,11 +67,11 @@ module Gherkin
       end
 
       it "should print ANSI coloured steps" do
-        @l.feature("Feature", "Hello\nWorld", 1)
+        @l.feature("Feature", "Hello", "World", 1)
         @l.steps([
           ['Given ', 'some stuff that is longer']
         ])
-        @l.scenario("Scenario", "The scenario", 4, "features/foo.feature:4")
+        @l.scenario("Scenario", "The scenario", "", 4, "features/foo.feature:4")
         @l.step("Given ", "some stuff that is longer", 5, nil, nil, nil, "features/step_definitions/bar.rb:56")
 
         assert_io(%{Feature: Hello
@@ -106,6 +106,7 @@ module Gherkin
   Some preamble
 
   Scenario: Scenario Description
+    description has multiple lines
     Given there is a step
       """
       with

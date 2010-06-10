@@ -31,27 +31,27 @@ module Gherkin
         @comments << content
       end
 
-      def feature(keyword, name, line)
-        @io.puts "#{grab_comments!('')}#{grab_tags!('')}#{keyword}: #{indent(name, '  ')}"
+      def feature(keyword, name, description, line)
+        @io.puts "#{grab_comments!('')}#{grab_tags!('')}#{keyword}: #{indent(name, '  ')}#{indented_description(description, '  ')}"
       end
 
       def background(keyword, name, line)
         @io.puts "\n#{grab_comments!('  ')}  #{keyword}: #{indent(name, '    ')}"
       end
 
-      def scenario(keyword, name, line, location=nil)
+      def scenario(keyword, name, description, line, location=nil)
         flush_table
-        @io.puts "\n#{grab_comments!('  ')}#{grab_tags!('  ')}  #{keyword}: #{indent(name, '    ')}#{indented_scenario_location!(keyword, name, location)}"
+        @io.puts "\n#{grab_comments!('  ')}#{grab_tags!('  ')}  #{keyword}: #{indent(name, '    ')}#{indented_description(description, '    ')}#{indented_scenario_location!(keyword, name, location)}"
       end
 
-      def scenario_outline(keyword, name, line)
+      def scenario_outline(keyword, name, description, line)
         flush_table
-        @io.puts "\n#{grab_comments!('  ')}#{grab_tags!('  ')}  #{keyword}: #{indent(name, '    ')}"
+        @io.puts "\n#{grab_comments!('  ')}#{grab_tags!('  ')}  #{keyword}: #{indent(name, '    ')}#{indented_description(description, '    ')}"
       end
 
-      def examples(keyword, name, line)
+      def examples(keyword, name, description, line)
         flush_table
-        @io.puts "\n#{grab_comments!('    ')}#{grab_tags!('    ')}    #{keyword}: #{indent(name, '    ')}"
+        @io.puts "\n#{grab_comments!('    ')}#{grab_tags!('    ')}    #{keyword}: #{indent(name, '    ')}#{indented_description(description, '    ')}"
       end
 
       def step(keyword, name, line, status=nil, exception=nil, arguments=nil, location=nil)
@@ -148,6 +148,11 @@ module Gherkin
         comments = @comments ? indent + @comments.join("\n#{indent}") + "\n" : ''
         @comments = nil
         comments
+      end
+      
+      def indented_description(description, indent)
+        return "" if description.empty?
+        indent("\n" + description, indent)
       end
 
       def indented_scenario_location!(keyword, name, location)
