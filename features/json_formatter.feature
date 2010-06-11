@@ -19,7 +19,7 @@ Feature: JSON formatter
       }
       """
 
-  Scenario: Feature with one scenario
+  Scenario: Feature with two scenarios
     Given the following text is parsed:
       """
       Feature: OH HAI
@@ -27,6 +27,10 @@ Feature: JSON formatter
         Scenario: Fujin
           Given wind
           Then spirit
+
+        Scenario: _why
+          Given chunky
+          Then bacon
       """
     Then the outputted JSON should be:
       """
@@ -37,14 +41,34 @@ Feature: JSON formatter
           {
             "keyword": "Scenario",
             "name": "Fujin",
+            "line": 3,
             "steps": [
               {
                 "keyword": "Given ",
-                "name": "wind"
+                "name": "wind",
+                "line": 4
               },
               {
                 "keyword": "Then ",
-                "name": "spirit"
+                "name": "spirit",
+                "line": 5
+              }
+            ]
+          },
+          {
+            "keyword": "Scenario",
+            "name": "_why",
+            "line": 7,
+            "steps": [
+              {
+                "keyword": "Given ",
+                "name": "chunky",
+                "line": 8
+              },
+              {
+                "keyword": "Then ",
+                "name": "bacon",
+                "line": 9
               }
             ]
           }

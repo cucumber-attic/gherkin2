@@ -13,13 +13,13 @@ module Gherkin
 
       def scenario(keyword, name, line, location=nil)
         @json_hash['elements'] ||= []
-        @json_hash['elements'] << {'keyword' => keyword, 'name' => name}
+        @json_hash['elements'] << {'keyword' => keyword, 'name' => name, 'line' => line}
       end
 
       def step(keyword, name, line, status=nil, exception=nil, arguments=nil, location=nil)
         element = @json_hash['elements'][-1]
         element['steps'] ||= []
-        element['steps'] << {'keyword' => keyword, 'name' => name }
+        element['steps'] << {'keyword' => keyword, 'name' => name, 'line' => line}
       end
 
       def eof
