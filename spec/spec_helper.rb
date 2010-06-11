@@ -36,6 +36,10 @@ module GherkinSpecHelper
     @lexer.scan(File.new(File.dirname(__FILE__) + "/gherkin/fixtures/" + file).read)
   end
 
+  def parse_file(file)
+    @parser.parse(File.new(File.dirname(__FILE__) + "/gherkin/fixtures/" + file).read)
+  end
+
   def rubify_hash(hash)
     if defined?(JRUBY_VERSION)
       h = {}
