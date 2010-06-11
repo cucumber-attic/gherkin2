@@ -15,7 +15,8 @@ Feature: JSON formatter
       """
       {
           "keyword": "Feature",
-          "name": "OH HAI"
+          "name": "OH HAI",
+          "elements": []
       }
       """
 
@@ -31,6 +32,14 @@ Feature: JSON formatter
         Scenario: _why
           Given chunky
           Then bacon
+
+        Scenario Outline: Life
+          Given some <boredom>
+          
+          Examples: Real life
+            |boredom|
+            |airport|
+            |meeting|
       """
     Then the outputted JSON should be:
       """
@@ -71,10 +80,24 @@ Feature: JSON formatter
                 "line": 9
               }
             ]
+          },
+          {
+            "keyword": "Scenario Outline",
+            "name": "Life",
+            "line": 11,
+            "steps": [
+              {
+                "keyword": "Given ",
+                "name": "some <boredom>",
+                "line": 12
+              }
+            ]
+          },
+          {
+            "keyword": "Examples",
+            "name": "Real life",
+            "line": 14
           }
         ]
       }
       """
-
-
-
