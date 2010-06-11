@@ -26,21 +26,29 @@ Feature: JSON formatter
 
         Scenario: Fujin
           Given wind
+          Then spirit
       """
     Then the outputted JSON should be:
       """
       {
-          "keyword": "Feature",
-          "name": "OH HAI",
-          "elements":[
+        "keyword": "Feature",
+        "name": "OH HAI",
+        "elements":[
           {
             "keyword": "Scenario",
             "name": "Fujin",
             "steps": [
-            {
-              "name": "Given wind"
-            }]
-          }]
+              {
+                "keyword": "Given ",
+                "name": "wind"
+              },
+              {
+                "keyword": "Then ",
+                "name": "spirit"
+              }
+            ]
+          }
+        ]
       }
       """
 

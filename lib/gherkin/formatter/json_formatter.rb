@@ -19,7 +19,7 @@ module Gherkin
       def step(keyword, name, line, status=nil, exception=nil, arguments=nil, location=nil)
         element = @json_hash['elements'][-1]
         element['steps'] ||= []
-        element['steps'] << {'name' => "#{keyword}#{name}" }
+        element['steps'] << {'keyword' => keyword, 'name' => name }
       end
 
       def eof
