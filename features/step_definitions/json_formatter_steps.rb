@@ -8,8 +8,8 @@ end
 
 Then /^the outputted JSON should be:$/ do |expected_json|
   require 'json'
-  expected = JSON.pretty_generate(JSON.parse(expected_json))
-  actual   = JSON.pretty_generate(JSON.parse(@io.string))
+  expected = JSON.parse(expected_json)
+  actual   = JSON.parse(@io.string)
   expected.should == actual
 end
 

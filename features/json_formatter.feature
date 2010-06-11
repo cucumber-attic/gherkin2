@@ -25,6 +25,7 @@ Feature: JSON formatter
       Feature: OH HAI
 
         Scenario: Fujin
+          Given wind
       """
     Then the outputted JSON should be:
       """
@@ -34,7 +35,11 @@ Feature: JSON formatter
           "elements":[
           {
             "keyword": "Scenario",
-            "name": "Fujin"
+            "name": "Fujin",
+            "steps": [
+            {
+              "name": "Given wind"
+            }]
           }]
       }
       """
