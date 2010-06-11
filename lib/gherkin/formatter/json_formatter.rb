@@ -11,6 +11,11 @@ module Gherkin
         @json_hash = {'keyword' => keyword, 'name' => name}
       end
 
+      def scenario(keyword, name, line, location=nil)
+        @json_hash['elements'] ||= []
+        @json_hash['elements'] << {'keyword' => keyword, 'name' => name}
+      end
+
       def eof
         @io.write(@json_hash.to_json)
       end

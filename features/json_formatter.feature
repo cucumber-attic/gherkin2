@@ -19,5 +19,25 @@ Feature: JSON formatter
       }
       """
 
+  Scenario: Feature with one scenario
+    Given the following text is parsed:
+      """
+      Feature: OH HAI
+
+        Scenario: Fujin
+      """
+    Then the outputted JSON should be:
+      """
+      {
+          "keyword": "Feature",
+          "name": "OH HAI",
+          "elements":[
+          {
+            "keyword": "Scenario",
+            "name": "Fujin"
+          }]
+      }
+      """
+
 
 
