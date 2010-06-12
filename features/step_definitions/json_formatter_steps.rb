@@ -19,7 +19,6 @@ Then /^the outputted JSON should be:$/ do |expected_json|
   require 'json'
   expected = JSON.pretty_generate(JSON.parse(expected_json))
   actual   = JSON.pretty_generate(JSON.parse(@io.string))
-  announce actual
   actual.should == expected
 end
 
