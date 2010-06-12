@@ -44,7 +44,7 @@ module Gherkin
 
         @formatter.to_sexp.should == [
           [:feature,  ["# one"],  ["@two"],  "Feature",  "three"],
-          [:scenario, ["# four"], ["@five"], "Scenario", "six"]
+          [:scenario, ["# four"], ["@five"], "Scenario", "six", 6]
         ]
       end
 
@@ -55,7 +55,7 @@ module Gherkin
         @fl.eof
 
         @formatter.to_sexp.should == [
-          [:step, [], "Given ",  "foo", [['yo'], ['bro']]]
+          [:step, [], "Given ",  "foo", 10, [['yo'], ['bro']]]
         ]
       end
 
@@ -71,27 +71,30 @@ module Gherkin
             ["#Comment on line 9", "#Comment on line 11"],
             [],
             "Background",
-            ""],
+            "",
+            13],
           [:scenario, 
             [], 
             ["@tag3", "@tag4"], 
-            "Scenario", "Reading a Scenario"],
+            "Scenario", "Reading a Scenario",
+            18],
           [:scenario,
             [],
             ["@tag3"],
             "Scenario",
-            "Reading a second scenario\nWith two lines of text"],
+            "Reading a second scenario\nWith two lines of text",
+            23],
           [:scenario, 
             [], 
             [], 
-            "Scenario", "Hammerzeit"],
+            "Scenario", "Hammerzeit",
+            39],
           [:step,
             [],
             "Then ",
             "crazy",
-            "Makes Homer something something\nAnd something else"
-          ]
-        ]
+            45,
+            "Makes Homer something something\nAnd something else"]]
       end
     end
   end

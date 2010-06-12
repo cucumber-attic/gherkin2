@@ -22,15 +22,15 @@ module Gherkin
       end
 
       def background(keyword, name, line)
-        @formatter.background(grab_comments!, grab_tags!, keyword, name)
+        @formatter.background(grab_comments!, grab_tags!, keyword, name, line)
       end
 
       def scenario(keyword, name, line)
-        @formatter.scenario(grab_comments!, grab_tags!, keyword, name)
+        @formatter.scenario(grab_comments!, grab_tags!, keyword, name, line)
       end
 
       def step(keyword, name, line)
-        @step = [grab_comments!, keyword, name]
+        @step = [grab_comments!, keyword, name, line]
       end
 
       def row(row, line)
@@ -69,7 +69,7 @@ module Gherkin
       def replay_step
         if(@step)
           multiline_arg = @py_string || grab_rows!
-          @formatter.step(@step[0], @step[1], @step[2], multiline_arg)
+          @formatter.step(*(@step + [multiline_arg]))
         end
       end
     end
