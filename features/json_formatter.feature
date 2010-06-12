@@ -14,10 +14,10 @@ Feature: JSON formatter
     Then the outputted JSON should be:
       """
       {
-          "keyword": "Feature",
-          "name": "OH HAI",
-          "elements": [],
-          "tags": []
+        "keyword": "Feature",
+        "name": "OH HAI",
+        "elements": [],
+        "tags": []
       }
       """
 
@@ -39,12 +39,12 @@ Feature: JSON formatter
         @three @four
         Scenario Outline: Life
           Given some <boredom>
-          
-          @five
-          Examples: Real life
-            |boredom|
-            |airport|
-            |meeting|
+
+        @five
+        Examples: Real life
+          |boredom|
+          |airport|
+          |meeting|
 
         Scenario: who stole my mojo?
           When I was
