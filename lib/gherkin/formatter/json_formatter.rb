@@ -48,7 +48,7 @@ module Gherkin
     private
 
       def add_element(keyword, name, line)
-        element = {'keyword' => keyword, 'name' => name, 'line' => line}
+        element = {'keyword' => keyword, 'name' => name, 'line' => line, 'tags' => grab_tags!}
         @json_hash['elements'] << element
         element
       end

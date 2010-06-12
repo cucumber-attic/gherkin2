@@ -62,6 +62,7 @@ Feature: JSON formatter
         "name": "OH HAI",
         "elements":[
           {
+            "tags": [],
             "keyword": "Scenario",
             "name": "Fujin",
             "line": 4,
@@ -79,6 +80,7 @@ Feature: JSON formatter
             ]
           },
           {
+            "tags": ["@two"],
             "keyword": "Scenario",
             "name": "_why",
             "line": 9,
@@ -96,6 +98,7 @@ Feature: JSON formatter
             ]
           },
           {
+            "tags": ["@three", "@four"],
             "keyword": "Scenario Outline",
             "name": "Life",
             "line": 14,
@@ -108,6 +111,7 @@ Feature: JSON formatter
             ]
           },
           {
+            "tags": ["@five"],
             "keyword": "Examples",
             "name": "Real life",
             "line": 18,
@@ -118,6 +122,7 @@ Feature: JSON formatter
             ]
           },
           {
+            "tags": [],
             "keyword": "Scenario",
             "name": "who stole my mojo?",
             "line": 23,
