@@ -26,10 +26,22 @@ module Gherkin
       end
 
       def scenario(keyword, name, line)
+        replay_step_or_examples
         @formatter.scenario(grab_comments!, grab_tags!, keyword, name, line)
       end
 
+      def scenario_outline(keyword, name, line)
+        replay_step_or_examples
+        @formatter.scenario_outline(grab_comments!, grab_tags!, keyword, name, line)
+      end
+
+      def examples(keyword, name, line)
+        replay_step_or_examples
+        @examples = [grab_comments!, grab_tags!, keyword, name, line]
+      end
+
       def step(keyword, name, line)
+        replay_step_or_examples
         @step = [grab_comments!, keyword, name, line]
       end
 
@@ -43,7 +55,8 @@ module Gherkin
       end
 
       def eof
-        replay_step
+        replay_step_or_examples
+        @formatter.eof
       end
 
     private
@@ -61,15 +74,27 @@ module Gherkin
       end
 
       def grab_rows!
-        rows = @rows || []
+        rows = @rows
         @rows = nil
         rows
       end
 
-      def replay_step
+      def grab_py_string!
+        py_string = @py_string
+        @py_string = nil
+        py_string
+      end
+
+      def replay_step_or_examples
         if(@step)
-          multiline_arg = @py_string || grab_rows!
+          multiline_arg = grab_py_string! || grab_rows!
           @formatter.step(*(@step + [multiline_arg]))
+          @step = nil
+        end
+        if(@examples)
+          table = grab_rows!
+          @formatter.examples(*(@examples + [table]))
+          @examples = nil
         end
       end
     end

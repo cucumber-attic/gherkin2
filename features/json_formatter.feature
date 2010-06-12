@@ -16,9 +16,9 @@ Feature: JSON formatter
       """
       {
         "comments": ["# language: no"],
+        "tags": [],
         "keyword": "Egenskap",
-        "name": "Kjapp",
-        "line": 2
+        "name": "Kjapp"
       }
       """
 
@@ -69,60 +69,75 @@ Feature: JSON formatter
     Then the outputted JSON should be:
       """
       {
+        "comments": [],
         "tags": ["@one"],
         "keyword": "Feature",
         "name": "OH HAI",
-        "line": 2,
         "elements":[
           {
+            "comments": [],
+            "tags": [],
             "keyword": "Scenario",
             "name": "Fujin",
             "line": 4,
             "steps": [
               {
+                "comments": [],
                 "keyword": "Given ",
                 "name": "wind",
-                "line": 5
+                "line": 5,
+                "multiline_arg": null
               },
               {
+                "comments": [],
                 "keyword": "Then ",
                 "name": "spirit",
-                "line": 6
+                "line": 6,
+                "multiline_arg": null
               }
             ]
           },
           {
+            "comments": [],
             "tags": ["@two"],
             "keyword": "Scenario",
             "name": "_why",
             "line": 9,
             "steps": [
               {
+                "comments": [],
                 "keyword": "Given ",
                 "name": "chunky",
-                "line": 10
+                "line": 10,
+                "multiline_arg": null
               },
               {
+                "comments": [],
                 "keyword": "Then ",
                 "name": "bacon",
-                "line": 11
+                "line": 11,
+                "multiline_arg": null
               }
             ]
           },
           {
+            "comments": [],
             "tags": ["@three", "@four"],
             "keyword": "Scenario Outline",
             "name": "Life",
             "line": 14,
             "steps": [
               {
+                "comments": [],
                 "keyword": "Given ",
                 "name": "some <boredom>",
-                "line": 15
+                "line": 15,
+                "multiline_arg": null
               }
             ]
           },
           {
+            "comments": [],
             "tags": ["@five"],
             "keyword": "Examples",
             "name": "Real life",
@@ -134,30 +149,35 @@ Feature: JSON formatter
             ]
           },
           {
+            "comments": [],
+            "tags": [],
             "keyword": "Scenario",
             "name": "who stole my mojo?",
             "line": 23,
             "steps": [
               {
+                "comments": [],
                 "keyword": "When ",
                 "name": "I was",
                 "line": 24,
-                "table": [
+                "multiline_arg": [
                   [
                     "asleep"
                   ]
                 ]
               },
               {
+                "comments": [],
                 "keyword": "And ",
                 "name": "so",
                 "line": 26,
-                "py_string": "innocent"
+                "multiline_arg": "innocent"
               }
             ]
           },
           {
             "comments": ["# The"],
+            "tags": [],
             "keyword": "Scenario Outline",
             "line": 32,
             "name": "with",
@@ -166,12 +186,14 @@ Feature: JSON formatter
                 "comments": ["# all"],
                 "keyword": "Then ",
                 "line": 34,
-                "name": "nice"
+                "name": "nice",
+                "multiline_arg": null
               }
             ]
           },
           {
             "comments": ["# comments", "# everywhere"],
+            "tags": [],
             "keyword": "Examples",
             "line": 38,
             "name": "# I mean",

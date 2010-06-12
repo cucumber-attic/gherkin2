@@ -6,45 +6,30 @@ module Gherkin
         @io = io
       end
 
-      def comment(content, line)
-        @comments ||= []
-        @comments << content
+      def feature(comments, tags, keyword, name)
+        @json_hash = {'comments' => comments, 'tags' => tags, 'keyword' => keyword, 'name' => name}
       end
 
-      def tag(name, line)
-        @tags ||= []
-        @tags << name
+      def scenario(comments, tags, keyword, name, line)
+        add_step_container(comments, tags, keyword, name, line)
       end
 
-      def feature(keyword, name, line)
-        @json_hash = {'keyword' => keyword, 'name' => name, 'line' => line}
-        add_comments_and_tags_to!(@json_hash)
+      def scenario_outline(comments, tags, keyword, name, line)
+        add_step_container(comments, tags, keyword, name, line)
       end
 
-      def scenario(keyword, name, line, location=nil)
-        add_step_container(keyword, name, line)
+      def examples(comments, tags, keyword, name, line, rows)
+        @table_container = add_element(comments, tags, keyword, name, line)
+        @table_container['table'] = rows
       end
 
-      def scenario_outline(keyword, name, line)
-        add_step_container(keyword, name, line)
-      end
-
-      def examples(keyword, name, line)
-        @table_container = add_element(keyword, name, line)
-      end
-
-      def row(row, line)
-        @table_container['table'] ||= []
-        @table_container['table'] << row.to_a
-      end
-
-      def py_string(string, line)
+      def py_string(comments, string, line)
         @table_container['py_string'] = string
       end
 
-      def step(keyword, name, line, status=nil, exception=nil, arguments=nil, location=nil)
-        @table_container = {'keyword' => keyword, 'name' => name, 'line' => line}
-        add_comments_and_tags_to!(@table_container)
+      def step(comments, keyword, name, line, multiline_arg, status=nil, exception=nil, arguments=nil, stepdef_location=nil)
+        @table_container = {'comments' => comments, 'keyword' => keyword, 'name' => name, 'line' => line, 'multiline_arg' => multiline_arg}
+        last_element['steps'] ||= []
         last_element['steps'] << @table_container
       end
 
@@ -54,36 +39,20 @@ module Gherkin
 
     private
 
-      def add_element(keyword, name, line)
-        element = {'keyword' => keyword, 'name' => name, 'line' => line}
-        add_comments_and_tags_to!(element)
+      def add_element(comments, tags, keyword, name, line)
+        element = {'comments' => comments, 'tags' => tags, 'keyword' => keyword, 'name' => name, 'line' => line}
         @json_hash['elements'] ||= []
         @json_hash['elements'] << element
         element
       end
 
-      def add_step_container(keyword, name, line)
-        add_element(keyword, name, line)
+      def add_step_container(comments, tags, keyword, name, line)
+        add_element(comments, tags, keyword, name, line)
         last_element['steps'] = []
       end
 
       def last_element
         @json_hash['elements'][-1]
-      end
-
-      def add_tags_to!(hash)
-        if(@tags)
-          hash['tags'] = @tags
-          @tags = nil
-        end
-      end
-
-      def add_comments_and_tags_to!(hash)
-        if(@comments)
-          hash['comments'] = @comments
-          @comments = nil
-        end
-        add_tags_to!(hash)
       end
     end
   end
