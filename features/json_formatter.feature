@@ -23,19 +23,23 @@ Feature: JSON formatter
   Scenario: Feature with two scenarios
     Given the following text is parsed:
       """
+      @one
       Feature: OH HAI
 
         Scenario: Fujin
           Given wind
           Then spirit
 
+        @two
         Scenario: _why
           Given chunky
           Then bacon
 
+        @three @four
         Scenario Outline: Life
           Given some <boredom>
           
+          @five
           Examples: Real life
             |boredom|
             |airport|
@@ -58,53 +62,53 @@ Feature: JSON formatter
           {
             "keyword": "Scenario",
             "name": "Fujin",
-            "line": 3,
+            "line": 4,
             "steps": [
               {
                 "keyword": "Given ",
                 "name": "wind",
-                "line": 4
+                "line": 5
               },
               {
                 "keyword": "Then ",
                 "name": "spirit",
-                "line": 5
+                "line": 6
               }
             ]
           },
           {
             "keyword": "Scenario",
             "name": "_why",
-            "line": 7,
+            "line": 9,
             "steps": [
               {
                 "keyword": "Given ",
                 "name": "chunky",
-                "line": 8
+                "line": 10
               },
               {
                 "keyword": "Then ",
                 "name": "bacon",
-                "line": 9
+                "line": 11
               }
             ]
           },
           {
             "keyword": "Scenario Outline",
             "name": "Life",
-            "line": 11,
+            "line": 14,
             "steps": [
               {
                 "keyword": "Given ",
                 "name": "some <boredom>",
-                "line": 12
+                "line": 15
               }
             ]
           },
           {
             "keyword": "Examples",
             "name": "Real life",
-            "line": 14,
+            "line": 18,
             "table": [
               ["boredom"], 
               ["airport"], 
@@ -112,12 +116,14 @@ Feature: JSON formatter
             ]
           },
           {
+            "keyword": "Scenario",
             "name": "who stole my mojo?",
+            "line": 23,
             "steps": [
               {
                 "keyword": "When ",
                 "name": "I was",
-                "line": 20,
+                "line": 24,
                 "table": [
                   [
                     "asleep"
@@ -127,12 +133,10 @@ Feature: JSON formatter
               {
                 "keyword": "And ",
                 "name": "so",
-                "line": 22,
+                "line": 26,
                 "py_string": "innocent"
-               }
-            ],
-            "line": 19,
-            "keyword": "Scenario"
+              }
+            ]
           }
         ]
       }

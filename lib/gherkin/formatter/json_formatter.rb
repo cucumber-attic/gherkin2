@@ -4,7 +4,11 @@ module Gherkin
     class JSONFormatter
       def initialize(io)
         @io = io
+      end
 
+      def tag(name, line)
+        @tags ||= []
+        @tags << name
       end
 
       def feature(keyword, name, line)
@@ -42,6 +46,7 @@ module Gherkin
       end
 
     private
+
       def add_element(keyword, name, line)
         element = {'keyword' => keyword, 'name' => name, 'line' => line}
         @json_hash['elements'] << element
