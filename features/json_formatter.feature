@@ -44,6 +44,10 @@ Feature: JSON formatter
         Scenario: who stole my mojo?
           When I was
             |asleep|
+          And so
+            \"\"\"
+            innocent
+            \"\"\"
       """
     Then the outputted JSON should be:
       """
@@ -111,15 +115,21 @@ Feature: JSON formatter
             "name": "who stole my mojo?",
             "steps": [
               {
+                "keyword": "When ",
                 "name": "I was",
                 "line": 20,
                 "table": [
                   [
                     "asleep"
                   ]
-                ],
-                "keyword": "When "
-              }
+                ]
+              },
+              {
+                "keyword": "And ",
+                "name": "so",
+                "line": 22,
+                "py_string": "innocent"
+               }
             ],
             "line": 19,
             "keyword": "Scenario"

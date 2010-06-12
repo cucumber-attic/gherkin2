@@ -28,6 +28,10 @@ module Gherkin
         @table_container['table'] << row.to_a
       end
 
+      def py_string(string, line)
+        @table_container['py_string'] = string
+      end
+
       def step(keyword, name, line, status=nil, exception=nil, arguments=nil, location=nil)
         @table_container = {'keyword' => keyword, 'name' => name, 'line' => line}
         last_element['steps'] << @table_container
