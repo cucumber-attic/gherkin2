@@ -16,7 +16,6 @@ Feature: JSON formatter
       """
       {
         "comments": ["# language: no"],
-        "tags": [],
         "keyword": "Egenskap",
         "name": "Kjapp",
         "line": 2,
@@ -77,7 +76,6 @@ Feature: JSON formatter
         "line": 2,
         "elements":[
           {
-            "tags": [],
             "keyword": "Scenario",
             "name": "Fujin",
             "line": 4,
@@ -137,7 +135,6 @@ Feature: JSON formatter
             ]
           },
           {
-            "tags": [],
             "keyword": "Scenario",
             "name": "who stole my mojo?",
             "line": 23,
@@ -162,7 +159,6 @@ Feature: JSON formatter
           },
           {
             "comments": ["# The"],
-            "tags": [],
             "keyword": "Scenario Outline",
             "line": 32,
             "name": "with",
@@ -177,7 +173,6 @@ Feature: JSON formatter
           },
           {
             "comments": ["# comments", "# everywhere"],
-            "tags": [],
             "keyword": "Examples",
             "line": 38,
             "name": "# I mean",

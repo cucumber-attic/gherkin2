@@ -17,8 +17,8 @@ module Gherkin
       end
 
       def feature(keyword, name, line)
-        @json_hash = {'keyword' => keyword, 'name' => name, 'line' => line, 'elements' => [], 'tags' => grab_tags!}
-        add_comments_to!(@json_hash)
+        @json_hash = {'keyword' => keyword, 'name' => name, 'line' => line, 'elements' => []}
+        add_comments_and_tags_to!(@json_hash)
       end
 
       def scenario(keyword, name, line, location=nil)
@@ -44,7 +44,7 @@ module Gherkin
 
       def step(keyword, name, line, status=nil, exception=nil, arguments=nil, location=nil)
         @table_container = {'keyword' => keyword, 'name' => name, 'line' => line}
-        add_comments_to!(@table_container)
+        add_comments_and_tags_to!(@table_container)
         last_element['steps'] << @table_container
       end
 
@@ -55,9 +55,9 @@ module Gherkin
     private
 
       def add_element(keyword, name, line)
-        element = {'keyword' => keyword, 'name' => name, 'line' => line, 'tags' => grab_tags!}
+        element = {'keyword' => keyword, 'name' => name, 'line' => line}
+        add_comments_and_tags_to!(element)
         @json_hash['elements'] << element
-        add_comments_to!(element)
         element
       end
 
@@ -70,17 +70,19 @@ module Gherkin
         @json_hash['elements'][-1]
       end
 
-      def grab_tags!
-        tags = @tags || []
-        @tags = nil
-        tags
+      def add_tags_to!(hash)
+        if(@tags)
+          hash['tags'] = @tags
+          @tags = nil
+        end
       end
 
-      def add_comments_to!(hash)
+      def add_comments_and_tags_to!(hash)
         if(@comments)
           hash['comments'] = @comments
           @comments = nil
         end
+        add_tags_to!(hash)
       end
     end
   end
