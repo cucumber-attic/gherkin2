@@ -1,4 +1,4 @@
-Feature: Pretty printer
+Feature: Pretty Formatter
   In order to have pretty gherkin
   I want to verify that all prettified cucumber features parse OK
 
