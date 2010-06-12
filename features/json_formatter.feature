@@ -9,15 +9,18 @@ Feature: JSON formatter
   Scenario: Only a Feature
     Given the following text is parsed:
       """
-      Feature: OH HAI
+      # language: no
+      Egenskap: Kjapp
       """
     Then the outputted JSON should be:
       """
       {
-        "keyword": "Feature",
-        "name": "OH HAI",
-        "elements": [],
-        "tags": []
+        "comments": ["# language: no"],
+        "tags": [],
+        "keyword": "Egenskap",
+        "name": "Kjapp",
+        "line": 2,
+        "elements": []
       }
       """
 
@@ -53,6 +56,17 @@ Feature: JSON formatter
             \"\"\"
             innocent
             \"\"\"
+
+        # The
+        Scenario Outline: with
+          # all
+          Then nice
+          
+        # comments
+        # everywhere
+        Examples:
+          # I mean
+          | partout |
       """
     Then the outputted JSON should be:
       """
@@ -60,6 +74,7 @@ Feature: JSON formatter
         "tags": ["@one"],
         "keyword": "Feature",
         "name": "OH HAI",
+        "line": 2,
         "elements":[
           {
             "tags": [],
@@ -143,6 +158,33 @@ Feature: JSON formatter
                 "line": 26,
                 "py_string": "innocent"
               }
+            ]
+          },
+          {
+            "comments": ["# The"],
+            "tags": [],
+            "keyword": "Scenario Outline",
+            "line": 32,
+            "name": "with",
+            "steps": [
+              {
+                "comments": ["# all"],
+                "keyword": "Then ",
+                "line": 34,
+                "name": "nice"
+              }
+            ]
+          },
+          {
+            "comments": ["# comments", "# everywhere"],
+            "tags": [],
+            "keyword": "Examples",
+            "line": 38,
+            "name": "# I mean",
+            "table": [
+              [
+                "partout"
+              ]
             ]
           }
         ]

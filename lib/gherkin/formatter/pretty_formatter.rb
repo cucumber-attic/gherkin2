@@ -21,14 +21,14 @@ module Gherkin
         @comments = nil
       end
 
-      def tag(name, line)
-        @tags ||= []
-        @tags << name
-      end
-
       def comment(content, line)
         @comments ||= []
         @comments << content
+      end
+
+      def tag(name, line)
+        @tags ||= []
+        @tags << name
       end
 
       def feature(keyword, name, line)
