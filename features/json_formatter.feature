@@ -40,6 +40,10 @@ Feature: JSON formatter
             |boredom|
             |airport|
             |meeting|
+
+        Scenario: who stole my mojo?
+          When I was
+            |asleep|
       """
     Then the outputted JSON should be:
       """
@@ -102,6 +106,23 @@ Feature: JSON formatter
               ["airport"], 
               ["meeting"]
             ]
+          },
+          {
+            "name": "who stole my mojo?",
+            "steps": [
+              {
+                "name": "I was",
+                "line": 20,
+                "table": [
+                  [
+                    "asleep"
+                  ]
+                ],
+                "keyword": "When "
+              }
+            ],
+            "line": 19,
+            "keyword": "Scenario"
           }
         ]
       }

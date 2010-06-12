@@ -20,16 +20,17 @@ module Gherkin
       end
 
       def examples(keyword, name, line)
-        add_element(keyword, name, line)
+        @table_container = add_element(keyword, name, line)
       end
 
       def row(row, line)
-        last_element['table'] ||= []
-        last_element['table'] << row.to_a
+        @table_container['table'] ||= []
+        @table_container['table'] << row.to_a
       end
 
       def step(keyword, name, line, status=nil, exception=nil, arguments=nil, location=nil)
-        last_element['steps'] << {'keyword' => keyword, 'name' => name, 'line' => line}
+        @table_container = {'keyword' => keyword, 'name' => name, 'line' => line}
+        last_element['steps'] << @table_container
       end
 
       def eof
@@ -38,7 +39,9 @@ module Gherkin
 
     private
       def add_element(keyword, name, line)
-        @json_hash['elements'] << {'keyword' => keyword, 'name' => name, 'line' => line}
+        element = {'keyword' => keyword, 'name' => name, 'line' => line}
+        @json_hash['elements'] << element
+        element
       end
 
       def add_step_container(keyword, name, line)
