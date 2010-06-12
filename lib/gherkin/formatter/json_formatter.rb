@@ -17,7 +17,7 @@ module Gherkin
       end
 
       def feature(keyword, name, line)
-        @json_hash = {'keyword' => keyword, 'name' => name, 'line' => line, 'elements' => []}
+        @json_hash = {'keyword' => keyword, 'name' => name, 'line' => line}
         add_comments_and_tags_to!(@json_hash)
       end
 
@@ -57,6 +57,7 @@ module Gherkin
       def add_element(keyword, name, line)
         element = {'keyword' => keyword, 'name' => name, 'line' => line}
         add_comments_and_tags_to!(element)
+        @json_hash['elements'] ||= []
         @json_hash['elements'] << element
         element
       end

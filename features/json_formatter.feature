@@ -18,8 +18,7 @@ Feature: JSON formatter
         "comments": ["# language: no"],
         "keyword": "Egenskap",
         "name": "Kjapp",
-        "line": 2,
-        "elements": []
+        "line": 2
       }
       """
 
