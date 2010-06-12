@@ -16,7 +16,8 @@ Feature: JSON formatter
       {
           "keyword": "Feature",
           "name": "OH HAI",
-          "elements": []
+          "elements": [],
+          "tags": []
       }
       """
 
@@ -56,6 +57,7 @@ Feature: JSON formatter
     Then the outputted JSON should be:
       """
       {
+        "tags": ["@one"],
         "keyword": "Feature",
         "name": "OH HAI",
         "elements":[

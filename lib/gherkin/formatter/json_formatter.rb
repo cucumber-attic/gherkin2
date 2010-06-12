@@ -12,7 +12,7 @@ module Gherkin
       end
 
       def feature(keyword, name, line)
-        @json_hash = {'keyword' => keyword, 'name' => name, 'elements' => []}
+        @json_hash = {'keyword' => keyword, 'name' => name, 'elements' => [], 'tags' => grab_tags!}
       end
 
       def scenario(keyword, name, line, location=nil)
@@ -60,6 +60,12 @@ module Gherkin
 
       def last_element
         @json_hash['elements'][-1]
+      end
+
+      def grab_tags!
+        tags = @tags || []
+        @tags = nil
+        tags
       end
     end
   end
