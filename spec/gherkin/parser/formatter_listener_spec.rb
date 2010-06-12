@@ -1,5 +1,7 @@
 require 'spec_helper'
 require 'gherkin/parser/formatter_listener'
+require 'gherkin/parser/parser'
+require 'gherkin/i18n_lexer'
 require 'stringio'
 
 module Gherkin
@@ -8,6 +10,7 @@ module Gherkin
       before do
         @formatter = SexpRecorder.new
         @fl = FormatterListener.new(@formatter)
+        @lexer = Gherkin::I18nLexer.new(Gherkin::Parser::Parser.new(@fl))
       end
       
       it "should pass tags to #feature method" do
@@ -52,7 +55,42 @@ module Gherkin
         @fl.eof
 
         @formatter.to_sexp.should == [
-          [:step, [], "Given ",  "foo", [['yo'], ['bro']]],
+          [:step, [], "Given ",  "foo", [['yo'], ['bro']]]
+        ]
+      end
+
+      it "should format an entire feature" do
+        @lexer.scan(File.new(File.dirname(__FILE__) + "/../fixtures/complex.feature").read)
+        @formatter.to_sexp.should == [
+          [:feature, 
+            ["#Comment on line 1", "#Comment on line 2"],
+            ["@tag1", "@tag2"],
+            "Feature",
+            "Feature Text\nIn order to test multiline forms\nAs a ragel writer\nI need to check for complex combinations"],
+          [:background,
+            ["#Comment on line 9", "#Comment on line 11"],
+            [],
+            "Background",
+            ""],
+          [:scenario, 
+            [], 
+            ["@tag3", "@tag4"], 
+            "Scenario", "Reading a Scenario"],
+          [:scenario,
+            [],
+            ["@tag3"],
+            "Scenario",
+            "Reading a second scenario\nWith two lines of text"],
+          [:scenario, 
+            [], 
+            [], 
+            "Scenario", "Hammerzeit"],
+          [:step,
+            [],
+            "Then ",
+            "crazy",
+            "Makes Homer something something\nAnd something else"
+          ]
         ]
       end
     end
