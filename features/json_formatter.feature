@@ -96,7 +96,12 @@ Feature: JSON formatter
           {
             "keyword": "Examples",
             "name": "Real life",
-            "line": 14
+            "line": 14,
+            "table": [
+              ["boredom"], 
+              ["airport"], 
+              ["meeting"]
+            ]
           }
         ]
       }

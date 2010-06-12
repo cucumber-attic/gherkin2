@@ -24,6 +24,8 @@ module Gherkin
       end
 
       def row(row, line)
+        last_element['table'] ||= []
+        last_element['table'] << row.to_a
       end
 
       def step(keyword, name, line, status=nil, exception=nil, arguments=nil, location=nil)
