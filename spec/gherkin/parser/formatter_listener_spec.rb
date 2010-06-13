@@ -8,8 +8,8 @@ module Gherkin
   module Parser
     describe FormatterListener do
       before do
-        @formatter = SexpRecorder.new
-        @fl = FormatterListener.new(@formatter)
+        @formatter = Gherkin::SexpRecorder.new
+        @fl = Gherkin::Parser::FormatterListener.new(@formatter)
         @lexer = Gherkin::I18nLexer.new(Gherkin::Parser::Parser.new(@fl))
       end
       
