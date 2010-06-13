@@ -41,8 +41,8 @@ Feature: foo
   Scenario: bar
     Given zap
 EOF
-          lexer.scan(feature)
-          lexer.scan(feature)
+          lexer.scan(feature, "test.feature")
+          lexer.scan(feature, "test.feature")
         end
       end
     end

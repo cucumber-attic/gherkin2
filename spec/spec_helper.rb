@@ -32,10 +32,12 @@ class StringIO
 end
 
 module GherkinSpecHelper
+  # TODO: Rename to gherkin_scan_file
   def scan_file(file)
-    @lexer.scan(File.new(File.dirname(__FILE__) + "/gherkin/fixtures/" + file).read)
+    @lexer.scan(File.new(File.dirname(__FILE__) + "/gherkin/fixtures/" + file).read, file)
   end
 
+  # TODO: Remove
   def parse_file(file)
     @parser.parse(File.new(File.dirname(__FILE__) + "/gherkin/fixtures/" + file).read)
   end

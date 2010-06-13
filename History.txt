@@ -7,6 +7,10 @@
 === Bugfixes
 * Include link to explanation of LexingError (Mike Sassak)
 
+=== Changed Features
+* The formatter API has completely changed. There is a Gherkin Listener API and a Formatter API.
+  The FormatterListener acts as an adapter between them.
+
 == 1.0.30 (2010-05-18)
 
 === New Features

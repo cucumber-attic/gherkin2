@@ -21,7 +21,7 @@ module Gherkin
           l  = Gherkin::Parser::FormatterListener.new(pf)
           parser = Gherkin::Parser::Parser.new(l, true, "root")
           lexer  = Gherkin::I18nLexer.new(parser, force_ruby)
-          lexer.scan(input)
+          lexer.scan(input, "test.feature")
           io.rewind
           actual = io.read
           actual.should == output

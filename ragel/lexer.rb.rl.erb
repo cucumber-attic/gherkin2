@@ -127,7 +127,8 @@ module Gherkin
         %% write data;
       end
  
-      def scan(data)
+      def scan(data, uri)
+        @listener.uri(uri)
         data = (data + "\n%_FEATURE_END_%").unpack("c*") # Explicit EOF simplifies things considerably
         eof = pe = data.length
  
@@ -157,7 +158,7 @@ module Gherkin
       def store_keyword_content(event, data, p, eof)
         end_point = (!@next_keyword_start or (p == eof)) ? p : @next_keyword_start
         con = yield utf8_pack(data[@content_start...end_point])
-        @listener.send(event, @keyword, con, @current_line)
+        @listener.__send__(event, @keyword, con, @current_line)
       end
       
       def current_line_content(data, p)

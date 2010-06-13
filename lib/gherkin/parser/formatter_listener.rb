@@ -1,7 +1,8 @@
 module Gherkin
   module Parser
     # Adapter from the "raw" Gherkin <tt>Listener</tt> API
-    # to the slightly more high-level <tt>Formatter</tt> API. 
+    # to the slightly more high-level <tt>Formatter</tt> API,
+    # which is easier to implement (less state to keep track of).
     class FormatterListener
       def initialize(formatter)
         @formatter = formatter
@@ -17,8 +18,12 @@ module Gherkin
         @tags << name
       end
 
-      def feature(keyword, name, line, uri=nil)
-        @formatter.feature(grab_comments!, grab_tags!, keyword, name, uri)
+      def uri(uri)
+        @uri = uri
+      end
+
+      def feature(keyword, name, line)
+        @formatter.feature(grab_comments!, grab_tags!, keyword, name, @uri)
       end
 
       def background(keyword, name, line)

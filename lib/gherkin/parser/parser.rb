@@ -20,11 +20,15 @@ module Gherkin
         push_machine(@machine_name)
       end
 
+      def uri(uri)
+        @listener.uri(uri)
+      end
+
       # Doesn't yet fall back to super
       def method_missing(method, *args)
         # TODO: Catch exception and call super
         if(event(method.to_s, args[-1]))
-          @listener.send(method, *args)
+          @listener.__send__(method, *args)
         end
         if method == :eof
           pop_machine
@@ -117,7 +121,8 @@ module Gherkin
         def transition_table(name)
           state_machine_reader = StateMachineReader.new
           lexer = Gherkin::I18n.new('en').lexer(state_machine_reader)
-          lexer.scan(File.read(File.dirname(__FILE__) + "/#{name}.txt"))
+          machine = File.dirname(__FILE__) + "/#{name}.txt"
+          lexer.scan(File.read(machine), machine)
           state_machine_reader.rows
         end
 
@@ -126,6 +131,9 @@ module Gherkin
 
           def initialize
             @rows = []
+          end
+
+          def uri(uri)
           end
 
           def row(row, line_number)
