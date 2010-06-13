@@ -1,25 +1,30 @@
+require 'gherkin/native'
+
 module Gherkin
   module Parser
     # Adapter from the "raw" Gherkin <tt>Listener</tt> API
     # to the slightly more high-level <tt>Formatter</tt> API,
     # which is easier to implement (less state to keep track of).
     class FormatterListener
+      native_impl('gherkin')
+
       def initialize(formatter)
         @formatter = formatter
-      end
-
-      def comment(content, line)
-        @comments ||= []
-        @comments << content
-      end
-
-      def tag(name, line)
-        @tags ||= []
-        @tags << name
+        @comments = []
+        @tags = []
+        @table = nil
       end
 
       def uri(uri)
         @uri = uri
+      end
+
+      def comment(content, line)
+        @comments << content
+      end
+
+      def tag(name, line)
+        @tags << name
       end
 
       def feature(keyword, name, line)
@@ -27,7 +32,7 @@ module Gherkin
       end
 
       def background(keyword, name, line)
-        @formatter.background(grab_comments!, grab_tags!, keyword, name, line)
+        @formatter.background(grab_comments!, keyword, name, line)
       end
 
       def scenario(keyword, name, line)
@@ -51,8 +56,8 @@ module Gherkin
       end
 
       def row(row, line)
-        @rows ||= []
-        @rows << row
+        @table ||= []
+        @table << row
       end
 
       def py_string(py_string, line)
@@ -67,21 +72,21 @@ module Gherkin
     private
 
       def grab_comments!
-        comments = @comments || []
-        @comments = nil
+        comments = @comments
+        @comments = []
         comments
       end
 
       def grab_tags!
-        tags = @tags || []
-        @tags = nil
+        tags = @tags
+        @tags = []
         tags
       end
 
-      def grab_rows!
-        rows = @rows
-        @rows = nil
-        rows
+      def grab_table!
+        table = @table
+        @table = nil
+        table
       end
 
       def grab_py_string!
@@ -92,13 +97,12 @@ module Gherkin
 
       def replay_step_or_examples
         if(@step)
-          multiline_arg = grab_py_string! || grab_rows!
-          @formatter.step(*(@step + [multiline_arg]))
+          multiline_arg = grab_py_string! || grab_table!
+          @formatter.step(*(@step + [multiline_arg, nil, nil, nil, nil]))
           @step = nil
         end
         if(@examples)
-          table = grab_rows!
-          @formatter.examples(*(@examples + [table]))
+          @formatter.examples(*(@examples + [grab_table!]))
           @examples = nil
         end
       end

@@ -20,7 +20,7 @@ public class I18nLexerTest {
                 "    Given I have an empty stack\n" +
                 "    When I pøsh <x> onto the stack";
 
-        lexer.scan(feature);
+        lexer.scan(feature, "test.feature");
 
         verify(listener).feature("Feature", "ÆØÅ", 1);
         verify(listener).step("When ", "I pøsh <x> onto the stack", 5);
@@ -33,7 +33,7 @@ public class I18nLexerTest {
 
         String feature = FixJava.readResource("/gherkin/utf8.feature");
 
-        lexer.scan(feature);
+        lexer.scan(feature, "test.feature");
 
         verify(listener).feature("Feature", "ÆØÅ", 1);
         verify(listener).step("When ", "I pøsh <x> onto the stack", 5);

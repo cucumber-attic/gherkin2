@@ -142,7 +142,8 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
 
   %% write data noerror;
 
-  public void scan(String inputSequence)  {
+  public void scan(String inputSequence, String uri)  {
+    listener.uri(uri);
     String input = inputSequence.toString() + "\n%_FEATURE_END_%";
     byte[] data = null;
     try {

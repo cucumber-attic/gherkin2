@@ -23,10 +23,6 @@ module Gherkin
         @table_container['table'] = rows
       end
 
-      def py_string(comments, string, line)
-        @table_container['py_string'] = string
-      end
-
       def step(comments, keyword, name, line, multiline_arg, status=nil, exception=nil, arguments=nil, stepdef_location=nil)
         @table_container = {'comments' => comments, 'keyword' => keyword, 'name' => name, 'line' => line, 'multiline_arg' => multiline_arg}
         last_element['steps'] ||= []

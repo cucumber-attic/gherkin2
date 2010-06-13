@@ -36,9 +36,13 @@ public class Parser implements Listener {
         machines.remove(machines.size() - 1);
     }
 
-    public void tag(String name, int line) {
+    public void uri(String uri) {
+        listener.uri(uri);
+    }
+
+    public void tag(String tag, int line) {
         if (event("tag", line)) {
-            listener.tag(name, line);
+            listener.tag(tag, line);
         }
     }
 
@@ -84,9 +88,9 @@ public class Parser implements Listener {
         }
     }
 
-    public void comment(String content, int line) {
+    public void comment(String comment, int line) {
         if (event("comment", line)) {
-            listener.comment(content, line);
+            listener.comment(comment, line);
         }
     }
 

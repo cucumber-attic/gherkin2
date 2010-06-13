@@ -19,14 +19,17 @@ public class StateMachineReader implements Listener {
     public List<List<String>> transitionTable() {
         transitionTable = new ArrayList<List<String>>();
         Lexer lexer = new EN(this);
-        lexer.scan(FixJava.readResource(machinePath));
+        lexer.scan(FixJava.readResource(machinePath), machinePath);
         return transitionTable;
     }
 
-    public void tag(String name, int line) {
+    public void uri(String uri) {
     }
 
-    public void comment(String content, int line) {
+    public void tag(String tag, int line) {
+    }
+
+    public void comment(String comment, int line) {
     }
 
     public void feature(String keyword, String name, int line) {

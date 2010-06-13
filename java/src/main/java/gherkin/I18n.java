@@ -92,17 +92,18 @@ public class I18n {
     public String getKeywordTable() {
         StringWriter writer = new StringWriter();
         Formatter pf = new PrettyFormatter(writer, true);
+        List<List<String>> table = new ArrayList<List<String>>();
         for (String key : KEYWORD_KEYS) {
-            pf.row(Arrays.asList(key, join(map(keywords(key), QUOTE_MAPPER), ", ")), 0);
+            table.add(Arrays.asList(key, join(map(keywords(key), QUOTE_MAPPER), ", ")));
         }
         for (String key : STEP_KEYWORD_KEYS) {
             List<String> codeKeywordList = new ArrayList<String>(keywords.get(key));
             codeKeywordList.remove("* ");
             String codeKeywords = join(map(map(codeKeywordList, CODE_KEYWORD_MAPPER), QUOTE_MAPPER), ", ");
 
-            pf.row(Arrays.asList(key + " (code)", codeKeywords), 0);
+            table.add(Arrays.asList(key + " (code)", codeKeywords));
         }
-        pf.flushTable();
+        pf.table(table);
         return writer.getBuffer().toString();
     }
 

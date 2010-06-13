@@ -1,12 +1,15 @@
 package gherkin;
 
+import gherkin.formatter.Argument;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.NullFormatter;
 import gherkin.formatter.PrettyFormatter;
+import gherkin.parser.FormatterListener;
 import gherkin.parser.Parser;
 import gherkin.util.FixJava;
 
 import java.io.*;
+import java.util.List;
 
 public class Main {
     private FileFilter featureFilter = new FileFilter() {
@@ -22,7 +25,14 @@ public class Main {
         this.out = out;
         final Formatter formatter = prettyOrNull ? new PrettyFormatter(out, true) : new NullFormatter() {
             @Override
-            public void step(String keyword, String name, int line) {
+            public void step(List<String> comments, String keyword, String name, int line, List<List<String>> stepTable, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
+                step();
+            }
+
+            public void step(List<String> comments, String keyword, String name, int line, String stepString,            String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
+                step();
+            }
+            private void step() {
                 try {
                     out.append('.').flush();
                 } catch (IOException e) {
@@ -30,7 +40,8 @@ public class Main {
                 }
             }
         };
-        Parser parser = new Parser(formatter);
+        FormatterListener formatterListener = new FormatterListener(formatter);
+        Parser parser = new Parser(formatterListener);
         lexer = new I18nLexer(parser);
     }
 
@@ -53,7 +64,7 @@ public class Main {
     private void parse(File file) {
         try {
             String input = FixJava.readReader(new FileReader(file));
-            lexer.scan(input);
+            lexer.scan(input, file.getPath());
         } catch (Exception e) {
             System.err.println(e.getMessage());
             System.exit(1);

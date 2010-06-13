@@ -32,20 +32,24 @@ public class FilterListener implements Listener {
         detectFilters(filters);
     }
 
-    public void tag(String name, int line) {
+    public void uri(String uri) {
+        listener.uri(uri);
+    }
+
+    public void tag(String tag, int line) {
         if (hasNoFilters()) {
-            listener.tag(name, line);
+            listener.tag(tag, line);
         } else {
-            metaBuffer.add(new Event(Event.Type.TAG, name, line));
+            metaBuffer.add(new Event(Event.Type.TAG, tag, line));
         }
         replayBuffersIfAllOk();
     }
 
-    public void comment(String content, int line) {
+    public void comment(String comment, int line) {
         if (hasNoFilters()) {
-            listener.comment(content, line);
+            listener.comment(comment, line);
         } else {
-            metaBuffer.add(new Event(Event.Type.COMMENT, content, line));
+            metaBuffer.add(new Event(Event.Type.COMMENT, comment, line));
         }
         replayBuffersIfAllOk();
     }

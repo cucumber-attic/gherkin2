@@ -19,17 +19,24 @@ module Gherkin
         @format = MonochromeFormat.new #@monochrome ? MonochromeFormat.new : AnsiColorFormat.new
       end
 
-      def feature(comments, tags, keyword, name, location)
-        @location = location
-        @io.puts "#{format_comments(comments, '')}#{format_tags(tags, '')}#{keyword}: #{indent(name, '  ')}"
+      def feature(comments, tags, keyword, name, uri)
+        @uri = uri
+        print_comments(comments, '')
+        print_tags(tags, '')
+        @io.puts "#{keyword}: #{indent(name, '  ')}"
       end
 
-      def background(keyword, name, line)
-        @io.puts "\n#{grab_comments!('  ')}  #{keyword}: #{indent(name, '    ')}"
+      def background(comments, keyword, name, line)
+        @io.puts
+        print_comments(comments, '  ')
+        @io.puts "  #{keyword}: #{indent(name, '    ')}#{indented_element_uri!(keyword, name, line)}"
       end
 
       def scenario(comments, tags, keyword, name, line)
-        @io.puts "\n#{format_comments(comments, '  ')}#{format_tags(tags, '  ')}  #{keyword}: #{indent(name, '    ')}#{indented_scenario_location!(keyword, name, line)}"
+        @io.puts
+        print_comments(comments, '  ')
+        print_tags(tags, '  ')
+        @io.puts "  #{keyword}: #{indent(name, '    ')}#{indented_element_uri!(keyword, name, line)}"
       end
 
       def scenario_outline(comments, tags, keyword, name, line)
@@ -37,18 +44,22 @@ module Gherkin
       end
 
       def examples(comments, tags, keyword, name, line, examples_table)
-        @io.puts "\n#{format_comments(comments, '    ')}#{format_tags(tags, '    ')}    #{keyword}: #{indent(name, '    ')}"
+        @io.puts
+        print_comments(comments, '    ')
+        print_tags(tags, '    ')
+        @io.puts "    #{keyword}: #{indent(name, '    ')}"
         table(examples_table)
       end
 
-      def step(comments, keyword, name, line, multiline_arg, status=nil, exception=nil, arguments=nil, stepdef_location=nil)
+      def step(comments, keyword, name, line, multiline_arg, status, exception, arguments, stepdef_location)
         status_param = "#{status}_param" if status
         name = Gherkin::Formatter::Argument.format(name, @format, (arguments || [])) 
 
         step = "#{keyword}#{indent(name, '    ')}"
         step = self.__send__(status, step, @monochrome) if status
 
-        @io.puts("#{format_comments(comments, '    ')}    #{step}#{indented_step_location!(stepdef_location)}")
+        print_comments(comments, '    ')
+        @io.puts("    #{step}#{indented_step_location!(stepdef_location)}")
         case multiline_arg
         when String
           py_string(multiline_arg)
@@ -129,24 +140,24 @@ module Gherkin
         end.join("\n")
       end
 
-      def format_tags(tags, indent)
-        tags.empty? ? '' : indent + tags.join(' ') + "\n"
+      def print_tags(tags, indent)
+        @io.write(tags.empty? ? '' : indent + tags.join(' ') + "\n")
       end
 
-      def format_comments(comments, indent)
-        comments.empty? ? '' : indent + comments.join("\n#{indent}") + "\n"
+      def print_comments(comments, indent)
+        @io.write(comments.empty? ? '' : indent + comments.join("\n#{indent}") + "\n")
       end
 
-      def indented_scenario_location!(keyword, name, line)
+      def indented_element_uri!(keyword, name, line)
         return '' if @max_step_length.nil?
         l = (keyword+name).unpack("U*").length
         @max_step_length = [@max_step_length, l].max
         indent = @max_step_length - l
-        ' ' * indent + ' ' + comments("# #{@location}:#{line}", @monochrome)
+        ' ' * indent + ' ' + comments("# #{@uri}:#{line}", @monochrome)
       end
 
       def indented_step_location!(location)
-        return "" if location.nil?
+        return '' if location.nil?
         indent = @max_step_length - @step_lengths[@step_index+=1]
         ' ' * indent + ' ' + comments("# #{location}", @monochrome)
       end
