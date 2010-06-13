@@ -1,7 +1,8 @@
 # encoding: utf-8
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require 'spec_helper'
 require 'gherkin/formatter/pretty_formatter'
 require 'gherkin/formatter/argument'
+require 'gherkin/parser/formatter_listener'
 require 'stringio'
 
 module Gherkin
@@ -16,10 +17,11 @@ module Gherkin
       def assert_pretty(input, output=input)
         [true, false].each do |force_ruby|
           io = StringIO.new
-          l = PrettyFormatter.new(io, true)
+          pf = Gherkin::Formatter::PrettyFormatter.new(io, true)
+          l  = Gherkin::Parser::FormatterListener.new(pf)
           parser = Gherkin::Parser::Parser.new(l, true, "root")
           lexer  = Gherkin::I18nLexer.new(parser, force_ruby)
-          lexer.scan(input)
+          lexer.scan(input, "test.feature")
           io.rewind
           actual = io.read
           actual.should == output
@@ -28,18 +30,18 @@ module Gherkin
 
       before do
         @io = StringIO.new
-        @l = PrettyFormatter.new(@io, true)
+        @l = Gherkin::Formatter::PrettyFormatter.new(@io, true)
       end
 
       it "should print comments when scenario is longer" do
-        @l.feature("Feature", "Hello", "World", 1)
+        @l.feature([], [], "Feature", "Hello", "World", "features/foo.feature")
         @l.steps([
           ['Given ', 'some stuff'],
           ['When ', 'foo']
         ])
-        @l.scenario("Scenario", "The scenario", "", 4, "features/foo.feature:4")
-        @l.step("Given ", "some stuff", 5, nil, nil, nil, "features/step_definitions/bar.rb:56")
-        @l.step("When ", "foo", 6, nil, nil, nil, "features/step_definitions/bar.rb:96")
+        @l.scenario([], [], "Scenario", "The scenario", "", 4)
+        @l.step([], "Given ", "some stuff", 5, nil, nil, nil, nil, "features/step_definitions/bar.rb:56")
+        @l.step([], "When ", "foo", 6, nil, nil, nil, nil, "features/step_definitions/bar.rb:96")
 
         assert_io(%{Feature: Hello
   World
@@ -51,12 +53,12 @@ module Gherkin
       end
 
       it "should print comments when step is longer" do
-        @l.feature("Feature", "Hello", "World", 1)
+        @l.feature([], [], "Feature", "Hello", "World", "features/foo.feature")
         @l.steps([
           ['Given ', 'some stuff that is longer']
         ])
-        @l.scenario("Scenario", "The scenario", "", 4, "features/foo.feature:4")
-        @l.step("Given ", "some stuff that is longer", 5, nil, nil, nil, "features/step_definitions/bar.rb:56")
+        @l.scenario([], [], "Scenario", "The scenario", "", 4)
+        @l.step([], "Given ", "some stuff that is longer", 5, nil, nil, nil, nil, "features/step_definitions/bar.rb:56")
 
         assert_io(%{Feature: Hello
   World
@@ -64,40 +66,11 @@ module Gherkin
   Scenario: The scenario            # features/foo.feature:4
     Given some stuff that is longer # features/step_definitions/bar.rb:56
 })
-      end
-
-      it "should print ANSI coloured steps" do
-        @l.feature("Feature", "Hello", "World", 1)
-        @l.steps([
-          ['Given ', 'some stuff that is longer']
-        ])
-        @l.scenario("Scenario", "The scenario", "", 4, "features/foo.feature:4")
-        @l.step("Given ", "some stuff that is longer", 5, nil, nil, nil, "features/step_definitions/bar.rb:56")
-
-        assert_io(%{Feature: Hello
-  World
-
-  Scenario: The scenario            # features/foo.feature:4
-    Given some stuff that is longer # features/step_definitions/bar.rb:56
-})
-      end
-
-      it "should prettify a whole table with padding (typically ANSI)" do
-        @l.row(%w(a bb), 1)
-        @l.row(%w(ccc d), 2)
-        @l.row(%w(ee ffff), 3)
-        @l.flush_table
-
-        assert_io(
-          "      | a   | bb   |\n" +
-          "      | ccc | d    |\n" +
-          "      | ee  | ffff |\n"
-        )
       end
 
       it "should highlight arguments for regular steps" do
         passed = defined?(JRUBY_VERSION) ? 'passed' : :passed
-        @l.step("Given ", "I have 999 cukes in my belly", 3, passed, nil, [Gherkin::Formatter::Argument.new(7, '999')], nil)
+        @l.step([], "Given ", "I have 999 cukes in my belly", 3, nil, passed, nil, [Gherkin::Formatter::Argument.new(7, '999')], nil)
         assert_io("    Given I have 999 cukes in my belly\n")
       end
 
@@ -152,9 +125,8 @@ Feature: Feature Description
 
       it "should escape backslashes and pipes" do
         io = StringIO.new
-        l = PrettyFormatter.new(io, true)
-        l.row(['|', '\\'], 1)
-        l.flush_table
+        l = Gherkin::Formatter::PrettyFormatter.new(io, true)
+        l.__send__(:table, [['|', '\\']])
         io.rewind
         io.read.should == '      | \\| | \\\\ |' + "\n"
       end

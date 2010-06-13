@@ -3,48 +3,40 @@ package gherkin.formatter;
 import java.util.List;
 
 public class NullFormatter implements Formatter {
-    public void scenario(String keyword, String name, String description, int line, String location) {
+
+    public void feature(List<String> comments, List<String> tags, String keyword, String name, String description, String uri) {
+
     }
 
-    public void step(String keyword, String name, int line, String status, Throwable thrown, List<Argument> arguments, String sourceLocation) {
+    public void background(List<String> comments, String keyword, String name, String description, int line) {
+
     }
 
-    public void flushTable() {
+    public void scenario(List<String> comments, List<String> tags, String keyword, String name, String description, int line) {
+
     }
 
-    public void tag(String name, int line) {
+    public void scenarioOutline(List<String> comments, List<String> tags, String keyword, String name, String description, int line) {
+
     }
 
-    public void comment(String content, int line) {
+    public void examples(List<String> comments, List<String> tags, String keyword, String name, String description, int line, List<List<String>> exampleRows) {
+
     }
 
-    public void feature(String keyword, String name, String description, int line) {
+    public void step(List<String> comments, String keyword, String name, int line, List<List<String>> stepTable, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
+
     }
 
-    public void background(String keyword, String name, String description, int line) {
-    }
+    public void step(List<String> comments, String keyword, String name, int line, String stepString, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
 
-    public void scenario(String keyword, String name, String description, int line) {
-    }
-
-    public void scenarioOutline(String keyword, String name, String description, int line) {
-    }
-
-    public void examples(String keyword, String name, String description, int line) {
-    }
-
-    public void step(String keyword, String name, int line) {
-    }
-
-    public void row(List<String> row, int line) {
-    }
-
-    public void pyString(String string, int line) {
     }
 
     public void eof() {
+
     }
 
-    public void syntaxError(String state, String event, List<String> legalEvents, int line) {
+    public void table(List<List<String>> rows) {
+
     }
 }

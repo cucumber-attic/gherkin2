@@ -73,6 +73,17 @@ Feature: Gherkin Feature lexer
       """
     Then there should be parse errors on lines 1 through 3
 
+  Scenario: Multiple Features in file
+    Given the following text is parsed:
+      """
+      Feature: 
+        Scenario: Hi
+      Feature: Uh ohs
+        Scenario Outline:
+      Feature: This is silly
+      """
+    Then there should be parse errors on lines 3 and 5
+
   Scenario: Tag ends background and scenario
     Given the following text is parsed:
       """

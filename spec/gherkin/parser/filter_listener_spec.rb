@@ -1,6 +1,7 @@
 # encoding: utf-8
-require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+require 'spec_helper'
 require 'gherkin/parser/filter_listener'
+require 'gherkin/parser/formatter_listener'
 require 'gherkin/formatter/pretty_formatter'
 require 'stringio'
 
@@ -11,8 +12,12 @@ module Gherkin
       class LineListener
         attr_reader :lines
         
+        def uri(uri)
+        end
+        
         def method_missing(*sexp_args)
           @lines ||= []
+          raise "Hmm" if sexp_args == [:eof, []]
           @lines << sexp_args[-1]
         end
       end
@@ -25,16 +30,18 @@ module Gherkin
 
       def verify_output(expected_output, filters)
         io = StringIO.new
-        scan(Gherkin::Formatter::PrettyFormatter.new(io, true), filters)
+        formatter = Gherkin::Formatter::PrettyFormatter.new(io, true)
+        listener = Gherkin::Parser::FormatterListener.new(formatter)
+        scan(listener, filters)
         io.rewind
         io.read.should == expected_output
       end
 
       def scan(listener, filters)
-        filter_listener = FilterListener.new(listener, filters)
+        filter_listener = Gherkin::Parser::FilterListener.new(listener, filters)
         parser = Gherkin::Parser::Parser.new(filter_listener, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser, true)
-        lexer.scan(@input)
+        lexer.scan(@input, "test.feature")
       end
 
       context "Scenario" do

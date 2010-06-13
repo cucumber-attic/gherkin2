@@ -3,9 +3,11 @@ package gherkin;
 import java.util.List;
 
 public interface Listener {
-    void tag(String name, int line);
+    void uri(String uri);
 
-    void comment(String content, int line);
+    void comment(String comment, int line);
+
+    void tag(String tag, int line);
 
     void feature(String keyword, String name, String description, int line);
 

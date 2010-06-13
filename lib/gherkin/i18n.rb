@@ -57,8 +57,7 @@ module Gherkin
         require 'gherkin/formatter/pretty_formatter'
         io = defined?(JRUBY_VERSION) ? Java.java.io.StringWriter.new : StringIO.new
         pf = Gherkin::Formatter::PrettyFormatter.new(io, true)
-        all.each{|i18n| pf.row([i18n.iso_code, i18n.keywords('name')[0], i18n.keywords('native')[0]], 0)}
-        pf.flush_table
+        pf.table(all.map{|i18n| [i18n.iso_code, i18n.keywords('name')[0], i18n.keywords('native')[0]] })
         if defined?(JRUBY_VERSION)
           io.getBuffer.toString
         else
@@ -148,17 +147,18 @@ module Gherkin
       io = StringIO.new
       pf = Gherkin::Formatter::PrettyFormatter.new(io, true)
 
-      KEYWORD_KEYS.each do |key|
-        pf.row([key, keywords(key).map{|keyword| %{"#{keyword}"}}.join(', ')], 0)
+      gherkin_keyword_table = KEYWORD_KEYS.map do |key|
+        [key, keywords(key).map{|keyword| %{"#{keyword}"}}.join(', ')]
       end
-      STEP_KEYWORD_KEYS.each do |key|
+      
+      code_keyword_table = STEP_KEYWORD_KEYS.map do |key|
         code_keywords = keywords(key).reject{|keyword| keyword == '* '}.map do |keyword|
           %{"#{self.class.code_keyword_for(keyword)}"}
         end.join(', ')
-        pf.row(["#{key} (code)", code_keywords], 0)
+        ["#{key} (code)", code_keywords]
       end
       
-      pf.flush_table
+      pf.table(gherkin_keyword_table + code_keyword_table)
       io.rewind
       io.read
     end

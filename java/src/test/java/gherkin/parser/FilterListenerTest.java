@@ -24,7 +24,9 @@ public class FilterListenerTest {
 
     private class LineListenerInvocationHandler implements InvocationHandler {
             public Object invoke(Object target, Method method, Object[] arguments)  {
-                argumentList.add(arguments);
+                if(!method.getName().equals("uri")) {
+                    argumentList.add(arguments);
+                }
                 return null;
             }
     }
@@ -95,6 +97,6 @@ public class FilterListenerTest {
         Listener filterListener = new FilterListener(listener, filters);
         Parser parser = new Parser(filterListener);
         Lexer lexer = new I18nLexer(parser);
-        lexer.scan(input);
+        lexer.scan(input, "test.feature");
     }
 }

@@ -4,7 +4,7 @@ Given /^a "([^\"]*)" "([^\"]*)" parser$/ do |ruby_or_native, parser_name|
 end
 
 Given "the following text is parsed:" do |text|
-  @lexer.scan(text)
+  @lexer.scan(text, "test.feature")
 end
 
 Then "there should be no parse errors" do

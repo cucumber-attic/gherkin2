@@ -1,28 +1,34 @@
 package gherkin.formatter;
 
-import gherkin.Listener;
-
 import java.util.List;
 
 /**
- * This interface extends the Listener interface with extra methods for formatting
- * Gherkin features during execution.
+ * This is the interface you should implement if you want your own custom
+ * formatter.
  */
-public interface Formatter extends Listener {
-    void scenario(String keyword, String name, String description, int line, String location);
+public interface Formatter {
+    void feature(List<String> comments, List<String> tags, String keyword, String name, String description, String uri);
+    void background(List<String> comments, String keyword, String name, String description, int line);
+    void scenario(List<String> comments, List<String> tags, String keyword, String name, String description, int line);
+    void scenarioOutline(List<String> comments, List<String> tags, String keyword, String name, String description, int line);
+    void examples(List<String> comments, List<String> tags, String keyword, String name, String description, int line, List<List<String>> exampleRows);
 
     /**
      * Invoked after a step has been executed.
      *
+     * @param comments comments in front of the step.
      * @param keyword the value of step keyword ("Given ", "When ", "Then " etc).
      * @param name the text of the step, for example "I have 5 cukes".
      * @param line the line of the step.
+     * @param stepTable a table argument
      * @param status whether or not we failed. TODO: USE ENUM
      * @param thrown the exception that was thrown, or null if none was thrown.
      * @param arguments The arguments the step was invoked with.
-     * @param sourceLocation the location of the step definition.
+     * @param stepdefLocation the location of the step definition.
      */
-    void step(String keyword, String name, int line, String status, Throwable thrown, List<Argument> arguments, String sourceLocation);
+    void step(List<String> comments, String keyword, String name, int line, List<List<String>> stepTable, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation);
+    void step(List<String> comments, String keyword, String name, int line, String stepString,            String status, Throwable thrown, List<Argument> arguments, String stepdefLocation);
+    void eof();
 
-    void flushTable();
+    void table(List<List<String>> rows);
 }

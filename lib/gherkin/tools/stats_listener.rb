@@ -20,21 +20,21 @@ module Gherkin
       def comment(content, line)
       end
 
-      def feature(keyword, name, line)
+      def feature(keyword, name, description, line)
         @features += 1
       end
 
-      def background(keyword, name, line)
+      def background(keyword, name, description, line)
       end
 
-      def scenario(keyword, name, line)
+      def scenario(keyword, name, description, line)
         @scenarios += 1
       end
 
-      def scenario_outline(keyword, name, line)
+      def scenario_outline(keyword, name, description, line)
       end
 
-      def examples(keyword, name, line)
+      def examples(keyword, name, description, line)
       end
 
       def step(keyword, name, line)

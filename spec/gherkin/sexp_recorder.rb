@@ -1,5 +1,9 @@
+require 'gherkin/rubify'
+
 module Gherkin
   class SexpRecorder
+    include Rubify
+    
     def initialize
       @sexps = []
     end
@@ -8,7 +12,7 @@ module Gherkin
       event = :scenario_outline if event == :scenarioOutline # Special Java Lexer handling
       event = :py_string if event == :pyString # Special Java Lexer handling
       event = :syntax_error if event == :syntaxError # Special Java Lexer handling
-      args[0] = args[0].to_a if event == :row # Special JRuby handling
+      args  = rubify(args)
       @sexps << [event] + args
     end
 

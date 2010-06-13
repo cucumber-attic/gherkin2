@@ -1,11 +1,6 @@
 module Gherkin
   module Parser
     class Event < Array
-      def initialize(*args)
-        super
-        self[1] = self[1].to_a if event == :row # Special JRuby handling
-      end
-
       def event
         self[0]
       end
@@ -24,7 +19,12 @@ module Gherkin
       end
 
       def replay(listener)
-        listener.__send__(event, *args)
+        begin
+          listener.__send__(event, *args)
+        rescue ArgumentError => e
+          e.message << "\nListener: #{listener.class}, args: #{args.inspect}"
+          raise e
+        end
       end
 
     private

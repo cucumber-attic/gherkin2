@@ -1,13 +1,11 @@
 package gherkin.formatter;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static gherkin.util.FixJava.join;
 import static gherkin.formatter.Colors.comments;
+import static gherkin.util.FixJava.join;
 
 /**
  * This class pretty prints feature files like they were in the source, only
@@ -18,12 +16,10 @@ import static gherkin.formatter.Colors.comments;
 public class PrettyFormatter implements Formatter {
     private final PrintWriter out;
     private final boolean monochrome;
-    private int maxStepLength = 0;
+    private int maxStepLength = -1;
     private int[] stepLengths;
     private int stepIndex;
-    private List<List<String>> rows;
-    private List<String> comments;
-    private List<String> tags;
+    private String uri;
 
     public PrettyFormatter(Writer out, boolean monochrome) {
         this.out = new PrintWriter(out);
@@ -34,68 +30,67 @@ public class PrettyFormatter implements Formatter {
         this(new OutputStreamWriter(out, "UTF-8"), monochrome);
     }
 
-    public void tag(String name, int line) {
-        if (tags == null) tags = new ArrayList<String>();
-        tags.add(name);
-    }
-
-    public void comment(String content, int line) {
-        if (comments == null) comments = new ArrayList<String>();
-        comments.add(content);
-    }
-
-    public void feature(String keyword, String name, String description, int line) {
-        printCommentsAndTags("");
+    public void feature(List<String> comments, List<String> tags, String keyword, String name, String description, String uri) {
+        this.uri = uri;
+        printComments(comments, "");
+        printTags(tags, "");
         out.println(keyword + ": " + indent(name, "  "));
         out.flush();
     }
 
-    public void background(String keyword, String name, String description, int line) {
+    public void background(List<String> comments, String keyword, String name, String description, int line) {
         out.println();
-        printCommentsAndTags("  ");
+        printComments(comments, "  ");
         out.println("  " + keyword + ": " + name);
     }
 
-    public void scenario(String keyword, String name, String description, int line) {
-        scenario(keyword, name, description, line, null);
-    }
-
-    public void scenario(String keyword, String name, String description, int line, String location) {
-        flushTable();
+    public void scenario(List<String> comments, List<String> tags, String keyword, String name, String description, int line) {
         out.println();
-        printCommentsAndTags("  ");
-        out.println("  " + keyword + ": " + indent(name, "    ") + indentedScenarioLocation(keyword, name, location));
+        printComments(comments, "  ");
+        printTags(tags, "  ");
+        out.println("  " + keyword + ": " + indent(name, "    ") + indentedScenarioLocation(keyword, name, line));
         out.flush();
     }
 
-    public void scenarioOutline(String keyword, String name, String description, int line) {
-        flushTable();
-        out.println();
-        printCommentsAndTags("  ");
-        out.println("  " + keyword + ": " + name);
+    public void scenarioOutline(List<String> comments, List<String> tags, String keyword, String name, String description, int line) {
+        scenario(comments, tags, keyword, name, description, line);
     }
 
-    public void examples(String keyword, String name, String description, int line) {
-        flushTable();
+    public void examples(List<String> comments, List<String> tags, String keyword, String name, String description, int line, List<List<String>> exampleRows) {
         out.println();
-        printCommentsAndTags("    ");
+        printComments(comments, "    ");
+        printTags(tags, "    ");
         out.println("    " + keyword + ": " + name);
+        table(exampleRows);
     }
 
-    public void step(String keyword, String name, int line, String status, Throwable thrown, List<Argument> arguments, String sourceLocation) {
-        flushTable();
-        out.println("    " + keyword + indent(name, "    ") + indentedStepLocation(sourceLocation));
+    public void step(List<String> comments, String keyword, String name, int line, List<List<String>> stepTable, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
+        step(comments, keyword, name, stepdefLocation);
+        if (stepTable != null) {
+            table(stepTable);
+        }
+    }
+
+    public void step(List<String> comments, String keyword, String name, int line, String stepString, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
+        step(comments, keyword, name, stepdefLocation);
+        if (stepString != null) {
+            pyString(stepString);
+        }
+    }
+
+    private void step(List<String> comments, String keyword, String name, String stepdefLocation) {
+        printComments(comments, "    ");
+        out.println("    " + keyword + indent(name, "    ") + indentedStepLocation(stepdefLocation));
         out.flush();
     }
 
-    public void flushTable() {
-        if (rows == null) return;
+    public void table(List<List<String>> rows) {
         int columnCount = rows.get(0).size();
         int[][] cellLengths = new int[rows.size()][columnCount];
         int[] maxLengths = new int[columnCount];
         for (int i = 0; i < rows.size(); i++) {
             for (int j = 0; j < columnCount; j++) {
-                int length = rows.get(i).get(j).length();
+                int length = escapeCell(rows.get(i).get(j)).length();
                 cellLengths[i][j] = length;
                 maxLengths[j] = Math.max(maxLengths[j], length);
             }
@@ -104,7 +99,7 @@ public class PrettyFormatter implements Formatter {
         for (int i = 0; i < rows.size(); i++) {
             out.write("      | ");
             for (int j = 0; j < columnCount; j++) {
-                out.write(rows.get(i).get(j));
+                out.write(escapeCell(rows.get(i).get(j)));
                 padSpace(maxLengths[j] - cellLengths[i][j]);
                 if (j < columnCount - 1) {
                     out.write(" | ");
@@ -115,30 +110,19 @@ public class PrettyFormatter implements Formatter {
             out.println();
         }
         out.flush();
-        rows = null;
     }
 
-    public void step(String keyword, String name, int line) {
-        step(keyword, name, line, null, null, Collections.<Argument>emptyList(), null);
+    private String escapeCell(String cell) {
+        return cell.replaceAll("\\|", "\\\\|").replaceAll("\\\\(?!\\|)", "\\\\\\\\");
     }
 
-    public void row(List<String> row, int line) {
-        if (rows == null) rows = new ArrayList<List<String>>();
-        List<String> escapedRow = new ArrayList<String>(row.size());
-        for(String cell : row) {
-            escapedRow.add(cell.replaceAll("\\|", "\\\\|").replaceAll("\\\\(?!\\|)", "\\\\\\\\"));
-        }
-        rows.add(escapedRow);
-    }
-
-    public void pyString(String string, int line) {
+    public void pyString(String string) {
         out.println("      \"\"\"");
         out.print(Pattern.compile("^", Pattern.MULTILINE).matcher(string).replaceAll("      "));
         out.println("\n      \"\"\"");
     }
 
     public void eof() {
-        flushTable();
         out.flush();
     }
 
@@ -169,29 +153,19 @@ public class PrettyFormatter implements Formatter {
         }
     }
 
-    private void printCommentsAndTags(String indent) {
-        printComments(indent);
-        printTags(indent);
-    }
-
-    private boolean printComments(String indent) {
-        if (comments == null) return false;
+    private void printComments(List<String> comments, String indent) {
         for (String comment : comments) {
             out.print(indent);
             out.println(comment);
         }
         out.flush();
-        comments = null;
-        return true;
     }
 
-    private boolean printTags(String indent) {
-        if (tags == null) return false;
+    private void printTags(List<String> tags, String indent) {
+        if(tags.isEmpty()) return;
         out.print(indent);
         out.println(join(tags, " "));
         out.flush();
-        tags = null;
-        return true;
     }
 
     private String indent(String name, String indentation) {
@@ -208,15 +182,15 @@ public class PrettyFormatter implements Formatter {
         return sb.toString();
     }
 
-    private String indentedScenarioLocation(String keyword, String name, String location) {
-        if (location == null || "".equals(location)) return "";
+    private String indentedScenarioLocation(String keyword, String name, int line) {
+        if (maxStepLength == -1) return "";
         int l = keyword.length() + name.length();
         maxStepLength = Math.max(maxStepLength, l);
         int indent = maxStepLength - l;
 
         StringBuffer buffer = new StringBuffer();
         padSpace(indent, buffer);
-        buffer.append(" ").append(comments("# " + location, monochrome));
+        buffer.append(" ").append(comments("# " + uri + ":" + line, monochrome));
         return buffer.toString();
     }
 

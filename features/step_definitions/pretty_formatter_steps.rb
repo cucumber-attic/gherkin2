@@ -4,11 +4,12 @@ require 'gherkin/formatter/pretty_formatter'
 
 module PrettyPlease
   def pretty(source)
-    io       = StringIO.new
-    listener = Gherkin::Formatter::PrettyFormatter.new(io)
-    parser   = Gherkin::Parser::Parser.new(listener, true)
-    lexer    = Gherkin::I18nLexer.new(parser)
-    lexer.scan(source)
+    io        = StringIO.new
+    formatter = Gherkin::Formatter::PrettyFormatter.new(io)
+    listener  = Gherkin::Parser::FormatterListener.new(formatter)
+    parser    = Gherkin::Parser::Parser.new(listener, true)
+    lexer     = Gherkin::I18nLexer.new(parser)
+    lexer.scan(source, "test.feature")
     io.rewind
     io.read
   end
@@ -16,40 +17,39 @@ end
 
 World(PrettyPlease)
 
-Given /^I have Cucumber's home dir defined in CUCUMBER_HOME$/ do
-  @cucumber_home = ENV['CUCUMBER_HOME']
-  raise "No CUCUMBER_HOME" if @cucumber_home.nil?
+Given /^I have Cucumber's source code next to Gherkin's$/ do
+  @cucumber_home = File.dirname(__FILE__) + '/../../../cucumber'
+  raise "No Cucumber source in #{@cucumber_home}" unless File.file?(@cucumber_home + '/bin/cucumber')
 end
 
 When /^I find all of the \.feature files$/ do
-  @features = Dir["#{@cucumber_home}/**/*.feature"].sort
+  @feature_paths = Dir["#{@cucumber_home}/**/*.feature"].sort
 end
 
 When /^I parse the prettified representation of each of them$/ do
-  @errors = [['Path', 'Error']]
-  @features.each do |feature|
+  @error = false
+  @feature_paths.each do |feature_path|
     pretty1 = nil
     pretty2 = nil
     begin
-      pretty1 = pretty(IO.read(feature))
+      pretty1 = pretty(IO.read(feature_path))
       pretty2 = pretty(pretty1)
       pretty2.should == pretty1
-    rescue Spec::Expectations::ExpectationNotMetError => e
+    rescue RSpec::Expectations::ExpectationNotMetError => e
       File.open("p1.feature", "wb") {|io| io.write(pretty1)}
       File.open("p2.feature", "wb") {|io| io.write(pretty2)}
-      announce "========== #{feature}:"
+      announce "=========="
+      announce feature_path
       if(e.message =~ /(@@.*)/m)
         announce $1
       else
-        announce "??? NO DIFF ???"
+        announce "Identical, except for newlines"
       end
-      @errors << [feature, "See announced diff"]
-    rescue => e
-      @errors << [feature, e.message]
+      @error = true
     end
   end
 end
 
-Then /^the following files should have errors:$/ do |table|
-  table.diff!(@errors)
+Then /^they should all be identical to the pretty output$/ do
+  raise "Some features didn't do pretty well" if @error
 end

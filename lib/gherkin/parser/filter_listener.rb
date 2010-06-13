@@ -31,7 +31,11 @@ module Gherkin
 
         @table_state = :step
       end
-      
+
+      def uri(uri)
+        @listener.uri(uri)
+      end
+
       private
 
       def method_missing(*event_args)

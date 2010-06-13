@@ -389,11 +389,13 @@ static VALUE CLexer_init(VALUE self, VALUE listener)
   return self;
 }
 
-static VALUE CLexer_scan(VALUE self, VALUE input)
+static VALUE CLexer_scan(VALUE self, VALUE input, VALUE uri)
 {
+  VALUE listener = rb_iv_get(self, "@listener");
+  rb_funcall(listener, rb_intern("uri"), 1, uri);
+
   lexer_state *lexer = NULL;
   DATA_GET(self, lexer_state, lexer);
-
 
   VALUE input_copy = rb_str_dup(input);
 
@@ -412,7 +414,6 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
     const char *p, *pe, *eof;
     int cs = 0;
     
-    VALUE listener = rb_iv_get(self, "@listener");
     VALUE current_row = Qnil;
 
     p = data;
@@ -448,6 +449,6 @@ void Init_gherkin_lexer_<%= @i18n.underscored_iso_code %>()
   cI18nLexer = rb_define_class_under(mCLexer, "<%= @i18n.underscored_iso_code.capitalize %>", rb_cObject);
   rb_define_alloc_func(cI18nLexer, CLexer_alloc);
   rb_define_method(cI18nLexer, "initialize", CLexer_init, 1);
-  rb_define_method(cI18nLexer, "scan", CLexer_scan, 1);
+  rb_define_method(cI18nLexer, "scan", CLexer_scan, 2);
 }
 
