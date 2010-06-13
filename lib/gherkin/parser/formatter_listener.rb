@@ -17,8 +17,8 @@ module Gherkin
         @tags << name
       end
 
-      def feature(keyword, name, line)
-        @formatter.feature(grab_comments!, grab_tags!, keyword, name)
+      def feature(keyword, name, line, uri=nil)
+        @formatter.feature(grab_comments!, grab_tags!, keyword, name, uri)
       end
 
       def background(keyword, name, line)

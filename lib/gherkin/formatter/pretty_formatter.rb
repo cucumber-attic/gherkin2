@@ -17,62 +17,47 @@ module Gherkin
         @io = io
         @monochrome = monochrome
         @format = MonochromeFormat.new #@monochrome ? MonochromeFormat.new : AnsiColorFormat.new
-        @tags = nil
-        @comments = nil
       end
 
-      def comment(content, line)
-        @comments ||= []
-        @comments << content
-      end
-
-      def tag(name, line)
-        @tags ||= []
-        @tags << name
-      end
-
-      def feature(keyword, name, line)
-        @io.puts "#{grab_comments!('')}#{grab_tags!('')}#{keyword}: #{indent(name, '  ')}"
+      def feature(comments, tags, keyword, name, location)
+        @location = location
+        @io.puts "#{format_comments(comments, '')}#{format_tags(tags, '')}#{keyword}: #{indent(name, '  ')}"
       end
 
       def background(keyword, name, line)
         @io.puts "\n#{grab_comments!('  ')}  #{keyword}: #{indent(name, '    ')}"
       end
 
-      def scenario(keyword, name, line, location=nil)
-        flush_table
-        @io.puts "\n#{grab_comments!('  ')}#{grab_tags!('  ')}  #{keyword}: #{indent(name, '    ')}#{indented_scenario_location!(keyword, name, location)}"
+      def scenario(comments, tags, keyword, name, line)
+        @io.puts "\n#{format_comments(comments, '  ')}#{format_tags(tags, '  ')}  #{keyword}: #{indent(name, '    ')}#{indented_scenario_location!(keyword, name, line)}"
       end
 
-      def scenario_outline(keyword, name, line)
-        flush_table
-        @io.puts "\n#{grab_comments!('  ')}#{grab_tags!('  ')}  #{keyword}: #{indent(name, '    ')}"
+      def scenario_outline(comments, tags, keyword, name, line)
+        scenario(comments, tags, keyword, name, line)
       end
 
-      def examples(keyword, name, line)
-        flush_table
-        @io.puts "\n#{grab_comments!('    ')}#{grab_tags!('    ')}    #{keyword}: #{indent(name, '    ')}"
+      def examples(comments, tags, keyword, name, line, examples_table)
+        @io.puts "\n#{format_comments(comments, '    ')}#{format_tags(tags, '    ')}    #{keyword}: #{indent(name, '    ')}"
+        table(examples_table)
       end
 
-      def step(keyword, name, line, status=nil, exception=nil, arguments=nil, location=nil)
-        flush_table
+      def step(comments, keyword, name, line, multiline_arg, status=nil, exception=nil, arguments=nil, stepdef_location=nil)
         status_param = "#{status}_param" if status
         name = Gherkin::Formatter::Argument.format(name, @format, (arguments || [])) 
-        #{|arg| status_param ? self.__send__(status_param, arg, @monochrome) : arg} if arguments
 
         step = "#{keyword}#{indent(name, '    ')}"
         step = self.__send__(status, step, @monochrome) if status
 
-        @io.puts("#{grab_comments!('    ')}    #{step}#{indented_step_location!(location)}")
-      end
-
-      def row(row, line)
-        @rows ||= []
-        @rows << row.map{|cell| escape_cell(cell)}
-      end
-
-      def py_string(string, line)
-        @io.puts "      \"\"\"\n" + string.gsub(START, '      ').gsub(/"""/,'\"\"\"') + "\n      \"\"\""
+        @io.puts("#{format_comments(comments, '    ')}    #{step}#{indented_step_location!(stepdef_location)}")
+        case multiline_arg
+        when String
+          py_string(multiline_arg)
+        when Array
+          table(multiline_arg)
+        when NilClass
+        else
+          raise "Bad multiline_arg: #{multiline_arg.inspect}"
+        end
       end
 
       def syntax_error(state, event, legal_events, line)
@@ -80,7 +65,6 @@ module Gherkin
       end
 
       def eof
-        flush_table
       end
 
       # This method can be invoked before a #scenario, to ensure location arguments are aligned
@@ -90,34 +74,41 @@ module Gherkin
         @step_index = -1
       end
 
-      def exception(exception)
-        exception_text = "#{exception.message} (#{exception.class})\n#{(exception.backtrace || []).join("\n")}".gsub(/^/, '      ')
-        @io.puts(failed(exception_text, @monochrome))
-      end
-
-      def flush_table(exception=nil, statuses=nil)
-        return if @rows.nil?
-        cell_lengths = @rows.map { |col| col.map { |cell| cell.unpack("U*").length }}
+      def table(rows)
+        cell_lengths = rows.map do |col| 
+          col.map do |cell| 
+            escape_cell(cell).unpack("U*").length
+          end
+        end
         max_lengths = cell_lengths.transpose.map { |col_lengths| col_lengths.max }.flatten
 
-        @rows.each_with_index do |row, i|
+        rows.each_with_index do |row, i|
           j = -1
           @io.puts '      | ' + row.zip(max_lengths).map { |cell, max_length|
             j += 1
-            color(cell, statuses, j) + ' ' * (max_length - cell_lengths[i][j])
+            color(cell, nil, j) + ' ' * (max_length - cell_lengths[i][j])
           }.join(' | ') + ' |'
-          exception(exception) if exception
         end
-        @rows = nil
+      end
+
+    private
+
+      def py_string(string)
+        @io.puts "      \"\"\"\n" + string.gsub(START, '      ').gsub(/"""/,'\"\"\"') + "\n      \"\"\""
+      end
+
+      def exception(exception)
+        exception_text = "#{exception.message} (#{exception.class})\n#{(exception.backtrace || []).join("\n")}".gsub(/^/, '      ')
+        @io.puts(failed(exception_text, @monochrome))
       end
 
       private
 
       def color(cell, statuses, col)
         if statuses
-          self.__send__(statuses[col], cell, @monochrome) + (@monochrome ? '' : reset)
+          self.__send__(statuses[col], escape_cell(cell), @monochrome) + (@monochrome ? '' : reset)
         else
-          cell
+          escape_cell(cell)
         end
       end
 
@@ -138,24 +129,20 @@ module Gherkin
         end.join("\n")
       end
 
-      def grab_tags!(indent)
-        tags = @tags ? indent + @tags.join(' ') + "\n" : ''
-        @tags = nil
-        tags
+      def format_tags(tags, indent)
+        tags.empty? ? '' : indent + tags.join(' ') + "\n"
       end
 
-      def grab_comments!(indent)
-        comments = @comments ? indent + @comments.join("\n#{indent}") + "\n" : ''
-        @comments = nil
-        comments
+      def format_comments(comments, indent)
+        comments.empty? ? '' : indent + comments.join("\n#{indent}") + "\n"
       end
 
-      def indented_scenario_location!(keyword, name, location)
-        return "" if location.nil?
+      def indented_scenario_location!(keyword, name, line)
+        return '' if @max_step_length.nil?
         l = (keyword+name).unpack("U*").length
         @max_step_length = [@max_step_length, l].max
         indent = @max_step_length - l
-        ' ' * indent + ' ' + comments("# #{location}", @monochrome)
+        ' ' * indent + ' ' + comments("# #{@location}:#{line}", @monochrome)
       end
 
       def indented_step_location!(location)

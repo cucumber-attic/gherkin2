@@ -18,7 +18,8 @@ Feature: JSON formatter
         "comments": ["# language: no"],
         "tags": [],
         "keyword": "Egenskap",
-        "name": "Kjapp"
+        "name": "Kjapp",
+        "uri": null
       }
       """
 
@@ -73,6 +74,7 @@ Feature: JSON formatter
         "tags": ["@one"],
         "keyword": "Feature",
         "name": "OH HAI",
+        "uri": null,
         "elements":[
           {
             "comments": [],

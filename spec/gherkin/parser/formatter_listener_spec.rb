@@ -15,22 +15,22 @@ module Gherkin
       
       it "should pass tags to #feature method" do
         @fl.tag("@hello", 1)
-        @fl.feature("Feature", "awesome", 2)
+        @fl.feature("Feature", "awesome", 2, nil)
         @fl.eof
 
         @formatter.to_sexp.should == [
-          [:feature, [], ["@hello"], "Feature", "awesome"],
+          [:feature, [], ["@hello"], "Feature", "awesome", nil],
           [:eof]
         ]
       end
 
       it "should pass comments to #feature method" do
         @fl.comment("# comment", 1)
-        @fl.feature("Feature", "awesome", 2)
+        @fl.feature("Feature", "awesome", 2, "foo.feature")
         @fl.eof
 
         @formatter.to_sexp.should == [
-          [:feature, ["# comment"], [], "Feature", "awesome"],
+          [:feature, ["# comment"], [], "Feature", "awesome", "foo.feature"],
           [:eof]
         ]
       end
@@ -38,14 +38,14 @@ module Gherkin
       it "should pass comments and tags to #feature and #scenario methods" do
         @fl.comment("# one", 1)
         @fl.tag("@two", 2)
-        @fl.feature("Feature", "three", 3)
+        @fl.feature("Feature", "three", 3, "foo.feature")
         @fl.comment("# four", 4)
         @fl.tag("@five", 5)
         @fl.scenario("Scenario", "six", 6)
         @fl.eof
 
         @formatter.to_sexp.should == [
-          [:feature,  ["# one"],  ["@two"],  "Feature",  "three"],
+          [:feature,  ["# one"],  ["@two"],  "Feature",  "three", "foo.feature"],
           [:scenario, ["# four"], ["@five"], "Scenario", "six", 6],
           [:eof]
         ]
@@ -68,7 +68,8 @@ module Gherkin
         @formatter.to_sexp.should == [
           [:feature, ["#Comment on line 1", "#Comment on line 2"], ["@tag1", "@tag2"],
             "Feature",
-            "Feature Text\nIn order to test multiline forms\nAs a ragel writer\nI need to check for complex combinations"],
+            "Feature Text\nIn order to test multiline forms\nAs a ragel writer\nI need to check for complex combinations",
+            nil],
           [:background, ["#Comment on line 9", "#Comment on line 11"], [], "Background", "", 13],
           [:step, [], "Given ", "this is a background step", 14, nil],
           [:step, [], "And ", "this is another one", 15, nil],

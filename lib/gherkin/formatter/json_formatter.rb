@@ -6,8 +6,8 @@ module Gherkin
         @io = io
       end
 
-      def feature(comments, tags, keyword, name)
-        @json_hash = {'comments' => comments, 'tags' => tags, 'keyword' => keyword, 'name' => name}
+      def feature(comments, tags, keyword, name, uri)
+        @json_hash = {'comments' => comments, 'tags' => tags, 'keyword' => keyword, 'name' => name, 'uri' => uri}
       end
 
       def scenario(comments, tags, keyword, name, line)

@@ -1,6 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 require 'gherkin/parser/filter_listener'
+require 'gherkin/parser/formatter_listener'
 require 'gherkin/formatter/pretty_formatter'
 require 'stringio'
 
@@ -25,7 +26,9 @@ module Gherkin
 
       def verify_output(expected_output, filters)
         io = StringIO.new
-        scan(Gherkin::Formatter::PrettyFormatter.new(io, true), filters)
+        formatter = Gherkin::Formatter::PrettyFormatter.new(io, true)
+        listener = Gherkin::Parser::FormatterListener.new(formatter)
+        scan(listener, filters)
         io.rewind
         io.read.should == expected_output
       end

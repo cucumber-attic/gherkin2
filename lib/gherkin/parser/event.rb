@@ -24,7 +24,12 @@ module Gherkin
       end
 
       def replay(listener)
-        listener.__send__(event, *args)
+        begin
+          listener.__send__(event, *args)
+        rescue ArgumentError => e
+          e.message << "\nListener: #{listener.inspect}"
+          raise e
+        end
       end
 
     private
