@@ -28,22 +28,20 @@ langs.each do |i18n|
   java = RagelTask.new('java', i18n)
   rb   = RagelTask.new('rb', i18n)
 
-  file 'lib/gherkin.jar' => [java.target, rb.target]
-
-  begin
-  if defined?(JRUBY_VERSION)
-    java_properties = "java/src/main/resources/gherkin/I18nKeywords_#{i18n.iso_code.gsub(/-/, '_')}.properties"
-    file java_properties => 'lib/gherkin/i18n.yml' do
-      File.open(java_properties, 'wb') do |io|
-        io.puts("# Generated file. Do not edit.")
-        Gherkin::I18n::KEYWORD_KEYS.each do |key|
-          value = Gherkin::I18n.unicode_escape(i18n.keywords(key).join("|"))
-          io.puts("#{key}:#{value}")
-        end
+  java_properties = "java/src/main/resources/gherkin/I18nKeywords_#{i18n.iso_code.gsub(/-/, '_')}.properties"
+  file java_properties => 'lib/gherkin/i18n.yml' do
+    File.open(java_properties, 'wb') do |io|
+      io.puts("# Generated file. Do not edit.")
+      Gherkin::I18n::KEYWORD_KEYS.each do |key|
+        value = Gherkin::I18n.unicode_escape(i18n.keywords(key).join("|"))
+        io.puts("#{key}:#{value}")
       end
     end
-    file 'lib/gherkin.jar' => java_properties
-  else
+  end
+  file 'lib/gherkin.jar' => [java.target, rb.target, java_properties]
+
+  begin
+  if !defined?(JRUBY_VERSION)
     require 'rake/extensiontask'
 
     c = RagelTask.new('c', i18n)

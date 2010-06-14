@@ -18,10 +18,10 @@ begin
     gem.homepage = "http://github.com/aslakhellesoy/gherkin"
     gem.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
     gem.executables = ["gherkin"]
-    gem.add_dependency "trollop", ">= 1.16.2"
-    gem.add_development_dependency 'rspec', '>= 2.0.0.beta.11'
-    gem.add_development_dependency "cucumber", ">= 0.8.1"
-    gem.add_development_dependency "rake-compiler", ">= 0.7.0" unless defined?(JRUBY_VERSION)
+    gem.add_dependency "trollop", "~> 1.16.2"
+    gem.add_development_dependency 'rspec', '~> 2.0.0.beta.11'
+    gem.add_development_dependency "cucumber", "~> 0.8.1"
+    gem.add_development_dependency "rake-compiler", "~> 0.7.0" unless defined?(JRUBY_VERSION)
 
     gem.files -= FileList['ikvm/**/*']
     gem.files -= FileList['java/**/*']
