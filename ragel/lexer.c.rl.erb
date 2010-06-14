@@ -129,7 +129,7 @@ static VALUE rb_eGherkinLexingError;
     store_kw_con(listener, "step",
       PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)),
       PTR_TO(content_start), LEN(content_start, p), 
-      lexer->current_line, lexer->eol);
+      lexer->current_line);
   }
   
   action store_comment_content {
@@ -265,7 +265,7 @@ static void
 store_kw_con(VALUE listener, const char * event_name, 
              const char * keyword_at, size_t keyword_length, 
              const char * at,         size_t length, 
-             int current_line, int eol)
+             int current_line)
 {
   VALUE con = Qnil, kw = Qnil;
   kw = ENCODED_STR_NEW(keyword_at, keyword_length);

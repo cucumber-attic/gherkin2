@@ -1,7 +1,6 @@
 require 'yaml'
 require 'gherkin/rubify'
 require 'gherkin/native'
-require 'gherkin/parser/row'
 
 module Gherkin
   class I18n
@@ -56,6 +55,7 @@ module Gherkin
       def language_table
         require 'stringio'
         require 'gherkin/formatter/pretty_formatter'
+        require 'gherkin/parser/row'
         io = defined?(JRUBY_VERSION) ? Java.java.io.StringWriter.new : StringIO.new
         pf = Gherkin::Formatter::PrettyFormatter.new(io, true)
         table = all.map do |i18n| 
@@ -148,6 +148,7 @@ module Gherkin
     def keyword_table
       require 'stringio'
       require 'gherkin/formatter/pretty_formatter'
+      require 'gherkin/parser/row'
       io = StringIO.new
       pf = Gherkin::Formatter::PrettyFormatter.new(io, true)
 

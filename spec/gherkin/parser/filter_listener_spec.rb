@@ -202,8 +202,8 @@ Feature: 2
 
       context "Scenario Outline" do
         before do
-          @input = %{Feature: 1
-
+          @input = %{Feature: Fname
+  Fdesc
   @tag3
   Scenario Outline: 4
     Given <foo> 5
@@ -259,7 +259,8 @@ Feature: 2
         end
 
         it "should replay itself properly" do
-          filtered = %{Feature: 1
+          filtered = %{Feature: Fname
+  Fdesc
 
   @tag3
   Scenario Outline: 4

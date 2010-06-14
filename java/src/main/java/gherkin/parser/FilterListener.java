@@ -58,7 +58,7 @@ public class FilterListener implements Listener {
         if (hasNoFilters()) {
             listener.feature(keyword, name, description, line);
         } else {
-            Event event = new Event(Event.Type.FEATURE, keyword, description, name, line);
+            Event event = new Event(Event.Type.FEATURE, keyword, name, description, line);
             featureBuffer = metaBuffer;
             featureBuffer.add(event);
             featureTags = extractTags();

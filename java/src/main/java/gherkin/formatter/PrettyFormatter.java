@@ -124,7 +124,7 @@ public class PrettyFormatter implements Formatter {
 
     public void pyString(String string) {
         out.println("      \"\"\"");
-        out.print(Pattern.compile("^", Pattern.MULTILINE).matcher(unix(string)).replaceAll("      "));
+        out.print(Pattern.compile("^", Pattern.MULTILINE).matcher(string).replaceAll("      "));
         out.println("\n      \"\"\"");
     }
 
@@ -198,13 +198,7 @@ public class PrettyFormatter implements Formatter {
 
     private void printDescription(String description, String indent) {
         if(!"".equals(description)) {
-            out.println(unix(description.replaceAll("^", indent)));
+            out.println(description.replaceAll("^", indent));
         }
-    }
-
-    private final Pattern WINDOWS_NEWLINE = Pattern.compile("\\\\r\\\\n", Pattern.MULTILINE);
-
-    private String unix(String s) {
-        return WINDOWS_NEWLINE.matcher(s).replaceAll(s);
     }
 }
