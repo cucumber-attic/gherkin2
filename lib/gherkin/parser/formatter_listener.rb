@@ -1,4 +1,5 @@
 require 'gherkin/native'
+require 'gherkin/parser/row'
 
 module Gherkin
   module Parser
@@ -15,8 +16,9 @@ module Gherkin
         @table = nil
       end
 
-      def uri(uri)
+      def location(uri, offset)
         @uri = uri
+        @offset = offset
       end
 
       def comment(content, line)
@@ -57,7 +59,7 @@ module Gherkin
 
       def row(cells, line)
         @table ||= []
-        @table << {"comments" => grab_comments!, "line" => line, "cells" => cells}
+        @table << Row.new(cells, grab_comments!, line)
       end
 
       def py_string(py_string, line)

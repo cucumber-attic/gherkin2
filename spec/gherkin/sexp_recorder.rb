@@ -13,6 +13,7 @@ module Gherkin
       event = :py_string if event == :pyString # Special Java Lexer handling
       event = :syntax_error if event == :syntaxError # Special Java Lexer handling
       args  = rubify(args)
+      args  = sexpify(args)
       @sexps << [event] + args
     end
 
@@ -31,6 +32,20 @@ module Gherkin
 
     def line(number)
       @sexps.find { |sexp| sexp.last == number }
+    end
+
+    def sexpify(o)
+      if (defined?(JRUBY_VERSION) && Java.java.util.Collection === o) || Array === o
+        o.map{|e| sexpify(e)}
+      elsif(Parser::Row === o)
+        {
+          "cells" => rubify(o.cells),
+          "comments" => rubify(o.comments),
+          "line" => o.line,
+        }
+      else
+        o
+      end
     end
   end
 end

@@ -36,8 +36,8 @@ public class Parser implements Listener {
         machines.remove(machines.size() - 1);
     }
 
-    public void uri(String uri) {
-        listener.uri(uri);
+    public void location(String uri, int offset) {
+        listener.location(uri, offset);
     }
 
     public void tag(String tag, int line) {
@@ -94,9 +94,9 @@ public class Parser implements Listener {
         }
     }
 
-    public void row(List<String> row, int line) {
+    public void row(List<String> cells, int line) {
         if (event("row", line)) {
-            listener.row(row, line);
+            listener.row(cells, line);
         }
     }
 

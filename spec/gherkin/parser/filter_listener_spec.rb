@@ -12,7 +12,7 @@ module Gherkin
       class LineListener
         attr_reader :lines
         
-        def uri(uri)
+        def location(uri, offset)
         end
         
         def method_missing(*sexp_args)
@@ -41,7 +41,7 @@ module Gherkin
         filter_listener = Gherkin::Parser::FilterListener.new(listener, filters)
         parser = Gherkin::Parser::Parser.new(filter_listener, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser, true)
-        lexer.scan(@input, "test.feature")
+        lexer.scan(@input, "test.feature", 0)
       end
 
       context "Scenario" do

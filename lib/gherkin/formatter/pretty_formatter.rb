@@ -91,7 +91,7 @@ module Gherkin
 
       def table(rows)
         cell_lengths = rows.map do |row| 
-          row["cells"].map do |cell| 
+          row.cells.map do |cell| 
             escape_cell(cell).unpack("U*").length
           end
         end
@@ -99,7 +99,7 @@ module Gherkin
 
         rows.each_with_index do |row, i|
           j = -1
-          @io.puts '      | ' + row["cells"].zip(max_lengths).map { |cell, max_length|
+          @io.puts '      | ' + row.cells.zip(max_lengths).map { |cell, max_length|
             j += 1
             color(cell, nil, j) + ' ' * (max_length - cell_lengths[i][j])
           }.join(' | ') + ' |'
@@ -117,8 +117,6 @@ module Gherkin
         @io.puts(failed(exception_text, @monochrome))
       end
 
-      private
-
       def color(cell, statuses, col)
         if statuses
           self.__send__(statuses[col], escape_cell(cell), @monochrome) + (@monochrome ? '' : reset)
@@ -129,10 +127,10 @@ module Gherkin
 
       if(RUBY_VERSION =~ /^1\.9/)
         START = /#{"^".encode('UTF-8')}/
-        NL    = Regexp.new("\n".encode('UTF-8'))
+        CRLF  = Regexp.new("\r\n".encode('UTF-8'))
       else
         START = /^/
-        NL    = /\n/n
+        CRLF  = /\r\n/n
       end
 
       def indent(string, indentation)

@@ -23,16 +23,16 @@ public class FilterListenerTest {
     private List<Object[]> argumentList = new ArrayList<Object[]>();
 
     private class LineListenerInvocationHandler implements InvocationHandler {
-            public Object invoke(Object target, Method method, Object[] arguments)  {
-                if(!method.getName().equals("uri")) {
-                    argumentList.add(arguments);
-                }
-                return null;
+        public Object invoke(Object target, Method method, Object[] arguments) {
+            if (!method.getName().equals("location")) {
+                argumentList.add(arguments);
             }
+            return null;
+        }
     }
 
     @Test
-    public void shouldReplayIdenticallyWhenLineFilterIsFeatureLine()  {
+    public void shouldReplayIdenticallyWhenLineFilterIsFeatureLine() {
         input = "Feature: 1\n" +
                 "  Scenario: 2\n" +
                 "    Given 3\n" +
@@ -40,12 +40,12 @@ public class FilterListenerTest {
                 "  Scenario: 5\n" +
                 "    Given 6" +
                 "";
-        verifyFilters(Arrays.asList(1,2,3,5,6, -1), Arrays.asList(1));
+        verifyFilters(Arrays.asList(1, 2, 3, 5, 6, -1), Arrays.asList(1));
     }
 
 
     @Test
-    public void scenarioOutlineShouldMatchExamplesNameOfSecondScenarioOutline()  {
+    public void scenarioOutlineShouldMatchExamplesNameOfSecondScenarioOutline() {
         input = "Feature: 1\n" +
                 "\n" +
                 "  @tag3\n" +
@@ -72,10 +72,10 @@ public class FilterListenerTest {
                 "    Given 24\n" +
                 "    When 25" +
                 "";
-        verifyFilters(Arrays.asList(1,3,4,5,6,17,18,19,20,21, -1), Arrays.asList(Pattern.compile("18")));
+        verifyFilters(Arrays.asList(1, 3, 4, 5, 6, 17, 18, 19, 20, 21, -1), Arrays.asList(Pattern.compile("18")));
     }
 
-    private void verifyFilters(List<Integer> expectedLines, List filters)  {
+    private void verifyFilters(List<Integer> expectedLines, List filters) {
         Listener lineListener = (Listener) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{Listener.class}, new LineListenerInvocationHandler());
         scan(lineListener, filters);
         assertEquals(expectedLines, filteredLines());
@@ -83,9 +83,9 @@ public class FilterListenerTest {
 
     private List<Integer> filteredLines() {
         List<Integer> lines = new ArrayList<Integer>();
-        for(Object[] arguments : argumentList) {
+        for (Object[] arguments : argumentList) {
             int line = -1;
-            if(arguments != null && arguments.length > 0) {
+            if (arguments != null && arguments.length > 0) {
                 line = (Integer) arguments[arguments.length - 1];
             }
             lines.add(line);
@@ -93,10 +93,10 @@ public class FilterListenerTest {
         return lines;
     }
 
-    private void scan(Listener listener, List filters)  {
+    private void scan(Listener listener, List filters) {
         Listener filterListener = new FilterListener(listener, filters);
         Parser parser = new Parser(filterListener);
         Lexer lexer = new I18nLexer(parser);
-        lexer.scan(input, "test.feature");
+        lexer.scan(input, "test.feature", 0);
     }
 }

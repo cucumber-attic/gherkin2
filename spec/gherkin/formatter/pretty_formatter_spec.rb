@@ -3,6 +3,7 @@ require 'spec_helper'
 require 'gherkin/formatter/pretty_formatter'
 require 'gherkin/formatter/argument'
 require 'gherkin/parser/formatter_listener'
+require 'gherkin/parser/row'
 require 'stringio'
 
 module Gherkin
@@ -21,7 +22,7 @@ module Gherkin
           l  = Gherkin::Parser::FormatterListener.new(pf)
           parser = Gherkin::Parser::Parser.new(l, true, "root")
           lexer  = Gherkin::I18nLexer.new(parser, force_ruby)
-          lexer.scan(input, "test.feature")
+          lexer.scan(input, "test.feature", 0)
           io.rewind
           actual = io.read
           actual.should == output
@@ -126,7 +127,7 @@ Feature: Feature Description
       it "should escape backslashes and pipes" do
         io = StringIO.new
         l = Gherkin::Formatter::PrettyFormatter.new(io, true)
-        l.__send__(:table, [{"cells" => ['|', '\\']}])
+        l.__send__(:table, [Parser::Row.new(['|', '\\'], nil, nil)])
         io.rewind
         io.read.should == '      | \\| | \\\\ |' + "\n"
       end

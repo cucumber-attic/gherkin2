@@ -5,14 +5,14 @@ module Gherkin
   module Lexer
     shared_examples_for "a Gherkin lexer" do
       def scan(gherkin)
-        @lexer.scan(gherkin, "test.feature")
+        @lexer.scan(gherkin, "test.feature", 0)
       end
 
       describe "Comments" do
         it "should parse a one line comment" do
           scan("# My comment\n")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:comment, "# My comment", 1],
             [:eof]
           ]
@@ -21,7 +21,7 @@ module Gherkin
         it "should parse a multiline comment" do
           scan("# Hello\n\n# World\n")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:comment, "# Hello", 1],
             [:comment, "# World", 3],
             [:eof]
@@ -31,7 +31,7 @@ module Gherkin
         it "should not consume comments as part of a multiline name" do
           scan("Scenario: test\n#hello\n Scenario: another")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:scenario, "Scenario", "test", "", 1],
             [:comment, "#hello", 2],
             [:scenario, "Scenario", "another", "", 3],
@@ -42,7 +42,7 @@ module Gherkin
         it "should allow empty comment lines" do 
           scan("#\n   # A comment\n   #\n")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:comment, "#", 1],
             [:comment, "# A comment", 2],
             [:comment, "#", 3],
@@ -61,7 +61,7 @@ module Gherkin
         it "should not take the tags as part of a multiline name feature element" do
           scan("Feature: hi\n Scenario: test\n\n@hello\n Scenario: another")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:feature, "Feature", "hi", "", 1],
             [:scenario, "Scenario", "test", "", 2],
             [:tag, "@hello", 4],
@@ -75,7 +75,7 @@ module Gherkin
         it "should allow an empty background name and description" do
           scan("Background:\nGiven I am a step\n")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:background, "Background", "", "", 1],
             [:step, "Given ", "I am a step", 2],
             [:eof]
@@ -85,7 +85,7 @@ module Gherkin
         it "should allow an empty background description" do
           scan("Background: Yeah\nGiven I am a step\n")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:background, "Background", "Yeah", "", 1],
             [:step, "Given ", "I am a step", 2],
             [:eof]
@@ -95,7 +95,7 @@ module Gherkin
         it "should allow multiline names ending at eof" do
           scan("Background: I have several\n   Lines to look at\n None starting with Given")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:background, "Background", "I have several", "Lines to look at\nNone starting with Given", 1],
             [:eof]
           ]
@@ -109,7 +109,7 @@ Background: It is my ambition to say
             in a whole book.
 Given I am a step})
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:feature, "Feature", "Hi", "", 1],
             [:background, "Background", "It is my ambition to say", "in ten sentences\nwhat others say\nin a whole book.",2],
             [:step, "Given ", "I am a step", 6],
@@ -122,7 +122,7 @@ Given I am a step})
         it "should be parsed" do
           scan("Scenario: Hello\n")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:scenario, "Scenario", "Hello", "", 1],
             [:eof]
           ]
@@ -134,7 +134,7 @@ Given I am a step})
                           Given baz
                           })
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:scenario, "Scenario", "bar", "", 1],
             [:step, "Given ", "baz", 3],
             [:eof]
@@ -149,7 +149,7 @@ Given I am a step})
                           Given I am a step
                           })
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:scenario, "Scenario", "It is my ambition to say", "in ten sentences\nwhat others say\nin a whole book.", 1],
             [:step, "Given ", "I am a step", 5],
             [:eof]
@@ -159,7 +159,7 @@ Given I am a step})
         it "should allow multiline names ending at eof" do
           scan("Scenario: I have several\n       Lines to look at\n None starting with Given")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:scenario, "Scenario", "I have several", "Lines to look at\nNone starting with Given", 1],
             [:eof]
           ]
@@ -172,7 +172,7 @@ Given I am a step})
   But I might not because I am a Charles Dickens character
 })
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:scenario, "Scenario", "I have a Button", "Buttons are great", 1],
             [:step, "Given ", "I have some", 3],
             [:step, "But ", "I might not because I am a Charles Dickens character", 4],
@@ -186,7 +186,7 @@ Given I am a step})
 Given I am a step
 })
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:scenario, "Scenario", "When I have when in scenario", "I should be fine", 1],
             [:step, "Given ", "I am a step", 3],
             [:eof]
@@ -205,7 +205,7 @@ Given I am a step
                           |green|
                           })
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:scenario_outline, "Scenario Outline", "Hello", "With a description", 1],
             [:step, "Given ", "a <what> cucumber", 3],
             [:examples, "Examples", "With a name", "and a description", 4],
@@ -222,7 +222,7 @@ Given I am a step
                           Scenario: My Scenario
                           })
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:scenario_outline, "Scenario Outline", "Hello", "", 1],
             [:scenario, "Scenario", "My Scenario", "", 3],
             [:eof]
@@ -238,7 +238,7 @@ Given I am a step
 
                           })
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:scenario_outline, "Scenario Outline", "It is my ambition to say", "in ten sentences\nwhat others say\nin a whole book.", 1],
             [:step, "Given ", "I am a step", 5],
             [:eof]
@@ -253,7 +253,7 @@ Given I am a step
                           |5|6|
                           })
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:examples, "Examples", "", "", 1],
             [:row, ["x","y"], 2],
             [:row, ["5","6"], 3],
@@ -269,7 +269,7 @@ Given I am a step
                           |5|
                           })
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:examples, "Examples", "I'm a multiline name", "and I'm ok\nf'real", 1],
             [:row, ["x"], 4],
             [:row, ["5"], 5],
@@ -284,7 +284,7 @@ Given I am a step
                           |a|b|
                           })
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:step, "Given ", "I have a table", 1],
             [:row, ['a','b'], 2],
             [:eof]
@@ -294,7 +294,7 @@ Given I am a step
         it "should parse steps with inline py_string" do
           scan("Given I have a string\n\"\"\"\nhello\nworld\n\"\"\"")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:step, "Given ", "I have a string", 1],
             [:py_string, "hello\nworld", 2],
             [:eof]
@@ -306,7 +306,7 @@ Given I am a step
         it "should find the feature, scenario, and step" do
           scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:feature, "Feature", "Feature Text", "", 1],
             [:scenario, "Scenario", "Reading a Scenario", "", 2],
             [:step, "Given ", "there is a step", 3],
@@ -319,7 +319,7 @@ Given I am a step
         it "should not raise an error when whitespace follows the Feature, Scenario, and Steps" do
           scan("Feature: Feature Text\n Scenario: Reading a Scenario\n    Given there is a step\n    ")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:feature, "Feature", "Feature Text", "", 1],
             [:scenario, "Scenario", "Reading a Scenario", "", 2],
             [:step, "Given ", "there is a step", 3],
@@ -333,7 +333,7 @@ Given I am a step
         it "should find the feature, scenario, and three steps" do
           scan("Feature: Feature Text\n  Scenario: Reading a Scenario\n    Given there is a step\n    And another step\n   And a third step\n")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:feature, "Feature", "Feature Text", "", 1],
             [:scenario, "Scenario", "Reading a Scenario", "", 2],
             [:step, "Given ", "there is a step", 3],
@@ -348,7 +348,7 @@ Given I am a step
         it "should find the feature" do
           scan("Feature: Feature Text\n")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:feature, "Feature", "Feature Text", "", 1],
             [:eof]
           ]
@@ -357,7 +357,7 @@ Given I am a step
         it "should parse a one line feature with no newline" do
           scan("Feature: hi")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:feature, "Feature", "hi", "", 1],
             [:eof]
           ]
@@ -368,7 +368,7 @@ Given I am a step
         it "should find the feature" do
           scan("Feature: Feature Text\n  And some more text")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:feature, "Feature", "Feature Text", "And some more text", 1],
             [:eof]
           ]
@@ -379,7 +379,7 @@ Given I am a step
         it "should find the feature and scenario" do
           scan("Feature: Feature Text\nScenario: Reading a Scenario\n")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:feature, "Feature", "Feature Text", "", 1],
             [:scenario, "Scenario", "Reading a Scenario", "", 2],
             [:eof]
@@ -391,7 +391,7 @@ Given I am a step
         it "should find the feature and two scenarios" do
           scan("Feature: Feature Text\nScenario: Reading a Scenario\n  Given a step\n\nScenario: A second scenario\n Given another step\n")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:feature, "Feature", "Feature Text", "", 1],
             [:scenario, "Scenario", "Reading a Scenario", "", 2],
             [:step, "Given ", "a step", 3],
@@ -404,7 +404,7 @@ Given I am a step
         it "should find the feature and two scenarios without indentation" do
           scan("Feature: Feature Text\nScenario: Reading a Scenario\nGiven a step\nScenario: A second scenario\nGiven another step\n")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:feature, "Feature", "Feature Text", "", 1],
             [:scenario, "Scenario", "Reading a Scenario", "", 2],
             [:step, "Given ", "a step", 3],
@@ -419,7 +419,7 @@ Given I am a step
         it "should find the feature, scenarios, steps, and comments in the proper order" do
           scan_file("simple_with_comments.feature")
           @listener.to_sexp.should == [
-            [:uri, 'simple_with_comments.feature'],
+            [:location, 'simple_with_comments.feature', 0],
             [:comment, "# Here is a comment", 1],
             [:feature, "Feature", "Feature Text", "", 2],
             [:comment, "# Here is another # comment", 3],
@@ -434,7 +434,7 @@ Given I am a step
         it "should support comments in tables" do
           scan_file("comments_in_table.feature")
           @listener.to_sexp.should == [
-            [:uri, 'comments_in_table.feature'],
+            [:location, 'comments_in_table.feature', 0],
             [:feature, "Feature", "x", "", 1], 
             [:scenario_outline, "Scenario Outline", "x", "", 3], 
             [:step, "Then ", "x is <state>", 4], 
@@ -451,7 +451,7 @@ Given I am a step
         it "should find the feature, scenario, step, and tags in the proper order" do
           scan_file("simple_with_tags.feature")
           @listener.to_sexp.should == [
-            [:uri, 'simple_with_tags.feature'],
+            [:location, 'simple_with_tags.feature', 0],
             [:comment, "# FC", 1],
             [:tag, "@ft",2],
             [:feature, "Feature", "hi", "", 3],
@@ -473,7 +473,7 @@ Given I am a step
         it "should lex this feature properly" do
           scan_file("1.feature")
           @listener.to_sexp.should == [
-            [:uri, '1.feature'],
+            [:location, '1.feature', 0],
             [:feature, "Feature", "Logging in", "So that I can be myself", 1],
             [:comment, "# Comment", 3],
             [:scenario, "Scenario", "Anonymous user can get a login form.", "Scenery here", 4],
@@ -488,7 +488,7 @@ Given I am a step
         it "should find things in the right order" do
           scan_file("complex.feature")
           @listener.to_sexp.should == [
-            [:uri, 'complex.feature'],
+            [:location, 'complex.feature', 0],
             [:comment, "#Comment on line 1", 1],
             [:comment, "#Comment on line 2", 2],
             [:tag, "@tag1", 3],
@@ -532,7 +532,7 @@ Given I am a step
         it "should find things in the right order for CRLF features" do
           scan_file("dos_line_endings.feature")
           @listener.to_sexp.should == [
-            [:uri, 'dos_line_endings.feature'],
+            [:location, 'dos_line_endings.feature', 0],
             [:comment, "#Comment on line 1", 1],
             [:comment, "#Comment on line 2", 2],
             [:tag, "@tag1", 3],
@@ -574,7 +574,7 @@ Given I am a step
         it "should cope with the retarded BOM that many Windows editors insert at the beginning of a file" do
           scan_file("with_bom.feature")
           @listener.to_sexp.should == [
-            [:uri, 'with_bom.feature'],
+            [:location, 'with_bom.feature', 0],
             [:feature, "Feature", "Feature Text", "", 1],
             [:scenario, "Scenario", "Reading a Scenario", "", 2],
             [:step, "Given ", "there is a step", 3],
@@ -601,7 +601,7 @@ Given I am a step
         it "Feature keyword should terminate narratives for multiline capable tokens" do
           scan("Feature:\nBackground:\nFeature:\nScenario Outline:\nFeature:\nScenario:\nFeature:\nExamples:\nFeature:\n")
           @listener.to_sexp.should == [
-            [:uri, 'test.feature'],
+            [:location, 'test.feature', 0],
             [:feature, "Feature", "", "", 1],
             [:background, "Background", "", "", 2],
             [:feature, "Feature", "", "", 3],

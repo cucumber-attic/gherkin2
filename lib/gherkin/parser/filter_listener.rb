@@ -32,8 +32,8 @@ module Gherkin
         @table_state = :step
       end
 
-      def uri(uri)
-        @listener.uri(uri)
+      def location(uri, offset)
+        @listener.location(uri, offset)
       end
 
       private

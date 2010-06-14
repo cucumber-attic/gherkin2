@@ -1,5 +1,7 @@
 package gherkin.formatter;
 
+import gherkin.parser.Row;
+
 import java.io.*;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -34,7 +36,8 @@ public class PrettyFormatter implements Formatter {
         this.uri = uri;
         printComments(comments, "");
         printTags(tags, "");
-        out.println(keyword + ": " + indent(name, "  "));
+        out.println(keyword + ": " + name);
+        printDescription(description, "  ");
         out.flush();
     }
 
@@ -42,13 +45,15 @@ public class PrettyFormatter implements Formatter {
         out.println();
         printComments(comments, "  ");
         out.println("  " + keyword + ": " + name);
+        printDescription(description, "    ");
     }
 
     public void scenario(List<String> comments, List<String> tags, String keyword, String name, String description, int line) {
         out.println();
         printComments(comments, "  ");
         printTags(tags, "  ");
-        out.println("  " + keyword + ": " + indent(name, "    ") + indentedScenarioLocation(keyword, name, line));
+        out.println("  " + keyword + ": " + name + indentedScenarioLocation(keyword, name, line));
+        printDescription(description, "    ");
         out.flush();
     }
 
@@ -56,15 +61,16 @@ public class PrettyFormatter implements Formatter {
         scenario(comments, tags, keyword, name, description, line);
     }
 
-    public void examples(List<String> comments, List<String> tags, String keyword, String name, String description, int line, List<List<String>> exampleRows) {
+    public void examples(List<String> comments, List<String> tags, String keyword, String name, String description, int line, List<Row> exampleRows) {
         out.println();
         printComments(comments, "    ");
         printTags(tags, "    ");
         out.println("    " + keyword + ": " + name);
+        printDescription(description, "    ");
         table(exampleRows);
     }
 
-    public void step(List<String> comments, String keyword, String name, int line, List<List<String>> stepTable, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
+    public void step(List<String> comments, String keyword, String name, int line, List<Row> stepTable, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
         step(comments, keyword, name, stepdefLocation);
         if (stepTable != null) {
             table(stepTable);
@@ -80,17 +86,17 @@ public class PrettyFormatter implements Formatter {
 
     private void step(List<String> comments, String keyword, String name, String stepdefLocation) {
         printComments(comments, "    ");
-        out.println("    " + keyword + indent(name, "    ") + indentedStepLocation(stepdefLocation));
+        out.println("    " + keyword + name + indentedStepLocation(stepdefLocation));
         out.flush();
     }
 
-    public void table(List<List<String>> rows) {
-        int columnCount = rows.get(0).size();
+    public void table(List<Row> rows) {
+        int columnCount = rows.get(0).getCells().size();
         int[][] cellLengths = new int[rows.size()][columnCount];
         int[] maxLengths = new int[columnCount];
         for (int i = 0; i < rows.size(); i++) {
             for (int j = 0; j < columnCount; j++) {
-                int length = escapeCell(rows.get(i).get(j)).length();
+                int length = escapeCell(rows.get(i).getCells().get(j)).length();
                 cellLengths[i][j] = length;
                 maxLengths[j] = Math.max(maxLengths[j], length);
             }
@@ -99,7 +105,7 @@ public class PrettyFormatter implements Formatter {
         for (int i = 0; i < rows.size(); i++) {
             out.write("      | ");
             for (int j = 0; j < columnCount; j++) {
-                out.write(escapeCell(rows.get(i).get(j)));
+                out.write(escapeCell(rows.get(i).getCells().get(j)));
                 padSpace(maxLengths[j] - cellLengths[i][j]);
                 if (j < columnCount - 1) {
                     out.write(" | ");
@@ -118,7 +124,7 @@ public class PrettyFormatter implements Formatter {
 
     public void pyString(String string) {
         out.println("      \"\"\"");
-        out.print(Pattern.compile("^", Pattern.MULTILINE).matcher(string).replaceAll("      "));
+        out.print(Pattern.compile("^", Pattern.MULTILINE).matcher(unix(string)).replaceAll("      "));
         out.println("\n      \"\"\"");
     }
 
@@ -168,20 +174,6 @@ public class PrettyFormatter implements Formatter {
         out.flush();
     }
 
-    private String indent(String name, String indentation) {
-        String indent = "";
-        StringBuilder sb = new StringBuilder();
-        String[] lines = name.split("\\n");
-        for (int i = 0; i < lines.length; i++) {
-            sb.append(indent).append(lines[i]);
-            if (i < lines.length - 1) {
-                sb.append("\n");
-            }
-            indent = indentation;
-        }
-        return sb.toString();
-    }
-
     private String indentedScenarioLocation(String keyword, String name, int line) {
         if (maxStepLength == -1) return "";
         int l = keyword.length() + name.length();
@@ -202,5 +194,17 @@ public class PrettyFormatter implements Formatter {
         padSpace(indent, buffer);
         buffer.append(" ").append(comments("# " + location, monochrome));
         return buffer.toString();
+    }
+
+    private void printDescription(String description, String indent) {
+        if(!"".equals(description)) {
+            out.println(unix(description.replaceAll("^", indent)));
+        }
+    }
+
+    private final Pattern WINDOWS_NEWLINE = Pattern.compile("\\\\r\\\\n", Pattern.MULTILINE);
+
+    private String unix(String s) {
+        return WINDOWS_NEWLINE.matcher(s).replaceAll(s);
     }
 }

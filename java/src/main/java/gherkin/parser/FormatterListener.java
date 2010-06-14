@@ -9,10 +9,11 @@ import java.util.List;
 public class FormatterListener implements Listener {
     private final Formatter formatter;
     private String uri;
+    private int offset;
     private List<String> comments = new ArrayList<String>();
     private List<String> tags = new ArrayList<String>();
     private Step step;
-    private List<List<String>> table;
+    private List<Row> table;
     private Examples examples;
     private String pyString;
 
@@ -20,8 +21,9 @@ public class FormatterListener implements Listener {
         this.formatter = formatter;
     }
 
-    public void uri(String uri) {
+    public void location(String uri, int offset) {
         this.uri = uri;
+        this.offset = offset;
     }
 
     public void comment(String comment, int line) {
@@ -37,34 +39,34 @@ public class FormatterListener implements Listener {
     }
 
     public void background(String keyword, String name, String description, int line) {
-        formatter.background(grabComments(), keyword, name, description, line);
+        formatter.background(grabComments(), keyword, name, description, line+offset);
     }
 
     public void scenario(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        formatter.scenario(grabComments(), grabTags(), keyword, name, description, line);
+        formatter.scenario(grabComments(), grabTags(), keyword, name, description, line+offset);
     }
 
     public void scenarioOutline(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        formatter.scenarioOutline(grabComments(), grabTags(), keyword, name, description, line);
+        formatter.scenarioOutline(grabComments(), grabTags(), keyword, name, description, line+offset);
     }
 
     public void examples(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        examples = new Examples(grabComments(), grabTags(), keyword, name, description, line);
+        examples = new Examples(grabComments(), grabTags(), keyword, name, description, line+offset);
     }
 
     public void step(String keyword, String name, int line) {
         replayStepsOrExamples();
-        step = new Step(grabComments(), keyword, name, line);
+        step = new Step(grabComments(), keyword, name, line+offset);
     }
 
-    public void row(List<String> row, int line) {
+    public void row(List<String> cells, int line) {
         if(table == null) {
-            table = new ArrayList<List<String>>();
+            table = new ArrayList<Row>();
         }
-        table.add(row);
+        table.add(new Row(cells, grabComments(), line));
     }
 
     public void pyString(String string, int line) {
@@ -92,8 +94,8 @@ public class FormatterListener implements Listener {
         return tags;
     }
 
-    private List<List<String>> grabTable() {
-        List<List<String>> table = this.table;
+    private List<Row> grabTable() {
+        List<Row> table = this.table;
         this.table = null;
         return table;
     }
@@ -107,7 +109,7 @@ public class FormatterListener implements Listener {
     private void replayStepsOrExamples() {
         if(step != null) {
             String pyString;
-            List<List<String>> table;
+            List<Row> table;
             if((pyString = grabPyString()) != null) {
                 step.replay(formatter, pyString);
             } else if((table = grabTable()) != null) {
@@ -139,7 +141,7 @@ public class FormatterListener implements Listener {
             formatter.step(comments, keyword, name, line, pyString, null, null, null, null);
         }
 
-        public void replay(Formatter formatter, List<List<String>> table) {
+        public void replay(Formatter formatter, List<Row> table) {
             formatter.step(comments, keyword, name, line, table, null, null, null, null);
         }
     }
@@ -162,7 +164,7 @@ public class FormatterListener implements Listener {
             this.line = line;
         }
 
-        public void replay(Formatter formatter, List<List<String>> examplesTable) {
+        public void replay(Formatter formatter, List<Row> examplesTable) {
             formatter.examples(comments, tags, keyword, name, description, line, examplesTable);
         }
     }

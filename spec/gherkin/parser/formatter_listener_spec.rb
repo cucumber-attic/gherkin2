@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'gherkin/parser/formatter_listener'
 require 'gherkin/parser/parser'
+require 'gherkin/parser/row'
 require 'gherkin/i18n_lexer'
 require 'stringio'
 
@@ -69,7 +70,7 @@ module Gherkin
       end
 
       it "should format an entire feature" do
-        @lexer.scan(File.new(File.dirname(__FILE__) + "/../fixtures/complex.feature").read, "complex.feature")
+        @lexer.scan(File.new(File.dirname(__FILE__) + "/../fixtures/complex.feature").read, "complex.feature", 0)
         @formatter.to_sexp.should == [
           [:feature, ["#Comment on line 1", "#Comment on line 2"], ["@tag1", "@tag2"],
             "Feature",

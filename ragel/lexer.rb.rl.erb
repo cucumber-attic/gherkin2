@@ -127,8 +127,8 @@ module Gherkin
         %% write data;
       end
  
-      def scan(data, uri)
-        @listener.uri(uri)
+      def scan(data, uri, offset)
+        @listener.location(uri, offset)
         data = (data + "\n%_FEATURE_END_%").unpack("c*") # Explicit EOF simplifies things considerably
         eof = pe = data.length
  
@@ -154,7 +154,7 @@ module Gherkin
       def unindent(startcol, text)
         text.gsub(/^[\t ]{0,#{startcol}}/, "")
       end
- 
+
       def store_keyword_content(event, data, p, eof)
         end_point = (!@next_keyword_start or (p == eof)) ? p : @next_keyword_start
         content = yield utf8_pack(data[@content_start...end_point])

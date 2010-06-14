@@ -20,7 +20,7 @@ namespace Gherkin
 				Parser parser = new Parser(new PrettyFormatter(output, true));
 				Lexer lexer = new I18nLexer(parser);
 				string source = File.OpenText(args[0]).ReadToEnd();
-				lexer.scan(source);
+				lexer.scan(source, args[0], 0);
 			} catch(Exception e) {
 				Console.Error.WriteLine(e.Message);
 				System.Environment.Exit(1);

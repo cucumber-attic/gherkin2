@@ -6,6 +6,7 @@ import gherkin.formatter.NullFormatter;
 import gherkin.formatter.PrettyFormatter;
 import gherkin.parser.FormatterListener;
 import gherkin.parser.Parser;
+import gherkin.parser.Row;
 import gherkin.util.FixJava;
 
 import java.io.*;
@@ -25,7 +26,7 @@ public class Main {
         this.out = out;
         final Formatter formatter = prettyOrNull ? new PrettyFormatter(out, true) : new NullFormatter() {
             @Override
-            public void step(List<String> comments, String keyword, String name, int line, List<List<String>> stepTable, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
+            public void step(List<String> comments, String keyword, String name, int line, List<Row> stepTable, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
                 step();
             }
 
@@ -64,7 +65,7 @@ public class Main {
     private void parse(File file) {
         try {
             String input = FixJava.readReader(new FileReader(file));
-            lexer.scan(input, file.getPath());
+            lexer.scan(input, file.getPath(), 0);
         } catch (Exception e) {
             System.err.println(e.getMessage());
             System.exit(1);

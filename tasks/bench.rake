@@ -111,7 +111,7 @@ class Benchmarker
     parser = Gherkin::Parser::Parser.new(NullListener.new, true, "root")
     lexer = Gherkin::I18nLexer.new(parser, true)
     @features.each do |feature|
-      lexer.scan(File.read(feature))
+      lexer.scan(File.read(feature), feature, 0)
     end
   end
 
@@ -122,7 +122,7 @@ class Benchmarker
     parser = Gherkin::Parser::Parser.new(NullListener.new, true, "root")
     lexer = Gherkin::I18nLexer.new(parser, false)
     @features.each do |feature|
-      lexer.scan(File.read(feature))
+      lexer.scan(File.read(feature), feature, 0)
     end
   end
 
@@ -132,7 +132,7 @@ class Benchmarker
     require 'null_listener'
     lexer = Gherkin::I18nLexer.new(NullListener.new, false)
     @features.each do |feature|
-      lexer.scan(File.read(feature))
+      lexer.scan(File.read(feature), feature, 0)
     end
   end
 end

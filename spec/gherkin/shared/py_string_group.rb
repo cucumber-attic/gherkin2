@@ -5,7 +5,7 @@ module Gherkin
   module Lexer
     shared_examples_for "a Gherkin lexer lexing py_strings" do
       def scan(gherkin)
-        @lexer.scan(gherkin, "test.feature")
+        @lexer.scan(gherkin, "test.feature", 0)
       end
 
       def ps(content)
@@ -52,7 +52,7 @@ EOS
       it "should parse content separated by two newlines" do
         scan ps("A\n\nB")
         @listener.to_sexp.should == [
-          [:uri, 'test.feature'],
+          [:location, 'test.feature', 0],
           [:py_string, "A\n\nB", 1],
           [:eof]
         ]

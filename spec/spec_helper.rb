@@ -34,7 +34,7 @@ end
 module GherkinSpecHelper
   # TODO: Rename to gherkin_scan_file
   def scan_file(file)
-    @lexer.scan(File.new(File.dirname(__FILE__) + "/gherkin/fixtures/" + file).read, file)
+    @lexer.scan(File.new(File.dirname(__FILE__) + "/gherkin/fixtures/" + file).read, file, 0)
   end
 
   # TODO: Remove

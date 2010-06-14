@@ -17,8 +17,8 @@ module Gherkin
       @force_ruby = force_ruby
     end
 
-    def scan(source, uri)
-      create_delegate(source).scan(source, uri)
+    def scan(source, uri, offset)
+      create_delegate(source).scan(source, uri, offset)
     end
 
   private

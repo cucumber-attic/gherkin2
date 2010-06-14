@@ -23,8 +23,8 @@ public class I18nLexer implements Lexer {
         return i18n;
     }
 
-    public void scan(String source, String uri) {
-        createDelegate(source).scan(source, uri);
+    public void scan(String source, String uri, int offset) {
+        createDelegate(source).scan(source, uri, offset);
     }
 
     private Lexer createDelegate(String source) {

@@ -20,8 +20,8 @@ module Gherkin
         push_machine(@machine_name)
       end
 
-      def uri(uri)
-        @listener.uri(uri)
+      def location(uri, offset)
+        @listener.location(uri, offset)
       end
 
       # Doesn't yet fall back to super
@@ -122,7 +122,7 @@ module Gherkin
           state_machine_reader = StateMachineReader.new
           lexer = Gherkin::I18n.new('en').lexer(state_machine_reader)
           machine = File.dirname(__FILE__) + "/#{name}.txt"
-          lexer.scan(File.read(machine), machine)
+          lexer.scan(File.read(machine), machine, 0)
           state_machine_reader.rows
         end
 
@@ -133,7 +133,7 @@ module Gherkin
             @rows = []
           end
 
-          def uri(uri)
+          def location(uri, offset)
           end
 
           def row(row, line_number)

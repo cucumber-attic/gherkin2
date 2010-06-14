@@ -3,7 +3,7 @@ package gherkin;
 import java.util.List;
 
 public interface Listener {
-    void uri(String uri);
+    void location(String uri, int offset);
 
     void comment(String comment, int line);
 
@@ -21,7 +21,7 @@ public interface Listener {
 
     void step(String keyword, String name, int line);
 
-    void row(List<String> row, int line);
+    void row(List<String> cells, int line);
 
     void pyString(String string, int line);
 

@@ -34,36 +34,36 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
     }
 
     action store_feature_content {
-      String con = multilineStrip(keywordContent(data, p, eof, nextKeywordStart, contentStart).trim());
-      listener.feature(keyword, nameFromContents(con), descriptionFromContents(con), currentLine);
+      String[] nameDescription = nameAndDescriptionWithPlatformNewlinesIntact(keywordContent(data, p, eof, nextKeywordStart, contentStart));
+      listener.feature(keyword, nameDescription[0], nameDescription[1], currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
 
     action store_background_content {
-      String con = multilineStrip(keywordContent(data, p, eof, nextKeywordStart, contentStart));
-      listener.background(keyword, nameFromContents(con), descriptionFromContents(con), currentLine);
+      String[] nameDescription = nameAndDescriptionWithPlatformNewlinesIntact(keywordContent(data, p, eof, nextKeywordStart, contentStart));
+      listener.background(keyword, nameDescription[0], nameDescription[1], currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
 
     action store_scenario_content {
-      String con = multilineStrip(keywordContent(data, p, eof, nextKeywordStart, contentStart));
-      listener.scenario(keyword, nameFromContents(con), descriptionFromContents(con), currentLine);
+      String[] nameDescription = nameAndDescriptionWithPlatformNewlinesIntact(keywordContent(data, p, eof, nextKeywordStart, contentStart));
+      listener.scenario(keyword, nameDescription[0], nameDescription[1], currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
 
     action store_scenario_outline_content {
-      String con = multilineStrip(keywordContent(data, p, eof, nextKeywordStart, contentStart));
-      listener.scenarioOutline(keyword, nameFromContents(con), descriptionFromContents(con), currentLine);
+      String[] nameDescription = nameAndDescriptionWithPlatformNewlinesIntact(keywordContent(data, p, eof, nextKeywordStart, contentStart));
+      listener.scenarioOutline(keyword, nameDescription[0], nameDescription[1], currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
 
     action store_examples_content {
-      String con = multilineStrip(keywordContent(data, p, eof, nextKeywordStart, contentStart));
-      listener.examples(keyword, nameFromContents(con), descriptionFromContents(con), currentLine);
+      String[] nameDescription = nameAndDescriptionWithPlatformNewlinesIntact(keywordContent(data, p, eof, nextKeywordStart, contentStart));
+      listener.examples(keyword, nameDescription[0], nameDescription[1], currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
@@ -142,9 +142,9 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
 
   %% write data noerror;
 
-  public void scan(String inputSequence, String uri)  {
-    listener.uri(uri);
-    String input = inputSequence.toString() + "\n%_FEATURE_END_%";
+  public void scan(String inputSequence, String uri, int offset)  {
+    listener.location(uri, offset);
+    String input = inputSequence + "\n%_FEATURE_END_%";
     byte[] data = null;
     try {
       data = input.getBytes("UTF-8");
@@ -178,35 +178,25 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
   private static final Pattern LF_RE = Pattern.compile("[^\r]\n");
   private static final String CRLF = "\r\n";
   private static final String LF = "\n";
-  
-  
-  private String nameFromContents(String contents) {
-    if (contents.isEmpty()) return "";
-    String[] lines = contents.split("\r?\n");
-    return lines[0];
-  }
-  
-  private String descriptionFromContents(String contents) {
-    String[] lines = contents.split("\r?\n");
-    if (lines.length < 2) return "";
-    
-    StringBuilder out = new StringBuilder();
-    out.append(lines[1]);
-    for (int i = 2; i < lines.length; ++i)
-      out.append("\n").append(lines[i]);
-    return out.toString();
-  }
 
-  private String multilineStrip(String text) {
+  private String[] nameAndDescriptionWithPlatformNewlinesIntact(String text) {
     int crlfCount = matchCount(CRLF_RE.matcher(text));
     int lfCount = matchCount(LF_RE.matcher(text));
     String eol = crlfCount > lfCount ? CRLF : LF;
 
-    StringBuffer result = new StringBuffer();
+    String name = null;
+    StringBuffer description = new StringBuffer();
     for(String s : text.split("\r?\n")) {
-      result.append(s.trim()).append(eol);
+      if(name == null) {
+        name = s.trim();
+      } else {
+        description.append(s.trim()).append(eol);
+      }
     }
-    return result.toString().trim();
+    if(name == null) {
+      name = "";
+    }
+    return new String[]{name, description.toString().trim()};
   }
 
   private int matchCount(Matcher m) {

@@ -24,7 +24,7 @@ module Gherkin
         parser = Gherkin::Parser::Parser.new(listener, true, "root")
         lexer = Gherkin::I18nLexer.new(parser, false)
         begin
-          lexer.scan(IO.read(file))
+          lexer.scan(IO.read(file), file, 0)
         rescue => e
           e.message << " (#{file})"
           raise e

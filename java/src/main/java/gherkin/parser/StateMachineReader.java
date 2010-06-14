@@ -19,11 +19,11 @@ public class StateMachineReader implements Listener {
     public List<List<String>> transitionTable() {
         transitionTable = new ArrayList<List<String>>();
         Lexer lexer = new EN(this);
-        lexer.scan(FixJava.readResource(machinePath), machinePath);
+        lexer.scan(FixJava.readResource(machinePath), machinePath, 0);
         return transitionTable;
     }
 
-    public void uri(String uri) {
+    public void location(String uri, int offset) {
     }
 
     public void tag(String tag, int line) {
@@ -59,7 +59,7 @@ public class StateMachineReader implements Listener {
     public void syntaxError(String name, String event, List<String> strings, int line) {
     }
 
-    public void row(List<String> row, int line) {
-        transitionTable.add(row);
+    public void row(List<String> cells, int line) {
+        transitionTable.add(cells);
     }
 }

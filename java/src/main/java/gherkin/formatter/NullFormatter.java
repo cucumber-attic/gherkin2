@@ -1,5 +1,7 @@
 package gherkin.formatter;
 
+import gherkin.parser.Row;
+
 import java.util.List;
 
 public class NullFormatter implements Formatter {
@@ -20,11 +22,11 @@ public class NullFormatter implements Formatter {
 
     }
 
-    public void examples(List<String> comments, List<String> tags, String keyword, String name, String description, int line, List<List<String>> exampleRows) {
+    public void examples(List<String> comments, List<String> tags, String keyword, String name, String description, int line, List<Row> exampleRows) {
 
     }
 
-    public void step(List<String> comments, String keyword, String name, int line, List<List<String>> stepTable, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
+    public void step(List<String> comments, String keyword, String name, int line, List<Row> stepTable, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
 
     }
 
@@ -36,7 +38,7 @@ public class NullFormatter implements Formatter {
 
     }
 
-    public void table(List<List<String>> rows) {
+    public void table(List<Row> rows) {
 
     }
 }

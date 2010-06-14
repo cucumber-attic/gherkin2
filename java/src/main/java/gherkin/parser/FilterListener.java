@@ -32,8 +32,8 @@ public class FilterListener implements Listener {
         detectFilters(filters);
     }
 
-    public void uri(String uri) {
-        listener.uri(uri);
+    public void location(String uri, int offset) {
+        listener.location(uri, offset);
     }
 
     public void tag(String tag, int line) {
@@ -162,11 +162,11 @@ public class FilterListener implements Listener {
         replayBuffersIfAllOk();
     }
 
-    public void row(List<String> row, int line) {
+    public void row(List<String> cells, int line) {
         if (hasNoFilters()) {
-            listener.row(row, line);
+            listener.row(cells, line);
         } else {
-            Event event = new Event(Event.Type.ROW, row, line);
+            Event event = new Event(Event.Type.ROW, cells, line);
             if (tableState.equals(TableState.EXAMPLES)) {
                 if (!headerRowAllreadyBuffered()) {
                     examplesBuffer.add(event);

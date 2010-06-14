@@ -1,5 +1,7 @@
 package gherkin.formatter;
 
+import gherkin.parser.Row;
+
 import java.util.List;
 
 /**
@@ -11,7 +13,7 @@ public interface Formatter {
     void background(List<String> comments, String keyword, String name, String description, int line);
     void scenario(List<String> comments, List<String> tags, String keyword, String name, String description, int line);
     void scenarioOutline(List<String> comments, List<String> tags, String keyword, String name, String description, int line);
-    void examples(List<String> comments, List<String> tags, String keyword, String name, String description, int line, List<List<String>> exampleRows);
+    void examples(List<String> comments, List<String> tags, String keyword, String name, String description, int line, List<Row> exampleRows);
 
     /**
      * Invoked after a step has been executed.
@@ -26,9 +28,9 @@ public interface Formatter {
      * @param arguments The arguments the step was invoked with.
      * @param stepdefLocation the location of the step definition.
      */
-    void step(List<String> comments, String keyword, String name, int line, List<List<String>> stepTable, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation);
+    void step(List<String> comments, String keyword, String name, int line, List<Row> stepTable, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation);
     void step(List<String> comments, String keyword, String name, int line, String stepString,            String status, Throwable thrown, List<Argument> arguments, String stepdefLocation);
     void eof();
 
-    void table(List<List<String>> rows);
+    void table(List<Row> rows);
 }

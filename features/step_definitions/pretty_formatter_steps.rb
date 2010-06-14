@@ -9,7 +9,7 @@ module PrettyPlease
     listener  = Gherkin::Parser::FormatterListener.new(formatter)
     parser    = Gherkin::Parser::Parser.new(listener, true)
     lexer     = Gherkin::I18nLexer.new(parser)
-    lexer.scan(source, "test.feature")
+    lexer.scan(source, "test.feature", 0)
     io.rewind
     io.read
   end
