@@ -1,10 +1,10 @@
 # I'm sure there's a better way than this...
-%w{/../../lib /../../spec/gherkin}.each do |path|
+%w{ /../../spec /../../lib}.each do |path|
   $LOAD_PATH << File.expand_path(File.dirname(__FILE__) + path)
 end
-
 require 'gherkin'
-require "sexp_recorder"
+require "gherkin/sexp_recorder"
+require 'gherkin/output_stream_string_io'
 
 module TransformHelpers
   def tr_line_number(step_arg)

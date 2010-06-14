@@ -5,7 +5,7 @@ require 'gherkin/formatter/pretty_formatter'
 module PrettyPlease
   def pretty(source)
     io        = StringIO.new
-    formatter = Gherkin::Formatter::PrettyFormatter.new(io)
+    formatter = Gherkin::Formatter::PrettyFormatter.new(io, false)
     listener  = Gherkin::Parser::FormatterListener.new(formatter)
     parser    = Gherkin::Parser::Parser.new(listener, true)
     lexer     = Gherkin::I18nLexer.new(parser)

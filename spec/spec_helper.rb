@@ -1,35 +1,13 @@
 require 'gherkin'
 require 'stringio'
 require 'gherkin/sexp_recorder'
+require 'gherkin/output_stream_string_io'
 require 'rubygems'
 require 'rspec/autorun'
 require 'gherkin/shared/lexer_group'
 require 'gherkin/shared/tags_group'
 require 'gherkin/shared/py_string_group'
 require 'gherkin/shared/row_group'
-
-if defined?(JRUBY_VERSION)
-  class OutputStreamStringIO < Java.java.io.ByteArrayOutputStream
-    def rewind
-    end
-
-    def read
-      toString("UTF-8")
-    end
-  end
-end
-
-class StringIO
-  class << self
-    def new
-      if defined?(JRUBY_VERSION)
-        OutputStreamStringIO.new
-      else
-        super
-      end
-    end
-  end
-end
 
 module GherkinSpecHelper
   # TODO: Rename to gherkin_scan_file

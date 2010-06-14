@@ -27,10 +27,11 @@ module Gherkin
 
       def examples(comments, tags, keyword, name, description, line, table)
         @table_container = add_element(comments, tags, keyword, name, description, line)
-        @table_container['examples_table'] = table
+        @table_container['examples_table'] = to_hash_array(table)
       end
 
       def step(comments, keyword, name, line, multiline_arg, status, exception, arguments, stepdef_location)
+        multiline_arg = to_hash_array(multiline_arg) if Array === multiline_arg
         @table_container = {'comments' => comments, 'keyword' => keyword, 'name' => name, 'line' => line, 'multiline_arg' => multiline_arg}
         last_element['steps'] ||= []
         last_element['steps'] << @table_container
@@ -63,6 +64,12 @@ module Gherkin
 
       def last_element
         @json_hash['elements'][-1]
+      end
+
+      def to_hash_array(rows)
+        rows.map do |row|
+          {"cells" => row.cells, "comments" => row.comments, "line" => row.line}
+        end
       end
     end
   end

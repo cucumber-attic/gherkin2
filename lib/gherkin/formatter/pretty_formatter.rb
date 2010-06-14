@@ -13,7 +13,7 @@ module Gherkin
       include Colors
       include Escaping
 
-      def initialize(io, monochrome=false)
+      def initialize(io, monochrome)
         @io = io
         @monochrome = monochrome
         @format = MonochromeFormat.new #@monochrome ? MonochromeFormat.new : AnsiColorFormat.new
