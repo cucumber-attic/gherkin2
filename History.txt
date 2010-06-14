@@ -1,4 +1,8 @@
-== 2.0.0
+== 2.0.1 (2010-06-15)
+
+The previous release had a missing gherkin.jar in the jruby gem. This release fixes that.
+
+== 2.0.0 (2010-06-15)
 
 We're breaking the old listener API in this release, and added a new JSON formatter,
 which calls for a new major version.
