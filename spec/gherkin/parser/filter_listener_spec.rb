@@ -33,8 +33,7 @@ module Gherkin
         formatter = Gherkin::Formatter::PrettyFormatter.new(io, true)
         listener = Gherkin::Parser::FormatterListener.new(formatter)
         scan(listener, filters)
-        io.rewind
-        io.read.should == expected_output
+        io.string.should == expected_output
       end
 
       def scan(listener, filters)

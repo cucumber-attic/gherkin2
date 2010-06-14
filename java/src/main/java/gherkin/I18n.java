@@ -95,14 +95,14 @@ public class I18n {
         Formatter pf = new PrettyFormatter(writer, true);
         List<Row> table = new ArrayList<Row>();
         for (String key : KEYWORD_KEYS) {
-            table.add(new Row(Arrays.asList(key, join(map(keywords(key), QUOTE_MAPPER), ", ")), null, -1));
+            table.add(new Row(Arrays.asList(key, join(map(keywords(key), QUOTE_MAPPER), ", ")), Collections.<String>emptyList(), -1));
         }
         for (String key : STEP_KEYWORD_KEYS) {
             List<String> codeKeywordList = new ArrayList<String>(keywords.get(key));
             codeKeywordList.remove("* ");
             String codeKeywords = join(map(map(codeKeywordList, CODE_KEYWORD_MAPPER), QUOTE_MAPPER), ", ");
 
-            table.add(new Row(Arrays.asList(key + " (code)", codeKeywords), null, -1));
+            table.add(new Row(Arrays.asList(key + " (code)", codeKeywords), Collections.<String>emptyList(), -1));
         }
         pf.table(table);
         return writer.getBuffer().toString();

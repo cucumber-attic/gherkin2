@@ -19,7 +19,13 @@ Then /^the outputted JSON should be:$/ do |expected_json|
   require 'json'
   expected = JSON.pretty_generate(JSON.parse(expected_json))
   actual   = JSON.pretty_generate(JSON.parse(@io.string))
-  actual.should == expected
+  begin
+    actual.should == expected
+  rescue # Haven't figured out how to order Hash on JRuby (JSON pure). Retry with possibly worse error message.
+    expected = JSON.parse(expected_json)
+    actual   = JSON.parse(@io.string)
+    actual.should == expected
+  end
 end
 
 

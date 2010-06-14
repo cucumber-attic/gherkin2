@@ -59,14 +59,13 @@ module Gherkin
         io = defined?(JRUBY_VERSION) ? Java.java.io.StringWriter.new : StringIO.new
         pf = Gherkin::Formatter::PrettyFormatter.new(io, true)
         table = all.map do |i18n| 
-          Parser::Row.new([i18n.iso_code, i18n.keywords('name')[0], i18n.keywords('native')[0]], nil, nil)
+          Parser::Row.new([i18n.iso_code, i18n.keywords('name')[0], i18n.keywords('native')[0]], [], nil)
         end
         pf.table(table)
         if defined?(JRUBY_VERSION)
           io.getBuffer.toString
         else
-          io.rewind
-          io.read
+          io.string
         end
       end
 
@@ -153,14 +152,14 @@ module Gherkin
       pf = Gherkin::Formatter::PrettyFormatter.new(io, true)
 
       gherkin_keyword_table = KEYWORD_KEYS.map do |key|
-        Parser::Row.new([key, keywords(key).map{|keyword| %{"#{keyword}"}}.join(', ')], nil, nil)
+        Parser::Row.new([key, keywords(key).map{|keyword| %{"#{keyword}"}}.join(', ')], [], nil)
       end
       
       code_keyword_table = STEP_KEYWORD_KEYS.map do |key|
         code_keywords = keywords(key).reject{|keyword| keyword == '* '}.map do |keyword|
           %{"#{self.class.code_keyword_for(keyword)}"}
         end.join(', ')
-        Parser::Row.new(["#{key} (code)", code_keywords], nil, nil)
+        Parser::Row.new(["#{key} (code)", code_keywords], [], nil)
       end
       
       pf.table(gherkin_keyword_table + code_keyword_table)

@@ -20,6 +20,12 @@ public class Row {
     }
 
     public Row(List<String> cells, List<String> comments, int line) {
+        if(cells == null) {
+            throw new NullPointerException("cells");
+        }
+        if(comments == null) {
+            throw new NullPointerException("comments");
+        }
         this.cells = cells;
         this.comments = comments;
         this.line = line;

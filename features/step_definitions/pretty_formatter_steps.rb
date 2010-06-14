@@ -10,8 +10,7 @@ module PrettyPlease
     parser    = Gherkin::Parser::Parser.new(listener, true)
     lexer     = Gherkin::I18nLexer.new(parser)
     lexer.scan(source, "test.feature", 0)
-    io.rewind
-    io.read
+    io.string
   end
 end
 
@@ -36,16 +35,18 @@ When /^I parse the prettified representation of each of them$/ do
       pretty2 = pretty(pretty1)
       pretty2.should == pretty1
     rescue RSpec::Expectations::ExpectationNotMetError => e
-      File.open("p1.feature", "wb") {|io| io.write(pretty1)}
-      File.open("p2.feature", "wb") {|io| io.write(pretty2)}
       announce "=========="
       announce feature_path
       if(e.message =~ /(@@.*)/m)
         announce $1
+        @error = true
+        File.open("p1.feature", "wb") {|io| io.write(pretty1)}
+        File.open("p2.feature", "wb") {|io| io.write(pretty2)}
       else
         announce "Identical, except for newlines"
       end
-      @error = true
+    rescue => e
+      e.message << "\nFatal error happened when parsing #{feature_path}"
     end
   end
 end

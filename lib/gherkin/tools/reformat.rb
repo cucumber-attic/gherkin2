@@ -10,8 +10,7 @@ module Gherkin
           purdy = StringIO.new
           listener = Formatter::PrettyFormatter.new(purdy)
           scan(file, listener)
-          purdy.rewind
-          File.open(file, 'w') {|io| io.write(purdy.read)}
+          File.open(file, 'w') {|io| io.write(purdy.string)}
         end
       end
     end

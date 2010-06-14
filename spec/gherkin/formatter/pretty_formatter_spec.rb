@@ -10,8 +10,7 @@ module Gherkin
   module Formatter
     describe PrettyFormatter do
       def assert_io(s)
-        @io.rewind
-        actual = @io.read
+        actual = @io.string
         actual.should == s
       end
       
@@ -23,8 +22,7 @@ module Gherkin
           parser = Gherkin::Parser::Parser.new(l, true, "root")
           lexer  = Gherkin::I18nLexer.new(parser, force_ruby)
           lexer.scan(input, "test.feature", 0)
-          io.rewind
-          actual = io.read
+          actual = io.string
           actual.should == output
         end
       end
@@ -127,9 +125,8 @@ Feature: Feature Description
       it "should escape backslashes and pipes" do
         io = StringIO.new
         l = Gherkin::Formatter::PrettyFormatter.new(io, true)
-        l.__send__(:table, [Gherkin::Parser::Row.new(['|', '\\'], nil, nil)])
-        io.rewind
-        io.read.should == '      | \\| | \\\\ |' + "\n"
+        l.__send__(:table, [Gherkin::Parser::Row.new(['|', '\\'], [], nil)])
+        io.string.should == '      | \\| | \\\\ |' + "\n"
       end
     end
   end

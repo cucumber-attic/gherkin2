@@ -1,9 +1,14 @@
 if defined?(JRUBY_VERSION)
   class OutputStreamStringIO < Java.java.io.ByteArrayOutputStream
-    def rewind
+    def write(what)
+      if String === what
+        super(Java.java.lang.String.new(what).getBytes("UTF-8"))
+      else
+        super(what)
+      end
     end
 
-    def read
+    def string
       toString("UTF-8")
     end
   end

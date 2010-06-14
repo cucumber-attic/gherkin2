@@ -121,6 +121,7 @@ public class FormatterListener implements Listener {
         }
         if(examples != null) {
             examples.replay(formatter, grabTable());
+            examples = null;
         }
     }
 
@@ -165,6 +166,7 @@ public class FormatterListener implements Listener {
         }
 
         public void replay(Formatter formatter, List<Row> examplesTable) {
+            if(examplesTable == null) throw new NullPointerException("examplesTable");
             formatter.examples(comments, tags, keyword, name, description, line, examplesTable);
         }
     }

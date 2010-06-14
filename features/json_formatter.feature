@@ -10,17 +10,18 @@ Feature: JSON formatter
     Given the following text is parsed:
       """
       # language: no
+      # Another comment
       Egenskap: Kjapp
       """
     Then the outputted JSON should be:
       """
       {
-        "uri": "test.feature",
-        "comments": ["# language: no"],
-        "tags": [],
+        "comments": ["# language: no", "# Another comment"],
+        "description": "",
         "keyword": "Egenskap",
         "name": "Kjapp",
-        "description": ""
+        "tags": [],
+        "uri": "test.feature"
       }
       """
 
@@ -71,11 +72,11 @@ Feature: JSON formatter
     Then the outputted JSON should be:
       """
       {
-        "uri": "test.feature",
         "comments": [],
-        "tags": ["@one"],
         "keyword": "Feature",
         "name": "OH HAI",
+        "tags": ["@one"],
+        "uri": "test.feature",
         "description": "",
         "elements":[
           {
