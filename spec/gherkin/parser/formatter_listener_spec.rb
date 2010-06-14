@@ -54,11 +54,16 @@ module Gherkin
       it "should replay step table" do
         @fl.step("Given ", "foo", 10)
         @fl.row(['yo'], 11)
-        @fl.row(['bro'], 12)
+        @fl.comment("# Hello", 12)
+        @fl.comment("# World", 13)
+        @fl.row(['bro'], 14)
         @fl.eof
 
         @formatter.to_sexp.should == [
-          [:step, [], "Given ",  "foo", 10, [['yo'], ['bro']], nil, nil, nil, nil],
+          [:step, [], "Given ",  "foo", 10, [
+            {"line"=>11, "comments"=>[], "cells"=>["yo"]}, 
+            {"line"=>14, "comments"=>["# Hello", "# World"], "cells"=>["bro"]}
+          ], nil, nil, nil, nil],
           [:eof]
         ]
       end
@@ -78,8 +83,43 @@ module Gherkin
           [:step, [], "Given ", "there is a step", 19, nil, nil, nil, nil, nil],
           [:step, [], "But ", "not another step", 20, nil, nil, nil, nil, nil],
           [:scenario, [], ["@tag3"], "Scenario", "Reading a second scenario", "With two lines of text", 23],
-          [:step, ["#Comment on line 24"], "Given ", "a third step with a table", 26, [["a", "b"], ["c", "d"], ["e", "f"]], nil, nil, nil, nil],
-          [:step, [], "And ", "I am still testing things", 30, [["g", "h"], ["e", "r"], ["k", "i"], ["n", ""]], nil, nil, nil, nil],
+          [:step, ["#Comment on line 24"], "Given ", "a third step with a table", 26, [
+            {
+              "comments" => [],
+              "line" => 27,
+              "cells" => ["a", "b"]
+            }, 
+            {
+              "comments" => [],
+              "line" => 28,
+              "cells" => ["c", "d"]
+            }, 
+            {
+              "comments" => [],
+              "line" => 29,
+              "cells" => ["e", "f"]
+            } ], nil, nil, nil, nil],
+          [:step, [], "And ", "I am still testing things", 30, [
+            {
+              "comments" => [],
+              "line" => 31,
+              "cells" => ["g", "h"]
+            }, 
+            {
+              "comments" => [],
+              "line" => 32,
+              "cells" => ["e", "r"]
+            }, 
+            {
+              "comments" => [],
+              "line" => 33,
+              "cells" => ["k", "i"]
+            }, 
+            {
+              "comments" => [],
+              "line" => 34,
+              "cells" => ["n", ""]
+            } ], nil, nil, nil, nil],
           [:step, [], "And ", "I am done testing these tables", 35, nil, nil, nil, nil, nil],
           [:step, ["#Comment on line 29"], "Then ", "I am happy", 37, nil, nil, nil, nil, nil],
           [:scenario, [], [], "Scenario", "Hammerzeit", "", 39],

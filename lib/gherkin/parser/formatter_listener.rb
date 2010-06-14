@@ -55,9 +55,9 @@ module Gherkin
         @step = [grab_comments!, keyword, name, line]
       end
 
-      def row(row, line)
+      def row(cells, line)
         @table ||= []
-        @table << row
+        @table << {"comments" => grab_comments!, "line" => line, "cells" => cells}
       end
 
       def py_string(py_string, line)

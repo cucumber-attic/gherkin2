@@ -90,8 +90,8 @@ module Gherkin
       end
 
       def table(rows)
-        cell_lengths = rows.map do |col| 
-          col.map do |cell| 
+        cell_lengths = rows.map do |row| 
+          row["cells"].map do |cell| 
             escape_cell(cell).unpack("U*").length
           end
         end
@@ -99,7 +99,7 @@ module Gherkin
 
         rows.each_with_index do |row, i|
           j = -1
-          @io.puts '      | ' + row.zip(max_lengths).map { |cell, max_length|
+          @io.puts '      | ' + row["cells"].zip(max_lengths).map { |cell, max_length|
             j += 1
             color(cell, nil, j) + ' ' * (max_length - cell_lengths[i][j])
           }.join(' | ') + ' |'

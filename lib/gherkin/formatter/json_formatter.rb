@@ -25,9 +25,9 @@ module Gherkin
         add_step_container(comments, tags, keyword, name, description, line)
       end
 
-      def examples(comments, tags, keyword, name, description, line, rows)
+      def examples(comments, tags, keyword, name, description, line, table)
         @table_container = add_element(comments, tags, keyword, name, description, line)
-        @table_container['table'] = rows
+        @table_container['examples_table'] = table
       end
 
       def step(comments, keyword, name, line, multiline_arg, status, exception, arguments, stepdef_location)

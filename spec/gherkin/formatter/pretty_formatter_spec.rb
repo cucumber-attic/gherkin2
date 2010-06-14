@@ -126,7 +126,7 @@ Feature: Feature Description
       it "should escape backslashes and pipes" do
         io = StringIO.new
         l = Gherkin::Formatter::PrettyFormatter.new(io, true)
-        l.__send__(:table, [['|', '\\']])
+        l.__send__(:table, [{"cells" => ['|', '\\']}])
         io.rewind
         io.read.should == '      | \\| | \\\\ |' + "\n"
       end

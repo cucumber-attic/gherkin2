@@ -64,7 +64,7 @@ Feature: JSON formatter
           
         # comments
         # everywhere
-        Examples:
+        Examples: An example
           # I mean
           | partout |
       """
@@ -150,10 +150,22 @@ Feature: JSON formatter
             "name": "Real life",
             "description": "",
             "line": 18,
-            "table": [
-              ["boredom"], 
-              ["airport"], 
-              ["meeting"]
+            "examples_table": [
+              {
+                "comments": [],
+                "cells": ["boredom"],
+                "line": 19
+              },
+              {
+                "comments": [],
+                "cells": ["airport"],
+                "line": 20
+              },
+              {
+                "comments": [],
+                "cells": ["meeting"],
+                "line": 21
+              }
             ]
           },
           {
@@ -170,9 +182,11 @@ Feature: JSON formatter
                 "name": "I was",
                 "line": 24,
                 "multiline_arg": [
-                  [
-                    "asleep"
-                  ]
+                  {
+                    "comments": [],
+                    "line": 25,
+                    "cells": ["asleep"]
+                  }
                 ]
               },
               {
@@ -205,13 +219,17 @@ Feature: JSON formatter
             "comments": ["# comments", "# everywhere"],
             "tags": [],
             "keyword": "Examples",
-            "description": "",
+            "name": "An example",
+            // TODO - the description should now be the comment
+            // It should be on the first row of the examples_table!
+            "description": "# I mean",
             "line": 38,
-            "name": "# I mean",
-            "table": [
-              [
-                "partout"
-              ]
+            "examples_table": [
+              {
+                "comments": [],
+                "line": 40,
+                "cells": ["partout"]
+              }
             ]
           }
         ]
