@@ -34,14 +34,14 @@ module Gherkin
         unique_keywords = all.map do |i18n|
           keywords.map do |keyword|
             if keyword.to_s == 'step'
-              i18n.step_keywords
+              i18n.step_keywords.to_a
             else
-              i18n.keywords(keyword)
+              i18n.keywords(keyword).to_a
             end
           end
         end
         
-        unique_keywords.flatten.compact.sort.reverse.uniq.join('|').gsub(/\*/, '\*')
+        unique_keywords.flatten.compact.map{|kw| kw.to_s}.sort.reverse.uniq.join('|').gsub(/\*/, '\*')
       end
 
       def code_keywords

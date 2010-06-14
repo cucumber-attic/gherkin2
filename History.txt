@@ -9,6 +9,7 @@ which calls for a new major version.
 * Upgraded to use RSpec 2.0.0 (Aslak Hellesøy)
 
 === Bugfixes
+* undefined method `<=>' on JRuby (#52 Aslak Hellesøy)
 * Include link to explanation of LexingError (Mike Sassak)
 
 === Changed Features

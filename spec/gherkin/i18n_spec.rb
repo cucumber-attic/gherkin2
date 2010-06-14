@@ -71,6 +71,10 @@ module Gherkin
           end
         end
 
+        it "should report keyword regexp" do
+          Gherkin::I18n.keyword_regexp(:step).should =~ /\|Quando \|Quand \|Quan \|Pryd \|Pokud \|/
+        end
+
         unless defined?(JRUBY_VERSION)
         it "should print available languages" do
           ("\n" + Gherkin::I18n.language_table).should == %{

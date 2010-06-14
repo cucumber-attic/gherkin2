@@ -1,4 +1,5 @@
 require 'gherkin/rubify'
+require 'gherkin/parser/row'
 
 module Gherkin
   class SexpRecorder
