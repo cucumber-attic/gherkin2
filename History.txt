@@ -1,6 +1,10 @@
-== In Git
+== 2.0.0
+
+We're breaking the old listener API in this release, and added a new JSON formatter,
+which calls for a new major version.
 
 === New Features
+* New JSON formatter. (Aslak Hellesøy, Joseph Wilk)
 * New synonyms for Hungarian (Bence Golda)
 * Upgraded to use RSpec 2.0.0 (Aslak Hellesøy)
 
@@ -9,7 +13,8 @@
 
 === Changed Features
 * The formatter API has completely changed. There is a Gherkin Listener API and a Formatter API.
-  The FormatterListener acts as an adapter between them.
+  The FormatterListener acts as an adapter between them. (Aslak Hellesøy)
+* The listener API now has an additional argument for description (text following the first line of Feature:, Scenario: etc.) (Gregroy Hnatiuk, Matt Wynne)
 
 == 1.0.30 (2010-05-18)
 

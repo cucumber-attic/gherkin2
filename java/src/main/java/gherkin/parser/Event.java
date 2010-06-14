@@ -27,6 +27,7 @@ public class Event {
     public Event(Type type, String keyword, String name, int line) {
         this(type, keyword, name, null, null, line);
     }
+
     public Event(Type type, String keyword, String name, String description, int line) {
         this(type, keyword, name, description, null, line);
     }

@@ -213,7 +213,7 @@ public class FilterListener implements Listener {
     }
 
     public void syntaxError(String state, String event,
-                             List<String> legalEvents, int line) {
+                            List<String> legalEvents, int line) {
     }
 
     private void detectFilters(List filters) {

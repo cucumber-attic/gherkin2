@@ -39,31 +39,31 @@ public class FormatterListener implements Listener {
     }
 
     public void background(String keyword, String name, String description, int line) {
-        formatter.background(grabComments(), keyword, name, description, line+offset);
+        formatter.background(grabComments(), keyword, name, description, line + offset);
     }
 
     public void scenario(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        formatter.scenario(grabComments(), grabTags(), keyword, name, description, line+offset);
+        formatter.scenario(grabComments(), grabTags(), keyword, name, description, line + offset);
     }
 
     public void scenarioOutline(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        formatter.scenarioOutline(grabComments(), grabTags(), keyword, name, description, line+offset);
+        formatter.scenarioOutline(grabComments(), grabTags(), keyword, name, description, line + offset);
     }
 
     public void examples(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        examples = new Examples(grabComments(), grabTags(), keyword, name, description, line+offset);
+        examples = new Examples(grabComments(), grabTags(), keyword, name, description, line + offset);
     }
 
     public void step(String keyword, String name, int line) {
         replayStepsOrExamples();
-        step = new Step(grabComments(), keyword, name, line+offset);
+        step = new Step(grabComments(), keyword, name, line + offset);
     }
 
     public void row(List<String> cells, int line) {
-        if(table == null) {
+        if (table == null) {
             table = new ArrayList<Row>();
         }
         table.add(new Row(cells, grabComments(), line));
@@ -107,19 +107,19 @@ public class FormatterListener implements Listener {
     }
 
     private void replayStepsOrExamples() {
-        if(step != null) {
+        if (step != null) {
             String pyString;
             List<Row> table;
-            if((pyString = grabPyString()) != null) {
+            if ((pyString = grabPyString()) != null) {
                 step.replay(formatter, pyString);
-            } else if((table = grabTable()) != null) {
+            } else if ((table = grabTable()) != null) {
                 step.replay(formatter, table);
             } else {
                 step.replay(formatter, (String) null);
             }
             step = null;
         }
-        if(examples != null) {
+        if (examples != null) {
             examples.replay(formatter, grabTable());
             examples = null;
         }
@@ -166,7 +166,7 @@ public class FormatterListener implements Listener {
         }
 
         public void replay(Formatter formatter, List<Row> examplesTable) {
-            if(examplesTable == null) throw new NullPointerException("examplesTable");
+            if (examplesTable == null) throw new NullPointerException("examplesTable");
             formatter.examples(comments, tags, keyword, name, description, line, examplesTable);
         }
     }

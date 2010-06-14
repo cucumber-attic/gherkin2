@@ -10,26 +10,32 @@ import java.util.List;
  */
 public interface Formatter {
     void feature(List<String> comments, List<String> tags, String keyword, String name, String description, String uri);
+
     void background(List<String> comments, String keyword, String name, String description, int line);
+
     void scenario(List<String> comments, List<String> tags, String keyword, String name, String description, int line);
+
     void scenarioOutline(List<String> comments, List<String> tags, String keyword, String name, String description, int line);
+
     void examples(List<String> comments, List<String> tags, String keyword, String name, String description, int line, List<Row> exampleRows);
 
     /**
      * Invoked after a step has been executed.
      *
-     * @param comments comments in front of the step.
-     * @param keyword the value of step keyword ("Given ", "When ", "Then " etc).
-     * @param name the text of the step, for example "I have 5 cukes".
-     * @param line the line of the step.
-     * @param stepTable a table argument
-     * @param status whether or not we failed. TODO: USE ENUM
-     * @param thrown the exception that was thrown, or null if none was thrown.
-     * @param arguments The arguments the step was invoked with.
+     * @param comments        comments in front of the step.
+     * @param keyword         the value of step keyword ("Given ", "When ", "Then " etc).
+     * @param name            the text of the step, for example "I have 5 cukes".
+     * @param line            the line of the step.
+     * @param stepTable       a table argument
+     * @param status          whether or not we failed. TODO: USE ENUM
+     * @param thrown          the exception that was thrown, or null if none was thrown.
+     * @param arguments       The arguments the step was invoked with.
      * @param stepdefLocation the location of the step definition.
      */
     void step(List<String> comments, String keyword, String name, int line, List<Row> stepTable, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation);
-    void step(List<String> comments, String keyword, String name, int line, String stepString,            String status, Throwable thrown, List<Argument> arguments, String stepdefLocation);
+
+    void step(List<String> comments, String keyword, String name, int line, String stepString, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation);
+
     void eof();
 
     void table(List<Row> rows);

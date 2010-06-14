@@ -20,10 +20,10 @@ public class Row {
     }
 
     public Row(List<String> cells, List<String> comments, int line) {
-        if(cells == null) {
+        if (cells == null) {
             throw new NullPointerException("cells");
         }
-        if(comments == null) {
+        if (comments == null) {
             throw new NullPointerException("comments");
         }
         this.cells = cells;

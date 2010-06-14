@@ -5,7 +5,6 @@ import gherkin.parser.Row;
 import java.util.List;
 
 public class NullFormatter implements Formatter {
-
     public void feature(List<String> comments, List<String> tags, String keyword, String name, String description, String uri) {
 
     }

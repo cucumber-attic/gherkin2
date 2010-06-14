@@ -8,6 +8,7 @@ CLEAN.include [
   'java/target',
   'ragel/i18n/*.rl',
   'lib/gherkin/rb_lexer/*.rb',
+  'lib/*.dll',
   'ext/**/*.c',
   'java/src/main/java/gherkin/lexer/*.java',
   'java/src/main/resources/gherkin/*.properties',

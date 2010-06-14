@@ -70,7 +70,7 @@ public class TagExpression {
             boolean result = true;
             for (Expression expression : expressions) {
                 result = expression.eval(tags);
-                if(!result) break;
+                if (!result) break;
             }
             return result;
         }
@@ -91,7 +91,7 @@ public class TagExpression {
             boolean result = false;
             for (Expression expression : expressions) {
                 result = expression.eval(tags);
-                if(result) break;
+                if (result) break;
             }
             return result;
         }
@@ -101,7 +101,7 @@ public class TagExpression {
         private final String tagName;
 
         public Tag(String tagName) {
-            if(!tagName.startsWith("@")) {
+            if (!tagName.startsWith("@")) {
                 throw new BadTagException(tagName);
             }
             this.tagName = tagName;
