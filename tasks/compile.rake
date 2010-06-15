@@ -24,15 +24,29 @@ end
 rl_langs = ENV['RL_LANGS'] ? ENV['RL_LANGS'].split(',') : []
 langs = Gherkin::I18n.all.select { |lang| rl_langs.empty? || rl_langs.include?(lang.iso_code) }
 
+# http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6457127
+file 'lib/gherkin.jar' => "java/src/main/resources/gherkin/I18nKeywords_in.properties"
+file "java/src/main/resources/gherkin/I18nKeywords_in.properties" => "java/src/main/resources/gherkin/I18nKeywords_id.properties" do
+  cp "java/src/main/resources/gherkin/I18nKeywords_id.properties", "java/src/main/resources/gherkin/I18nKeywords_in.properties"
+end
+
+# http://forums.sun.com/thread.jspa?threadID=5335461
+file 'lib/gherkin.jar' => "java/src/main/resources/gherkin/I18nKeywords_iw.properties"
+file "java/src/main/resources/gherkin/I18nKeywords_iw.properties" => "java/src/main/resources/gherkin/I18nKeywords_he.properties" do
+  cp "java/src/main/resources/gherkin/I18nKeywords_he.properties", "java/src/main/resources/gherkin/I18nKeywords_iw.properties"
+end
+
 langs.each do |i18n|
   java = RagelTask.new('java', i18n)
   rb   = RagelTask.new('rb', i18n)
 
-  java_properties = "java/src/main/resources/gherkin/I18nKeywords_#{i18n.iso_code.gsub(/-/, '_')}.properties"
+  lang_country = i18n.iso_code.split(/-/)
+  suffix = lang_country.length == 1 ? lang_country[0] : "#{lang_country[0]}_#{lang_country[1].upcase}"
+  java_properties = "java/src/main/resources/gherkin/I18nKeywords_#{suffix}.properties"
   file java_properties => 'lib/gherkin/i18n.yml' do
     File.open(java_properties, 'wb') do |io|
       io.puts("# Generated file. Do not edit.")
-      Gherkin::I18n::KEYWORD_KEYS.each do |key|
+      (Gherkin::I18n::KEYWORD_KEYS + %w{name native}).each do |key|
         value = Gherkin::I18n.unicode_escape(i18n.keywords(key).join("|"))
         io.puts("#{key}:#{value}")
       end

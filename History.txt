@@ -1,3 +1,8 @@
+== In Git
+
+=== Bugfixes
+* Fixed support for xx-yy languages and Hebrew and Indonesian (JDK bugs). (Aslak Hellesøy)
+
 == 2.0.1 (2010-06-15)
 
 The previous release had a missing gherkin.jar in the jruby gem. This release fixes that.

@@ -6,6 +6,7 @@ import gherkin.parser.Row;
 import gherkin.util.Mapper;
 
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.*;
 
 import static gherkin.util.FixJava.join;
@@ -75,6 +76,9 @@ public class I18n {
     }
 
     public List<String> keywords(String key) {
+        if(!keywords.containsKey(key)) {
+            throw new RuntimeException("No such key: " + key + ". Available keys: " + keywords.keySet());
+        }
         return keywords.get(key);
     }
 

@@ -58,7 +58,7 @@ module Gherkin
         require 'gherkin/parser/row'
         io = defined?(JRUBY_VERSION) ? Java.java.io.StringWriter.new : StringIO.new
         pf = Gherkin::Formatter::PrettyFormatter.new(io, true)
-        table = all.map do |i18n| 
+        table = all.map do |i18n|
           Parser::Row.new([i18n.iso_code, i18n.keywords('name')[0], i18n.keywords('native')[0]], [], nil)
         end
         pf.table(table)

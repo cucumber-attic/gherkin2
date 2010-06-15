@@ -91,7 +91,7 @@ public class Event {
             case SCENARIO:
             case SCENARIO_OUTLINE:
             case EXAMPLES:
-                return filter.matcher(name).matches();
+                return filter.matcher(name).find();
             default:
                 return false;
         }

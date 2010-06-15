@@ -15,6 +15,18 @@ public class I18nTest {
     }
 
     @Test
+    public void shouldProvideKeywordsForIndonesian() throws IOException {
+        I18n no = new I18n("id");
+        assertEquals(Arrays.asList("* ", "Ketika "), no.keywords("when"));
+    }
+
+    @Test
+    public void shouldProvideKeywordsForHebrew() throws IOException {
+        I18n no = new I18n("he");
+        assertEquals(Arrays.asList("דוגמאות"), no.keywords("examples"));
+    }
+
+    @Test
     public void shouldProvideKeywordsForChinese() throws IOException {
         I18n no = new I18n("zh-CN");
         assertEquals(Arrays.asList("* ", "但是"), no.keywords("but"));
