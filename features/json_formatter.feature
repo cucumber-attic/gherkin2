@@ -85,6 +85,7 @@ Feature: JSON formatter
             "keyword": "Scenario",
             "name": "Fujin",
             "description": "",
+            "type": "scenario",
             "line": 4,
             "steps": [
               {
@@ -109,6 +110,7 @@ Feature: JSON formatter
             "keyword": "Scenario",
             "name": "_why",
             "description": "",
+            "type": "scenario",
             "line": 9,
             "steps": [
               {
@@ -133,6 +135,7 @@ Feature: JSON formatter
             "keyword": "Scenario Outline",
             "name": "Life",
             "description": "",
+            "type": "scenario_outline",
             "line": 14,
             "steps": [
               {
@@ -150,6 +153,7 @@ Feature: JSON formatter
             "keyword": "Examples",
             "name": "Real life",
             "description": "",
+            "type": "examples",
             "line": 18,
             "examples_table": [
               {
@@ -175,6 +179,7 @@ Feature: JSON formatter
             "keyword": "Scenario",
             "name": "who stole my mojo?",
             "description": "",
+            "type": "scenario",
             "line": 23,
             "steps": [
               {
@@ -204,6 +209,7 @@ Feature: JSON formatter
             "tags": [],
             "keyword": "Scenario Outline",
             "description": "",
+            "type": "scenario_outline",
             "line": 32,
             "name": "with",
             "steps": [
@@ -224,6 +230,7 @@ Feature: JSON formatter
             // TODO - the description should now be the comment
             // It should be on the first row of the examples_table!
             "description": "# I mean",
+            "type": "examples",
             "line": 38,
             "examples_table": [
               {
@@ -236,3 +243,63 @@ Feature: JSON formatter
         ]
       }
       """
+
+  Scenario:  Feature with Background
+    Given the following text is parsed:
+      """
+      Feature: Kjapp
+        Background: No idea what Kjapp means
+          Given I Google it
+
+        # Writing JSON by hand sucks
+        Scenario: 
+          Then I think it means "fast"
+      """
+    Then the outputted JSON should be:
+      """
+      {
+        "comments": [],
+        "description": "",
+        "keyword": "Feature",
+        "name": "Kjapp",
+        "tags": [],
+        "uri": "test.feature",
+        "background": {
+          "comments": [],
+          "description": "",
+          "keyword": "Background",
+          "line": 2,
+          "name": "No idea what Kjapp means",
+          "steps": [
+            {
+              "comments": [],
+              "keyword": "Given ",
+              "line": 3,
+              "name": "I Google it",
+              "multiline_arg": null
+            }
+          ]
+        },
+        "elements": [
+          {
+            "comments": ["# Writing JSON by hand sucks"],
+            "tags": [],
+            "keyword": "Scenario",
+            "name": "",
+            "description": "",
+            "type": "scenario",
+            "line": 6,
+            "steps": [
+              {
+                "comments": [],
+                "keyword": "Then ",
+                "name": "I think it means \"fast\"",
+                "line": 7,
+                "multiline_arg": null
+              }
+            ]
+          }
+        ]
+      }
+      """
+    
