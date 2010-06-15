@@ -46,9 +46,8 @@ module Gherkin
       end
 
       def examples(comments, tags, keyword, name, description, line, table)
-        @in_background = false
-        @table_container = add_element('examples', comments, tags, keyword, name, description, line)
-        @table_container['examples_table'] = to_hash_array(table)
+        @table_container = add_examples(comments, tags, keyword, name, description, line)
+        @table_container['table'] = to_hash_array(table)
       end
 
       def step(comments, keyword, name, line, multiline_arg, status, exception, arguments, stepdef_location)
@@ -77,6 +76,20 @@ module Gherkin
         }
         @json_hash['elements'] ||= []
         @json_hash['elements'] << element
+        element
+      end
+
+      def add_examples(comments, tags, keyword, name, description, line)
+        element = {
+          'comments' => comments.to_a, 
+          'tags' => tags.to_a, 
+          'keyword' => keyword, 
+          'name' => name, 
+          'description' => description,
+          'line' => line
+        }
+        last_element['examples'] ||= []
+        last_element['examples'] << element
         element
       end
 

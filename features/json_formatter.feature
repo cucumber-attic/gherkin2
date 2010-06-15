@@ -25,7 +25,7 @@ Feature: JSON formatter
       }
       """
 
-  Scenario: Feature with two scenarios
+  Scenario: Feature with scenarios and outlines
     Given the following text is parsed:
       """
       @one
@@ -145,31 +145,32 @@ Feature: JSON formatter
                 "line": 15,
                 "multiline_arg": null
               }
-            ]
-          },
-          {
-            "comments": [],
-            "tags": ["@five"],
-            "keyword": "Examples",
-            "name": "Real life",
-            "description": "",
-            "type": "examples",
-            "line": 18,
-            "examples_table": [
+            ],
+            "examples": [
               {
                 "comments": [],
-                "cells": ["boredom"],
-                "line": 19
-              },
-              {
-                "comments": [],
-                "cells": ["airport"],
-                "line": 20
-              },
-              {
-                "comments": [],
-                "cells": ["meeting"],
-                "line": 21
+                "tags": ["@five"],
+                "keyword": "Examples",
+                "name": "Real life",
+                "description": "",
+                "line": 18,
+                "table": [
+                  {
+                    "comments": [],
+                    "cells": ["boredom"],
+                    "line": 19
+                  },
+                  {
+                    "comments": [],
+                    "cells": ["airport"],
+                    "line": 20
+                  },
+                  {
+                    "comments": [],
+                    "cells": ["meeting"],
+                    "line": 21
+                  }
+                ]
               }
             ]
           },
@@ -220,23 +221,24 @@ Feature: JSON formatter
                 "name": "nice",
                 "multiline_arg": null
               }
-            ]
-          },
-          {
-            "comments": ["# comments", "# everywhere"],
-            "tags": [],
-            "keyword": "Examples",
-            "name": "An example",
-            // TODO - the description should now be the comment
-            // It should be on the first row of the examples_table!
-            "description": "# I mean",
-            "type": "examples",
-            "line": 38,
-            "examples_table": [
+            ],
+            "examples": [
               {
-                "comments": [],
-                "line": 40,
-                "cells": ["partout"]
+                "comments": ["# comments", "# everywhere"],
+                "tags": [],
+                "keyword": "Examples",
+                "name": "An example",
+                // TODO - the description should now be the comment
+                // It should be on the first row of the examples_table!
+                "description": "# I mean",
+                "line": 38,
+                "table": [
+                  {
+                    "comments": [],
+                    "line": 40,
+                    "cells": ["partout"]
+                  }
+                ]
               }
             ]
           }
