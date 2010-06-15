@@ -51,9 +51,7 @@ module Gherkin
       end
 
       def step(comments, keyword, name, line, multiline_arg, status, exception, arguments, stepdef_location)
-        multiline_arg = rubify(multiline_arg)
-        multiline_arg = to_hash_array(multiline_arg) if Array === multiline_arg
-        @table_container = {'comments' => comments.to_a, 'keyword' => keyword, 'name' => name, 'line' => line, 'multiline_arg' => multiline_arg}
+        @table_container = {'comments' => comments.to_a, 'keyword' => keyword, 'name' => name, 'line' => line}.merge(step_arg_to_hash(multiline_arg))
         last_element['steps'] ||= []
         last_element['steps'] << @table_container
       end
@@ -108,6 +106,12 @@ module Gherkin
         rows.map do |row|
           {"cells" => row.cells.to_a, "comments" => row.comments.to_a, "line" => row.line}
         end
+      end
+
+      def step_arg_to_hash(multiline_arg)
+        return {} if multiline_arg.nil?
+        multiline_arg = rubify(multiline_arg)
+        Array === multiline_arg ? {"table" => to_hash_array(multiline_arg) } : { "py_string" => multiline_arg }
       end
     end
   end

@@ -92,15 +92,13 @@ Feature: JSON formatter
                 "comments": [],
                 "keyword": "Given ",
                 "name": "wind",
-                "line": 5,
-                "multiline_arg": null
+                "line": 5
               },
               {
                 "comments": [],
                 "keyword": "Then ",
                 "name": "spirit",
-                "line": 6,
-                "multiline_arg": null
+                "line": 6
               }
             ]
           },
@@ -117,15 +115,13 @@ Feature: JSON formatter
                 "comments": [],
                 "keyword": "Given ",
                 "name": "chunky",
-                "line": 10,
-                "multiline_arg": null
+                "line": 10
               },
               {
                 "comments": [],
                 "keyword": "Then ",
                 "name": "bacon",
-                "line": 11,
-                "multiline_arg": null
+                "line": 11
               }
             ]
           },
@@ -142,8 +138,7 @@ Feature: JSON formatter
                 "comments": [],
                 "keyword": "Given ",
                 "name": "some <boredom>",
-                "line": 15,
-                "multiline_arg": null
+                "line": 15
               }
             ],
             "examples": [
@@ -188,7 +183,7 @@ Feature: JSON formatter
                 "keyword": "When ",
                 "name": "I was",
                 "line": 24,
-                "multiline_arg": [
+                "table": [
                   {
                     "comments": [],
                     "line": 25,
@@ -201,7 +196,7 @@ Feature: JSON formatter
                 "keyword": "And ",
                 "name": "so",
                 "line": 26,
-                "multiline_arg": "innocent"
+                "py_string": "innocent"
               }
             ]
           },
@@ -218,8 +213,7 @@ Feature: JSON formatter
                 "comments": ["# all"],
                 "keyword": "Then ",
                 "line": 34,
-                "name": "nice",
-                "multiline_arg": null
+                "name": "nice"
               }
             ],
             "examples": [
@@ -228,13 +222,11 @@ Feature: JSON formatter
                 "tags": [],
                 "keyword": "Examples",
                 "name": "An example",
-                // TODO - the description should now be the comment
-                // It should be on the first row of the examples_table!
-                "description": "# I mean",
+                "description": "",
                 "line": 38,
                 "table": [
                   {
-                    "comments": [],
+                    "comments": ["# I mean"],
                     "line": 40,
                     "cells": ["partout"]
                   }
@@ -278,8 +270,7 @@ Feature: JSON formatter
               "comments": [],
               "keyword": "Given ",
               "line": 4,
-              "name": "I Google it",
-              "multiline_arg": null
+              "name": "I Google it"
             }
           ]
         },
@@ -297,8 +288,7 @@ Feature: JSON formatter
                 "comments": [],
                 "keyword": "Then ",
                 "name": "I think it means \"fast\"",
-                "line": 8,
-                "multiline_arg": null
+                "line": 8
               }
             ]
           }

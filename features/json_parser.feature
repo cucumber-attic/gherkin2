@@ -49,15 +49,13 @@ Feature: JSON parser
                 "comments": [],
                 "keyword": "Given ",
                 "name": "wind",
-                "line": 5,
-                "multiline_arg": null
+                "line": 5
               },
               {
                 "comments": [],
                 "keyword": "Then ",
                 "name": "spirit",
-                "line": 6,
-                "multiline_arg": null
+                "line": 6
               }
             ]
           },
@@ -74,15 +72,13 @@ Feature: JSON parser
                 "comments": [],
                 "keyword": "Given ",
                 "name": "chunky",
-                "line": 10,
-                "multiline_arg": null
+                "line": 10
               },
               {
                 "comments": [],
                 "keyword": "Then ",
                 "name": "bacon",
-                "line": 11,
-                "multiline_arg": null
+                "line": 11
               }
             ]
           },
@@ -99,8 +95,7 @@ Feature: JSON parser
                 "comments": [],
                 "keyword": "Given ",
                 "name": "some <boredom>",
-                "line": 15,
-                "multiline_arg": null
+                "line": 15
               }
             ],
             "examples": [
@@ -145,7 +140,7 @@ Feature: JSON parser
                 "keyword": "When ",
                 "name": "I was",
                 "line": 24,
-                "multiline_arg": [
+                "table": [
                   {
                     "comments": [],
                     "line": 25,
@@ -158,7 +153,7 @@ Feature: JSON parser
                 "keyword": "And ",
                 "name": "so",
                 "line": 26,
-                "multiline_arg": "innocent"
+                "py_string": "innocent"
               }
             ]
           },
@@ -175,8 +170,7 @@ Feature: JSON parser
                 "comments": ["# all"],
                 "keyword": "Then ",
                 "line": 34,
-                "name": "nice",
-                "multiline_arg": null
+                "name": "nice"
               }
             ],
             "examples": [
@@ -187,13 +181,18 @@ Feature: JSON parser
                 "name": "An example",
                 // TODO - the description should now be the comment
                 // It should be on the first row of the examples_table!
-                "description": "# I mean",
+                "description": "",
                 "line": 38,
                 "table": [
                   {
-                    "comments": [],
+                    "comments": ["# I mean"],
                     "line": 40,
                     "cells": ["partout"]
+                  },
+                  {
+                    "comments": ["# I really mean"],
+                    "line": 40,
+                    "cells": ["bartout"]
                   }
                 ]
               }
@@ -238,12 +237,14 @@ Feature: JSON parser
         Scenario Outline: with
           # all
           Then nice
-          
+
           # comments
           # everywhere
           Examples: An example
             # I mean
             | partout |
+            # I really mean
+            | bartout |
       """
 
   Scenario:  Feature with Background
@@ -267,8 +268,7 @@ Feature: JSON parser
               "comments": [],
               "keyword": "Given ",
               "line": 3,
-              "name": "I Google it",
-              "multiline_arg": null
+              "name": "I Google it"
             }
           ]
         },
@@ -286,8 +286,7 @@ Feature: JSON parser
                 "comments": [],
                 "keyword": "Then ",
                 "name": "I think it means \"fast\"",
-                "line": 7,
-                "multiline_arg": null
+                "line": 7
               }
             ]
           }

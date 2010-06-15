@@ -39,6 +39,18 @@ module Gherkin
           ]
         end
 
+        it "should not consume comments as part of a multiline example name" do
+          scan("Examples: thing\n# ho hum\n| 1 | 2 |\n| 3 | 4 |\n")
+          @listener.to_sexp.should == [
+            [:location, 'test.feature', 0],
+            [:examples, "Examples", "thing", "", 1],
+            [:comment,  "# ho hum", 2],
+            [:row, ["1","2"], 3],
+            [:row, ["3","4"], 4],
+            [:eof]
+          ]
+        end
+
         it "should allow empty comment lines" do 
           scan("#\n   # A comment\n   #\n")
           @listener.to_sexp.should == [
