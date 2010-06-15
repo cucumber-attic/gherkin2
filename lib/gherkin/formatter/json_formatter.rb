@@ -37,12 +37,12 @@ module Gherkin
 
       def scenario(comments, tags, keyword, name, description, line)
         @in_background = false
-        add_step_container('scenario', comments, tags, keyword, name, description, line)
+        add_step_container(comments, tags, keyword, name, description, line, 'scenario')
       end
 
       def scenario_outline(comments, tags, keyword, name, description, line)
         @in_background = false
-        add_step_container('scenario_outline', comments, tags, keyword, name, description, line)
+        add_step_container(comments, tags, keyword, name, description, line, 'scenario_outline')
       end
 
       def examples(comments, tags, keyword, name, description, line, table)
@@ -64,7 +64,7 @@ module Gherkin
 
     private
 
-      def add_element(type, comments, tags, keyword, name, description, line)
+      def element_hash(comments, tags, keyword, name, description, line, type=nil)
         element = {
           'comments' => comments.to_a, 
           'tags' => tags.to_a, 
@@ -72,22 +72,20 @@ module Gherkin
           'name' => name, 
           'description' => description,
           'line' => line,
-          'type' => type
         }
+        element['type'] = type if type
+        element
+      end
+
+      def add_element(comments, tags, keyword, name, description, line, type)
+        element = element_hash(comments, tags, keyword, name, description, line, type)
         @json_hash['elements'] ||= []
         @json_hash['elements'] << element
         element
       end
 
       def add_examples(comments, tags, keyword, name, description, line)
-        element = {
-          'comments' => comments.to_a, 
-          'tags' => tags.to_a, 
-          'keyword' => keyword, 
-          'name' => name, 
-          'description' => description,
-          'line' => line
-        }
+        element = element_hash(comments, tags, keyword, name, description, line)
         last_element['examples'] ||= []
         last_element['examples'] << element
         element
