@@ -250,6 +250,7 @@ Feature: JSON formatter
     Given the following text is parsed:
       """
       Feature: Kjapp
+
         Background: No idea what Kjapp means
           Given I Google it
 
@@ -270,13 +271,13 @@ Feature: JSON formatter
           "comments": [],
           "description": "",
           "keyword": "Background",
-          "line": 2,
+          "line": 3,
           "name": "No idea what Kjapp means",
           "steps": [
             {
               "comments": [],
               "keyword": "Given ",
-              "line": 3,
+              "line": 4,
               "name": "I Google it",
               "multiline_arg": null
             }
@@ -290,13 +291,13 @@ Feature: JSON formatter
             "name": "",
             "description": "",
             "type": "scenario",
-            "line": 6,
+            "line": 7,
             "steps": [
               {
                 "comments": [],
                 "keyword": "Then ",
                 "name": "I think it means \"fast\"",
-                "line": 7,
+                "line": 8,
                 "multiline_arg": null
               }
             ]
