@@ -112,7 +112,7 @@ module Gherkin
     private
 
       def py_string(string)
-        @io.puts "      \"\"\"\n" + indent(string, '      ').gsub(/"""/,'\"\"\"') + "\n      \"\"\""
+        @io.puts "      \"\"\"\n" + escape_triple_quotes(indent(string, '      ')) + "\n      \"\"\""
       end
 
       def exception(exception)
@@ -129,13 +129,19 @@ module Gherkin
       end
 
       if(RUBY_VERSION =~ /^1\.9/)
-        START = /#{"^".encode('UTF-8')}/
+        START = /#{'^'.encode('UTF-8')}/
+        TRIPLE_QUOTES = /#{'"""'.encode('UTF-8')}/
       else
         START = /^/
+        TRIPLE_QUOTES = /"""/
       end
 
       def indent(string, indentation)
         string.gsub(START, indentation)
+      end
+
+      def escape_triple_quotes(s)
+        s.gsub(TRIPLE_QUOTES, '\"\"\"')
       end
 
       def print_tags(tags, indent)

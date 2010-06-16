@@ -1,10 +1,10 @@
-Feature: JSON parser
+Feature: JSON lexer
   In order to support greater access to features
   we want JSON
 
   Background:
     Given a PrettyFormatter
-    And a JSON parser
+    And a JSON lexer
 
   Scenario: Only a Feature
     Given the following JSON is parsed:

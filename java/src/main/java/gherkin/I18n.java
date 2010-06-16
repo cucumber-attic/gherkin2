@@ -66,13 +66,23 @@ public class I18n {
     }
 
     public Lexer lexer(Listener listener) {
-        String qualifiedI18nLexerClassName = "gherkin.lexer." + locale.toString().toUpperCase();
+        String qualifiedI18nLexerClassName = "gherkin.lexer." + localeName().toUpperCase();
         try {
             Class<?> delegateClass = getClass().getClassLoader().loadClass(qualifiedI18nLexerClassName);
             return (Lexer) delegateClass.getConstructor(Listener.class).newInstance(listener);
         } catch (Exception e) {
             throw new RuntimeException("Couldn't load lexer class: " + qualifiedI18nLexerClassName, e);
         }
+    }
+
+    /**
+     * Workaround for he and id bugs in the JDK.
+     * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6457127
+     * http://forums.sun.com/thread.jspa?threadID=5335461
+     * @return locale name.
+     */
+    private String localeName() {
+        return locale.toString().replaceAll("^iw", "he").replaceAll("^in", "id");
     }
 
     public List<String> keywords(String key) {

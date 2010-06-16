@@ -23,6 +23,7 @@ public class PrettyFormatter implements Formatter {
     private int stepIndex;
     private String uri;
     private static final Pattern START = Pattern.compile("^", Pattern.MULTILINE);
+    private static final Pattern TRIPLE_QUOTES = Pattern.compile("\"\"\"", Pattern.MULTILINE);
 
     public PrettyFormatter(Writer out, boolean monochrome) {
         this.out = new PrintWriter(out);
@@ -129,7 +130,7 @@ public class PrettyFormatter implements Formatter {
 
     public void pyString(String string) {
         out.println("      \"\"\"");
-        out.print(indent(string, "      "));
+        out.print(escapeTripleQuotes(indent(string, "      ")));
         out.println("\n      \"\"\"");
     }
 
@@ -207,4 +208,9 @@ public class PrettyFormatter implements Formatter {
     private String indent(String s, String indentation) {
         return START.matcher(s).replaceAll(indentation);
     }
+
+    private String escapeTripleQuotes(String s) {
+        return TRIPLE_QUOTES.matcher(s).replaceAll("\\\\\"\\\\\"\\\\\"");
+    }
+
 }

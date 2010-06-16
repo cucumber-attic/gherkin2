@@ -1,8 +1,14 @@
-== In Git
+== 2.0.2
+
+=== New Features
+* New JSON Lexer. (Gregory Hnatiuk)
 
 === Bugfixes
 * Fixed incorrect indentation for descriptions in Java. (Aslak Hellesøy)
 * Fixed support for xx-yy languages and Hebrew and Indonesian (JDK bugs). (Aslak Hellesøy)
+
+=== Changed Features
+* Examples are now nested inside the Scenario Outline in the JSON format. (Gregory Hnatiuk)
 
 == 2.0.1 (2010-06-15)
 
