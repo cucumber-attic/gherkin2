@@ -22,6 +22,7 @@ public class PrettyFormatter implements Formatter {
     private int[] stepLengths;
     private int stepIndex;
     private String uri;
+    private static final Pattern START = Pattern.compile("^", Pattern.MULTILINE);
 
     public PrettyFormatter(Writer out, boolean monochrome) {
         this.out = new PrintWriter(out);
@@ -37,7 +38,7 @@ public class PrettyFormatter implements Formatter {
         printComments(comments, "");
         printTags(tags, "");
         out.println(keyword + ": " + name);
-        printDescription(description, "  ");
+        printDescription(description, "  ", false);
         out.flush();
     }
 
@@ -45,7 +46,7 @@ public class PrettyFormatter implements Formatter {
         out.println();
         printComments(comments, "  ");
         out.println("  " + keyword + ": " + name);
-        printDescription(description, "    ");
+        printDescription(description, "    ", true);
     }
 
     public void scenario(List<String> comments, List<String> tags, String keyword, String name, String description, int line) {
@@ -53,7 +54,7 @@ public class PrettyFormatter implements Formatter {
         printComments(comments, "  ");
         printTags(tags, "  ");
         out.println("  " + keyword + ": " + name + indentedScenarioLocation(keyword, name, line));
-        printDescription(description, "    ");
+        printDescription(description, "    ", true);
         out.flush();
     }
 
@@ -66,7 +67,7 @@ public class PrettyFormatter implements Formatter {
         printComments(comments, "    ");
         printTags(tags, "    ");
         out.println("    " + keyword + ": " + name);
-        printDescription(description, "    ");
+        printDescription(description, "    ", true);
         table(exampleRows);
     }
 
@@ -124,16 +125,12 @@ public class PrettyFormatter implements Formatter {
 
     public void pyString(String string) {
         out.println("      \"\"\"");
-        out.print(Pattern.compile("^", Pattern.MULTILINE).matcher(string).replaceAll("      "));
+        out.print(indent(string, "      "));
         out.println("\n      \"\"\"");
     }
 
     public void eof() {
         out.flush();
-    }
-
-    public void syntaxError(String state, String event, List<String> legalEvents, int line) {
-        out.println("Syntax error:" + state + ' ' + event);
     }
 
     public void steps(List<List<String>> steps) {
@@ -196,9 +193,14 @@ public class PrettyFormatter implements Formatter {
         return buffer.toString();
     }
 
-    private void printDescription(String description, String indent) {
+    private void printDescription(String description, String indentation, boolean newline) {
         if(!"".equals(description)) {
-            out.println(description.replaceAll("^", indent));
+            out.println(indent(description, indentation));
+            if(newline) out.println();
         }
+    }
+
+    private String indent(String s, String indentation) {
+        return START.matcher(s).replaceAll(indentation);
     }
 }

@@ -79,6 +79,7 @@ module Gherkin
 
   Scenario: Scenario Description
     description has multiple lines
+
     Given there is a step
       """
       with
@@ -97,6 +98,8 @@ module Gherkin
 @foo
 Feature: Feature Description
   Some preamble
+  on several
+  lines
 
   # A Scenario Outline comment
   @bar

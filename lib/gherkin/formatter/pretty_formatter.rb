@@ -24,14 +24,14 @@ module Gherkin
         print_comments(comments, '')
         print_tags(tags, '')
         @io.puts "#{keyword}: #{name}"
-        @io.puts indent(description, '  ') unless description == ""
+        print_description(description, '  ', false)
       end
 
       def background(comments, keyword, name, description, line)
         @io.puts
         print_comments(comments, '  ')
         @io.puts "  #{keyword}: #{name}#{indented_element_uri!(keyword, name, line)}"
-        @io.puts indent(description, '    ') unless description == ""
+        print_description(description, '    ')
       end
 
       def scenario(comments, tags, keyword, name, description, line)
@@ -39,7 +39,7 @@ module Gherkin
         print_comments(comments, '  ')
         print_tags(tags, '  ')
         @io.puts "  #{keyword}: #{name}#{indented_element_uri!(keyword, name, line)}"
-        @io.puts indent(description, '    ') unless description == ""
+        print_description(description, '    ')
       end
 
       def scenario_outline(comments, tags, keyword, name, description, line)
@@ -51,7 +51,7 @@ module Gherkin
         print_comments(comments, '    ')
         print_tags(tags, '    ')
         @io.puts "    #{keyword}: #{name}"
-        @io.puts indent(description, '    ') unless description == ""
+        print_description(description, '    ')
         table(examples_table)
       end
 
@@ -109,7 +109,7 @@ module Gherkin
     private
 
       def py_string(string)
-        @io.puts "      \"\"\"\n" + string.gsub(START, '      ').gsub(/"""/,'\"\"\"') + "\n      \"\"\""
+        @io.puts "      \"\"\"\n" + indent(string, '      ').gsub(/"""/,'\"\"\"') + "\n      \"\"\""
       end
 
       def exception(exception)
@@ -127,14 +127,12 @@ module Gherkin
 
       if(RUBY_VERSION =~ /^1\.9/)
         START = /#{"^".encode('UTF-8')}/
-        CRLF  = Regexp.new("\r\n".encode('UTF-8'))
       else
         START = /^/
-        CRLF  = /\r\n/n
       end
 
       def indent(string, indentation)
-        string.gsub(/^/, indentation)
+        string.gsub(START, indentation)
       end
 
       def print_tags(tags, indent)
@@ -143,6 +141,13 @@ module Gherkin
 
       def print_comments(comments, indent)
         @io.write(comments.empty? ? '' : indent + comments.join("\n#{indent}") + "\n")
+      end
+
+      def print_description(description, indent, newline=true)
+        if description != ""
+          @io.puts indent(description, indent)
+          @io.puts if newline
+        end
       end
 
       def indented_element_uri!(keyword, name, line)
