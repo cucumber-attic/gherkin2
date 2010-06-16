@@ -103,6 +103,10 @@ public class PrettyFormatter implements Formatter {
         }
 
         for (int i = 0; i < rows.size(); i++) {
+            for(String comment : rows.get(i).getComments()) {
+                out.write("      ");
+                out.println(comment);
+            }
             out.write("      | ");
             for (int j = 0; j < columnCount; j++) {
                 out.write(escapeCell(rows.get(i).getCells().get(j)));
