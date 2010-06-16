@@ -21,7 +21,7 @@ module Gherkin
           cmd = Tools.const_get(cmd_name.capitalize.to_sym).new(args)
           cmd.run
         rescue => e
-          Trollop::die(e.message + "\nCommand: #{cmd_name}")
+          Trollop::die(e.message + "\n#{e.backtrace.join("\n")}\n\nCommand: #{cmd_name}")
         end
       end
 

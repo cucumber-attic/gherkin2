@@ -1,16 +1,19 @@
 require 'stringio'
 require 'gherkin/tools/files'
 require 'gherkin/formatter/pretty_formatter'
+require 'gherkin/parser/formatter_listener'
 
 module Gherkin
   module Tools
     class Reformat < Files
       def run
         each do |file|
-          purdy = StringIO.new
-          listener = Formatter::PrettyFormatter.new(purdy)
+          io = defined?(JRUBY_VERSION) ? Java.java.io.StringWriter.new : StringIO.new
+          formatter = Formatter::PrettyFormatter.new(io, true)
+          listener = Parser::FormatterListener.new(formatter)
           scan(file, listener)
-          File.open(file, 'w') {|io| io.write(purdy.string)}
+          string = defined?(JRUBY_VERSION) ? io.getBuffer.toString : io.string
+          File.open(file, 'w') {|io| io.write(string)}
         end
       end
     end
