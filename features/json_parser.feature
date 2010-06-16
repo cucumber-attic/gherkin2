@@ -1,19 +1,13 @@
-Feature: JSON formatter
+Feature: JSON parser
   In order to support greater access to features
   we want JSON
 
   Background:
-    Given a JSON formatter
-    And a "ruby" "root" parser
+    Given a PrettyFormatter
+    And a JSON parser
 
   Scenario: Only a Feature
-    Given the following text is parsed:
-      """
-      # language: no
-      # Another comment
-      Egenskap: Kjapp
-      """
-    Then the outputted JSON should be:
+    Given the following JSON is parsed:
       """
       {
         "comments": ["# language: no", "# Another comment"],
@@ -24,52 +18,15 @@ Feature: JSON formatter
         "uri": "test.feature"
       }
       """
+    Then the outputted text should be:
+      """
+      # language: no
+      # Another comment
+      Egenskap: Kjapp
+      """
 
   Scenario: Feature with scenarios and outlines
-    Given the following text is parsed:
-      """
-      @one
-      Feature: OH HAI
-
-        Scenario: Fujin
-          Given wind
-          Then spirit
-
-        @two
-        Scenario: _why
-          Given chunky
-          Then bacon
-
-        @three @four
-        Scenario Outline: Life
-          Given some <boredom>
-
-        @five
-        Examples: Real life
-          |boredom|
-          |airport|
-          |meeting|
-
-        Scenario: who stole my mojo?
-          When I was
-            |asleep|
-          And so
-            \"\"\"
-            innocent
-            \"\"\"
-
-        # The
-        Scenario Outline: with
-          # all
-          Then nice
-          
-        # comments
-        # everywhere
-        Examples: An example
-          # I mean
-          | partout |
-      """
-    Then the outputted JSON should be:
+    Given the following JSON is parsed:
       """
       {
         "comments": [],
@@ -222,6 +179,8 @@ Feature: JSON formatter
                 "tags": [],
                 "keyword": "Examples",
                 "name": "An example",
+                // TODO - the description should now be the comment
+                // It should be on the first row of the examples_table!
                 "description": "",
                 "line": 38,
                 "table": [
@@ -229,6 +188,11 @@ Feature: JSON formatter
                     "comments": ["# I mean"],
                     "line": 40,
                     "cells": ["partout"]
+                  },
+                  {
+                    "comments": ["# I really mean"],
+                    "line": 40,
+                    "cells": ["bartout"]
                   }
                 ]
               }
@@ -237,20 +201,54 @@ Feature: JSON formatter
         ]
       }
       """
+    Then the outputted text should be:
+      """
+      @one
+      Feature: OH HAI
+
+        Scenario: Fujin
+          Given wind
+          Then spirit
+
+        @two
+        Scenario: _why
+          Given chunky
+          Then bacon
+
+        @three @four
+        Scenario Outline: Life
+          Given some <boredom>
+
+          @five
+          Examples: Real life
+            | boredom |
+            | airport |
+            | meeting |
+
+        Scenario: who stole my mojo?
+          When I was
+            | asleep |
+          And so
+            \"\"\"
+            innocent
+            \"\"\"
+
+        # The
+        Scenario Outline: with
+          # all
+          Then nice
+
+          # comments
+          # everywhere
+          Examples: An example
+            # I mean
+            | partout |
+            # I really mean
+            | bartout |
+      """
 
   Scenario:  Feature with Background
-    Given the following text is parsed:
-      """
-      Feature: Kjapp
-
-        Background: No idea what Kjapp means
-          Given I Google it
-
-        # Writing JSON by hand sucks
-        Scenario: 
-          Then I think it means "fast"
-      """
-    Then the outputted JSON should be:
+    Given the following JSON is parsed:
       """
       {
         "comments": [],
@@ -263,13 +261,13 @@ Feature: JSON formatter
           "comments": [],
           "description": "",
           "keyword": "Background",
-          "line": 3,
+          "line": 2,
           "name": "No idea what Kjapp means",
           "steps": [
             {
               "comments": [],
               "keyword": "Given ",
-              "line": 4,
+              "line": 3,
               "name": "I Google it"
             }
           ]
@@ -282,17 +280,28 @@ Feature: JSON formatter
             "name": "",
             "description": "",
             "type": "scenario",
-            "line": 7,
+            "line": 6,
             "steps": [
               {
                 "comments": [],
                 "keyword": "Then ",
                 "name": "I think it means \"fast\"",
-                "line": 8
+                "line": 7
               }
             ]
           }
         ]
       }
+      """
+    Then the outputted text should be:
+      """
+      Feature: Kjapp
+
+        Background: No idea what Kjapp means
+          Given I Google it
+
+        # Writing JSON by hand sucks
+        Scenario: 
+          Then I think it means "fast"
       """
     
