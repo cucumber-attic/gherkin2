@@ -7,12 +7,12 @@ module Gherkin
 
     before do
       @listener = Gherkin::SexpRecorder.new
-      @parser = Gherkin::JSONLexer.new(@listener)
+      @lexer = Gherkin::JSONLexer.new(@listener)
     end
 
     describe "An empty feature" do
-      it "should parse empty features" do
-        @parser.parse('{}')
+      it "should scan empty features" do
+        @lexer.scan('{}')
         @listener.to_sexp.should == [
           [:eof]
         ]
@@ -20,8 +20,8 @@ module Gherkin
     end
 
     describe "A barely empty feature" do
-      it "should parse a feature with no elements" do
-        @parser.parse('{ "keyword": "Feature", "name": "One", "description": "", "line" : 3 }')
+      it "should scan a feature with no elements" do
+        @lexer.scan('{ "keyword": "Feature", "name": "One", "description": "", "line" : 3 }')
         @listener.to_sexp.should == [
           [:feature, "Feature", "One", "", 3],
           [:eof]
@@ -31,7 +31,7 @@ module Gherkin
 
     describe "Missing line numbers" do
       it "should indicate a line number of 0 if a line attribute doesn't exist" do
-        @parser.parse('{ "name": "My Sweet Featur", "keyword": "Feature", "description": "" }')
+        @lexer.scan('{ "name": "My Sweet Featur", "keyword": "Feature", "description": "" }')
         @listener.to_sexp.should == [
           [:feature, "Feature", "My Sweet Featur", "", 0],
           [:eof]
@@ -41,7 +41,7 @@ module Gherkin
 
     describe "Keywords" do
       it "should use the keyword from the source when provided" do
-        @parser.parse('{ "name" : "My Sweet Featur", "language": "fr", "keyword": "Feature", "description": "" }')
+        @lexer.scan('{ "name" : "My Sweet Featur", "language": "fr", "keyword": "Feature", "description": "" }')
         @listener.to_sexp.should == [
           [:feature, "Feature", "My Sweet Featur", "",  0],
           [:eof]
@@ -51,7 +51,7 @@ module Gherkin
 
     describe "A complex feature with tags, comments, multiple scenarios, and multiple steps and tables" do
       it "should find things in the right order" do
-        parse_file("complex.json")
+        scan_file("complex.json")
         @listener.to_sexp.should == [
           [:tag, "@tag1", 0],
           [:tag, "@tag2", 0],

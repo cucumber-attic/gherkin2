@@ -7,7 +7,7 @@ module Gherkin
       @listener = listener
     end
 
-    def scan(src)
+    def scan(src, uri='unknown.json', offset=0)
       feature = JSON.parse(src)
 
       comments_for(feature)

@@ -1,23 +1,17 @@
+require 'rubygems'
+require 'rspec/autorun'
 require 'gherkin'
 require 'stringio'
 require 'gherkin/sexp_recorder'
 require 'gherkin/output_stream_string_io'
-require 'rubygems'
-require 'rspec/autorun'
 require 'gherkin/shared/lexer_group'
 require 'gherkin/shared/tags_group'
 require 'gherkin/shared/py_string_group'
 require 'gherkin/shared/row_group'
 
 module GherkinSpecHelper
-  # TODO: Rename to gherkin_scan_file
   def scan_file(file)
     @lexer.scan(File.new(File.dirname(__FILE__) + "/gherkin/fixtures/" + file).read, file, 0)
-  end
-
-  # TODO: Remove
-  def parse_file(file)
-    @parser.parse(File.new(File.dirname(__FILE__) + "/gherkin/fixtures/" + file).read)
   end
 
   def rubify_hash(hash)
