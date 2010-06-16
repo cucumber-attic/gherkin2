@@ -4,6 +4,12 @@ Feature: Pretty Formatter
 
   Scenario: Parse all the features in Cucumber
     Given I have Cucumber's source code next to Gherkin's
-    When I find all of the .feature files
-    And I parse the prettified representation of each of them
-    Then they should all be identical to the pretty output
+    And I find all of the .feature files
+    When I send each prettified original through the "pretty" machinery
+    Then the machinery output should be identical to the prettified original
+
+  Scenario: Parse all the features in Cucumber
+    Given I have Cucumber's source code next to Gherkin's
+    And I find all of the .feature files
+    When I send each prettified original through the "json" machinery
+    Then the machinery output should be identical to the prettified original

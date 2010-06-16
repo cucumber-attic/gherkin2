@@ -20,7 +20,7 @@
   ScenarioHeadingEnd = EOL+ space* ( I18N_Feature | I18N_Background | I18N_Scenario | I18N_ScenarioOutline | I18N_Step | '@' | '#' | EOF ) >next_keyword_start;
   BackgroundHeadingEnd = EOL+ space* ( I18N_Feature | I18N_Scenario | I18N_ScenarioOutline | I18N_Step | '@' | '#'| EOF ) >next_keyword_start;
   ScenarioOutlineHeadingEnd = EOL+ space* ( I18N_Feature | I18N_Scenario | I18N_Step | '@' | '#' | EOF ) >next_keyword_start;
-  ExamplesHeadingEnd = EOL+ space* ( I18N_Feature | '|' ) >next_keyword_start;
+  ExamplesHeadingEnd = EOL+ space* ( I18N_Feature | '|' | '#') >next_keyword_start;
  
   FeatureHeading = space* I18N_Feature %begin_content ^FeatureHeadingEnd* :>> FeatureHeadingEnd @store_feature_content;
   BackgroundHeading = space* I18N_Background %begin_content ^BackgroundHeadingEnd* :>> BackgroundHeadingEnd @store_background_content;

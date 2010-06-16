@@ -98,6 +98,9 @@ module Gherkin
         max_lengths = cell_lengths.transpose.map { |col_lengths| col_lengths.max }.flatten
 
         rows.each_with_index do |row, i|
+          row.comments.each do |comment|
+            @io.puts "      #{comment}"
+          end
           j = -1
           @io.puts '      | ' + row.cells.zip(max_lengths).map { |cell, max_length|
             j += 1
