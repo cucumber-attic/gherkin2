@@ -1,5 +1,5 @@
 module Gherkin
-  module Parser
+  module Listener
     class Event < Array
       def event
         self[0]

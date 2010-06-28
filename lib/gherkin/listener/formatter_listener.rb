@@ -1,8 +1,8 @@
 require 'gherkin/native'
-require 'gherkin/parser/row'
+require 'gherkin/listener/row'
 
 module Gherkin
-  module Parser
+  module Listener
     # Adapter from the "raw" Gherkin <tt>Listener</tt> API
     # to the slightly more high-level <tt>Formatter</tt> API,
     # which is easier to implement (less state to keep track of).

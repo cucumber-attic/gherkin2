@@ -1,16 +1,16 @@
 require 'spec_helper'
-require 'gherkin/parser/formatter_listener'
+require 'gherkin/listener/formatter_listener'
 require 'gherkin/parser/parser'
-require 'gherkin/parser/row'
+require 'gherkin/listener/row'
 require 'gherkin/i18n_lexer'
 require 'stringio'
 
 module Gherkin
-  module Parser
+  module Listener
     describe FormatterListener do
       before do
         @formatter = Gherkin::SexpRecorder.new
-        @fl = Gherkin::Parser::FormatterListener.new(@formatter)
+        @fl = Gherkin::Listener::FormatterListener.new(@formatter)
         @lexer = Gherkin::I18nLexer.new(Gherkin::Parser::Parser.new(@fl))
       end
       

@@ -1,6 +1,10 @@
-package gherkin.parser;
+package gherkin.listener;
 
 import gherkin.Listener;
+import gherkin.listener.filter.Event;
+import gherkin.listener.filter.FilterMethod;
+import gherkin.listener.filter.FilterMethodFactory;
+import gherkin.listener.filter.TagFilterMethod;
 
 import java.util.*;
 
@@ -307,4 +311,7 @@ public class FilterListener implements Listener {
         return retVal;
     }
 
+    public static enum TableState {
+        BACKGROUND, STEP, EXAMPLES
+    }
 }

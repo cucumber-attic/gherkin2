@@ -1,12 +1,12 @@
 # encoding: utf-8
 require 'spec_helper'
-require 'gherkin/parser/filter_listener'
-require 'gherkin/parser/formatter_listener'
+require 'gherkin/listener/filter_listener'
+require 'gherkin/listener/formatter_listener'
 require 'gherkin/formatter/pretty_formatter'
 require 'stringio'
 
 module Gherkin
-  module Parser
+  module Listener
     describe FilterListener do
       
       class LineListener
@@ -31,13 +31,13 @@ module Gherkin
       def verify_output(expected_output, filters)
         io = StringIO.new
         formatter = Gherkin::Formatter::PrettyFormatter.new(io, true)
-        listener = Gherkin::Parser::FormatterListener.new(formatter)
+        listener = Gherkin::Listener::FormatterListener.new(formatter)
         scan(listener, filters)
         io.string.should == expected_output
       end
 
       def scan(listener, filters)
-        filter_listener = Gherkin::Parser::FilterListener.new(listener, filters)
+        filter_listener = Gherkin::Listener::FilterListener.new(listener, filters)
         parser = Gherkin::Parser::Parser.new(filter_listener, true, "root")
         lexer  = Gherkin::I18nLexer.new(parser, true)
         lexer.scan(@input, "test.feature", 0)

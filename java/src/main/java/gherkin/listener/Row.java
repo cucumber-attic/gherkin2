@@ -1,4 +1,4 @@
-package gherkin.parser;
+package gherkin.listener;
 
 import java.util.List;
 

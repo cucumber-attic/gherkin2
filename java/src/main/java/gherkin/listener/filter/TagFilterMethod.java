@@ -1,4 +1,6 @@
-package gherkin.parser;
+package gherkin.listener.filter;
+
+import gherkin.TagExpression;
 
 import java.util.List;
 

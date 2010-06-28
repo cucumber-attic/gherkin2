@@ -1,4 +1,4 @@
-package gherkin.parser;
+package gherkin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,13 +38,13 @@ public class TagExpression {
             if (tagAndLimit.length == 2) {
                 tag = tagAndLimit[0];
                 int limit = Integer.parseInt(tagAndLimit[1]);
-                if(limits.containsKey(tag) && limits.get(tag) != limit) {
+                if (limits.containsKey(tag) && limits.get(tag) != limit) {
                     throw new BadTagLimitException(tag, limits.get(tag), limit);
                 }
                 limits.put(tag, limit);
             }
 
-            if(negation) {
+            if (negation) {
                 or.add(new Not(new Tag(tag)));
             } else {
                 or.add(new Tag(tag));

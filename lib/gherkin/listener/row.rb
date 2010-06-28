@@ -1,7 +1,7 @@
 require 'gherkin/native'
 
 module Gherkin
-  module Parser
+  module Listener
     class Row
       native_impl('gherkin')
 

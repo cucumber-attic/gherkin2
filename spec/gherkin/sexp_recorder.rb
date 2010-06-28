@@ -1,5 +1,5 @@
 require 'gherkin/rubify'
-require 'gherkin/parser/row'
+require 'gherkin/listener/row'
 
 module Gherkin
   class SexpRecorder
@@ -38,7 +38,7 @@ module Gherkin
     def sexpify(o)
       if (defined?(JRUBY_VERSION) && Java.java.util.Collection === o) || Array === o
         o.map{|e| sexpify(e)}
-      elsif(Parser::Row === o)
+      elsif(Listener::Row === o)
         {
           "cells" => rubify(o.cells),
           "comments" => rubify(o.comments),

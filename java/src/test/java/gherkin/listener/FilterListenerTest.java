@@ -1,8 +1,9 @@
-package gherkin.parser;
+package gherkin.listener;
 
 import gherkin.I18nLexer;
 import gherkin.Lexer;
 import gherkin.Listener;
+import gherkin.parser.Parser;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationHandler;

@@ -1,9 +1,9 @@
-require 'gherkin/parser/event'
-require 'gherkin/parser/tag_expression'
+require 'gherkin/listener/event'
+require 'gherkin/tag_expression'
 require 'gherkin/native'
 
 module Gherkin
-  module Parser
+  module Listener
     # This class filters events based on filter criteria.
     class FilterListener
       native_impl('gherkin')

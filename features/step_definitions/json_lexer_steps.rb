@@ -4,7 +4,7 @@ require 'gherkin/json_lexer'
 
 Given /^a PrettyFormatter$/ do
   @io = StringIO.new
-  @formatter = Gherkin::Parser::FormatterListener.new(Gherkin::Formatter::PrettyFormatter.new(@io, true))
+  @formatter = Gherkin::Listener::FormatterListener.new(Gherkin::Formatter::PrettyFormatter.new(@io, true))
 end
 
 Given /^a JSON lexer$/ do

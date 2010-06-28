@@ -4,9 +4,9 @@ import gherkin.formatter.Argument;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.NullFormatter;
 import gherkin.formatter.PrettyFormatter;
-import gherkin.parser.FormatterListener;
+import gherkin.listener.FormatterListener;
+import gherkin.listener.Row;
 import gherkin.parser.Parser;
-import gherkin.parser.Row;
 import gherkin.util.FixJava;
 
 import java.io.*;
@@ -30,9 +30,10 @@ public class Main {
                 step();
             }
 
-            public void step(List<String> comments, String keyword, String name, int line, String stepString,            String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
+            public void step(List<String> comments, String keyword, String name, int line, String stepString, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
                 step();
             }
+
             private void step() {
                 try {
                     out.append('.').flush();

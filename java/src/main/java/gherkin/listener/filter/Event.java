@@ -1,4 +1,4 @@
-package gherkin.parser;
+package gherkin.listener.filter;
 
 import gherkin.Listener;
 
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class Event {
-    enum Type {
+    public enum Type {
         ROW, TAG, COMMENT,
         FEATURE, BACKGROUND, SCENARIO,
         SCENARIO_OUTLINE, EXAMPLES, STEP,

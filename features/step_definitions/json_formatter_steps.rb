@@ -1,6 +1,6 @@
 require 'stringio'
 require 'gherkin/formatter/json_formatter'
-require 'gherkin/parser/formatter_listener'
+require 'gherkin/listener/formatter_listener'
 
 # Monkey patching so that Hash.to_json has a predictable result.
 class Hash
@@ -12,7 +12,7 @@ end
 
 Given /^a JSON formatter$/ do
   @io = StringIO.new
-  @listener = Gherkin::Parser::FormatterListener.new(Gherkin::Formatter::JSONFormatter.new(@io))
+  @listener = Gherkin::Listener::FormatterListener.new(Gherkin::Formatter::JSONFormatter.new(@io))
 end
 
 Then /^the outputted JSON should be:$/ do |expected_json|

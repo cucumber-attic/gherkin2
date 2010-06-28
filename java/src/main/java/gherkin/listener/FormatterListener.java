@@ -1,4 +1,4 @@
-package gherkin.parser;
+package gherkin.listener;
 
 import gherkin.Listener;
 import gherkin.formatter.Formatter;
@@ -170,4 +170,5 @@ public class FormatterListener implements Listener {
             formatter.examples(comments, tags, keyword, name, description, line, examplesTable);
         }
     }
+
 }

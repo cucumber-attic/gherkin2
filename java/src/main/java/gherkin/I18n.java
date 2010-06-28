@@ -2,11 +2,10 @@ package gherkin;
 
 import gherkin.formatter.Formatter;
 import gherkin.formatter.PrettyFormatter;
-import gherkin.parser.Row;
+import gherkin.listener.Row;
 import gherkin.util.Mapper;
 
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.*;
 
 import static gherkin.util.FixJava.join;
@@ -14,8 +13,9 @@ import static gherkin.util.FixJava.map;
 
 public class I18n {
     private static final List<String> FEATURE_ELEMENT_KEYWORD_KEYS = Arrays.asList("feature", "background", "scenario", "scenario_outline", "examples");
-    private static final List<String> STEP_KEYWORD_KEYS            = Arrays.asList("given", "when", "then", "and", "but");
-    private static final List<String> KEYWORD_KEYS                 = new ArrayList<String>();
+    private static final List<String> STEP_KEYWORD_KEYS = Arrays.asList("given", "when", "then", "and", "but");
+    private static final List<String> KEYWORD_KEYS = new ArrayList<String>();
+
     static {
         KEYWORD_KEYS.addAll(FEATURE_ELEMENT_KEYWORD_KEYS);
         KEYWORD_KEYS.addAll(STEP_KEYWORD_KEYS);
@@ -79,6 +79,7 @@ public class I18n {
      * Workaround for he and id bugs in the JDK.
      * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6457127
      * http://forums.sun.com/thread.jspa?threadID=5335461
+     *
      * @return locale name.
      */
     private String localeName() {
@@ -86,7 +87,7 @@ public class I18n {
     }
 
     public List<String> keywords(String key) {
-        if(!keywords.containsKey(key)) {
+        if (!keywords.containsKey(key)) {
             throw new RuntimeException("No such key: " + key + ". Available keys: " + keywords.keySet());
         }
         return keywords.get(key);

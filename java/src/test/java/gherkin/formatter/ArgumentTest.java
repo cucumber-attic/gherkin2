@@ -12,6 +12,6 @@ public class ArgumentTest {
         assertEquals("I have [[[[åtte] cukes i [[[[bøtta]", Argument.format("I have åtte cukes i bøtta", new ArgumentFormat("[[[[", "]"),
                 new Argument(7, "åtte"),
                 new Argument(21, "bøtta")
-                ));
+        ));
     }
 }

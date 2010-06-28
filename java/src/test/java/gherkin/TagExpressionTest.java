@@ -1,4 +1,4 @@
-package gherkin.parser;
+package gherkin;
 
 import org.junit.Test;
 

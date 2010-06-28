@@ -55,11 +55,11 @@ module Gherkin
       def language_table
         require 'stringio'
         require 'gherkin/formatter/pretty_formatter'
-        require 'gherkin/parser/row'
+        require 'gherkin/listener/row'
         io = defined?(JRUBY_VERSION) ? Java.java.io.StringWriter.new : StringIO.new
         pf = Gherkin::Formatter::PrettyFormatter.new(io, true)
         table = all.map do |i18n|
-          Parser::Row.new([i18n.iso_code, i18n.keywords('name')[0], i18n.keywords('native')[0]], [], nil)
+          Listener::Row.new([i18n.iso_code, i18n.keywords('name')[0], i18n.keywords('native')[0]], [], nil)
         end
         pf.table(table)
         if defined?(JRUBY_VERSION)
@@ -147,19 +147,19 @@ module Gherkin
     def keyword_table
       require 'stringio'
       require 'gherkin/formatter/pretty_formatter'
-      require 'gherkin/parser/row'
+      require 'gherkin/listener/row'
       io = StringIO.new
       pf = Gherkin::Formatter::PrettyFormatter.new(io, true)
 
       gherkin_keyword_table = KEYWORD_KEYS.map do |key|
-        Parser::Row.new([key, keywords(key).map{|keyword| %{"#{keyword}"}}.join(', ')], [], nil)
+        Listener::Row.new([key, keywords(key).map{|keyword| %{"#{keyword}"}}.join(', ')], [], nil)
       end
       
       code_keyword_table = STEP_KEYWORD_KEYS.map do |key|
         code_keywords = keywords(key).reject{|keyword| keyword == '* '}.map do |keyword|
           %{"#{self.class.code_keyword_for(keyword)}"}
         end.join(', ')
-        Parser::Row.new(["#{key} (code)", code_keywords], [], nil)
+        Listener::Row.new(["#{key} (code)", code_keywords], [], nil)
       end
       
       pf.table(gherkin_keyword_table + code_keyword_table)

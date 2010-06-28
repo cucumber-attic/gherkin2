@@ -1,6 +1,6 @@
 package gherkin.formatter;
 
-import gherkin.parser.Row;
+import gherkin.listener.Row;
 
 import java.util.List;
 
