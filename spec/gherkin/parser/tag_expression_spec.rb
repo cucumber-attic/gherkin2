@@ -111,6 +111,29 @@ module Gherkin
           rubify_hash(@e.limits).should == {"@zap"=>5, "@foo"=>3}
         end
       end
+
+      context "Tag limits" do
+        it "should be counted for negative tags" do
+          @e = Gherkin::Parser::TagExpression.new(['~@todo:3'])
+          rubify_hash(@e.limits).should == {"@todo"=>3}
+        end
+
+        it "should be counted for positive tags" do
+          @e = Gherkin::Parser::TagExpression.new(['@todo:3'])
+          rubify_hash(@e.limits).should == {"@todo"=>3}
+        end
+
+        it "should raise an error for inconsistent limits" do
+          lambda do
+            @e = Gherkin::Parser::TagExpression.new(['@todo:3', '~@todo:4'])
+          end.should raise_error(/Inconsistent tag limits for @todo: 3 and 4/)
+        end
+
+        it "should allow duplicate consistent limits" do
+          @e = Gherkin::Parser::TagExpression.new(['@todo:3', '~@todo:3'])
+          rubify_hash(@e.limits).should == {"@todo"=>3}
+        end
+      end
     end
   end
 end

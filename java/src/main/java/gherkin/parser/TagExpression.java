@@ -26,17 +26,27 @@ public class TagExpression {
     private void add(String[] tags) {
         Or or = new Or();
         for (String tag : tags) {
+            boolean negation;
             tag = tag.trim();
             if (tag.startsWith("~")) {
                 tag = tag.substring(1);
+                negation = true;
+            } else {
+                negation = false;
+            }
+            String[] tagAndLimit = tag.split(":");
+            if (tagAndLimit.length == 2) {
+                tag = tagAndLimit[0];
+                int limit = Integer.parseInt(tagAndLimit[1]);
+                if(limits.containsKey(tag) && limits.get(tag) != limit) {
+                    throw new BadTagLimitException(tag, limits.get(tag), limit);
+                }
+                limits.put(tag, limit);
+            }
+
+            if(negation) {
                 or.add(new Not(new Tag(tag)));
             } else {
-                String[] tagAndLimit = tag.split(":");
-                if (tagAndLimit.length == 2) {
-                    tag = tagAndLimit[0];
-                    int limit = Integer.parseInt(tagAndLimit[1]);
-                    limits.put(tag, limit);
-                }
                 or.add(new Tag(tag));
             }
         }
@@ -120,6 +130,12 @@ public class TagExpression {
     private class BadTagException extends RuntimeException {
         public BadTagException(String tagName) {
             super("Bad tag: \"" + tagName + "\"");
+        }
+    }
+
+    private class BadTagLimitException extends RuntimeException {
+        public BadTagLimitException(String tag, int limitA, int limitB) {
+            super("Inconsistent tag limits for " + tag + ": " + limitA + " and " + limitB);
         }
     }
 }

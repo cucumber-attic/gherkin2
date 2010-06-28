@@ -27,11 +27,25 @@ module Gherkin
 
     private
 
-      def add(tags)
-        negatives, positives = tags.partition{|tag| tag =~ /^~/}
-        positive_limits = Hash[*positives.map{|positive| tag, limit = positive.split(':'); [tag, limit ? limit.to_i : nil]}.flatten]
-        @limits.merge!(positive_limits)
-        @ands << (negatives + positive_limits.keys)
+      def add(tags_with_negation_and_limits)
+        negatives, positives = tags_with_negation_and_limits.partition{|tag| tag =~ /^~/}
+        @ands << (store_and_extract_limits(negatives, true) + store_and_extract_limits(positives, false))
+      end
+
+      def store_and_extract_limits(tags_with_negation_and_limits, negated)
+        tags_with_negation = []
+        tags_with_negation_and_limits.each do |tag_with_negation_and_limit|
+          tag_with_negation, limit = tag_with_negation_and_limit.split(':')
+          tags_with_negation << tag_with_negation
+          if limit
+            tag_without_negation = negated ? tag_with_negation[1..-1] : tag_with_negation
+            if @limits[tag_without_negation] && @limits[tag_without_negation] != limit.to_i
+              raise "Inconsistent tag limits for #{tag_without_negation}: #{@limits[tag_without_negation]} and #{limit.to_i}" 
+            end
+            @limits[tag_without_negation] = limit.to_i
+          end
+        end
+        tags_with_negation
       end
 
       def ruby_expression
