@@ -5,8 +5,12 @@ module Gherkin
         @regexen = regexen
       end
 
-      def eval(name)
-        @regexen.detect{|regexp| name =~ regexp}
+      def eval(names)
+        @regexen.detect do |regexp| 
+          names.detect do |name|
+            name =~ regexp
+          end
+        end
       end
     end
   end

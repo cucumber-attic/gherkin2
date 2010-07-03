@@ -66,7 +66,8 @@ module Gherkin
             @feature_element_tags = (@feature_tags + args[2]).uniq
             @feature_element_ok = @filter.eval(@feature_element_tags)
           when RegexpFilter
-            @feature_element_ok = @filter.eval(args[4])
+            @feature_element_name = args[4]
+            @feature_element_ok = @filter.eval([@feature_element_name])
           end
         when :examples
           replay!
@@ -79,7 +80,8 @@ module Gherkin
             examples_tags = (@feature_element_tags + args[2]).uniq
             @feature_element_ok = @filter.eval(examples_tags)
           when RegexpFilter
-            @feature_element_ok = @filter.eval(args[4])
+            examples_name = args[4]
+            @feature_element_ok = @filter.eval([@feature_element_name, examples_name])
           end
         when :step
           if @feature_element_events.any?

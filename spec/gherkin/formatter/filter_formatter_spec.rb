@@ -52,6 +52,10 @@ module Gherkin
         it "should filter on scenario name" do
           verify_filter([/Reading a Scenario/], 1..19)
         end
+
+        it "should filter on scenario outline name" do
+          verify_filter([/More/], 1..14, 46..61)
+        end
       end
     end
   end
