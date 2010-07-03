@@ -47,9 +47,12 @@ module Gherkin
           @feature_element_tags = (@feature_tags + args[2]).uniq
           @feature_element_ok = @filter.eval(@feature_element_tags)
         when :examples
+          replay!
+
           @feature_element_events << args
-          #@examples_tags = (@feature_element_tags + args[2]).uniq
-          #@feature_element_ok = @filter.eval(@feature_element_tags)
+
+          examples_tags = (@feature_element_tags + args[2]).uniq
+          @feature_element_ok = @filter.eval(examples_tags)
         when :step
           if @feature_element_events
             @feature_element_events << args

@@ -16,23 +16,27 @@ module Gherkin
         fl = Gherkin::Listener::FormatterListener.new(formatter)
         lexer = Gherkin::I18nLexer.new(fl)
 
-        source = File.new(File.dirname(__FILE__) + "/../fixtures/complex_for_filtering.feature").read
+        source = File.new(File.dirname(__FILE__) + "/../fixtures/complex_for_filtering.feature").read + "# __EOF__"
         lexer.scan(source, "complex.feature", 0)
         
         source_lines = source.split("\n")
         expected = (line_ranges.map do |line_range|
           source_lines[(line_range.first-1..line_range.last-1)]
-        end.flatten + [""]).join("\n")
+        end.flatten).join("\n").gsub(/# __EOF__/, '')
         io.string.should == expected
       end
 
       context "tags" do
-        it "should filter on @tag4" do
-          verify_filter(['@tag4'], 1..18)
+        it "should filter on scenario tag" do
+          verify_filter(['@tag4'], 1..19)
         end
 
-        it "should filter on @more" do
-          verify_filter(['@more'], 1..14, 45..59)
+        it "should filter on scenario outline tag" do
+          verify_filter(['@more'], 1..14, 45..60)
+        end
+
+        it "should filter on examples tag" do
+          verify_filter(['@neat'], 1..14, 45..54)
         end
       end
     end
