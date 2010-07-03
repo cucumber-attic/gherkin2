@@ -20,16 +20,17 @@ Feature: Feature Text
   @tag3
   Scenario: Reading a second scenario
     With two lines of text
+
     #Comment on line 24
     Given a third step with a table
-    |a|b|
-    |c|d|
-    |e|f|
+      | a | b |
+      | c | d |
+      | e | f |
     And I am still testing things
-      |g|h|
-      |e|r|
-      |k|i|
-      |n|| 
+      | g | h |
+      | e | r |
+      | k | i |
+      | n |   |
     And I am done testing these tables
     #Comment on line 29
     Then I am happy

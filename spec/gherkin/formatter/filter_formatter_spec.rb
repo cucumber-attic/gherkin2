@@ -31,16 +31,20 @@ module Gherkin
           verify_filter(['@tag4'], 1..19)
         end
 
+        it "should filter on abother scenario tag" do
+          verify_filter(['@tag3'], 1..37)
+        end
+
         it "should filter on scenario outline tag" do
-          verify_filter(['@more'], 1..14, 45..60)
+          verify_filter(['@more'], 1..14, 46..61)
         end
 
         it "should filter on first examples tag" do
-          verify_filter(['@neat'], 1..14, 45..54)
+          verify_filter(['@neat'], 1..14, 46..55)
         end
 
         it "should filter on second examples tag" do
-          verify_filter(['@hamster'], 1..14, 45..48, 55..60)
+          verify_filter(['@hamster'], 1..14, 46..49, 56..61)
         end
       end
     end
