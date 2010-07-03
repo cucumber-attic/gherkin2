@@ -47,6 +47,12 @@ module Gherkin
           verify_filter(['@hamster'], 1..14, 46..49, 56..61)
         end
       end
+
+      context "name" do
+        it "should filter on scenario name" do
+          verify_filter([/Reading a Scenario/], 1..19)
+        end
+      end
     end
   end
 end

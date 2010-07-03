@@ -1,11 +1,12 @@
 require 'gherkin/tag_expression'
+require 'gherkin/formatter/regexp_filter'
 
 module Gherkin
   module Formatter
     class FilterFormatter
       def initialize(formatter, filters)
         @formatter = formatter
-        @filter = TagExpression.new(filters)
+        @filter = detect_filter(filters)
         
         @header_events = []
         @feature_element_events = []
@@ -34,7 +35,19 @@ module Gherkin
       end
 
     private
-    
+
+      def detect_filter(filters)
+        raise "Inconsistent filters: #{filters.inspect}" if filters.map{|filter| filter.class}.uniq.length > 1
+        case(filters[0])
+        when Fixnum 
+          LineFilter.new(filters)
+        when Regexp 
+          RegexpFilter.new(filters)
+        when String 
+          TagExpression.new(filters)
+        end
+      end
+
       def method_missing(*args)
         case(args[0])
         when :feature
@@ -48,16 +61,26 @@ module Gherkin
           @feature_element_events.clear
           @feature_element_events << args
           
-          @feature_element_tags = (@feature_tags + args[2]).uniq
-          @feature_element_ok = @filter.eval(@feature_element_tags)
+          case @filter
+          when TagExpression
+            @feature_element_tags = (@feature_tags + args[2]).uniq
+            @feature_element_ok = @filter.eval(@feature_element_tags)
+          when RegexpFilter
+            @feature_element_ok = @filter.eval(args[4])
+          end
         when :examples
           replay!
 
           @examples_events.clear
           @examples_events << args
 
-          examples_tags = (@feature_element_tags + args[2]).uniq
-          @feature_element_ok = @filter.eval(examples_tags)
+          case @filter
+          when TagExpression
+            examples_tags = (@feature_element_tags + args[2]).uniq
+            @feature_element_ok = @filter.eval(examples_tags)
+          when RegexpFilter
+            @feature_element_ok = @filter.eval(args[4])
+          end
         when :step
           if @feature_element_events.any?
             @feature_element_events << args
