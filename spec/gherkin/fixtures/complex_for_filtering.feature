@@ -45,15 +45,15 @@ Feature: Feature Text
   @more
   Scenario Outline: More
     Given Some <whaaa>
-    
+
     @neat
     Examples: Neato
-      |whaa|
-      |neat|
-      |beat|
-    
+      | whaa |
+      | neat |
+      | beat |
+
     @hamster
     Examples: Rodents
-      |whaa|
-      |hammy|
-      |mousy|
+      | whaa  |
+      | hammy |
+      | mousy |

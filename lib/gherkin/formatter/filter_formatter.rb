@@ -35,40 +35,48 @@ module Gherkin
         case(args[0])
         when :feature
           @header_events = [args]
-          @body_events = []
           @feature_tags = args[2]
         when :background
-          @background = true
           @header_events << args
-        when :scenario
-          @background = false
-          tags = (@feature_tags + args[2]).uniq
-          @feature_element_ok = @filter.eval(tags)
-          if @feature_element_ok
-            @body_events << args
-          end
-        when :scenario_outline
-          @background = false
+        when :scenario, :scenario_outline
+          replay!
+
+          @feature_element_events = []
+          @feature_element_events << args
+          
+          @feature_element_tags = (@feature_tags + args[2]).uniq
+          @feature_element_ok = @filter.eval(@feature_element_tags)
         when :examples
-          @background = false
+          @feature_element_events << args
+          #@examples_tags = (@feature_element_tags + args[2]).uniq
+          #@feature_element_ok = @filter.eval(@feature_element_tags)
         when :step
-          if @background
+          if @feature_element_events
+            @feature_element_events << args
+          else
             @header_events << args
-          elsif @feature_element_ok
-            @body_events << args
           end
         when :eof
-          replay
+          replay!
         else
           super
         end
       end
 
-      def replay
-        return if @body_events.empty?
-        (@header_events + @body_events).each do |event|
+      def replay!
+        if @feature_element_ok
+          if @header_events.any?
+            replay_events!(@header_events)
+          end
+          replay_events!(@feature_element_events)
+        end
+      end
+      
+      def replay_events!(events)
+        events.each do |event|
           @formatter.__send__(*event)
         end
+        events.clear
       end
     end
   end

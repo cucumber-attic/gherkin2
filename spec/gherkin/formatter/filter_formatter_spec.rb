@@ -9,7 +9,7 @@ require 'gherkin/formatter/pretty_formatter'
 module Gherkin
   module Formatter
     describe FilterFormatter do
-      def verify_filter(filters, lines)
+      def verify_filter(filters, *line_ranges)
         io = StringIO.new
         pretty_formatter = Gherkin::Formatter::PrettyFormatter.new(io, true)
         formatter = Gherkin::Formatter::FilterFormatter.new(pretty_formatter, filters)
@@ -19,12 +19,21 @@ module Gherkin
         source = File.new(File.dirname(__FILE__) + "/../fixtures/complex_for_filtering.feature").read
         lexer.scan(source, "complex.feature", 0)
         
-        range = (lines.first-1..lines.last-1)
-        io.string.should == source.split("\n")[range].join("\n") + "\n"
+        source_lines = source.split("\n")
+        expected = (line_ranges.map do |line_range|
+          source_lines[(line_range.first-1..line_range.last-1)]
+        end.flatten + [""]).join("\n")
+        io.string.should == expected
       end
 
-      it "should filter on tags" do
-        verify_filter(['@tag4'], 1..18)
+      context "tags" do
+        it "should filter on @tag4" do
+          verify_filter(['@tag4'], 1..18)
+        end
+
+        it "should filter on @more" do
+          verify_filter(['@more'], 1..14, 45..59)
+        end
       end
     end
   end
