@@ -56,6 +56,14 @@ module Gherkin
         it "should filter on scenario outline name" do
           verify_filter([/More/], 1..14, 46..61)
         end
+
+        it "should filter on first examples name" do
+          verify_filter([/Neato/], 1..14, 46..55)
+        end
+
+        it "should filter on second examples name" do
+          verify_filter([/Rodents/], 1..14, 46..49, 56..61)
+        end
       end
     end
   end
