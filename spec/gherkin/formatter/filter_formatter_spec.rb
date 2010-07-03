@@ -71,6 +71,18 @@ module Gherkin
           it "should filter on scenario line" do
             verify_filter([16], 1..19)
           end
+
+          it "should filter on scenario outline line" do
+            verify_filter([47], 1..14, 46..61)
+          end
+
+          it "should filter on first examples line" do
+            verify_filter([51], 1..14, 46..55)
+          end
+
+          it "should filter on second examples line" do
+            verify_filter([57], 1..14, 46..49, 56..61)
+          end
         end
       end
     end

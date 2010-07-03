@@ -86,6 +86,9 @@ module Gherkin
           when RegexpFilter
             examples_name = args[4]
             @feature_element_ok = @filter.eval([@feature_element_name, examples_name])
+          when LineFilter
+            examples_line = args[6]
+            @feature_element_ok = @filter.eval([@feature_element_line, examples_line])
           end
         when :step
           if @feature_element_events.any?
