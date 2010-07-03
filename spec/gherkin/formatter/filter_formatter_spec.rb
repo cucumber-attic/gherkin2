@@ -20,11 +20,11 @@ module Gherkin
         lexer.scan(source, "complex.feature", 0)
         
         range = (lines.first-1..lines.last-1)
-        io.string.should == source.split("\n")[range].join("\n")
+        io.string.should == source.split("\n")[range].join("\n") + "\n"
       end
 
       it "should filter on tags" do
-        verify_filter(['@tag4'], 1..19)
+        verify_filter(['@tag4'], 1..18)
       end
     end
   end
