@@ -35,8 +35,12 @@ module Gherkin
           verify_filter(['@more'], 1..14, 45..60)
         end
 
-        it "should filter on examples tag" do
+        it "should filter on first examples tag" do
           verify_filter(['@neat'], 1..14, 45..54)
+        end
+
+        it "should filter on second examples tag" do
+          verify_filter(['@hamster'], 1..14, 45..48, 55..60)
         end
       end
     end

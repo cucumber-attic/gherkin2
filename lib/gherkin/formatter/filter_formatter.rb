@@ -6,6 +6,10 @@ module Gherkin
       def initialize(formatter, filters)
         @formatter = formatter
         @filter = TagExpression.new(filters)
+        
+        @header_events = []
+        @feature_element_events = []
+        @examples_events = []
       end
 
       def _feature(comments, tags, keyword, name, description, uri)
@@ -34,14 +38,14 @@ module Gherkin
       def method_missing(*args)
         case(args[0])
         when :feature
-          @header_events = [args]
+          @header_events << args
           @feature_tags = args[2]
         when :background
           @header_events << args
         when :scenario, :scenario_outline
           replay!
 
-          @feature_element_events = []
+          @feature_element_events.clear
           @feature_element_events << args
           
           @feature_element_tags = (@feature_tags + args[2]).uniq
@@ -49,12 +53,13 @@ module Gherkin
         when :examples
           replay!
 
-          @feature_element_events << args
+          @examples_events.clear
+          @examples_events << args
 
           examples_tags = (@feature_element_tags + args[2]).uniq
           @feature_element_ok = @filter.eval(examples_tags)
         when :step
-          if @feature_element_events
+          if @feature_element_events.any?
             @feature_element_events << args
           else
             @header_events << args
@@ -72,6 +77,9 @@ module Gherkin
             replay_events!(@header_events)
           end
           replay_events!(@feature_element_events)
+          if @examples_events.any?
+            replay_events!(@examples_events)
+          end
         end
       end
       
