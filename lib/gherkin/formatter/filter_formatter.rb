@@ -1,5 +1,6 @@
 require 'gherkin/tag_expression'
 require 'gherkin/formatter/regexp_filter'
+require 'gherkin/formatter/line_filter'
 
 module Gherkin
   module Formatter
@@ -68,6 +69,9 @@ module Gherkin
           when RegexpFilter
             @feature_element_name = args[4]
             @feature_element_ok = @filter.eval([@feature_element_name])
+          when LineFilter
+            @feature_element_line = args[6]
+            @feature_element_ok = @filter.eval([@feature_element_line])
           end
         when :examples
           replay!

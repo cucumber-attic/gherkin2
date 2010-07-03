@@ -48,7 +48,7 @@ module Gherkin
         end
       end
 
-      context "name" do
+      context "names" do
         it "should filter on scenario name" do
           verify_filter([/Reading a Scenario/], 1..19)
         end
@@ -63,6 +63,14 @@ module Gherkin
 
         it "should filter on second examples name" do
           verify_filter([/Rodents/], 1..14, 46..49, 56..61)
+        end
+      end
+
+      context "lines" do
+        context "on the same line as keyword" do
+          it "should filter on scenario line" do
+            verify_filter([16], 1..19)
+          end
         end
       end
     end
