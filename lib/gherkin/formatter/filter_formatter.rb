@@ -14,25 +14,59 @@ module Gherkin
         @examples_events = []
       end
 
-      def _feature(comments, tags, keyword, name, description, uri)
+      def feature(comments, tags, keyword, name, description, uri)
+        @header_events << [:feature, comments, tags, keyword, name, description, uri]
+        @feature_tags = tags
       end
 
-      def _background(comments, keyword, name, description, line)
+      def background(comments, keyword, name, description, line)
+        @header_events << [:background, comments, keyword, name, description, line]
       end
 
-      def _scenario(comments, tags, keyword, name, description, line)
+      def scenario(comments, tags, keyword, name, description, line)
+        filter_scenario(:scenario, comments, tags, keyword, name, description, line)
       end
 
-      def _scenario_outline(comments, tags, keyword, name, description, line)
+      def scenario_outline(comments, tags, keyword, name, description, line)
+        filter_scenario(:scenario_outline, comments, tags, keyword, name, description, line)
       end
 
-      def _examples(comments, tags, keyword, name, description, line, examples_table)
+      def examples(comments, tags, keyword, name, description, line, examples_table)
+        replay!
+
+        @examples_events.clear
+        @examples_events << [:examples, comments, tags, keyword, name, description, line, examples_table]
+
+        case @filter
+        when TagExpression
+          examples_tags = (@feature_element_tags + tags).uniq
+          @feature_element_ok = @filter.eval(examples_tags)
+        when RegexpFilter
+          examples_name = name
+          @feature_element_ok = @filter.eval([@feature_element_name, examples_name])
+        when LineFilter
+          examples_range = line..examples_table.last.line
+          @feature_element_ok = @filter.eval([feature_element_range, examples_range])
+        end
       end
 
-      def _step(comments, keyword, name, line, multiline_arg, status, exception, arguments, stepdef_location)
+      def step(comments, keyword, name, line, multiline_arg, status, exception, arguments, stepdef_location)
+        args = [:step, comments, keyword, name, line, multiline_arg, status, exception, arguments, stepdef_location]
+        if @feature_element_events.any?
+          @feature_element_events << args
+          
+          if LineFilter === @filter
+            @feature_element_end = line
+            @feature_element_ok = @filter.eval([feature_element_range])
+          end
+        else
+          @header_events << args
+        end
       end
 
-      def _eof
+      def eof
+        replay!
+        @formatter.eof
       end
 
     private
@@ -49,63 +83,23 @@ module Gherkin
         end
       end
 
-      def method_missing(*args)
-        case(args[0])
-        when :feature
-          @header_events << args
-          @feature_tags = args[2]
-        when :background
-          @header_events << args
-        when :scenario, :scenario_outline
-          replay!
+      def filter_scenario(method, comments, tags, keyword, name, description, line)
+        replay!
 
-          @feature_element_events.clear
-          @feature_element_events << args
-          
-          case @filter
-          when TagExpression
-            @feature_element_tags = (@feature_tags + args[2]).uniq
-            @feature_element_ok = @filter.eval(@feature_element_tags)
-          when RegexpFilter
-            @feature_element_name = args[4]
-            @feature_element_ok = @filter.eval([@feature_element_name])
-          when LineFilter
-            @feature_element_start = args[6]
-            @feature_element_end = args[6]
-            @feature_element_ok = @filter.eval([feature_element_range])
-          end
-        when :examples
-          replay!
-
-          @examples_events.clear
-          @examples_events << args
-
-          case @filter
-          when TagExpression
-            examples_tags = (@feature_element_tags + args[2]).uniq
-            @feature_element_ok = @filter.eval(examples_tags)
-          when RegexpFilter
-            examples_name = args[4]
-            @feature_element_ok = @filter.eval([@feature_element_name, examples_name])
-          when LineFilter
-            examples_range = args[6]..args[7].last.line
-            @feature_element_ok = @filter.eval([feature_element_range, examples_range])
-          end
-        when :step
-          if @feature_element_events.any?
-            @feature_element_events << args
-            
-            if LineFilter === @filter
-              @feature_element_end = args[4]
-              @feature_element_ok = @filter.eval([feature_element_range])
-            end
-          else
-            @header_events << args
-          end
-        when :eof
-          replay!
-        else
-          super
+        @feature_element_events.clear
+        @feature_element_events << [method, comments, tags, keyword, name, description, line]
+        
+        case @filter
+        when TagExpression
+          @feature_element_tags = (@feature_tags + tags).uniq
+          @feature_element_ok = @filter.eval(@feature_element_tags)
+        when RegexpFilter
+          @feature_element_name = name
+          @feature_element_ok = @filter.eval([@feature_element_name])
+        when LineFilter
+          @feature_element_start = line
+          @feature_element_end = line
+          @feature_element_ok = @filter.eval([feature_element_range])
         end
       end
 
