@@ -42,8 +42,7 @@ module Gherkin
           examples_tags = (@feature_element_tags + tags).uniq
           @feature_element_ok = @filter.eval(examples_tags)
         when RegexpFilter
-          examples_name = name
-          @feature_element_ok = @filter.eval([@feature_element_name, examples_name])
+          @feature_element_ok = @filter.eval([@feature_element_name, name])
         when LineFilter
           examples_range = line..examples_table.last.line
           @feature_element_ok = @filter.eval([feature_element_range, examples_range])
