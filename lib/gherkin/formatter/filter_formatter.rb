@@ -70,8 +70,9 @@ module Gherkin
             @feature_element_name = args[4]
             @feature_element_ok = @filter.eval([@feature_element_name])
           when LineFilter
-            @feature_element_line = args[6]
-            @feature_element_ok = @filter.eval([@feature_element_line])
+            @feature_element_start = args[6]
+            @feature_element_end = args[6]
+            @feature_element_ok = @filter.eval([feature_element_range])
           end
         when :examples
           replay!
@@ -87,12 +88,17 @@ module Gherkin
             examples_name = args[4]
             @feature_element_ok = @filter.eval([@feature_element_name, examples_name])
           when LineFilter
-            examples_line = args[6]
-            @feature_element_ok = @filter.eval([@feature_element_line, examples_line])
+            examples_range = args[6]..args[7].last.line
+            @feature_element_ok = @filter.eval([feature_element_range, examples_range])
           end
         when :step
           if @feature_element_events.any?
             @feature_element_events << args
+            
+            if LineFilter === @filter
+              @feature_element_end = args[4]
+              @feature_element_ok = @filter.eval([feature_element_range])
+            end
           else
             @header_events << args
           end
@@ -101,6 +107,10 @@ module Gherkin
         else
           super
         end
+      end
+
+      def feature_element_range
+        @feature_element_start..@feature_element_end
       end
 
       def replay!

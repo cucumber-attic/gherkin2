@@ -67,7 +67,7 @@ module Gherkin
       end
 
       context "lines" do
-        context "on the same line as keyword" do
+        context "on the same line as feature element keyword" do
           it "should filter on scenario line" do
             verify_filter([16], 1..19)
           end
@@ -82,6 +82,26 @@ module Gherkin
 
           it "should filter on second examples line" do
             verify_filter([57], 1..14, 46..49, 56..61)
+          end
+        end
+
+        context "on the same line as step keyword" do
+          it "should filter on step line" do
+            verify_filter([17], 1..19)
+          end
+
+          it "should filter on scenario outline line" do
+            verify_filter([48], 1..14, 46..61)
+          end
+        end
+
+        context "on the same line as table line" do
+          it "should filter on first examples line" do
+            verify_filter([52], 1..14, 46..55)
+          end
+
+          it "should filter on second examples line" do
+            verify_filter([58], 1..14, 46..49, 56..61)
           end
         end
       end

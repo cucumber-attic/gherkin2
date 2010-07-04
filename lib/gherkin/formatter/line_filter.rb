@@ -5,10 +5,10 @@ module Gherkin
         @lines = lines
       end
 
-      def eval(lines)
-        @lines.detect do |l1| 
-          lines.detect do |l2|
-            l1 == l2
+      def eval(ranges)
+        @lines.detect do |line|
+          ranges.detect do |range|
+            range.include?(line)
           end
         end
       end
