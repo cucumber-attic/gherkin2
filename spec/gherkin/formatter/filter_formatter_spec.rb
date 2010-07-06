@@ -9,6 +9,12 @@ require 'gherkin/formatter/pretty_formatter'
 module Gherkin
   module Formatter
     describe FilterFormatter do
+      attr_accessor :file
+
+      before do
+        self.file = 'complex_for_filtering.feature'
+      end
+
       def verify_filter(filters, *line_ranges)
         io = StringIO.new
         pretty_formatter = Gherkin::Formatter::PrettyFormatter.new(io, true)
@@ -16,7 +22,7 @@ module Gherkin
         fl = Gherkin::Listener::FormatterListener.new(formatter)
         lexer = Gherkin::I18nLexer.new(fl)
 
-        source = File.new(File.dirname(__FILE__) + "/../fixtures/complex_for_filtering.feature").read + "# __EOF__"
+        source = File.new(File.dirname(__FILE__) + "/../fixtures/" + file).read + "# __EOF__"
         lexer.scan(source, "complex.feature", 0)
         
         source_lines = source.split("\n")
@@ -64,6 +70,11 @@ module Gherkin
         it "should filter on second examples name" do
           verify_filter([/Rodents/], 1..14, 46..49, 56..61)
         end
+
+        it "should filter on various names" do
+          self.file = 'hantu_pisang.feature'
+          verify_filter([/Pisang/], 1..8, 19..32)
+        end
       end
 
       context "lines" do
@@ -95,13 +106,19 @@ module Gherkin
           end
         end
 
-        context "on the same line as table line" do
-          it "should filter on first examples line" do
+        context "on examples header line" do
+          it "should filter on first table" do
             verify_filter([52], 1..14, 46..55)
           end
 
-          it "should filter on second examples line" do
+          it "should filter on second table" do
             verify_filter([58], 1..14, 46..49, 56..61)
+          end
+        end
+
+        context "on examples example line" do
+          it "should filter on first table" do
+            verify_filter([53], 1..14, 46..53, 55..55)
           end
         end
       end

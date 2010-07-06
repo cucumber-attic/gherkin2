@@ -35,7 +35,7 @@ Feature: Feature Text
     #Comment on line 29
     Then I am happy
 
-  Scenario: Hammerzeit
+  Scenario: Hammerzeit XX
     Given All work and no play
       """
       Makes Homer something something
@@ -48,7 +48,7 @@ Feature: Feature Text
     Given Some <whaaa>
 
     @neat
-    Examples: Neato
+    Examples: Neato XX
       | whaa |
       | neat |
       | beat |
