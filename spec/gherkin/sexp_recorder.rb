@@ -40,10 +40,12 @@ module Gherkin
         o.map{|e| sexpify(e)}
       elsif(Listener::Row === o)
         {
-          "cells" => rubify(o.cells),
-          "comments" => rubify(o.comments),
+          "cells" => sexpify(o.cells),
+          "comments" => sexpify(o.comments),
           "line" => o.line,
         }
+      elsif(Formatter::Struct::Comment === o)
+        o.value
       else
         o
       end

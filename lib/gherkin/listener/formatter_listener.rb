@@ -1,5 +1,6 @@
 require 'gherkin/native'
 require 'gherkin/listener/row'
+require 'gherkin/formatter/struct'
 
 module Gherkin
   module Listener
@@ -21,8 +22,8 @@ module Gherkin
         @offset = offset
       end
 
-      def comment(content, line)
-        @comments << content
+      def comment(value, line)
+        @comments << Formatter::Struct::Comment.new(value, line)
       end
 
       def tag(name, line)

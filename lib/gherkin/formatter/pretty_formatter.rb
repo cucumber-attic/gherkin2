@@ -149,7 +149,7 @@ module Gherkin
       end
 
       def print_comments(comments, indent)
-        @io.write(comments.empty? ? '' : indent + comments.join("\n#{indent}") + "\n")
+        @io.write(comments.empty? ? '' : indent + comments.map{|comment| comment.value}.join("\n#{indent}") + "\n")
       end
 
       def print_description(description, indent, newline=true)
