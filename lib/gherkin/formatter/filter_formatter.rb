@@ -9,18 +9,29 @@ module Gherkin
         @formatter = formatter
         @filter = detect_filter(filters)
         
-        @header_events = []
+        @feature_events = []
+        @background_events = []
         @feature_element_events = []
         @examples_events = []
       end
 
       def feature(comments, tags, keyword, name, description, uri)
-        @header_events << [:feature, comments, tags, keyword, name, description, uri]
+        @background_ok = false
+        
+        @feature_events << [:feature, comments, tags, keyword, name, description, uri]
         @feature_tags = tags
       end
 
       def background(comments, keyword, name, description, line)
-        @header_events << [:background, comments, keyword, name, description, line]
+        @feature_element_start = line
+        @feature_element_end = line
+
+        case @filter
+        when RegexpFilter
+          @background_ok = @filter.eval([@feature_element_name, name])
+        end
+
+        @background_events << [:background, comments, keyword, name, description, line]
       end
 
       def scenario(comments, tags, keyword, name, description, line)
@@ -59,13 +70,13 @@ module Gherkin
         args = [:step, comments, keyword, name, line, multiline_arg, status, exception, arguments, stepdef_location]
         if @feature_element_events.any?
           @feature_element_events << args
-          
-          if LineFilter === @filter
-            @feature_element_end = line
-            @feature_element_ok = @filter.eval([feature_element_range])
-          end
         else
-          @header_events << args
+          @background_events << args
+        end
+
+        if LineFilter === @filter
+          @feature_element_end = line
+          @feature_element_ok = @filter.eval([feature_element_range])
         end
       end
 
@@ -114,12 +125,15 @@ module Gherkin
       end
 
       def replay!
-        if @feature_element_ok
-          if @header_events.any?
-            replay_events!(@header_events)
+        if @feature_element_ok || @background_ok
+          replay_events!(@feature_events)
+
+          if @background_ok
+            replay_events!(@background_events)
           end
-          replay_events!(@feature_element_events)
-          if @examples_events.any?
+          if @feature_element_ok
+            replay_events!(@background_events)
+            replay_events!(@feature_element_events)
             replay_events!(@examples_events)
           end
         end

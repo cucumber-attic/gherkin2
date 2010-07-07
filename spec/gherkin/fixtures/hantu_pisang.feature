@@ -1,6 +1,6 @@
 Feature: search examples
 
-  Background: Hantu Pisang background match
+  Background: The background
     Given passing without a table
 
   Scenario: should match Hantu Pisang

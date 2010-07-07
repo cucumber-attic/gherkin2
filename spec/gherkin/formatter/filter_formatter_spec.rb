@@ -75,6 +75,11 @@ module Gherkin
           self.file = 'hantu_pisang.feature'
           verify_filter([/Pisang/], 1..8, 19..32)
         end
+
+        it "should filter on background name" do
+          self.file = 'hantu_pisang.feature'
+          verify_filter([/The background/], 1..5)
+        end
       end
 
       context "lines" do
