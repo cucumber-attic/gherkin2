@@ -33,6 +33,10 @@ module Gherkin
       end
 
       context "tags" do
+        it "should filter on feature tag" do
+          verify_filter(['@tag1'], 1..61)
+        end
+
         it "should filter on scenario tag" do
           verify_filter(['@tag4'], 1..19)
         end
@@ -124,6 +128,12 @@ module Gherkin
         context "on examples example line" do
           it "should filter on first table" do
             verify_filter([53], 1..14, 46..53, 55..55)
+          end
+        end
+
+        context "on tag line" do
+          it "should filter on first tag" do
+            verify_filter([15], 1..19)
           end
         end
       end

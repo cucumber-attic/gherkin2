@@ -7,63 +7,56 @@ module Gherkin
     class FilterFormatter
       def initialize(formatter, filters)
         @formatter = formatter
-        @filter = detect_filter(filters)
-        
-        @feature_events = []
-        @background_events = []
+        @filter    = detect_filter(filters)
+
+        @feature_element_tags   = []
+
+        @feature_events         = []
+        @background_events      = []
         @feature_element_events = []
-        @examples_events = []
+        @examples_events        = []
       end
 
       def feature(statement, uri)
-        @background_ok = false
-        
-        @feature_events << [:feature, statement, uri]
-        @feature_tags = statement.tags
+        @feature_tags   = statement.tags
+        @feature_name   = statement.name
+        @feature_events = [[:feature, statement, uri]]
       end
 
       def background(statement)
-        @feature_element_start = statement.line
-        @feature_element_end = statement.line
-
-        case @filter
-        when RegexpFilter
-          @background_ok = @filter.eval([@feature_element_name, statement.name])
-        end
-
-        @background_events << [:background, statement]
+        @feature_element_name   = statement.name
+        @feature_element_range  = statement.line_range
+        @background_events      = [[:background, statement]]
       end
 
       def scenario(statement)
-        filter_scenario(:scenario, statement)
+        replay!
+        @feature_element_tags   = statement.tags
+        @feature_element_name   = statement.name
+        @feature_element_range  = statement.line_range
+        @feature_element_events = [[:scenario, statement]]
       end
 
       def scenario_outline(statement)
-        filter_scenario(:scenario_outline, statement)
+        replay!
+        @feature_element_tags   = statement.tags
+        @feature_element_name   = statement.name
+        @feature_element_range  = statement.line_range
+        @feature_element_events = [[:scenario_outline, statement]]
+        @examples_events.clear
       end
 
       def examples(statement, examples_rows)
         replay!
+        @examples_tags = statement.tags
+        @examples_name = statement.name
 
-        case @filter
-        when TagExpression
-          examples_tags = (@feature_element_tags + statement.tags).uniq
-          @feature_element_ok = @filter.eval(examples_tags.map{|tag| tag.name})
-        when RegexpFilter
-          @feature_element_ok = @filter.eval([@feature_element_name, statement.name])
-        when LineFilter
-          table_body_range = examples_rows[1].line..examples_rows[-1].line
-          if @filter.eval([table_body_range])
-            examples_rows = @filter.filter_table_body_rows(examples_rows)
-          end
-
-          examples_range = statement.line..examples_rows[-1].line
-          @feature_element_ok = @filter.eval([feature_element_range, examples_range])
+        table_body_range = examples_rows[1].line..examples_rows[-1].line
+        @examples_range = statement.line_range.first..table_body_range.last
+        if(LineFilter === @filter && @filter.eval([table_body_range]))
+          examples_rows = @filter.filter_table_body_rows(examples_rows)
         end
-
-        if @feature_element_ok
-          @examples_events << [:examples, statement, examples_rows]
-        end
+        @examples_events = [[:examples, statement, examples_rows]]
       end
 
       def step(statement, multiline_arg, result)
@@ -75,8 +68,14 @@ module Gherkin
         end
 
         if LineFilter === @filter
-          @feature_element_end = statement.line
-          @feature_element_ok = @filter.eval([feature_element_range])
+          step_range = statement.line_range
+          case multiline_arg
+          when String
+            #warn "FIXME - add last line of pystring: #{multiline_arg}"
+          when Array
+            step_range = step_range.first..multiline_arg[-1].line
+          end
+          @feature_element_range = @feature_element_range.first..step_range.last
         end
       end
 
@@ -99,46 +98,39 @@ module Gherkin
         end
       end
 
-      def filter_scenario(method, statement)
-        replay!
-
-        @examples_events.clear
-        @feature_element_events.clear
-        @feature_element_events << [method, statement]
-        
+      def replay!
         case @filter
         when TagExpression
-          @feature_element_tags = (@feature_tags + statement.tags).uniq
-          @feature_element_ok = @filter.eval(@feature_element_tags.map{|tag| tag.name})
+          background_ok      = false
+          feature_element_ok = @filter.eval(tag_names(@feature_tags + @feature_element_tags))
+          example_ok         = @filter.eval(tag_names(@feature_tags + @feature_element_tags + @examples_tags)) if @examples_tags
         when RegexpFilter
-          @feature_element_name = statement.name
-          @feature_element_ok = @filter.eval([@feature_element_name])
+          background_ok      = @filter.eval([@background_name]) if @background_name
+          feature_element_ok = @filter.eval([@feature_element_name]) if @feature_element_name
+          example_ok         = @filter.eval([@feature_element_name, @examples_name]) if @examples_name
         when LineFilter
-          @feature_element_start = statement.line
-          @feature_element_end = statement.line
-          @feature_element_ok = @filter.eval([feature_element_range])
+          background_ok      = @filter.eval([@background_range]) if @background_range
+          feature_element_ok = @filter.eval([@feature_element_range]) if @feature_element_range
+          example_ok         = @filter.eval([@feature_element_range, @examples_range]) if @examples_range
         end
-      end
 
-      def feature_element_range
-        @feature_element_start..@feature_element_end
-      end
-
-      def replay!
-        if @feature_element_ok || @background_ok
+        if background_ok || feature_element_ok || example_ok
           replay_events!(@feature_events)
+          replay_events!(@background_events)
 
-          if @background_ok
-            replay_events!(@background_events)
-          end
-          if @feature_element_ok
-            replay_events!(@background_events)
+          if feature_element_ok || example_ok
             replay_events!(@feature_element_events)
-            replay_events!(@examples_events)
+            if example_ok
+              replay_events!(@examples_events)
+            end
           end
         end
       end
-      
+
+      def tag_names(tags)
+        tags.uniq.map{|tag| tag.name}
+      end
+
       def replay_events!(events)
         events.each do |event|
           @formatter.__send__(*event)

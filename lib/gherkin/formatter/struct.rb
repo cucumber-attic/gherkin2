@@ -31,6 +31,12 @@ module Gherkin
         def initialize(comments, tags, keyword, name, description, line)
           @comments, @tags, @keyword, @name, @description, @line = comments, tags, keyword, name, description, line
         end
+
+        def line_range
+          first = @comments[0] ? @comments[0].line : (@tags[0] ? @tags[0].line : line)
+          last = line
+          first..last
+        end
       end
 
       class Result
