@@ -40,12 +40,12 @@ module Gherkin
 
       def scenario(keyword, name, description, line)
         replay_step_or_examples
-        @formatter.scenario(grab_comments!, grab_tags!, keyword, name, description, line)
+        @formatter.scenario(statement(grab_comments!, grab_tags!, keyword, name, description, line))
       end
 
       def scenario_outline(keyword, name, description, line)
         replay_step_or_examples
-        @formatter.scenario_outline(grab_comments!, grab_tags!, keyword, name, description, line)
+        @formatter.scenario_outline(statement(grab_comments!, grab_tags!, keyword, name, description, line))
       end
 
       def examples(keyword, name, description, line)

@@ -34,16 +34,16 @@ module Gherkin
         print_description(statement.description, '    ')
       end
 
-      def scenario(comments, tags, keyword, name, description, line)
+      def scenario(statement)
         @io.puts
-        print_comments(comments, '  ')
-        print_tags(tags, '  ')
-        @io.puts "  #{keyword}: #{name}#{indented_element_uri!(keyword, name, line)}"
-        print_description(description, '    ')
+        print_comments(statement.comments, '  ')
+        print_tags(statement.tags, '  ')
+        @io.puts "  #{statement.keyword}: #{statement.name}#{indented_element_uri!(statement.keyword, statement.name, statement.line)}"
+        print_description(statement.description, '    ')
       end
 
-      def scenario_outline(comments, tags, keyword, name, description, line)
-        scenario(comments, tags, keyword, name, description, line)
+      def scenario_outline(statement)
+        scenario(statement)
       end
 
       def examples(comments, tags, keyword, name, description, line, examples_table)

@@ -39,7 +39,7 @@ module Gherkin
           ['Given ', 'some stuff'],
           ['When ', 'foo']
         ])
-        @l.scenario([], [], "Scenario", "The scenario", "", 4)
+        @l.scenario(Struct::Statement.new([], [], "Scenario", "The scenario", "", 4))
         @l.step([], "Given ", "some stuff", 5, nil, nil, nil, nil, "features/step_definitions/bar.rb:56")
         @l.step([], "When ", "foo", 6, nil, nil, nil, nil, "features/step_definitions/bar.rb:96")
 
@@ -57,7 +57,7 @@ module Gherkin
         @l.steps([
           ['Given ', 'some stuff that is longer']
         ])
-        @l.scenario([], [], "Scenario", "The scenario", "", 4)
+        @l.scenario(Struct::Statement.new([], [], "Scenario", "The scenario", "", 4))
         @l.step([], "Given ", "some stuff that is longer", 5, nil, nil, nil, nil, "features/step_definitions/bar.rb:56")
 
         assert_io(%{Feature: Hello

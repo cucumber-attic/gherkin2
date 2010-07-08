@@ -13,14 +13,14 @@ module Gherkin
         @uri = uri
       end
 
-      def scenario(comments, tags, keyword, name, description, line)
-        record_tags((@feature_tags.to_a + tags.to_a).uniq, line)
-        @formatter.__send__(:scenario, comments, tags, keyword, name, description, line)
+      def scenario(statement)
+        record_tags((@feature_tags.to_a + statement.tags.to_a).uniq, statement.line)
+        @formatter.__send__(:scenario, statement)
       end
 
-      def scenario_outline(comments, tags, keyword, name, description, line)
-        @scenario_outline_tags = tags
-        @formatter.__send__(:scenario_outline, comments, tags, keyword, name, description, line)
+      def scenario_outline(statement)
+        @scenario_outline_tags = statement.tags
+        @formatter.__send__(:scenario_outline, statement)
       end
 
       def examples(comments, tags, keyword, name, description, line, examples_table)

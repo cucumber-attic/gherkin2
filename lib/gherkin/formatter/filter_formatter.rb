@@ -34,12 +34,12 @@ module Gherkin
         @background_events << [:background, statement]
       end
 
-      def scenario(comments, tags, keyword, name, description, line)
-        filter_scenario(:scenario, comments, tags, keyword, name, description, line)
+      def scenario(statement)
+        filter_scenario(:scenario, statement)
       end
 
-      def scenario_outline(comments, tags, keyword, name, description, line)
-        filter_scenario(:scenario_outline, comments, tags, keyword, name, description, line)
+      def scenario_outline(statement)
+        filter_scenario(:scenario_outline, statement)
       end
 
       def examples(comments, tags, keyword, name, description, line, examples_table)
@@ -99,23 +99,23 @@ module Gherkin
         end
       end
 
-      def filter_scenario(method, comments, tags, keyword, name, description, line)
+      def filter_scenario(method, statement)
         replay!
 
         @examples_events.clear
         @feature_element_events.clear
-        @feature_element_events << [method, comments, tags, keyword, name, description, line]
+        @feature_element_events << [method, statement]
         
         case @filter
         when TagExpression
-          @feature_element_tags = (@feature_tags + tags).uniq
+          @feature_element_tags = (@feature_tags + statement.tags).uniq
           @feature_element_ok = @filter.eval(@feature_element_tags.map{|tag| tag.name})
         when RegexpFilter
-          @feature_element_name = name
+          @feature_element_name = statement.name
           @feature_element_ok = @filter.eval([@feature_element_name])
         when LineFilter
-          @feature_element_start = line
-          @feature_element_end = line
+          @feature_element_start = statement.line
+          @feature_element_end = statement.line
           @feature_element_ok = @filter.eval([feature_element_range])
         end
       end
