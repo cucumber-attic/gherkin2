@@ -50,12 +50,12 @@ module Gherkin
 
       def examples(keyword, name, description, line)
         replay_step_or_examples
-        @examples = statement(grab_comments!, grab_tags!, keyword, name, description, line)
+        @examples_statement = statement(grab_comments!, grab_tags!, keyword, name, description, line)
       end
 
       def step(keyword, name, line)
         replay_step_or_examples
-        @step = [grab_comments!, keyword, name, line]
+        @step_statement = statement(grab_comments!, [], keyword, name, nil, line)
       end
 
       def row(cells, line)
@@ -103,14 +103,14 @@ module Gherkin
       end
 
       def replay_step_or_examples
-        if(@step)
+        if(@step_statement)
           multiline_arg = grab_py_string! || grab_table!
-          @formatter.step(*(@step + [multiline_arg, nil, nil, nil, nil]))
-          @step = nil
+          @formatter.step(@step_statement, multiline_arg, nil)
+          @step_statement = nil
         end
-        if(@examples)
-          @formatter.examples(@examples, grab_table!)
-          @examples = nil
+        if(@examples_statement)
+          @formatter.examples(@examples_statement, grab_table!)
+          @examples_statement = nil
         end
       end
     end

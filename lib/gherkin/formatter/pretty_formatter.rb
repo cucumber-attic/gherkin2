@@ -55,15 +55,14 @@ module Gherkin
         table(examples_rows)
       end
 
-      def step(comments, keyword, name, line, multiline_arg, status, exception, arguments, stepdef_location)
-        status_param = "#{status}_param" if status
-        name = Gherkin::Formatter::Argument.format(name, @format, (arguments || [])) 
+      def step(statement, multiline_arg, result)
+        name = Gherkin::Formatter::Argument.format(statement.name, @format, (result ? result.arguments : []))
 
-        step = "#{keyword}#{name}"
-        step = self.__send__(status, step, @monochrome) if status
+        step = "#{statement.keyword}#{statement.name}"
+        step = self.__send__(result.status, step, @monochrome) if result
 
-        print_comments(comments, '    ')
-        @io.puts("    #{step}#{indented_step_location!(stepdef_location)}")
+        print_comments(statement.comments, '    ')
+        @io.puts("    #{step}#{indented_step_location!(result ? result.stepdef_location : nil)}")
         case multiline_arg
         when String
           py_string(multiline_arg)

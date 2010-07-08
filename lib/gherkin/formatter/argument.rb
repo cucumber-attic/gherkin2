@@ -11,6 +11,7 @@ module Gherkin
       end
       
       def self.format(string, argument_format, arguments)
+        arguments ||= []
         s = string.dup
         offset = past_offset = 0
         arguments.each do |arg|

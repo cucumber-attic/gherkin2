@@ -32,6 +32,14 @@ module Gherkin
           @comments, @tags, @keyword, @name, @description, @line = comments, tags, keyword, name, description, line
         end
       end
+
+      class Result
+        attr_reader :status, :error_message, :arguments, :stepdef_location
+        
+        def initialize(status, error_message, arguments, stepdef_location)
+          @status, @error_message, @arguments, @stepdef_location = status, error_message, arguments, stepdef_location
+        end
+      end
     end
   end
 end

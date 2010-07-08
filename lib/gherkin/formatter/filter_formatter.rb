@@ -66,8 +66,8 @@ module Gherkin
         end
       end
 
-      def step(comments, keyword, name, line, multiline_arg, status, exception, arguments, stepdef_location)
-        args = [:step, comments, keyword, name, line, multiline_arg, status, exception, arguments, stepdef_location]
+      def step(statement, multiline_arg, result)
+        args = [:step, statement, multiline_arg, result]
         if @feature_element_events.any?
           @feature_element_events << args
         else
@@ -75,7 +75,7 @@ module Gherkin
         end
 
         if LineFilter === @filter
-          @feature_element_end = line
+          @feature_element_end = statement.line
           @feature_element_ok = @filter.eval([feature_element_range])
         end
       end
