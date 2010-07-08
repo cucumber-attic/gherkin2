@@ -24,6 +24,14 @@ module Gherkin
           @name.hash
         end
       end
+
+      class Statement
+        attr_reader :comments, :tags, :keyword, :name, :description
+        
+        def initialize(comments, tags, keyword, name, description)
+          @comments, @tags, @keyword, @name, @description = comments, tags, keyword, name, description
+        end
+      end
     end
   end
 end

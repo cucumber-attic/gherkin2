@@ -11,13 +11,13 @@ module Gherkin
         @io = io
       end
 
-      def feature(comments, tags, keyword, name, description, uri)
+      def feature(statement, uri)
         @json_hash = {
-          'comments' => comments.to_a, 
-          'tags' => tags.to_a, 
-          'keyword' => keyword, 
-          'name' => name, 
-          'description' => description, 
+          'comments' => statement.comments.to_a, 
+          'tags' => statement.tags.to_a, 
+          'keyword' => statement.keyword, 
+          'name' => statement.name, 
+          'description' => statement.description, 
           'uri' => uri
         }
       end

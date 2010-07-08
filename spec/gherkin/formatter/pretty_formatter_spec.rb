@@ -2,6 +2,7 @@
 require 'spec_helper'
 require 'gherkin/formatter/pretty_formatter'
 require 'gherkin/formatter/argument'
+require 'gherkin/formatter/struct'
 require 'gherkin/listener/formatter_listener'
 require 'gherkin/listener/row'
 require 'stringio'
@@ -33,7 +34,7 @@ module Gherkin
       end
 
       it "should print comments when scenario is longer" do
-        @l.feature([], [], "Feature", "Hello", "World", "features/foo.feature")
+        @l.feature(Struct::Statement.new([], [], "Feature", "Hello", "World"), "features/foo.feature")
         @l.steps([
           ['Given ', 'some stuff'],
           ['When ', 'foo']
@@ -52,7 +53,7 @@ module Gherkin
       end
 
       it "should print comments when step is longer" do
-        @l.feature([], [], "Feature", "Hello", "World", "features/foo.feature")
+        @l.feature(Struct::Statement.new([], [], "Feature", "Hello", "World"), "features/foo.feature")
         @l.steps([
           ['Given ', 'some stuff that is longer']
         ])

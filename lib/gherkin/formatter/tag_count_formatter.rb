@@ -8,8 +8,8 @@ module Gherkin
         @tag_counts = Hash.new{|hash, tag_name| hash[tag_name] = []}
       end
 
-      def feature(comments, tags, keyword, name, description, uri)
-        @feature_tags = tags
+      def feature(statement, uri)
+        @feature_tags = statement.tags
         @uri = uri
       end
 

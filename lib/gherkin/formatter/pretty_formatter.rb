@@ -19,12 +19,12 @@ module Gherkin
         @format = MonochromeFormat.new #@monochrome ? MonochromeFormat.new : AnsiColorFormat.new
       end
 
-      def feature(comments, tags, keyword, name, description, uri)
+      def feature(statement, uri)
         @uri = uri
-        print_comments(comments, '')
-        print_tags(tags, '')
-        @io.puts "#{keyword}: #{name}"
-        print_description(description, '  ', false)
+        print_comments(statement.comments, '')
+        print_tags(statement.tags, '')
+        @io.puts "#{statement.keyword}: #{statement.name}"
+        print_description(statement.description, '  ', false)
       end
 
       def background(comments, keyword, name, description, line)

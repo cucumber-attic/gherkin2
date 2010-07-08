@@ -48,6 +48,8 @@ module Gherkin
         o.value
       elsif(Formatter::Struct::Tag === o)
         o.name
+      elsif(Formatter::Struct::Statement === o)
+        "APE"
       else
         o
       end

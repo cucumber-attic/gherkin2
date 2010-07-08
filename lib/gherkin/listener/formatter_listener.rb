@@ -31,7 +31,7 @@ module Gherkin
       end
 
       def feature(keyword, name, description, line)
-        @formatter.feature(grab_comments!, grab_tags!, keyword, name, description, @uri)
+        @formatter.feature(create_statement!(keyword, name, description), @uri)
       end
 
       def background(keyword, name, description, line)
@@ -73,6 +73,10 @@ module Gherkin
       end
 
     private
+
+      def create_statement!(keyword, name, description)
+        Formatter::Struct::Statement.new(grab_comments!, grab_tags!, keyword, name, description)
+      end
 
       def grab_comments!
         comments = @comments

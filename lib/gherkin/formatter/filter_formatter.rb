@@ -15,11 +15,11 @@ module Gherkin
         @examples_events = []
       end
 
-      def feature(comments, tags, keyword, name, description, uri)
+      def feature(statement, uri)
         @background_ok = false
         
-        @feature_events << [:feature, comments, tags, keyword, name, description, uri]
-        @feature_tags = tags
+        @feature_events << [:feature, statement, uri]
+        @feature_tags = statement.tags
       end
 
       def background(comments, keyword, name, description, line)
