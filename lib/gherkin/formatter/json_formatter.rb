@@ -97,7 +97,7 @@ module Gherkin
       def step_arg_to_hash(multiline_arg)
         return {} if multiline_arg.nil?
         multiline_arg = rubify(multiline_arg)
-        Array === multiline_arg ? {"table" => to_hash_array(multiline_arg) } : { "py_string" => multiline_arg }
+        Array === multiline_arg ? {"table" => to_hash_array(multiline_arg) } : { "py_string" => multiline_arg.value }
       end
 
       def compact(hash)

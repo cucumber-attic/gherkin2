@@ -1,5 +1,4 @@
 require 'gherkin/native'
-require 'gherkin/listener/row'
 require 'gherkin/formatter/struct'
 
 module Gherkin
@@ -60,11 +59,11 @@ module Gherkin
 
       def row(cells, line)
         @table ||= []
-        @table << Row.new(cells, grab_comments!, line)
+        @table << Formatter::Struct::Row.new(cells, grab_comments!, line)
       end
 
       def py_string(py_string, line)
-        @py_string = py_string
+        @py_string = Formatter::Struct::PyString.new(py_string, line)
       end
 
       def eof

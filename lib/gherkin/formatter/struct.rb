@@ -1,3 +1,5 @@
+require 'gherkin/native'
+
 module Gherkin
   module Formatter
     module Struct
@@ -22,6 +24,29 @@ module Gherkin
 
         def hash
           @name.hash
+        end
+      end
+
+      class PyString
+        attr_reader :value, :line
+        
+        def initialize(value, line)
+          @value, @line = value, line
+        end
+
+        def line_range
+          line_count = value.split(/\r?\n/).length
+          line..(line+line_count+1)
+        end
+      end
+
+      class Row
+        native_impl('gherkin')
+
+        attr_reader :cells, :comments, :line
+
+        def initialize(cells, comments, line)
+          @cells, @comments, @line = cells, comments, line
         end
       end
 

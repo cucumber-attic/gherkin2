@@ -3,6 +3,7 @@ require 'gherkin/formatter/colors'
 require 'gherkin/formatter/monochrome_format'
 require 'gherkin/formatter/argument'
 require 'gherkin/formatter/escaping'
+require 'gherkin/formatter/struct'
 require 'gherkin/native'
 
 module Gherkin
@@ -64,7 +65,7 @@ module Gherkin
         print_comments(statement.comments, '    ')
         @io.puts("    #{step}#{indented_step_location!(result ? result.stepdef_location : nil)}")
         case multiline_arg
-        when String
+        when Struct::PyString
           py_string(multiline_arg)
         when Array
           table(multiline_arg)
@@ -110,8 +111,8 @@ module Gherkin
 
     private
 
-      def py_string(string)
-        @io.puts "      \"\"\"\n" + escape_triple_quotes(indent(string, '      ')) + "\n      \"\"\""
+      def py_string(py_string)
+        @io.puts "      \"\"\"\n" + escape_triple_quotes(indent(py_string.value, '      ')) + "\n      \"\"\""
       end
 
       def exception(exception)

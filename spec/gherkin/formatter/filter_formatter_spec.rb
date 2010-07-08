@@ -136,6 +136,20 @@ module Gherkin
             verify_filter([15], 1..19)
           end
         end
+
+        context "multiline argument" do
+          it "should filter on table line" do
+            verify_filter([36], 1..14, 20..37)
+          end
+
+          it "should filter on first pystring quote" do
+            verify_filter([41], 1..14, 38..45)
+          end
+
+          it "should filter on last pystring quote" do
+            verify_filter([44], 1..14, 38..45)
+          end
+        end
       end
     end
   end

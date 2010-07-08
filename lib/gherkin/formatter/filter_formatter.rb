@@ -1,6 +1,7 @@
 require 'gherkin/tag_expression'
 require 'gherkin/formatter/regexp_filter'
 require 'gherkin/formatter/line_filter'
+require 'gherkin/formatter/struct'
 
 module Gherkin
   module Formatter
@@ -70,8 +71,8 @@ module Gherkin
         if LineFilter === @filter
           step_range = statement.line_range
           case multiline_arg
-          when String
-            #warn "FIXME - add last line of pystring: #{multiline_arg}"
+          when Struct::PyString
+            step_range = step_range.first..multiline_arg.line_range.last
           when Array
             step_range = step_range.first..multiline_arg[-1].line
           end

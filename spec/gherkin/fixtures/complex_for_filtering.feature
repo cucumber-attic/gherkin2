@@ -27,21 +27,21 @@ Feature: Feature Text
       | c | d |
       | e | f |
     And I am still testing things
+    And I am done testing these tables
+    #Comment on line 29
+    Then I am happy
       | g | h |
       | e | r |
       | k | i |
       | n |   |
-    And I am done testing these tables
-    #Comment on line 29
-    Then I am happy
 
   Scenario: Hammerzeit XX
     Given All work and no play
+    Then crazy
       """
       Makes Homer something something
       And something else
       """
-    Then crazy
 
   @more
   Scenario Outline: More

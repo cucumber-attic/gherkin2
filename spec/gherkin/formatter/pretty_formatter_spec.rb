@@ -4,7 +4,6 @@ require 'gherkin/formatter/pretty_formatter'
 require 'gherkin/formatter/argument'
 require 'gherkin/formatter/struct'
 require 'gherkin/listener/formatter_listener'
-require 'gherkin/listener/row'
 require 'stringio'
 
 module Gherkin
@@ -132,7 +131,7 @@ Feature: Feature Description
       it "should escape backslashes and pipes" do
         io = StringIO.new
         l = Gherkin::Formatter::PrettyFormatter.new(io, true)
-        l.__send__(:table, [Gherkin::Listener::Row.new(['|', '\\'], [], nil)])
+        l.__send__(:table, [Gherkin::Formatter::Struct::Row.new(['|', '\\'], [], nil)])
         io.string.should == '      | \\| | \\\\ |' + "\n"
       end
     end
