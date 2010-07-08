@@ -23,9 +23,9 @@ module Gherkin
         @formatter.__send__(:scenario_outline, statement)
       end
 
-      def examples(comments, tags, keyword, name, description, line, examples_table)
-        record_tags((@feature_tags.to_a + @scenario_outline_tags.to_a + tags.to_a).uniq, line)
-        @formatter.__send__(:examples, tags, keyword, name, description, line)
+      def examples(statement, examples_rows)
+        record_tags((@feature_tags.to_a + @scenario_outline_tags.to_a + statement.tags.to_a).uniq, statement.line)
+        @formatter.__send__(:examples, statement, examples_rows)
       end
 
     private

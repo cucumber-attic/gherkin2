@@ -46,13 +46,13 @@ module Gherkin
         scenario(statement)
       end
 
-      def examples(comments, tags, keyword, name, description, line, examples_table)
+      def examples(statement, examples_rows)
         @io.puts
-        print_comments(comments, '    ')
-        print_tags(tags, '    ')
-        @io.puts "    #{keyword}: #{name}"
-        print_description(description, '    ')
-        table(examples_table)
+        print_comments(statement.comments, '    ')
+        print_tags(statement.tags, '    ')
+        @io.puts "    #{statement.keyword}: #{statement.name}"
+        print_description(statement.description, '    ')
+        table(examples_rows)
       end
 
       def step(comments, keyword, name, line, multiline_arg, status, exception, arguments, stepdef_location)

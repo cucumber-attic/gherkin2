@@ -42,27 +42,27 @@ module Gherkin
         filter_scenario(:scenario_outline, statement)
       end
 
-      def examples(comments, tags, keyword, name, description, line, examples_table)
+      def examples(statement, examples_rows)
         replay!
 
         case @filter
         when TagExpression
-          examples_tags = (@feature_element_tags + tags).uniq
+          examples_tags = (@feature_element_tags + statement.tags).uniq
           @feature_element_ok = @filter.eval(examples_tags.map{|tag| tag.name})
         when RegexpFilter
-          @feature_element_ok = @filter.eval([@feature_element_name, name])
+          @feature_element_ok = @filter.eval([@feature_element_name, statement.name])
         when LineFilter
-          table_body_range = examples_table[1].line..examples_table[-1].line
+          table_body_range = examples_rows[1].line..examples_rows[-1].line
           if @filter.eval([table_body_range])
-            examples_table = @filter.filter_table_body_rows(examples_table)
+            examples_rows = @filter.filter_table_body_rows(examples_rows)
           end
 
-          examples_range = line..examples_table.last.line
+          examples_range = statement.line..examples_rows[-1].line
           @feature_element_ok = @filter.eval([feature_element_range, examples_range])
         end
 
         if @feature_element_ok
-          @examples_events << [:examples, comments, tags, keyword, name, description, line, examples_table]
+          @examples_events << [:examples, statement, examples_rows]
         end
       end
 

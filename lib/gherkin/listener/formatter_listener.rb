@@ -50,7 +50,7 @@ module Gherkin
 
       def examples(keyword, name, description, line)
         replay_step_or_examples
-        @examples = [grab_comments!, grab_tags!, keyword, name, description, line]
+        @examples = statement(grab_comments!, grab_tags!, keyword, name, description, line)
       end
 
       def step(keyword, name, line)
@@ -109,7 +109,7 @@ module Gherkin
           @step = nil
         end
         if(@examples)
-          @formatter.examples(*(@examples + [grab_table!]))
+          @formatter.examples(@examples, grab_table!)
           @examples = nil
         end
       end
