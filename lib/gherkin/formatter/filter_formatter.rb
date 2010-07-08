@@ -48,7 +48,7 @@ module Gherkin
         case @filter
         when TagExpression
           examples_tags = (@feature_element_tags + tags).uniq
-          @feature_element_ok = @filter.eval(examples_tags)
+          @feature_element_ok = @filter.eval(examples_tags.map{|tag| tag.name})
         when RegexpFilter
           @feature_element_ok = @filter.eval([@feature_element_name, name])
         when LineFilter
@@ -109,7 +109,7 @@ module Gherkin
         case @filter
         when TagExpression
           @feature_element_tags = (@feature_tags + tags).uniq
-          @feature_element_ok = @filter.eval(@feature_element_tags)
+          @feature_element_ok = @filter.eval(@feature_element_tags.map{|tag| tag.name})
         when RegexpFilter
           @feature_element_name = name
           @feature_element_ok = @filter.eval([@feature_element_name])

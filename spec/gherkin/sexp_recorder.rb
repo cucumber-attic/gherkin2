@@ -46,6 +46,8 @@ module Gherkin
         }
       elsif(Formatter::Struct::Comment === o)
         o.value
+      elsif(Formatter::Struct::Tag === o)
+        o.name
       else
         o
       end

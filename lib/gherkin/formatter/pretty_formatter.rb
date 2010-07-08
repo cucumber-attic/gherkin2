@@ -145,7 +145,7 @@ module Gherkin
       end
 
       def print_tags(tags, indent)
-        @io.write(tags.empty? ? '' : indent + tags.join(' ') + "\n")
+        @io.write(tags.empty? ? '' : indent + tags.map{|tag| tag.name}.join(' ') + "\n")
       end
 
       def print_comments(comments, indent)

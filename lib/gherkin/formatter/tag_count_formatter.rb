@@ -5,7 +5,7 @@ module Gherkin
       
       def initialize(formatter)
         @formatter = formatter
-        @tag_counts = Hash.new{|hash, tag| hash[tag] = []}
+        @tag_counts = Hash.new{|hash, tag_name| hash[tag_name] = []}
       end
 
       def feature(comments, tags, keyword, name, description, uri)
@@ -32,7 +32,7 @@ module Gherkin
 
       def record_tags(tags, line)
         tags.each do |tag|
-          @tag_counts[tag] << "#{@uri}:#{line}"
+          @tag_counts[tag.name] << "#{@uri}:#{line}"
         end
       end
 

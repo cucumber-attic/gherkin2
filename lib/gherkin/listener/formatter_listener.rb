@@ -27,7 +27,7 @@ module Gherkin
       end
 
       def tag(name, line)
-        @tags << name
+        @tags << Formatter::Struct::Tag.new(name, line)
       end
 
       def feature(keyword, name, description, line)
