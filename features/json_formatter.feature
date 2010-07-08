@@ -17,10 +17,9 @@ Feature: JSON formatter
       """
       {
         "comments": ["# language: no", "# Another comment"],
-        "description": "",
         "keyword": "Egenskap",
         "name": "Kjapp",
-        "tags": [],
+        "line": 3,
         "uri": "test.feature"
       }
       """
@@ -72,30 +71,24 @@ Feature: JSON formatter
     Then the outputted JSON should be:
       """
       {
-        "comments": [],
         "keyword": "Feature",
         "name": "OH HAI",
         "tags": ["@one"],
+        "line": 2,
         "uri": "test.feature",
-        "description": "",
         "elements":[
           {
-            "comments": [],
-            "tags": [],
             "keyword": "Scenario",
             "name": "Fujin",
-            "description": "",
             "type": "scenario",
             "line": 4,
             "steps": [
               {
-                "comments": [],
                 "keyword": "Given ",
                 "name": "wind",
                 "line": 5
               },
               {
-                "comments": [],
                 "keyword": "Then ",
                 "name": "spirit",
                 "line": 6
@@ -103,22 +96,18 @@ Feature: JSON formatter
             ]
           },
           {
-            "comments": [],
             "tags": ["@two"],
             "keyword": "Scenario",
             "name": "_why",
-            "description": "",
             "type": "scenario",
             "line": 9,
             "steps": [
               {
-                "comments": [],
                 "keyword": "Given ",
                 "name": "chunky",
                 "line": 10
               },
               {
-                "comments": [],
                 "keyword": "Then ",
                 "name": "bacon",
                 "line": 11
@@ -126,16 +115,13 @@ Feature: JSON formatter
             ]
           },
           {
-            "comments": [],
             "tags": ["@three", "@four"],
             "keyword": "Scenario Outline",
             "name": "Life",
-            "description": "",
             "type": "scenario_outline",
             "line": 14,
             "steps": [
               {
-                "comments": [],
                 "keyword": "Given ",
                 "name": "some <boredom>",
                 "line": 15
@@ -143,25 +129,20 @@ Feature: JSON formatter
             ],
             "examples": [
               {
-                "comments": [],
                 "tags": ["@five"],
                 "keyword": "Examples",
                 "name": "Real life",
-                "description": "",
                 "line": 18,
                 "table": [
                   {
-                    "comments": [],
                     "cells": ["boredom"],
                     "line": 19
                   },
                   {
-                    "comments": [],
                     "cells": ["airport"],
                     "line": 20
                   },
                   {
-                    "comments": [],
                     "cells": ["meeting"],
                     "line": 21
                   }
@@ -170,29 +151,23 @@ Feature: JSON formatter
             ]
           },
           {
-            "comments": [],
-            "tags": [],
             "keyword": "Scenario",
             "name": "who stole my mojo?",
-            "description": "",
             "type": "scenario",
             "line": 23,
             "steps": [
               {
-                "comments": [],
                 "keyword": "When ",
                 "name": "I was",
                 "line": 24,
                 "table": [
                   {
-                    "comments": [],
                     "line": 25,
                     "cells": ["asleep"]
                   }
                 ]
               },
               {
-                "comments": [],
                 "keyword": "And ",
                 "name": "so",
                 "line": 26,
@@ -202,9 +177,7 @@ Feature: JSON formatter
           },
           {
             "comments": ["# The"],
-            "tags": [],
             "keyword": "Scenario Outline",
-            "description": "",
             "type": "scenario_outline",
             "line": 32,
             "name": "with",
@@ -219,10 +192,8 @@ Feature: JSON formatter
             "examples": [
               {
                 "comments": ["# comments", "# everywhere"],
-                "tags": [],
                 "keyword": "Examples",
                 "name": "An example",
-                "description": "",
                 "line": 38,
                 "table": [
                   {
@@ -253,21 +224,16 @@ Feature: JSON formatter
     Then the outputted JSON should be:
       """
       {
-        "comments": [],
-        "description": "",
         "keyword": "Feature",
         "name": "Kjapp",
-        "tags": [],
+        "line": 1,
         "uri": "test.feature",
         "background": {
-          "comments": [],
-          "description": "",
           "keyword": "Background",
           "line": 3,
           "name": "No idea what Kjapp means",
           "steps": [
             {
-              "comments": [],
               "keyword": "Given ",
               "line": 4,
               "name": "I Google it"
@@ -277,15 +243,11 @@ Feature: JSON formatter
         "elements": [
           {
             "comments": ["# Writing JSON by hand sucks"],
-            "tags": [],
             "keyword": "Scenario",
-            "name": "",
-            "description": "",
             "type": "scenario",
             "line": 7,
             "steps": [
               {
-                "comments": [],
                 "keyword": "Then ",
                 "name": "I think it means \"fast\"",
                 "line": 8

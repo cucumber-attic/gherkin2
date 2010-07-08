@@ -98,7 +98,7 @@ module Gherkin
 
         rows.each_with_index do |row, i|
           row.comments.each do |comment|
-            @io.puts "      #{comment}"
+            @io.puts "      #{comment.value}"
           end
           j = -1
           @io.puts '      | ' + row.cells.zip(max_lengths).map { |cell, max_length|

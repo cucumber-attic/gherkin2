@@ -12,46 +12,32 @@ module Gherkin
       end
 
       def feature(statement, uri)
-        @json_hash = {
-          'comments' => statement.comments.to_a, 
-          'tags' => statement.tags.to_a, 
-          'keyword' => statement.keyword, 
-          'name' => statement.name, 
-          'description' => statement.description, 
-          'uri' => uri
-        }
+        @json_hash = statement_hash(nil, statement)
+        @json_hash['uri'] = uri
       end
 
-      def background(comments, keyword, name, description, line)
-        background = {
-          'comments' => comments.to_a, 
-          'keyword' => keyword, 
-          'name' => name, 
-          'description' => description,
-          'line' => line,
-          'steps' => [],
-        }
-        @json_hash['background'] = background 
+      def background(statement)
+        @json_hash['background'] = statement_hash(nil, statement) 
         @in_background = true
       end
 
-      def scenario(comments, tags, keyword, name, description, line)
+      def scenario(statement)
         @in_background = false
-        add_step_container(comments, tags, keyword, name, description, line, 'scenario')
+        add_step_container('scenario', statement)
       end
 
-      def scenario_outline(comments, tags, keyword, name, description, line)
+      def scenario_outline(statement)
         @in_background = false
-        add_step_container(comments, tags, keyword, name, description, line, 'scenario_outline')
+        add_step_container('scenario_outline', statement)
       end
 
-      def examples(comments, tags, keyword, name, description, line, table)
-        @table_container = add_examples(comments, tags, keyword, name, description, line)
-        @table_container['table'] = to_hash_array(table)
+      def examples(statement, examples_rows)
+        @table_container = add_examples(statement)
+        @table_container['table'] = to_hash_array(examples_rows)
       end
 
-      def step(comments, keyword, name, line, multiline_arg, status, exception, arguments, stepdef_location)
-        @table_container = {'comments' => comments.to_a, 'keyword' => keyword, 'name' => name, 'line' => line}.merge(step_arg_to_hash(multiline_arg))
+      def step(statement, multiline_arg, result)
+        @table_container = statement_hash(nil, statement).merge(step_arg_to_hash(multiline_arg))
         last_element['steps'] ||= []
         last_element['steps'] << @table_container
       end
@@ -62,35 +48,35 @@ module Gherkin
 
     private
 
-      def element_hash(comments, tags, keyword, name, description, line, type=nil)
+      def statement_hash(type, statement)
         element = {
-          'comments' => comments.to_a, 
-          'tags' => tags.to_a, 
-          'keyword' => keyword, 
-          'name' => name, 
-          'description' => description,
-          'line' => line,
+          'comments' => statement.comments.map{|comment| comment.value}, 
+          'tags' => statement.tags.map{|tag| tag.name}, 
+          'keyword' => statement.keyword, 
+          'name' => statement.name, 
+          'description' => statement.description,
+          'line' => statement.line,
         }
-        element['type'] = type if type
-        element
+        element['type'] = type
+        compact(element)
       end
 
-      def add_element(comments, tags, keyword, name, description, line, type)
-        element = element_hash(comments, tags, keyword, name, description, line, type)
+      def add_element(type, statement)
+        element = statement_hash(type, statement)
         @json_hash['elements'] ||= []
         @json_hash['elements'] << element
         element
       end
 
-      def add_examples(comments, tags, keyword, name, description, line)
-        element = element_hash(comments, tags, keyword, name, description, line)
+      def add_examples(statement)
+        element = statement_hash(nil, statement)
         last_element['examples'] ||= []
         last_element['examples'] << element
         element
       end
 
-      def add_step_container(type, comments, tags, keyword, name, description, line)
-        add_element(type, comments, tags, keyword, name, description, line)
+      def add_step_container(type, statement)
+        add_element(type, statement)
         last_element['steps'] = []
       end
 
@@ -104,7 +90,7 @@ module Gherkin
 
       def to_hash_array(rows)
         rows.map do |row|
-          {"cells" => row.cells.to_a, "comments" => row.comments.to_a, "line" => row.line}
+          compact({"cells" => row.cells.to_a, "comments" => row.comments.map{|comment| comment.value}, "line" => row.line})
         end
       end
 
@@ -112,6 +98,10 @@ module Gherkin
         return {} if multiline_arg.nil?
         multiline_arg = rubify(multiline_arg)
         Array === multiline_arg ? {"table" => to_hash_array(multiline_arg) } : { "py_string" => multiline_arg }
+      end
+
+      def compact(hash)
+        hash.reject{|k,v| [[], "", nil].index(v)}
       end
     end
   end
