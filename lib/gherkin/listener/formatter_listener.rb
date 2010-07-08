@@ -31,11 +31,11 @@ module Gherkin
       end
 
       def feature(keyword, name, description, line)
-        @formatter.feature(create_statement!(keyword, name, description), @uri)
+        @formatter.feature(statement(grab_comments!, grab_tags!, keyword, name, description, line), @uri)
       end
 
       def background(keyword, name, description, line)
-        @formatter.background(grab_comments!, keyword, name, description, line)
+        @formatter.background(statement(grab_comments!, [], keyword, name, description, line))
       end
 
       def scenario(keyword, name, description, line)
@@ -74,8 +74,8 @@ module Gherkin
 
     private
 
-      def create_statement!(keyword, name, description)
-        Formatter::Struct::Statement.new(grab_comments!, grab_tags!, keyword, name, description)
+      def statement(comments, tags, keyword, name, description, line)
+        Formatter::Struct::Statement.new(comments, tags, keyword, name, description, line)
       end
 
       def grab_comments!

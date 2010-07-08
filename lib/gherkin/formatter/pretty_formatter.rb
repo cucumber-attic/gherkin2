@@ -27,11 +27,11 @@ module Gherkin
         print_description(statement.description, '  ', false)
       end
 
-      def background(comments, keyword, name, description, line)
+      def background(statement)
         @io.puts
-        print_comments(comments, '  ')
-        @io.puts "  #{keyword}: #{name}#{indented_element_uri!(keyword, name, line)}"
-        print_description(description, '    ')
+        print_comments(statement.comments, '  ')
+        @io.puts "  #{statement.keyword}: #{statement.name}#{indented_element_uri!(statement.keyword, statement.name, statement.line)}"
+        print_description(statement.description, '    ')
       end
 
       def scenario(comments, tags, keyword, name, description, line)

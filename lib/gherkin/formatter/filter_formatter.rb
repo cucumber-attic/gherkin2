@@ -22,16 +22,16 @@ module Gherkin
         @feature_tags = statement.tags
       end
 
-      def background(comments, keyword, name, description, line)
-        @feature_element_start = line
-        @feature_element_end = line
+      def background(statement)
+        @feature_element_start = statement.line
+        @feature_element_end = statement.line
 
         case @filter
         when RegexpFilter
-          @background_ok = @filter.eval([@feature_element_name, name])
+          @background_ok = @filter.eval([@feature_element_name, statement.name])
         end
 
-        @background_events << [:background, comments, keyword, name, description, line]
+        @background_events << [:background, statement]
       end
 
       def scenario(comments, tags, keyword, name, description, line)

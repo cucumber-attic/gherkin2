@@ -26,10 +26,10 @@ module Gherkin
       end
 
       class Statement
-        attr_reader :comments, :tags, :keyword, :name, :description
+        attr_reader :comments, :tags, :keyword, :name, :description, :line
         
-        def initialize(comments, tags, keyword, name, description)
-          @comments, @tags, @keyword, @name, @description = comments, tags, keyword, name, description
+        def initialize(comments, tags, keyword, name, description, line)
+          @comments, @tags, @keyword, @name, @description, @line = comments, tags, keyword, name, description, line
         end
       end
     end
