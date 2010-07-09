@@ -1,18 +1,18 @@
 #encoding: utf-8
 require 'spec_helper'
-require 'gherkin/json_lexer'
+require 'gherkin/json_parser'
 
 module Gherkin
-  describe JSONLexer do 
+  describe JSONParser do 
 
     before do
       @listener = Gherkin::SexpRecorder.new
-      @lexer = Gherkin::JSONLexer.new(@listener)
+      @parser = Gherkin::JSONParser.new(nil)
     end
 
     describe "An empty feature" do
       it "should scan empty features" do
-        @lexer.scan('{}')
+        @parser.parse_with_listener('{}', @listener)
         @listener.to_sexp.should == [
           [:eof]
         ]
@@ -21,7 +21,7 @@ module Gherkin
 
     describe "A barely empty feature" do
       it "should scan a feature with no elements" do
-        @lexer.scan('{ "keyword": "Feature", "name": "One", "description": "", "line" : 3 }')
+        @parser.parse_with_listener('{ "keyword": "Feature", "name": "One", "description": "", "line" : 3 }', @listener)
         @listener.to_sexp.should == [
           [:feature, "Feature", "One", "", 3],
           [:eof]
@@ -31,7 +31,7 @@ module Gherkin
 
     describe "Missing line numbers" do
       it "should indicate a line number of 0 if a line attribute doesn't exist" do
-        @lexer.scan('{ "name": "My Sweet Featur", "keyword": "Feature", "description": "" }')
+        @parser.parse_with_listener('{ "name": "My Sweet Featur", "keyword": "Feature", "description": "" }', @listener)
         @listener.to_sexp.should == [
           [:feature, "Feature", "My Sweet Featur", "", 0],
           [:eof]
@@ -41,7 +41,7 @@ module Gherkin
 
     describe "Keywords" do
       it "should use the keyword from the source when provided" do
-        @lexer.scan('{ "name" : "My Sweet Featur", "language": "fr", "keyword": "Feature", "description": "" }')
+        @parser.parse_with_listener('{ "name" : "My Sweet Featur", "language": "fr", "keyword": "Feature", "description": "" }', @listener)
         @listener.to_sexp.should == [
           [:feature, "Feature", "My Sweet Featur", "",  0],
           [:eof]
@@ -51,7 +51,7 @@ module Gherkin
 
     describe "A complex feature with tags, comments, multiple scenarios, and multiple steps and tables" do
       it "should find things in the right order" do
-        scan_file("complex.json")
+        @parser.parse_with_listener(fixture("complex.json"), @listener)
         @listener.to_sexp.should == [
           [:tag, "@tag1", 0],
           [:tag, "@tag2", 0],

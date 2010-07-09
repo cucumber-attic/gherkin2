@@ -24,7 +24,7 @@ class GherkinWorld
   include TransformHelpers
   
   def initialize
-    @listener = Gherkin::SexpRecorder.new
+    @formatter = Gherkin::SexpRecorder.new
   end
 end
 

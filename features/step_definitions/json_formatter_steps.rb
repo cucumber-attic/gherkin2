@@ -12,7 +12,7 @@ end
 
 Given /^a JSON formatter$/ do
   @io = StringIO.new
-  @listener = Gherkin::Listener::FormatterListener.new(Gherkin::Formatter::JSONFormatter.new(@io))
+  @formatter = Gherkin::Formatter::JSONFormatter.new(@io)
 end
 
 Then /^the outputted JSON should be:$/ do |expected_json|

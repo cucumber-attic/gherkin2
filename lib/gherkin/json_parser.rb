@@ -1,13 +1,26 @@
 require 'json'
+require 'gherkin/listener/formatter_listener'
 
 module Gherkin
-  class JSONLexer
+  class JSONParser
 
-    def initialize(listener)
-      @listener = listener
+    def initialize(formatter)
+      @formatter = formatter
     end
 
-    def scan(src, uri='unknown.json', offset=0)
+    def parse(src, uri='unknown.json', offset=0)
+      @listener = Listener::FormatterListener.new(@formatter)
+      _parse(src, uri, offset)
+    end
+
+    def parse_with_listener(src, listener)
+      @listener = listener
+      _parse(src, 'unknown.json', 0)
+    end
+
+    private
+
+    def _parse(src, uri, offset)
       feature = JSON.parse(src)
 
       comments_for(feature)
@@ -26,8 +39,6 @@ module Gherkin
 
       @listener.eof
     end
-
-    private
 
     def parse_element(feature_element)
       comments_for(feature_element)

@@ -20,11 +20,10 @@ module Gherkin
         Dir[*globs].uniq.sort.each(&proc)
       end
 
-      def scan(file, listener)
-        parser = Gherkin::Parser::Parser.new(listener, true, "root")
-        lexer = Gherkin::I18nLexer.new(parser, false)
+      def scan(file, formatter)
+        parser = Gherkin::Parser::Parser.new(formatter, true, "root")
         begin
-          lexer.scan(IO.read(file), file, 0)
+          parser.parse(IO.read(file), file, 0)
         rescue => e
           e.message << " (#{file})"
           raise e

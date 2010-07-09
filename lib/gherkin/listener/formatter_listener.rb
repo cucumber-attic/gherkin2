@@ -71,6 +71,10 @@ module Gherkin
         @formatter.eof
       end
 
+      def syntax_error(state, ev, expected, line)
+        @formatter.syntax_error(state, ev, expected, line)
+      end
+
     private
 
       def statement(comments, tags, keyword, name, description, line)

@@ -1,4 +1,5 @@
 require 'gherkin/native'
+require 'gherkin/listener/formatter_listener'
 
 module Gherkin
   module Parser
@@ -12,12 +13,26 @@ module Gherkin
       native_impl('gherkin')
 
       # Initialize the parser. +machine_name+ refers to a state machine table.
-      def initialize(listener, raise_on_error=true, machine_name='root')
-        @listener = listener
+      def initialize(formatter, raise_on_error=true, machine_name='root', force_ruby=false)
+        # TODO: initialize in #parse - with uri and offset
+        @listener = Listener::FormatterListener.new(formatter)
         @raise_on_error = raise_on_error
-        @machines = []
         @machine_name = machine_name
+        @machines = []
         push_machine(@machine_name)
+        @lexer = I18nLexer.new(self, force_ruby)
+      end
+
+      def parse(gherkin, feature_path, line_offset)
+        @lexer.scan(gherkin, feature_path, line_offset)
+      end
+
+      def i18n_language
+        @lexer.i18n_language
+      end
+
+      def errors
+        @lexer.errors
       end
 
       def location(uri, offset)
@@ -27,9 +42,8 @@ module Gherkin
       # Doesn't yet fall back to super
       def method_missing(method, *args)
         # TODO: Catch exception and call super
-        if(event(method.to_s, args[-1]))
-          @listener.__send__(method, *args)
-        end
+        event(method.to_s, args[-1])
+        @listener.__send__(method, *args)
         if method == :eof
           pop_machine
           push_machine(@machine_name)
@@ -41,11 +55,10 @@ module Gherkin
           if @raise_on_error
             raise ParseError.new(state, ev, expected, line)
           else
+            # Only used for testing
             @listener.syntax_error(state, ev, expected, line)
-            return false
           end
         end
-        true
       end
 
       def push_machine(name)

@@ -11,7 +11,11 @@ require 'gherkin/shared/row_group'
 
 module GherkinSpecHelper
   def scan_file(file)
-    @lexer.scan(File.new(File.dirname(__FILE__) + "/gherkin/fixtures/" + file).read, file, 0)
+    @lexer.scan(fixture(file), file, 0)
+  end
+
+  def fixture(file)
+    File.new(File.dirname(__FILE__) + "/gherkin/fixtures/" + file).read
   end
 
   def rubify_hash(hash)

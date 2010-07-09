@@ -75,11 +75,8 @@ module Gherkin
         end
       end
 
-      def syntax_error(state, event, legal_events, line)
-        raise "SYNTAX ERROR"
-      end
-
       def eof
+        # NO-OP
       end
 
       # This method can be invoked before a #scenario, to ensure location arguments are aligned

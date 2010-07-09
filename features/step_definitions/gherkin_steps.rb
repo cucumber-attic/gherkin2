@@ -1,18 +1,17 @@
 Given /^a "([^\"]*)" "([^\"]*)" parser$/ do |ruby_or_native, parser_name|
-  parser = Gherkin::Parser::Parser.new(@listener, false, parser_name)
-  @lexer = Gherkin::I18nLexer.new(parser, ruby_or_native == "ruby")
+  @parser = Gherkin::Parser::Parser.new(@formatter, false, parser_name, ruby_or_native)
 end
 
 Given "the following text is parsed:" do |text|
-  @lexer.scan(text, "test.feature", 0)
+  @parser.parse(text, "test.feature", 0)
 end
 
 Then "there should be no parse errors" do
-  @listener.errors.should == []
+  @formatter.errors.should == []
 end
 
 Then /^there should be a parse error on (line \d+)$/ do |line|
-  @listener.line(line).should include(:syntax_error, line)
+  @formatter.line(line).should include(:syntax_error, line)
 end
 
 Then /^there should be parse errors on (lines .*)$/ do |lines|

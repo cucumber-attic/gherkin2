@@ -3,38 +3,34 @@ require 'fileutils'
 require 'gherkin'
 require 'gherkin/formatter/pretty_formatter'
 require 'gherkin/formatter/json_formatter'
-require 'gherkin/json_lexer'
+require 'gherkin/json_parser'
 
 module PrettyPlease
   def pretty_machinery(gherkin, feature_path)
     io        = StringIO.new
     formatter = Gherkin::Formatter::PrettyFormatter.new(io, false)
-    listener  = Gherkin::Listener::FormatterListener.new(formatter)
-    parser    = Gherkin::Parser::Parser.new(listener, true)
-    lexer     = Gherkin::I18nLexer.new(parser)
-    scan(lexer, gherkin, feature_path)
+    parser    = Gherkin::Parser::Parser.new(formatter, true)
+    parse(parser, gherkin, feature_path)
     io.string
   end
 
   def json_machinery(gherkin, feature_path)
     json                = StringIO.new
     json_formatter      = Gherkin::Formatter::JSONFormatter.new(json)
-    formatter_listener  = Gherkin::Listener::FormatterListener.new(json_formatter)
-    gherkin_lexer       = Gherkin::I18nLexer.new(formatter_listener)
-    scan(gherkin_lexer, gherkin, feature_path)
+    gherkin_parser      = Gherkin::Parser::Parser.new(json_formatter, true)
+    parse(gherkin_parser, gherkin, feature_path)
 
     result              = StringIO.new
     pretty_formatter    = Gherkin::Formatter::PrettyFormatter.new(result, false)
-    formatter_listener  = Gherkin::Listener::FormatterListener.new(pretty_formatter)
-    json_lexer          = Gherkin::JSONLexer.new(formatter_listener)
-    json_lexer.scan(json.string)
+    json_parser         = Gherkin::JSONParser.new(pretty_formatter)
+    json_parser.parse(json.string)
     
     result.string
   end
   
-  def scan(lexer, gherkin, feature_path)
+  def parse(parser, gherkin, feature_path)
     begin
-      lexer.scan(gherkin, feature_path, 0)
+      parser.parse(gherkin, feature_path, 0)
     rescue => e
       if e.message =~ /Lexing error/
         FileUtils.mkdir "tmp" unless File.directory?("tmp")

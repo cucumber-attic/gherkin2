@@ -18,10 +18,8 @@ module Gherkin
         [true, false].each do |force_ruby|
           io = StringIO.new
           pf = Gherkin::Formatter::PrettyFormatter.new(io, true)
-          l  = Gherkin::Listener::FormatterListener.new(pf)
-          parser = Gherkin::Parser::Parser.new(l, true, "root")
-          lexer  = Gherkin::I18nLexer.new(parser, force_ruby)
-          lexer.scan(input, "test.feature", 0)
+          parser = Gherkin::Parser::Parser.new(pf, true, "root", force_ruby)
+          parser.parse(input, "test.feature", 0)
           actual = io.string
           actual.should == output
         end

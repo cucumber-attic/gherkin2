@@ -6,11 +6,10 @@ module Gherkin
   module Tools
     class Stats < Files
       def run
-        listener = StatsListener.new
+        formatter = StatsFormatter.new
         each do |f|
-          parser = Gherkin::Parser::Parser.new(listener, true)
-          lexer = Gherkin::I18nLexer.new(parser)
-          lexer.scan(IO.read(f), f, 0)
+          parser = Gherkin::Parser::Parser.new(formatter, true)
+          parser.parse(IO.read(f), f, 0)
         end
         puts "Features:  #{listener.features}"
         puts "Scenarios: #{listener.scenarios}"

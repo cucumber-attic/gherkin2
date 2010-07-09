@@ -106,23 +106,19 @@ class Benchmarker
 
   def run_rb_gherkin    
     require 'gherkin'
-    require 'gherkin/i18n_lexer'
-    require 'null_listener'
-    parser = Gherkin::Parser::Parser.new(NullListener.new, true, "root")
-    lexer = Gherkin::I18nLexer.new(parser, true)
+    require 'null_formatter'
+    parser = Gherkin::Parser::Parser.new(NullFormatter.new, true, "root", true)
     @features.each do |feature|
-      lexer.scan(File.read(feature), feature, 0)
+      parser.parse(File.read(feature), feature, 0)
     end
   end
 
   def run_native_gherkin
     require 'gherkin'
-    require 'gherkin/i18n_lexer'
     require 'null_listener'
-    parser = Gherkin::Parser::Parser.new(NullListener.new, true, "root")
-    lexer = Gherkin::I18nLexer.new(parser, false)
+    parser = Gherkin::Parser::Parser.new(NullFormatter.new, true, "root", false)
     @features.each do |feature|
-      lexer.scan(File.read(feature), feature, 0)
+      parser.parse(File.read(feature), feature, 0)
     end
   end
 
