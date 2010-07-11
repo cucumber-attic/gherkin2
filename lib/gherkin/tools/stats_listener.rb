@@ -50,7 +50,7 @@ module Gherkin
       def py_string(string, line)
       end
 
-      def syntax_error(state, event, legal_events, line)
+      def syntax_error(state, event, legal_events, uri, line)
       end
 
       def eof

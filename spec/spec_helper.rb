@@ -11,7 +11,7 @@ require 'gherkin/shared/row_group'
 
 module GherkinSpecHelper
   def scan_file(file)
-    @lexer.scan(fixture(file), file, 0)
+    @lexer.scan(fixture(file))
   end
 
   def fixture(file)

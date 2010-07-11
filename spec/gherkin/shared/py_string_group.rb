@@ -52,7 +52,6 @@ EOS
       it "should parse content separated by two newlines" do
         scan ps("A\n\nB")
         @listener.to_sexp.should == [
-          [:location, 'test.feature', 0],
           [:py_string, "A\n\nB", 1],
           [:eof]
         ]

@@ -8,9 +8,9 @@ module Gherkin
       @formatter = formatter
     end
 
-    def parse(src, uri='unknown.json', offset=0)
+    def parse(src, feature_uri='unknown.json', line_offset=0)
       @listener = Listener::FormatterListener.new(@formatter)
-      _parse(src, uri, offset)
+      _parse(src, feature_uri, line_offset)
     end
 
     def parse_with_listener(src, listener)
@@ -20,7 +20,8 @@ module Gherkin
 
     private
 
-    def _parse(src, uri, offset)
+    def _parse(src, feature_uri, line_offset)
+      @listener.location(feature_uri)
       feature = JSON.parse(src)
 
       comments_for(feature)

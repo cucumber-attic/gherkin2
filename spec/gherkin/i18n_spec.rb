@@ -9,14 +9,13 @@ module Gherkin
       end
 
       def scan_file(lexer, file)
-        lexer.scan(File.new(File.dirname(__FILE__) + "/fixtures/" + file).read, file, 0)
+        lexer.scan(File.new(File.dirname(__FILE__) + "/fixtures/" + file).read)
       end
 
       it "should recognize keywords in the language of the lexer" do
         lexer = Gherkin::I18nLexer.new(@listener, false)
         scan_file(lexer, "i18n_no.feature")
         @listener.to_sexp.should == [
-          [:location, "i18n_no.feature", 0],
           [:comment, "#language:no", 1],
           [:feature, "Egenskap", "i18n support", "", 2],
           [:scenario, "Scenario", "Parsing many languages", "", 4],
@@ -31,7 +30,6 @@ module Gherkin
         lexer = Gherkin::I18nLexer.new(@listener, false)
         scan_file(lexer, "i18n_zh-CN.feature")
         @listener.to_sexp.should == [
-          [:location, "i18n_zh-CN.feature", 0],
           [:comment, "#language:zh-CN", 1],
           [:feature, "功能", "加法", "", 2],
           [:scenario, "场景", "两个数相加", "", 4],
@@ -47,7 +45,6 @@ module Gherkin
         lexer = Gherkin::I18nLexer.new(@listener, false)
         scan_file(lexer, "i18n_fr.feature")
         @listener.to_sexp.should == [
-          [:location, "i18n_fr.feature", 0],
           [:comment, "#language:fr", 1],
           [:feature, "Fonctionnalité", "Addition", "", 2],
           [:scenario_outline, "Plan du scénario", "Addition de produits dérivés", "", 3],

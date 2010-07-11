@@ -5,7 +5,7 @@ module Gherkin
   module Lexer
     shared_examples_for "a Gherkin lexer lexing rows" do
       def scan(gherkin)
-        @lexer.scan(gherkin, "test.feature", 0)
+        @lexer.scan(gherkin)
       end
 
       rows = {
@@ -43,7 +43,6 @@ module Gherkin
       it "should allow utf-8" do
         scan(" | ůﻚ | 2 | \n")
         @listener.to_sexp.should == [
-          [:location, 'test.feature', 0],
           [:row, ["ůﻚ", "2"], 1],
           [:eof]
         ]

@@ -127,8 +127,7 @@ module Gherkin
         %% write data;
       end
  
-      def scan(data, uri, offset)
-        @listener.location(uri, offset)
+      def scan(data)
         data = (data + "\n%_FEATURE_END_%").unpack("c*") # Explicit EOF simplifies things considerably
         eof = pe = data.length
  

@@ -14,8 +14,8 @@ module Gherkin
 
       # Initialize the parser. +machine_name+ refers to a state machine table.
       def initialize(formatter, raise_on_error=true, machine_name='root', force_ruby=false)
-        # TODO: initialize in #parse - with uri and offset
-        @listener = Listener::FormatterListener.new(formatter)
+        @formatter = formatter
+        @listener = Listener::FormatterListener.new(@formatter)
         @raise_on_error = raise_on_error
         @machine_name = machine_name
         @machines = []
@@ -23,8 +23,11 @@ module Gherkin
         @lexer = I18nLexer.new(self, force_ruby)
       end
 
-      def parse(gherkin, feature_path, line_offset)
-        @lexer.scan(gherkin, feature_path, line_offset)
+      def parse(gherkin, feature_uri, line_offset)
+        @feature_uri = feature_uri
+        @line_offset = line_offset
+        @listener.location(feature_uri)
+        @lexer.scan(gherkin)
       end
 
       def i18n_language
@@ -33,10 +36,6 @@ module Gherkin
 
       def errors
         @lexer.errors
-      end
-
-      def location(uri, offset)
-        @listener.location(uri, offset)
       end
 
       # Doesn't yet fall back to super
@@ -51,12 +50,13 @@ module Gherkin
       end
 
       def event(ev, line)
-        machine.event(ev, line) do |state, expected|
+        l = line ? @line_offset+line : nil
+        machine.event(ev, l) do |state, expected|
           if @raise_on_error
-            raise ParseError.new(state, ev, expected, line)
+            raise ParseError.new(state, ev, expected, @feature_uri, l)
           else
             # Only used for testing
-            @listener.syntax_error(state, ev, expected, line)
+            @listener.syntax_error(state, ev, expected, @feature_uri, l)
           end
         end
       end
@@ -135,7 +135,7 @@ module Gherkin
           state_machine_reader = StateMachineReader.new
           lexer = Gherkin::I18n.new('en').lexer(state_machine_reader)
           machine = File.dirname(__FILE__) + "/#{name}.txt"
-          lexer.scan(File.read(machine), machine, 0)
+          lexer.scan(File.read(machine))
           state_machine_reader.rows
         end
 

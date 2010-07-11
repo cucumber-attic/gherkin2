@@ -16,9 +16,8 @@ module Gherkin
         @table = nil
       end
 
-      def location(uri, offset)
-        @uri = uri
-        @offset = offset
+      def location(feature_uri)
+        @feature_uri = feature_uri
       end
 
       def comment(value, line)
@@ -30,7 +29,7 @@ module Gherkin
       end
 
       def feature(keyword, name, description, line)
-        @formatter.feature(statement(grab_comments!, grab_tags!, keyword, name, description, line), @uri)
+        @formatter.feature(statement(grab_comments!, grab_tags!, keyword, name, description, line), @feature_uri)
       end
 
       def background(keyword, name, description, line)
@@ -71,8 +70,8 @@ module Gherkin
         @formatter.eof
       end
 
-      def syntax_error(state, ev, expected, line)
-        @formatter.syntax_error(state, ev, expected, line)
+      def syntax_error(state, ev, expected, uri, line)
+        @formatter.syntax_error(state, ev, expected, uri, line)
       end
 
     private

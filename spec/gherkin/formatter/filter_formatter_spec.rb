@@ -18,12 +18,12 @@ module Gherkin
       def verify_filter(filters, *line_ranges)
         io = StringIO.new
         pretty_formatter = Gherkin::Formatter::PrettyFormatter.new(io, true)
-        formatter = Gherkin::Formatter::FilterFormatter.new(pretty_formatter, filters)
-        fl = Gherkin::Listener::FormatterListener.new(formatter)
-        lexer = Gherkin::I18nLexer.new(fl)
+        filter_formatter = Gherkin::Formatter::FilterFormatter.new(pretty_formatter, filters)
+        parser = Gherkin::Parser::Parser.new(filter_formatter)
 
-        source = File.new(File.dirname(__FILE__) + "/../fixtures/" + file).read + "# __EOF__"
-        lexer.scan(source, "complex.feature", 0)
+        path = File.dirname(__FILE__) + "/../fixtures/" + file
+        source = File.new(path).read + "# __EOF__"
+        parser.parse(source, path, 0)
         
         source_lines = source.split("\n")
         expected = (line_ranges.map do |line_range|

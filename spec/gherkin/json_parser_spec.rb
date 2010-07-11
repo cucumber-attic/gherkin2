@@ -14,6 +14,7 @@ module Gherkin
       it "should scan empty features" do
         @parser.parse_with_listener('{}', @listener)
         @listener.to_sexp.should == [
+          [:location, "unknown.json"],
           [:eof]
         ]
       end
@@ -23,6 +24,7 @@ module Gherkin
       it "should scan a feature with no elements" do
         @parser.parse_with_listener('{ "keyword": "Feature", "name": "One", "description": "", "line" : 3 }', @listener)
         @listener.to_sexp.should == [
+          [:location, "unknown.json"],
           [:feature, "Feature", "One", "", 3],
           [:eof]
         ]
@@ -33,6 +35,7 @@ module Gherkin
       it "should indicate a line number of 0 if a line attribute doesn't exist" do
         @parser.parse_with_listener('{ "name": "My Sweet Featur", "keyword": "Feature", "description": "" }', @listener)
         @listener.to_sexp.should == [
+          [:location, "unknown.json"],
           [:feature, "Feature", "My Sweet Featur", "", 0],
           [:eof]
         ]
@@ -43,6 +46,7 @@ module Gherkin
       it "should use the keyword from the source when provided" do
         @parser.parse_with_listener('{ "name" : "My Sweet Featur", "language": "fr", "keyword": "Feature", "description": "" }', @listener)
         @listener.to_sexp.should == [
+          [:location, "unknown.json"],
           [:feature, "Feature", "My Sweet Featur", "",  0],
           [:eof]
         ]
@@ -53,6 +57,7 @@ module Gherkin
       it "should find things in the right order" do
         @parser.parse_with_listener(fixture("complex.json"), @listener)
         @listener.to_sexp.should == [
+          [:location, "unknown.json"],
           [:tag, "@tag1", 0],
           [:tag, "@tag2", 0],
           [:feature, "Feature", "Feature Text","In order to test multiline forms", 0],
