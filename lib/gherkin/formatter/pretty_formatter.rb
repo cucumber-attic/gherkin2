@@ -3,7 +3,7 @@ require 'gherkin/formatter/colors'
 require 'gherkin/formatter/monochrome_format'
 require 'gherkin/formatter/argument'
 require 'gherkin/formatter/escaping'
-require 'gherkin/formatter/struct'
+require 'gherkin/formatter/model'
 require 'gherkin/native'
 
 module Gherkin
@@ -65,7 +65,7 @@ module Gherkin
         print_comments(statement.comments, '    ')
         @io.puts("    #{step}#{indented_step_location!(result ? result.stepdef_location : nil)}")
         case multiline_arg
-        when Struct::PyString
+        when Model::PyString
           py_string(multiline_arg)
         when Array
           table(multiline_arg)

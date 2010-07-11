@@ -1,9 +1,9 @@
 require 'spec_helper'
-require 'gherkin/formatter/struct'
+require 'gherkin/formatter/model'
 
 module Gherkin
   module Formatter
-    module Struct
+    module Model
       describe Tag do
         it "should be equal when name is equal" do
           tags = [Tag.new('@x', 1), Tag.new('@y', 2), Tag.new('@x', 3)]

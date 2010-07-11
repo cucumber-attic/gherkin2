@@ -1,5 +1,5 @@
 require 'gherkin/native'
-require 'gherkin/formatter/struct'
+require 'gherkin/formatter/model'
 
 module Gherkin
   module Listener
@@ -22,11 +22,11 @@ module Gherkin
       end
 
       def comment(value, line)
-        @comments << Formatter::Struct::Comment.new(value, line)
+        @comments << Formatter::Model::Comment.new(value, line)
       end
 
       def tag(name, line)
-        @tags << Formatter::Struct::Tag.new(name, line)
+        @tags << Formatter::Model::Tag.new(name, line)
       end
 
       def feature(keyword, name, description, line)
@@ -59,11 +59,11 @@ module Gherkin
 
       def row(cells, line)
         @table ||= []
-        @table << Formatter::Struct::Row.new(cells, grab_comments!, line)
+        @table << Formatter::Model::Row.new(cells, grab_comments!, line)
       end
 
       def py_string(py_string, line)
-        @py_string = Formatter::Struct::PyString.new(py_string, line)
+        @py_string = Formatter::Model::PyString.new(py_string, line)
       end
 
       def eof
@@ -78,7 +78,7 @@ module Gherkin
     private
 
       def statement(comments, tags, keyword, name, description, line)
-        Formatter::Struct::Statement.new(comments, tags, keyword, name, description, line)
+        Formatter::Model::Statement.new(comments, tags, keyword, name, description, line)
       end
 
       def grab_comments!

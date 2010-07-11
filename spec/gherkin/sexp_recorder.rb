@@ -1,5 +1,5 @@
 require 'gherkin/rubify'
-require 'gherkin/formatter/struct'
+require 'gherkin/formatter/model'
 
 module Gherkin
   class SexpRecorder
@@ -38,17 +38,17 @@ module Gherkin
     def sexpify(o)
       if (defined?(JRUBY_VERSION) && Java.java.util.Collection === o) || Array === o
         o.map{|e| sexpify(e)}
-      elsif(Formatter::Struct::Row === o)
+      elsif(Formatter::Model::Row === o)
         {
           "cells" => sexpify(o.cells),
           "comments" => sexpify(o.comments),
           "line" => o.line,
         }
-      elsif(Formatter::Struct::Comment === o)
+      elsif(Formatter::Model::Comment === o)
         o.value
-      elsif(Formatter::Struct::Tag === o)
+      elsif(Formatter::Model::Tag === o)
         o.name
-      elsif(Formatter::Struct::Statement === o)
+      elsif(Formatter::Model::Statement === o)
         "APE"
       else
         o

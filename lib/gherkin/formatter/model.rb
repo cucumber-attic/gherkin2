@@ -2,7 +2,7 @@ require 'gherkin/native'
 
 module Gherkin
   module Formatter
-    module Struct
+    module Model
       class Comment
         attr_reader :value, :line
         
