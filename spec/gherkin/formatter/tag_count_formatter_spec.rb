@@ -9,21 +9,20 @@ module Gherkin
     describe TagCountFormatter do
       it "should count tags" do
         dummy = Gherkin::SexpRecorder.new
-        @formatter = Gherkin::Formatter::TagCountFormatter.new(dummy)
-        fl = Gherkin::Listener::FormatterListener.new(@formatter)
-        @lexer = Gherkin::I18nLexer.new(fl)
+        formatter = Gherkin::Formatter::TagCountFormatter.new(dummy)
+        parser = Gherkin::Parser::Parser.new(formatter)
 
-        fl.location('complex.feature')
-        @lexer.scan(File.new(File.dirname(__FILE__) + "/../fixtures/complex_with_tags.feature").read)
+        f = File.new(File.dirname(__FILE__) + "/../fixtures/complex_with_tags.feature").read
+        parser.parse(f, 'f.feature', 0)
         
-        @formatter.tag_counts.should == {
-          "@hamster" => ["complex.feature:58"],
-          "@tag1"    => ["complex.feature:18","complex.feature:23","complex.feature:39","complex.feature:52","complex.feature:58"],
-          "@tag2"    => ["complex.feature:18","complex.feature:23","complex.feature:39","complex.feature:52","complex.feature:58"],
-          "@tag3"    => ["complex.feature:18", "complex.feature:23"],
-          "@tag4"    => ["complex.feature:18"],
-          "@neat"    => ["complex.feature:52"],
-          "@more"    => ["complex.feature:52", "complex.feature:58"]
+        formatter.tag_counts.should == {
+          "@hamster" => ["f.feature:58"],
+          "@tag1"    => ["f.feature:18","f.feature:23","f.feature:39","f.feature:52","f.feature:58"],
+          "@tag2"    => ["f.feature:18","f.feature:23","f.feature:39","f.feature:52","f.feature:58"],
+          "@tag3"    => ["f.feature:18", "f.feature:23"],
+          "@tag4"    => ["f.feature:18"],
+          "@neat"    => ["f.feature:52"],
+          "@more"    => ["f.feature:52", "f.feature:58"]
         }
       end
     end
