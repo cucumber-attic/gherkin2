@@ -1,3 +1,4 @@
+require 'gherkin/rubify'
 require 'gherkin/tag_expression'
 require 'gherkin/formatter/regexp_filter'
 require 'gherkin/formatter/line_filter'
@@ -6,6 +7,8 @@ require 'gherkin/formatter/model'
 module Gherkin
   module Formatter
     class FilterFormatter
+      include Rubify
+      
       def initialize(formatter, filters)
         @formatter = formatter
         @filter    = detect_filter(filters)
@@ -55,7 +58,7 @@ module Gherkin
         @examples_tags = statement.tags
         @examples_name = statement.name
 
-        table_body_range = examples_rows[1].line..examples_rows[-1].line
+        table_body_range = examples_rows.to_a[1].line..examples_rows.to_a[-1].line
         @examples_range = statement.line_range.first..table_body_range.last
         if(LineFilter === @filter && @filter.eval([table_body_range]))
           examples_rows = @filter.filter_table_body_rows(examples_rows)
@@ -73,11 +76,11 @@ module Gherkin
 
         if LineFilter === @filter
           step_range = statement.line_range
-          case multiline_arg
+          case rubify(multiline_arg)
           when Model::PyString
             step_range = step_range.first..multiline_arg.line_range.last
           when Array
-            step_range = step_range.first..multiline_arg[-1].line
+            step_range = step_range.first..multiline_arg.to_a[-1].line
           end
           @feature_element_range = @feature_element_range.first..step_range.last
         end
@@ -106,8 +109,8 @@ module Gherkin
         case @filter
         when TagExpression
           background_ok      = false
-          feature_element_ok = @filter.eval(tag_names(@feature_tags + @feature_element_tags))
-          examples_ok        = @filter.eval(tag_names(@feature_tags + @feature_element_tags + @examples_tags)) if @examples_tags
+          feature_element_ok = @filter.eval(tag_names(@feature_tags.to_a + @feature_element_tags.to_a))
+          examples_ok        = @filter.eval(tag_names(@feature_tags.to_a + @feature_element_tags.to_a + @examples_tags.to_a)) if @examples_tags
         when RegexpFilter
           background_ok      = @filter.eval([@background_name]) if @background_name
           feature_element_ok = @filter.eval([@feature_element_name])
@@ -132,7 +135,7 @@ module Gherkin
       end
 
       def tag_names(tags)
-        tags.uniq.map{|tag| tag.name}
+        tags.to_a.uniq.map{|tag| tag.name}
       end
 
       def replay_events!(events)

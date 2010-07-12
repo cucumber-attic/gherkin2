@@ -3,8 +3,6 @@ package gherkin;
 import java.util.List;
 
 public interface Listener {
-    void location(String uri, int offset);
-
     void comment(String comment, int line);
 
     void tag(String tag, int line);
@@ -27,5 +25,5 @@ public interface Listener {
 
     void eof();
 
-    void syntaxError(String state, String event, List<String> legalEvents, int line);
+    void syntaxError(String state, String event, List<String> legalEvents, String uri, int line);
 }

@@ -26,7 +26,15 @@ class Class
       end
 
       def new(*args)
-        java_class.new(*javaify(args))
+        begin
+          java_class.new(*javaify(args))
+        rescue ArgumentError => e
+          e.message << "\n#{java_class.name}"
+          raise e
+        rescue NameError => e
+          e.message << "\n args: #{args.inspect}" 
+          raise e
+        end
       end
 
       def ===(object)

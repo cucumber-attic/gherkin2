@@ -1,5 +1,5 @@
-Given /^a "([^\"]*)" "([^\"]*)" parser$/ do |ruby_or_native, parser_name|
-  @parser = Gherkin::Parser::Parser.new(@formatter, false, parser_name, ruby_or_native)
+Given /^a "(ruby|native)" "([^\"]*)" parser$/ do |ruby_or_native, parser_name|
+  @parser = Gherkin::Parser::Parser.new(@formatter, false, parser_name, ruby_or_native=="ruby")
 end
 
 Given "the following text is parsed:" do |text|

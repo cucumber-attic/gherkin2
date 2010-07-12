@@ -2,7 +2,8 @@ package gherkin;
 
 import gherkin.formatter.Formatter;
 import gherkin.formatter.PrettyFormatter;
-import gherkin.listener.Row;
+import gherkin.formatter.model.Comment;
+import gherkin.formatter.model.Row;
 import gherkin.util.Mapper;
 
 import java.io.StringWriter;
@@ -22,13 +23,13 @@ public class I18n {
     }
 
     private static final Mapper QUOTE_MAPPER = new Mapper() {
-        public String map(String string) {
-            return '"' + string + '"';
+        public String map(Object o) {
+            return '"' + (String) o + '"';
         }
     };
     private static final Mapper CODE_KEYWORD_MAPPER = new Mapper() {
-        public String map(String keyword) {
-            return codeKeywordFor(keyword);
+        public String map(Object keyword) {
+            return codeKeywordFor((String) keyword);
         }
     };
 
@@ -110,14 +111,16 @@ public class I18n {
         Formatter pf = new PrettyFormatter(writer, true);
         List<Row> table = new ArrayList<Row>();
         for (String key : KEYWORD_KEYS) {
-            table.add(new Row(Arrays.asList(key, join(map(keywords(key), QUOTE_MAPPER), ", ")), Collections.<String>emptyList(), -1));
+            List<String> cells = Arrays.asList(key, join(map(keywords(key), QUOTE_MAPPER), ", "));
+            table.add(new Row(Collections.<Comment>emptyList(), cells, -1));
         }
         for (String key : STEP_KEYWORD_KEYS) {
             List<String> codeKeywordList = new ArrayList<String>(keywords.get(key));
             codeKeywordList.remove("* ");
             String codeKeywords = join(map(map(codeKeywordList, CODE_KEYWORD_MAPPER), QUOTE_MAPPER), ", ");
 
-            table.add(new Row(Arrays.asList(key + " (code)", codeKeywords), Collections.<String>emptyList(), -1));
+            List<String> cells = Arrays.asList(key + " (code)", codeKeywords);
+            table.add(new Row(Collections.<Comment>emptyList(), cells, -1));
         }
         pf.table(table);
         return writer.getBuffer().toString();

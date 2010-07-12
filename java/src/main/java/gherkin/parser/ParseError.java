@@ -6,19 +6,19 @@ import java.util.List;
 
 public class ParseError extends RuntimeException {
     private final String state;
-    private final List<String> expectedEvents;
+    private final List<String> legalEvents;
 
-    public ParseError(String state, String event, List<String> expectedEvents, int line) {
-        super("Parse error on line " + line + ". Found " + event + " when expecting one of: " + FixJava.join(expectedEvents, ", ") + ". (Current state: " + state + ").");
+    public ParseError(String state, String event, List<String> legalEvents, int line) {
+        super("Parse error on line " + line + ". Found " + event + " when expecting one of: " + FixJava.join(legalEvents, ", ") + ". (Current getState: " + state + ").");
         this.state = state;
-        this.expectedEvents = expectedEvents;
+        this.legalEvents = legalEvents;
     }
 
-    public String state() {
+    public List<String> getLegalEvents() {
+        return legalEvents;
+    }
+
+    public String getState() {
         return state;
-    }
-
-    public List<String> expectedEvents() {
-        return expectedEvents;
     }
 }

@@ -53,10 +53,10 @@ module Gherkin
         l = line ? @line_offset+line : nil
         machine.event(ev, l) do |state, expected|
           if @raise_on_error
-            raise ParseError.new(state, ev, expected, @feature_uri, l)
+            raise ParseError.new(state, ev, legal_events, @feature_uri, l)
           else
             # Only used for testing
-            @listener.syntax_error(state, ev, expected, @feature_uri, l)
+            @listener.syntax_error(state, ev, legal_events, @feature_uri, l)
           end
         end
       end

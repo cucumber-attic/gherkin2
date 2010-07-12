@@ -1,3 +1,5 @@
+require 'gherkin/formatter/model'
+
 module Gherkin
   module Rubify
     if defined?(JRUBY_VERSION)
@@ -5,8 +7,11 @@ module Gherkin
       # This is especially important to convert java.util.List coming
       # from Java and back to a Ruby Array.
       def rubify(o)
-        if Java.java.util.Collection === o || Array === o
+        case(o)
+        when Java.java.util.Collection, Array
           o.map{|e| rubify(e)}
+        when Java.gherkin.formatter.model.PyString
+          Formatter::Model::PyString.new(o.value, o.line)
         else
           o
         end

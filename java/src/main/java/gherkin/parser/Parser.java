@@ -1,6 +1,10 @@
 package gherkin.parser;
 
+import gherkin.I18n;
+import gherkin.I18nLexer;
 import gherkin.Listener;
+import gherkin.formatter.Formatter;
+import gherkin.listener.FormatterListener;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -9,23 +13,45 @@ import java.util.regex.Pattern;
 public class Parser implements Listener {
     List<Machine> machines = new ArrayList<Machine>();
 
-    private final Listener listener;
+    private final Formatter formatter;
     private final boolean throwOnError;
     private final String machineName;
+    private FormatterListener listener;
+    private I18nLexer lexer;
+    private String featureURI;
+    private int lineOffset;
 
-    public Parser(Listener listener) {
-        this(listener, true);
+    public Parser(Formatter formatter) {
+        this(formatter, true);
     }
 
-    public Parser(Listener listener, boolean throwOnError) {
-        this(listener, throwOnError, "root");
+    public Parser(Formatter formatter, boolean throwOnError) {
+        this(formatter, throwOnError, "root", false);
     }
 
-    public Parser(Listener listener, boolean throwOnError, String machineName) {
-        this.listener = listener;
+    public Parser(Formatter formatter, boolean throwOnError, String machineName, boolean forceRubyDummy) {
+        this.formatter = formatter;
+        this.listener = new FormatterListener(formatter);
         this.throwOnError = throwOnError;
         this.machineName = machineName;
         pushMachine(machineName);
+        this.lexer = new I18nLexer(this, forceRubyDummy);
+    }
+
+    /**
+     * @param featureURI    the URI where the gherkin originated from. Typically a file path.
+     * @param lineOffset the line offset within the uri document the gherkin was taken from. Typically 0.
+     */
+    public void parse(String gherkin, String featureURI, int lineOffset) {
+        this.featureURI = featureURI;
+        this.lineOffset = lineOffset;
+
+        listener.location(featureURI);
+        lexer.scan(gherkin);
+    }
+
+    public I18n getI18nLanguage() {
+        return lexer.getI18nLanguage();
     }
 
     private void pushMachine(String machineName) {
@@ -34,10 +60,6 @@ public class Parser implements Listener {
 
     private void popMachine() {
         machines.remove(machines.size() - 1);
-    }
-
-    public void location(String uri, int offset) {
-        listener.location(uri, offset);
     }
 
     public void tag(String tag, int line) {
@@ -108,6 +130,10 @@ public class Parser implements Listener {
         pushMachine(machineName);
     }
 
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+        throw new RuntimeException("Didn't expect this");
+    }
+
     public void syntaxError(String name, String event, List<String> strings, int line) {
     }
 
@@ -119,7 +145,8 @@ public class Parser implements Listener {
             if (throwOnError) {
                 throw e;
             } else {
-                listener.syntaxError(e.state(), event, e.expectedEvents(), line);
+                int l = lineOffset + line;
+                listener.syntaxError(e.getState(), event, e.getLegalEvents(), featureURI, l);
                 return false;
             }
         }
@@ -148,11 +175,11 @@ public class Parser implements Listener {
         public void event(String event, int line) {
             Map<String, String> states = transitionMap.get(state);
             if (states == null) {
-                throw new RuntimeException("Unknown state: " + state + " for machine " + name);
+                throw new RuntimeException("Unknown getState: " + state + " for machine " + name);
             }
             String newState = states.get(event);
             if (newState == null) {
-                throw new RuntimeException("Unknown transition: " + event + " among " + states + " for machine " + name + " in state " + state);
+                throw new RuntimeException("Unknown transition: " + event + " among " + states + " for machine " + name + " in getState " + state);
             }
             if ("E".equals(newState)) {
                 throw new ParseError(state, event, expectedEvents(), line);

@@ -12,7 +12,7 @@ public class I18nLexer implements Lexer {
         this(listener, false);
     }
 
-    public I18nLexer(Listener listener, boolean ignored) {
+    public I18nLexer(Listener listener, boolean forceRubyDummy) {
         this.listener = listener;
     }
 
@@ -23,8 +23,8 @@ public class I18nLexer implements Lexer {
         return i18n;
     }
 
-    public void scan(String source, String uri, int offset) {
-        createDelegate(source).scan(source, uri, offset);
+    public void scan(String source) {
+        createDelegate(source).scan(source);
     }
 
     private Lexer createDelegate(String source) {

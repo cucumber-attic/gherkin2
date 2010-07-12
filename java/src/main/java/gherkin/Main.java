@@ -1,11 +1,12 @@
 package gherkin;
 
-import gherkin.formatter.Argument;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.NullFormatter;
 import gherkin.formatter.PrettyFormatter;
-import gherkin.listener.FormatterListener;
-import gherkin.listener.Row;
+import gherkin.formatter.model.PyString;
+import gherkin.formatter.model.Result;
+import gherkin.formatter.model.Row;
+import gherkin.formatter.model.Statement;
 import gherkin.parser.Parser;
 import gherkin.util.FixJava;
 
@@ -26,11 +27,12 @@ public class Main {
         this.out = out;
         final Formatter formatter = prettyOrNull ? new PrettyFormatter(out, true) : new NullFormatter() {
             @Override
-            public void step(List<String> comments, String keyword, String name, int line, List<Row> stepTable, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
+            public void step(Statement statement, PyString stepString, Result result) {
                 step();
             }
 
-            public void step(List<String> comments, String keyword, String name, int line, String stepString, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
+            @Override
+            public void step(Statement statement, List<Row> stepTable, Result result) {
                 step();
             }
 
@@ -42,8 +44,7 @@ public class Main {
                 }
             }
         };
-        FormatterListener formatterListener = new FormatterListener(formatter);
-        Parser parser = new Parser(formatterListener);
+        Parser parser = new Parser(formatter);
         lexer = new I18nLexer(parser);
     }
 
@@ -66,7 +67,7 @@ public class Main {
     private void parse(File file) {
         try {
             String input = FixJava.readReader(new FileReader(file));
-            lexer.scan(input, file.getPath(), 0);
+            lexer.scan(input);
         } catch (Exception e) {
             System.err.println(e.getMessage());
             System.exit(1);

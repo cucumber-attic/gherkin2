@@ -1,6 +1,7 @@
 package gherkin.formatter;
 
-import gherkin.listener.Row;
+import gherkin.formatter.model.*;
+import gherkin.util.Mapper;
 
 import java.io.*;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.regex.Pattern;
 
 import static gherkin.formatter.Colors.comments;
 import static gherkin.util.FixJava.join;
+import static gherkin.util.FixJava.map;
 
 /**
  * This class pretty prints feature files like they were in the source, only
@@ -24,6 +26,11 @@ public class PrettyFormatter implements Formatter {
     private String uri;
     private static final Pattern START = Pattern.compile("^", Pattern.MULTILINE);
     private static final Pattern TRIPLE_QUOTES = Pattern.compile("\"\"\"", Pattern.MULTILINE);
+    private Mapper tagNameMapper = new Mapper() {
+        public String map(Object tag) {
+            return ((Tag) tag).getName();
+        }
+    };
 
     public PrettyFormatter(Writer out, boolean monochrome) {
         this.out = new PrintWriter(out);
@@ -34,61 +41,62 @@ public class PrettyFormatter implements Formatter {
         this(new OutputStreamWriter(out, "UTF-8"), monochrome);
     }
 
-    public void feature(List<String> comments, List<String> tags, String keyword, String name, String description, String uri) {
+    public void feature(Statement statement, String uri) {
         this.uri = uri;
-        printComments(comments, "");
-        printTags(tags, "");
-        out.println(keyword + ": " + name);
-        printDescription(description, "  ", false);
+        printComments(statement.getComments(), "");
+        printTags(statement.getTags(), "");
+        out.println(statement.getKeyword() + ": " + statement.getName());
+        printDescription(statement.getDescription(), "  ", false);
         out.flush();
     }
 
-    public void background(List<String> comments, String keyword, String name, String description, int line) {
+    public void background(Statement statement) {
         out.println();
-        printComments(comments, "  ");
-        out.println("  " + keyword + ": " + name);
-        printDescription(description, "    ", true);
+        printComments(statement.getComments(), "  ");
+        out.println("  " + statement.getKeyword() + ": " + statement.getName());
+        printDescription(statement.getDescription(), "    ", true);
     }
 
-    public void scenario(List<String> comments, List<String> tags, String keyword, String name, String description, int line) {
+    public void scenario(Statement statement) {
         out.println();
-        printComments(comments, "  ");
-        printTags(tags, "  ");
-        out.println("  " + keyword + ": " + name + indentedScenarioLocation(keyword, name, line));
-        printDescription(description, "    ", true);
+        printComments(statement.getComments(), "  ");
+        printTags(statement.getTags(), "  ");
+        out.println("  " + statement.getKeyword() + ": " + statement.getName() + indentedScenarioLocation(statement.getKeyword(), statement.getName(), statement.getLine()));
+        printDescription(statement.getDescription(), "    ", true);
         out.flush();
     }
 
-    public void scenarioOutline(List<String> comments, List<String> tags, String keyword, String name, String description, int line) {
-        scenario(comments, tags, keyword, name, description, line);
+    public void scenarioOutline(Statement statement) {
+        scenario(statement);
     }
 
-    public void examples(List<String> comments, List<String> tags, String keyword, String name, String description, int line, List<Row> exampleRows) {
+    public void examples(Statement statement, List<Row> exampleRows) {
         out.println();
-        printComments(comments, "    ");
-        printTags(tags, "    ");
-        out.println("    " + keyword + ": " + name);
-        printDescription(description, "    ", true);
+        printComments(statement.getComments(), "    ");
+        printTags(statement.getTags(), "    ");
+        out.println("    " + statement.getKeyword() + ": " + statement.getName());
+        printDescription(statement.getDescription(), "    ", true);
         table(exampleRows);
     }
 
-    public void step(List<String> comments, String keyword, String name, int line, List<Row> stepTable, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
-        step(comments, keyword, name, stepdefLocation);
+    public void step(Statement statement, List<Row> stepTable, Result result) {
+        step(statement, result);
         if (stepTable != null) {
             table(stepTable);
         }
     }
 
-    public void step(List<String> comments, String keyword, String name, int line, String stepString, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation) {
-        step(comments, keyword, name, stepdefLocation);
+    public void step(Statement statement, PyString stepString, Result result) {
+        step(statement, result);
         if (stepString != null) {
             pyString(stepString);
         }
     }
 
-    private void step(List<String> comments, String keyword, String name, String stepdefLocation) {
-        printComments(comments, "    ");
-        out.println("    " + keyword + name + indentedStepLocation(stepdefLocation));
+    private void step(Statement statement, Result result) {
+        printComments(statement.getComments(), "    ");
+        String location = result != null ? result.getStepdefLocation() : null;
+        out.println("    " + statement.getKeyword() + statement.getName() + indentedStepLocation(location));
         out.flush();
     }
 
@@ -105,9 +113,9 @@ public class PrettyFormatter implements Formatter {
         }
 
         for (int i = 0; i < rows.size(); i++) {
-            for(String comment : rows.get(i).getComments()) {
+            for(Comment comment : rows.get(i).getComments()) {
                 out.write("      ");
-                out.println(comment);
+                out.println(comment.getValue());
             }
             out.write("      | ");
             for (int j = 0; j < columnCount; j++) {
@@ -124,13 +132,17 @@ public class PrettyFormatter implements Formatter {
         out.flush();
     }
 
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+        throw new UnsupportedOperationException();
+    }
+
     private String escapeCell(String cell) {
         return cell.replaceAll("\\|", "\\\\|").replaceAll("\\\\(?!\\|)", "\\\\\\\\");
     }
 
-    public void pyString(String string) {
+    public void pyString(PyString pyString) {
         out.println("      \"\"\"");
-        out.print(escapeTripleQuotes(indent(string, "      ")));
+        out.print(escapeTripleQuotes(indent(pyString.getValue(), "      ")));
         out.println("\n      \"\"\"");
     }
 
@@ -161,18 +173,18 @@ public class PrettyFormatter implements Formatter {
         }
     }
 
-    private void printComments(List<String> comments, String indent) {
-        for (String comment : comments) {
+    private void printComments(List<Comment> comments, String indent) {
+        for (Comment comment : comments) {
             out.print(indent);
-            out.println(comment);
+            out.println(comment.getValue());
         }
         out.flush();
     }
 
-    private void printTags(List<String> tags, String indent) {
+    private void printTags(List<Tag> tags, String indent) {
         if(tags.isEmpty()) return;
         out.print(indent);
-        out.println(join(tags, " "));
+        out.println(join(map(tags, tagNameMapper), " "));
         out.flush();
     }
 

@@ -58,11 +58,11 @@ module Gherkin
 
       def row(cells, line)
         @table ||= []
-        @table << Formatter::Model::Row.new(cells, grab_comments!, line)
+        @table << Formatter::Model::Row.new(grab_comments!, cells, line)
       end
 
-      def py_string(py_string, line)
-        @py_string = Formatter::Model::PyString.new(py_string, line)
+      def py_string(string, line)
+        @py_string = Formatter::Model::PyString.new(string, line)
       end
 
       def eof
@@ -70,8 +70,8 @@ module Gherkin
         @formatter.eof
       end
 
-      def syntax_error(state, ev, expected, uri, line)
-        @formatter.syntax_error(state, ev, expected, uri, line)
+      def syntax_error(state, ev, legal_events, uri, line)
+        @formatter.syntax_error(state, ev, legal_events, uri, line)
       end
 
     private

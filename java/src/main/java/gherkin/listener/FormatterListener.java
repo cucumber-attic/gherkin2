@@ -2,6 +2,7 @@ package gherkin.listener;
 
 import gherkin.Listener;
 import gherkin.formatter.Formatter;
+import gherkin.formatter.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,68 +10,66 @@ import java.util.List;
 public class FormatterListener implements Listener {
     private final Formatter formatter;
     private String uri;
-    private int offset;
-    private List<String> comments = new ArrayList<String>();
-    private List<String> tags = new ArrayList<String>();
-    private Step step;
+    private List<Comment> comments = new ArrayList<Comment>();
+    private List<Tag> tags = new ArrayList<Tag>();
+    private Statement step;
     private List<Row> table;
-    private Examples examples;
-    private String pyString;
+    private Statement examples;
+    private PyString pyString;
 
     public FormatterListener(Formatter formatter) {
         this.formatter = formatter;
     }
 
-    public void location(String uri, int offset) {
+    public void location(String uri) {
         this.uri = uri;
-        this.offset = offset;
     }
 
     public void comment(String comment, int line) {
-        comments.add(comment);
+        comments.add(new Comment(comment, line));
     }
 
     public void tag(String tag, int line) {
-        tags.add(tag);
+        tags.add(new Tag(tag, line));
     }
 
     public void feature(String keyword, String name, String description, int line) {
-        formatter.feature(grabComments(), grabTags(), keyword, name, description, uri);
+        formatter.feature(statement(grabComments(), grabTags(), keyword, name, description, line), uri);
     }
 
     public void background(String keyword, String name, String description, int line) {
-        formatter.background(grabComments(), keyword, name, description, line + offset);
+        formatter.background(statement(grabComments(), grabTags(), keyword, name, description, line));
     }
 
     public void scenario(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        formatter.scenario(grabComments(), grabTags(), keyword, name, description, line + offset);
+        formatter.scenario(statement(grabComments(), grabTags(), keyword, name, description, line));
     }
 
     public void scenarioOutline(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        formatter.scenarioOutline(grabComments(), grabTags(), keyword, name, description, line + offset);
+        formatter.scenarioOutline(statement(grabComments(), grabTags(), keyword, name, description, line));
     }
 
     public void examples(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        examples = new Examples(grabComments(), grabTags(), keyword, name, description, line + offset);
+        examples = statement(grabComments(), grabTags(), keyword, name, description, line);
     }
 
     public void step(String keyword, String name, int line) {
         replayStepsOrExamples();
-        step = new Step(grabComments(), keyword, name, line + offset);
+        step = statement(grabComments(), grabTags(), keyword, name, null, line);
     }
 
     public void row(List<String> cells, int line) {
         if (table == null) {
             table = new ArrayList<Row>();
         }
-        table.add(new Row(cells, grabComments(), line));
+        table.add(new Row(grabComments(), cells, line));
     }
 
     public void pyString(String string, int line) {
-        this.pyString = string;
+        this.pyString = new PyString(string, line);
     }
 
     public void eof() {
@@ -78,19 +77,23 @@ public class FormatterListener implements Listener {
         formatter.eof();
     }
 
-    public void syntaxError(String state, String event, List<String> legalEvents, int line) {
-        throw new UnsupportedOperationException();
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+        formatter.syntaxError(state, event, legalEvents, uri, line);
     }
 
-    private List<String> grabComments() {
-        List<String> comments = this.comments;
-        this.comments = new ArrayList<String>();
+    private Statement statement(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, int line) {
+        return new Statement(comments, tags, keyword, name, description, line);
+    }
+
+    private List<Comment> grabComments() {
+        List<Comment> comments = this.comments;
+        this.comments = new ArrayList<Comment>();
         return comments;
     }
 
-    private List<String> grabTags() {
-        List<String> tags = this.tags;
-        this.tags = new ArrayList<String>();
+    private List<Tag> grabTags() {
+        List<Tag> tags = this.tags;
+        this.tags = new ArrayList<Tag>();
         return tags;
     }
 
@@ -100,75 +103,28 @@ public class FormatterListener implements Listener {
         return table;
     }
 
-    private String grabPyString() {
-        String pyString = this.pyString;
+    private PyString grabPyString() {
+        PyString pyString = this.pyString;
         this.pyString = null;
         return pyString;
     }
 
     private void replayStepsOrExamples() {
         if (step != null) {
-            String pyString;
+            PyString pyString;
             List<Row> table;
             if ((pyString = grabPyString()) != null) {
-                step.replay(formatter, pyString);
+                step.replayStep(formatter, pyString, null);
             } else if ((table = grabTable()) != null) {
-                step.replay(formatter, table);
+                step.replayStep(formatter, table, null);
             } else {
-                step.replay(formatter, (String) null);
+                step.replayStep(formatter, (PyString) null, null);
             }
             step = null;
         }
         if (examples != null) {
-            examples.replay(formatter, grabTable());
+            examples.replayExamples(formatter, grabTable());
             examples = null;
         }
     }
-
-    private class Step {
-        private final List<String> comments;
-        private final String keyword;
-        private final String name;
-        private final int line;
-
-        public Step(List<String> comments, String keyword, String name, int line) {
-            this.comments = comments;
-            this.keyword = keyword;
-            this.name = name;
-            this.line = line;
-        }
-
-        public void replay(Formatter formatter, String pyString) {
-            formatter.step(comments, keyword, name, line, pyString, null, null, null, null);
-        }
-
-        public void replay(Formatter formatter, List<Row> table) {
-            formatter.step(comments, keyword, name, line, table, null, null, null, null);
-        }
-    }
-
-
-    private class Examples {
-        private final List<String> comments;
-        private final List<String> tags;
-        private final String keyword;
-        private final String name;
-        private final String description;
-        private final int line;
-
-        public Examples(List<String> comments, List<String> tags, String keyword, String name, String description, int line) {
-            this.comments = comments;
-            this.tags = tags;
-            this.keyword = keyword;
-            this.name = name;
-            this.description = description;
-            this.line = line;
-        }
-
-        public void replay(Formatter formatter, List<Row> examplesTable) {
-            if (examplesTable == null) throw new NullPointerException("examplesTable");
-            formatter.examples(comments, tags, keyword, name, description, line, examplesTable);
-        }
-    }
-
 }

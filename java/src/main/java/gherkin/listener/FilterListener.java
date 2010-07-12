@@ -36,10 +36,6 @@ public class FilterListener implements Listener {
         detectFilters(filters);
     }
 
-    public void location(String uri, int offset) {
-        listener.location(uri, offset);
-    }
-
     public void tag(String tag, int line) {
         if (hasNoFilters()) {
             listener.tag(tag, line);
@@ -214,6 +210,10 @@ public class FilterListener implements Listener {
     public void eof() {
         replayExamplesRowsBuffer();
         listener.eof();
+    }
+
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+        throw new UnsupportedOperationException();
     }
 
     public void syntaxError(String state, String event,

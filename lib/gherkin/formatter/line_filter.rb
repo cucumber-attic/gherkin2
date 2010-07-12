@@ -14,7 +14,7 @@ module Gherkin
       end
 
       def filter_table_body_rows(rows)
-        body = rows[1..-1].select do |row|
+        body = rows.to_a[1..-1].select do |row|
           @lines.detect do |line|
             row.line == line
           end

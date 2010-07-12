@@ -20,10 +20,10 @@ public class FixJava {
         return sb.toString();
     }
 
-    public static List<String> map(List<String> strings, Mapper mapper) {
-        List<String> result = new ArrayList<String>(strings.size());
-        for (String s : strings) {
-            result.add(mapper.map(s));
+    public static List<String> map(List objects, Mapper mapper) {
+        List<String> result = new ArrayList<String>(objects.size());
+        for (Object o : objects) {
+            result.add(mapper.map(o));
         }
         return result;
     }

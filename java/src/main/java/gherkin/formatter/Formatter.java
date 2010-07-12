@@ -1,6 +1,9 @@
 package gherkin.formatter;
 
-import gherkin.listener.Row;
+import gherkin.formatter.model.PyString;
+import gherkin.formatter.model.Result;
+import gherkin.formatter.model.Row;
+import gherkin.formatter.model.Statement;
 
 import java.util.List;
 
@@ -9,34 +12,23 @@ import java.util.List;
  * formatter.
  */
 public interface Formatter {
-    void feature(List<String> comments, List<String> tags, String keyword, String name, String description, String uri);
+    void feature(Statement statement, String uri);
 
-    void background(List<String> comments, String keyword, String name, String description, int line);
+    void background(Statement statement);
 
-    void scenario(List<String> comments, List<String> tags, String keyword, String name, String description, int line);
+    void scenario(Statement statement);
 
-    void scenarioOutline(List<String> comments, List<String> tags, String keyword, String name, String description, int line);
+    void scenarioOutline(Statement statement);
 
-    void examples(List<String> comments, List<String> tags, String keyword, String name, String description, int line, List<Row> exampleRows);
+    void examples(Statement statement, List<Row> exampleRows);
 
-    /**
-     * Invoked after a step has been executed.
-     *
-     * @param comments        comments in front of the step.
-     * @param keyword         the value of step keyword ("Given ", "When ", "Then " etc).
-     * @param name            the text of the step, for example "I have 5 cukes".
-     * @param line            the line of the step.
-     * @param stepTable       a table argument
-     * @param status          whether or not we failed. TODO: USE ENUM
-     * @param thrown          the exception that was thrown, or null if none was thrown.
-     * @param arguments       The arguments the step was invoked with.
-     * @param stepdefLocation the location of the step definition.
-     */
-    void step(List<String> comments, String keyword, String name, int line, List<Row> stepTable, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation);
+    void step(Statement statement, List<Row> stepTable, Result result);
 
-    void step(List<String> comments, String keyword, String name, int line, String stepString, String status, Throwable thrown, List<Argument> arguments, String stepdefLocation);
+    void step(Statement statement, PyString stepString, Result result);
 
     void eof();
 
     void table(List<Row> rows);
+
+    void syntaxError(String state, String event, List<String> legalEvents, String uri, int line);
 }
