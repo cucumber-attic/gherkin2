@@ -24,6 +24,7 @@ namespace :gems do
   task :jruby => :release_dir do
     sh "rvm jruby rake spec"
     sh "rvm jruby rake gemspec build PLATFORM=java"
+    raise "The jruby gem looks too small" if File.stat("pkg/gherkin-#{GHERKIN_VERSION}-java.gem").size < 1000000
     mv "pkg/gherkin-#{GHERKIN_VERSION}-java.gem", 'release'
   end
 

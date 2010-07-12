@@ -31,6 +31,7 @@ E.g. in Bash, export RL_LANG="en,fr,no". This can be quite helpful when modifyin
 * Bump version in the VERSION.yml file and:
 ** java/pom.xml
 ** ikvm/Gherkin/Gherkin.csproj
+* Make sure both JRuby and MRI has the latest Cucumber installed (from source) otherwise the jruby gem might not get the jar inside it.
 * rake release:ALL
 * Announce on Cucumber list, IRC and Twitter.
 
@@ -45,7 +46,7 @@ http://crossgcc.rts-software.org/doku.php - just add the bin folder to your PATH
 == Note on Patches/Pull Requests
  
 * Fork the project.
-* Run rake ragel:rb to generate all the I18N lexers
+* Run rake ragel:rb to generate all the I18n lexers
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
   future version unintentionally.
@@ -56,4 +57,4 @@ http://crossgcc.rts-software.org/doku.php - just add the bin folder to your PATH
 
 == Copyright
 
-Copyright (c) 2009 Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy. See LICENSE for details.
+Copyright (c) 2009-2010 Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy. See LICENSE for details.

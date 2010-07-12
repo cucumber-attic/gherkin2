@@ -1,7 +1,18 @@
-== In Git
+== 2.1.1 (2010-07-12)
+
+The previous release had a missing gherkin.jar in the jruby gem. This release fixes that. For good this time!
+
+== 2.1.0 (2010-07-12)
 
 === New Features
+* Pirate! (anteaya)
 * Tag limits for negative tags (Aslak Hellesøy)
+
+=== Changed Features
+* The formatter API has changed and the listener API is now only used internally. (Aslak Hellesøy)
+
+=== Removed Features
+* FilterListener has been replaced with FilterFormatter. Currently only in Ruby (no Java impl yet). (Aslak Hellesøy)
 
 == 2.0.2 (2010-06-16)
 
