@@ -144,6 +144,19 @@
   then: "*|DEN"
   and: "*|AN"
   but: "*|BUT"
+"en-pirate":
+  name: Pirate
+  native: Pirate
+  feature: Ahoy matey!
+  background: Yo-ho-ho
+  scenario: Heave to
+  scenario_outline: Shiver me timbers
+  examples: Dead men tell no tales
+  given: "*|Gangway!"
+  when: "*|Blimey!"
+  then: "*|Let go and haul"
+  and: "*|Aye"
+  but: "*|Avast!"
 "en-Scouse":
   name: Scouse
   native: Scouse
