@@ -1,5 +1,3 @@
-require 'gherkin/formatter/model'
-
 module Gherkin
   module Rubify
     if defined?(JRUBY_VERSION)
@@ -11,6 +9,7 @@ module Gherkin
         when Java.java.util.Collection, Array
           o.map{|e| rubify(e)}
         when Java.gherkin.formatter.model.PyString
+          require 'gherkin/formatter/model'
           Formatter::Model::PyString.new(o.value, o.line)
         else
           o
