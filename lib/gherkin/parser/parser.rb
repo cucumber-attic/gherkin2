@@ -51,7 +51,7 @@ module Gherkin
 
       def event(ev, line)
         l = line ? @line_offset+line : nil
-        machine.event(ev, l) do |state, expected|
+        machine.event(ev, l) do |state, legal_events|
           if @raise_on_error
             raise ParseError.new(state, ev, legal_events, @feature_uri, l)
           else

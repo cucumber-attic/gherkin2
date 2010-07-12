@@ -86,6 +86,7 @@ module Gherkin
       | en-Scouse | Scouse                 | Scouse               |
       | en-au     | Australian             | Australian           |
       | en-lol    | LOLCAT                 | LOLCAT               |
+      | en-pirate | Pirate                 | Pirate               |
       | en-tx     | Texan                  | Texan                |
       | eo        | Esperanto              | Esperanto            |
       | es        | Spanish                | español              |
