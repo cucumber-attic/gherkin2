@@ -1,3 +1,8 @@
+== 2.1.2 (2010-07-13)
+
+=== Bugfixes
+* Fix some missing require statements that surfaced when gherkin was used outside Cucumber. (Aslak Hellesøy)
+
 == 2.1.1 (2010-07-12)
 
 The previous release had a missing gherkin.jar in the jruby gem. This release fixes that. For good this time!

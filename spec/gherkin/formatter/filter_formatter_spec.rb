@@ -1,8 +1,7 @@
 # encoding: utf-8
 require 'stringio'
 require 'spec_helper'
-require 'gherkin/i18n_lexer'
-require 'gherkin/listener/formatter_listener'
+require 'gherkin/parser/parser'
 require 'gherkin/formatter/filter_formatter'
 require 'gherkin/formatter/pretty_formatter'
 

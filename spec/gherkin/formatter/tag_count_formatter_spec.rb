@@ -1,7 +1,6 @@
 # encoding: utf-8
 require 'spec_helper'
-require 'gherkin/i18n_lexer'
-require 'gherkin/listener/formatter_listener'
+require 'gherkin/parser/parser'
 require 'gherkin/formatter/tag_count_formatter'
 
 module Gherkin

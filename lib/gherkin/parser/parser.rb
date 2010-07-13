@@ -1,3 +1,5 @@
+require 'gherkin/i18n'
+require 'gherkin/i18n_lexer'
 require 'gherkin/native'
 require 'gherkin/listener/formatter_listener'
 
