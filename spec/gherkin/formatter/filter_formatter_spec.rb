@@ -55,6 +55,11 @@ module Gherkin
         it "should filter on second examples tag" do
           verify_filter(['@hamster'], 1..14, 46..49, 56..61)
         end
+
+        it "should not replay examples from ignored scenario outline" do
+          self.file = 'scenario_outline_with_tags.feature'
+          verify_filter(['~@wip'], 1..2, 12..14)
+        end
       end
 
       context "names" do

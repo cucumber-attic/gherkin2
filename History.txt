@@ -1,3 +1,8 @@
+== 2.1.3 (2010-07-14)
+
+=== Bugfixes
+* Examples are not cleared when an ignored Scenario Outline/Examples is followed by a Scenario. (#67 Aslak Hellesøy)
+
 == 2.1.2 (2010-07-13)
 
 === Bugfixes

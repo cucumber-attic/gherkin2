@@ -6,8 +6,8 @@ require 'gherkin/listener/formatter_listener'
 module Gherkin
   module Parser
     class ParseError < StandardError
-      def initialize(state, new_state, expected_states, line)
-        super("Parse error on line #{line}. Found #{new_state} when expecting one of: #{expected_states.join(', ')}. (Current state: #{state}).")
+      def initialize(state, new_state, expected_states, uri, line)
+        super("Parse error on line #{uri}:#{line}. Found #{new_state} when expecting one of: #{expected_states.join(', ')}. (Current state: #{state}).")
       end
     end
 

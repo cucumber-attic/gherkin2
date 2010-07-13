@@ -42,6 +42,7 @@ module Gherkin
         @feature_element_name   = statement.name
         @feature_element_range  = statement.line_range
         @feature_element_events = [[:scenario, statement]]
+        @examples_events.clear
       end
 
       def scenario_outline(statement)
