@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 public class Parser implements Listener {
     List<Machine> machines = new ArrayList<Machine>();
 
-    private final Formatter formatter;
     private final boolean throwOnError;
     private final String machineName;
     private FormatterListener listener;
@@ -26,15 +25,17 @@ public class Parser implements Listener {
     }
 
     public Parser(Formatter formatter, boolean throwOnError) {
-        this(formatter, throwOnError, "root", false);
+        this(formatter, throwOnError, "root");
+    }
+
+    public Parser(Formatter formatter, boolean throwOnError, String machineName) {
+        this(formatter, throwOnError, machineName, false);
     }
 
     public Parser(Formatter formatter, boolean throwOnError, String machineName, boolean forceRubyDummy) {
-        this.formatter = formatter;
         this.listener = new FormatterListener(formatter);
         this.throwOnError = throwOnError;
         this.machineName = machineName;
-        pushMachine(machineName);
         this.lexer = new I18nLexer(this, forceRubyDummy);
     }
 
@@ -45,7 +46,7 @@ public class Parser implements Listener {
     public void parse(String gherkin, String featureURI, int lineOffset) {
         this.featureURI = featureURI;
         this.lineOffset = lineOffset;
-
+        pushMachine(machineName);
         listener.location(featureURI);
         lexer.scan(gherkin);
     }
@@ -55,7 +56,7 @@ public class Parser implements Listener {
     }
 
     private void pushMachine(String machineName) {
-        machines.add(new Machine(this, machineName));
+        machines.add(new Machine(this, machineName, featureURI));
     }
 
     private void popMachine() {
@@ -134,9 +135,6 @@ public class Parser implements Listener {
         throw new RuntimeException("Didn't expect this");
     }
 
-    public void syntaxError(String name, String event, List<String> strings, int line) {
-    }
-
     private boolean event(String event, int line) {
         try {
             machine().event(event, line);
@@ -162,13 +160,18 @@ public class Parser implements Listener {
 
         private final Parser parser;
         private final String name;
+        private final String uri;
         private String state;
         private Map<String, Map<String, String>> transitionMap;
 
-        public Machine(Parser parser, String name) {
+        public Machine(Parser parser, String name, String uri) {
+            if(uri == null) {
+                throw new NullPointerException("uri");
+            }
             this.parser = parser;
             this.name = name;
             this.state = name;
+            this.uri = uri;
             this.transitionMap = transitionMap(name);
         }
 
@@ -182,7 +185,7 @@ public class Parser implements Listener {
                 throw new RuntimeException("Unknown transition: " + event + " among " + states + " for machine " + name + " in getState " + state);
             }
             if ("E".equals(newState)) {
-                throw new ParseError(state, event, expectedEvents(), line);
+                throw new ParseError(state, event, expectedEvents(), uri, line);
             } else {
                 Matcher push = PUSH.matcher(newState);
                 if (push.matches()) {

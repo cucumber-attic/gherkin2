@@ -7,7 +7,7 @@ module Gherkin
   module Parser
     class ParseError < StandardError
       def initialize(state, new_state, expected_states, uri, line)
-        super("Parse error on line #{uri}:#{line}. Found #{new_state} when expecting one of: #{expected_states.join(', ')}. (Current state: #{state}).")
+        super("Parse error at #{uri}:#{line}. Found #{new_state} when expecting one of: #{expected_states.join(', ')}. (Current state: #{state}).")
       end
     end
 
