@@ -20,7 +20,7 @@ public class Main {
         }
     };
 
-    private Lexer lexer;
+    private Parser parser;
     private final Writer out;
 
     public Main(final Writer out, boolean prettyOrNull) {
@@ -44,8 +44,7 @@ public class Main {
                 }
             }
         };
-        Parser parser = new Parser(formatter);
-        lexer = new I18nLexer(parser);
+        parser = new Parser(formatter);
     }
 
     private void scanAll(File file) throws IOException {
@@ -67,9 +66,9 @@ public class Main {
     private void parse(File file) {
         try {
             String input = FixJava.readReader(new FileReader(file));
-            lexer.scan(input);
+            parser.parse(input, file.getPath(), 0);
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace(System.err);
             System.exit(1);
         }
     }

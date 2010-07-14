@@ -49,6 +49,7 @@ public class Parser implements Listener {
         pushMachine(machineName);
         listener.location(featureURI);
         lexer.scan(gherkin);
+        popMachine();
     }
 
     public I18n getI18nLanguage() {
@@ -127,8 +128,6 @@ public class Parser implements Listener {
         if (event("eof", 1)) {
             listener.eof();
         }
-        popMachine();
-        pushMachine(machineName);
     }
 
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
