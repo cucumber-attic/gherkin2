@@ -20,7 +20,7 @@ namespace :release do
 
   task :push_jar do
     Dir.chdir('java') do
-      sh("mvn deploy")
+      sh("mvn -Dmaven.wagon.provider.http=httpclient deploy")
     end
   end
 end
