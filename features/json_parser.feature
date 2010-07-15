@@ -10,6 +10,7 @@ Feature: JSON lexer
     Given the following JSON is parsed:
       """
       {
+        "type": "feature",
         "comments": ["# language: no", "# Another comment"],
         "description": "",
         "keyword": "Egenskap",
@@ -29,6 +30,7 @@ Feature: JSON lexer
     Given the following JSON is parsed:
       """
       {
+        "type": "feature",
         "comments": [],
         "keyword": "Feature",
         "name": "OH HAI",
@@ -100,6 +102,7 @@ Feature: JSON lexer
             ],
             "examples": [
               {
+                "type": "examples",
                 "comments": [],
                 "tags": ["@five"],
                 "keyword": "Examples",
@@ -175,6 +178,7 @@ Feature: JSON lexer
             ],
             "examples": [
               {
+                "type": "examples",
                 "comments": ["# comments", "# everywhere"],
                 "tags": [],
                 "keyword": "Examples",
@@ -251,35 +255,37 @@ Feature: JSON lexer
     Given the following JSON is parsed:
       """
       {
+        "type": "feature",
         "comments": [],
         "description": "",
         "keyword": "Feature",
         "name": "Kjapp",
         "tags": [],
         "uri": "test.feature",
-        "background": {
-          "comments": [],
-          "description": "",
-          "keyword": "Background",
-          "line": 2,
-          "name": "No idea what Kjapp means",
-          "steps": [
-            {
-              "comments": [],
-              "keyword": "Given ",
-              "line": 3,
-              "name": "I Google it"
-            }
-          ]
-        },
         "elements": [
           {
+            "type": "background",
+            "comments": [],
+            "description": "",
+            "keyword": "Background",
+            "line": 2,
+            "name": "No idea what Kjapp means",
+            "steps": [
+              {
+                "comments": [],
+                "keyword": "Given ",
+                "line": 3,
+                "name": "I Google it"
+              }
+            ]
+          },
+          {
+            "type": "scenario",
             "comments": ["# Writing JSON by hand sucks"],
             "tags": [],
             "keyword": "Scenario",
             "name": "",
             "description": "",
-            "type": "scenario",
             "line": 6,
             "steps": [
               {

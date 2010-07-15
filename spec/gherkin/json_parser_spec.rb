@@ -22,7 +22,7 @@ module Gherkin
 
     describe "A barely empty feature" do
       it "should scan a feature with no elements" do
-        @parser.parse_with_listener('{ "keyword": "Feature", "name": "One", "description": "", "line" : 3 }', @listener)
+        @parser.parse_with_listener('{ "type": "feature", "keyword": "Feature", "name": "One", "description": "", "line" : 3 }', @listener)
         @listener.to_sexp.should == [
           [:location, "unknown.json"],
           [:feature, "Feature", "One", "", 3],
@@ -33,7 +33,7 @@ module Gherkin
 
     describe "Missing line numbers" do
       it "should indicate a line number of 0 if a line attribute doesn't exist" do
-        @parser.parse_with_listener('{ "name": "My Sweet Featur", "keyword": "Feature", "description": "" }', @listener)
+        @parser.parse_with_listener('{ "type": "feature", "name": "My Sweet Featur", "keyword": "Feature", "description": "" }', @listener)
         @listener.to_sexp.should == [
           [:location, "unknown.json"],
           [:feature, "Feature", "My Sweet Featur", "", 0],
@@ -44,7 +44,7 @@ module Gherkin
 
     describe "Keywords" do
       it "should use the keyword from the source when provided" do
-        @parser.parse_with_listener('{ "name" : "My Sweet Featur", "language": "fr", "keyword": "Feature", "description": "" }', @listener)
+        @parser.parse_with_listener('{ "type": "feature", "name" : "My Sweet Featur", "language": "fr", "keyword": "Feature", "description": "" }', @listener)
         @listener.to_sexp.should == [
           [:location, "unknown.json"],
           [:feature, "Feature", "My Sweet Featur", "",  0],

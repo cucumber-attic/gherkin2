@@ -26,17 +26,11 @@ module Gherkin
 
       comments_for(feature)
       tags_for(feature)
-      multiline_event(:feature, feature)
+      multiline_event(feature)
 
-      if feature["background"]
-        comments_for(feature["background"])
-        multiline_event(:background, feature["background"])
-        steps_for(feature["background"])
-      end
-
-      feature["elements"].each do |feature_element|
+      (feature["elements"] || []).each do |feature_element|
         parse_element(feature_element) 
-      end if feature["elements"]
+      end
 
       @listener.eof
     end
@@ -44,26 +38,17 @@ module Gherkin
     def parse_element(feature_element)
       comments_for(feature_element)
       tags_for(feature_element)
-      case feature_element["type"]
-      when "scenario" then parse_scenario(feature_element)
-      when "scenario_outline" then parse_outline(feature_element)
-      end
-    end
+      multiline_event(feature_element)
+      steps_for(feature_element)
 
-    def parse_outline(scenario_outline)
-      multiline_event(:scenario_outline, scenario_outline)
-      steps_for(scenario_outline)
-      scenario_outline["examples"].each do |examples|
-        comments_for(examples)
-        tags_for(examples)
-        multiline_event(:examples, examples)
-        rows_for(examples)
+      if feature_element["type"] == "scenario_outline"
+        (feature_element["examples"] || []).each do |examples|
+          comments_for(examples)
+          tags_for(examples)
+          multiline_event(examples)
+          rows_for(examples)
+        end
       end
-    end
-
-    def parse_scenario(scenario)
-      multiline_event(:scenario, scenario)
-      steps_for(scenario)
     end
 
     def comments_for(element)
@@ -106,9 +91,9 @@ module Gherkin
       element["line"].to_i || 0
     end
 
-    def multiline_event(type, element)
+    def multiline_event(element)
       if element["keyword"] 
-        @listener.__send__(type, element["keyword"], element["name"] || "", element["description"] || "", line_for(element))
+        @listener.__send__(element['type'].to_sym, element["keyword"], element["name"] || "", element["description"] || "", line_for(element))
       end
     end
   end

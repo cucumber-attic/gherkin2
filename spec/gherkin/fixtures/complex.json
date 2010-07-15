@@ -1,23 +1,25 @@
-{ "name": "Feature Text",
+{ 
+  "type": "feature",
+  "name": "Feature Text",
   "keyword": "Feature",
   "description": "In order to test multiline forms",
   "tags": [
     "@tag1",
     "@tag2"
   ],
-  "background" : {
-    "description": "",
-    "name": "", 
-    "keyword": "Background",
-    "steps": [
-      { "name": "this is a background step",
-        "keyword": "Given " },
-      { "name": "this is another one",
-        "keyword": "When ",
-        "line": 412 }
-    ]
-  },
   "elements": [
+    { "type": "background",
+      "description": "",
+      "name": "", 
+      "keyword": "Background",
+      "steps": [
+        { "name": "this is a background step",
+          "keyword": "Given " },
+        { "name": "this is another one",
+          "keyword": "When ",
+          "line": 412 }
+      ]
+    },
     { "type": "scenario_outline",
       "keyword": "Scenario Outline",
       "name": "An Scenario Outline",
@@ -34,7 +36,8 @@
         }
       ],
       "examples": [
-        { "name": "Sweet Example", 
+        { "type": "examples",
+          "name": "Sweet Example", 
           "keyword": "Examples",
           "description": "",
           "table" : [

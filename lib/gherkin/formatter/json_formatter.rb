@@ -12,22 +12,19 @@ module Gherkin
       end
 
       def feature(statement, uri)
-        @json_hash = statement_hash(nil, statement)
+        @json_hash = statement_hash('feature', statement)
         @json_hash['uri'] = uri
       end
 
       def background(statement)
-        @json_hash['background'] = statement_hash(nil, statement) 
-        @in_background = true
+        add_step_container('background', statement)
       end
 
       def scenario(statement)
-        @in_background = false
         add_step_container('scenario', statement)
       end
 
       def scenario_outline(statement)
-        @in_background = false
         add_step_container('scenario_outline', statement)
       end
 
@@ -56,8 +53,8 @@ module Gherkin
           'name' => statement.name, 
           'description' => statement.description,
           'line' => statement.line,
+          'type' => type
         }
-        element['type'] = type
         compact(element)
       end
 
@@ -69,7 +66,7 @@ module Gherkin
       end
 
       def add_examples(statement)
-        element = statement_hash(nil, statement)
+        element = statement_hash('examples', statement)
         last_element['examples'] ||= []
         last_element['examples'] << element
         element
@@ -81,11 +78,7 @@ module Gherkin
       end
 
       def last_element
-        if @in_background
-          @json_hash['background']
-        else
-          @json_hash['elements'][-1]
-        end
+        @json_hash['elements'][-1]
       end
 
       def to_hash_array(rows)

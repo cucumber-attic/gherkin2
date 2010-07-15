@@ -16,6 +16,7 @@ Feature: JSON formatter
     Then the outputted JSON should be:
       """
       {
+        "type": "feature", 
         "comments": ["# language: no", "# Another comment"],
         "keyword": "Egenskap",
         "name": "Kjapp",
@@ -71,6 +72,7 @@ Feature: JSON formatter
     Then the outputted JSON should be:
       """
       {
+        "type": "feature", 
         "keyword": "Feature",
         "name": "OH HAI",
         "tags": ["@one"],
@@ -129,6 +131,7 @@ Feature: JSON formatter
             ],
             "examples": [
               {
+                "type": "examples", 
                 "tags": ["@five"],
                 "keyword": "Examples",
                 "name": "Real life",
@@ -191,6 +194,7 @@ Feature: JSON formatter
             ],
             "examples": [
               {
+                "type": "examples", 
                 "comments": ["# comments", "# everywhere"],
                 "keyword": "Examples",
                 "name": "An example",
@@ -224,23 +228,25 @@ Feature: JSON formatter
     Then the outputted JSON should be:
       """
       {
+        "type": "feature", 
         "keyword": "Feature",
         "name": "Kjapp",
         "line": 1,
         "uri": "test.feature",
-        "background": {
-          "keyword": "Background",
-          "line": 3,
-          "name": "No idea what Kjapp means",
-          "steps": [
-            {
-              "keyword": "Given ",
-              "line": 4,
-              "name": "I Google it"
-            }
-          ]
-        },
         "elements": [
+          {
+            "type": "background",
+            "keyword": "Background",
+            "line": 3,
+            "name": "No idea what Kjapp means",
+            "steps": [
+              {
+                "keyword": "Given ",
+                "line": 4,
+                "name": "I Google it"
+              }
+            ]
+          },
           {
             "comments": ["# Writing JSON by hand sucks"],
             "keyword": "Scenario",
