@@ -47,15 +47,15 @@ module Gherkin
 
       def statement_hash(type, statement)
         element = {
-          'comments' => statement.comments.map{|comment| comment.value}, 
-          'tags' => statement.tags.map{|tag| tag.name}, 
           'keyword' => statement.keyword, 
           'name' => statement.name, 
-          'description' => statement.description,
           'line' => statement.line,
-          'type' => type
         }
-        compact(element)
+        element['type'] = type if type
+        element['comments'] = statement.comments.map{|comment| comment.value} if statement.comments && statement.comments.any?
+        element['tags'] = statement.tags.map{|tag| tag.name} if statement.tags && statement.tags.any?
+        element['description'] = statement.description if statement.description
+        element
       end
 
       def add_element(type, statement)
@@ -83,7 +83,9 @@ module Gherkin
 
       def to_hash_array(rows)
         rows.map do |row|
-          compact({"cells" => row.cells.to_a, "comments" => row.comments.map{|comment| comment.value}, "line" => row.line})
+          e = {"cells" => row.cells.to_a, "line" => row.line}
+          e["comments"] = row.comments.map{|comment| comment.value} if row.comments && row.comments.any?
+          e
         end
       end
 
@@ -91,10 +93,6 @@ module Gherkin
         return {} if multiline_arg.nil?
         multiline_arg = rubify(multiline_arg)
         Array === multiline_arg ? {"table" => to_hash_array(multiline_arg) } : { "py_string" => multiline_arg.value }
-      end
-
-      def compact(hash)
-        hash.reject{|k,v| [[], "", nil].index(v)}
       end
     end
   end

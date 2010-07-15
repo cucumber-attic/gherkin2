@@ -20,6 +20,7 @@ Feature: JSON formatter
         "comments": ["# language: no", "# Another comment"],
         "keyword": "Egenskap",
         "name": "Kjapp",
+        "description": "",
         "line": 3,
         "uri": "test.feature"
       }
@@ -73,16 +74,18 @@ Feature: JSON formatter
       """
       {
         "type": "feature", 
+        "tags": ["@one"],
         "keyword": "Feature",
         "name": "OH HAI",
-        "tags": ["@one"],
+        "description": "",
         "line": 2,
         "uri": "test.feature",
         "elements":[
           {
+            "type": "scenario",
             "keyword": "Scenario",
             "name": "Fujin",
-            "type": "scenario",
+            "description": "",
             "line": 4,
             "steps": [
               {
@@ -98,10 +101,11 @@ Feature: JSON formatter
             ]
           },
           {
+            "type": "scenario",
             "tags": ["@two"],
             "keyword": "Scenario",
             "name": "_why",
-            "type": "scenario",
+            "description": "",
             "line": 9,
             "steps": [
               {
@@ -117,10 +121,11 @@ Feature: JSON formatter
             ]
           },
           {
+            "type": "scenario_outline",
             "tags": ["@three", "@four"],
             "keyword": "Scenario Outline",
             "name": "Life",
-            "type": "scenario_outline",
+            "description": "",
             "line": 14,
             "steps": [
               {
@@ -135,6 +140,7 @@ Feature: JSON formatter
                 "tags": ["@five"],
                 "keyword": "Examples",
                 "name": "Real life",
+                "description": "",
                 "line": 18,
                 "table": [
                   {
@@ -154,9 +160,10 @@ Feature: JSON formatter
             ]
           },
           {
+            "type": "scenario",
             "keyword": "Scenario",
             "name": "who stole my mojo?",
-            "type": "scenario",
+            "description": "",
             "line": 23,
             "steps": [
               {
@@ -179,11 +186,12 @@ Feature: JSON formatter
             ]
           },
           {
+            "type": "scenario_outline",
             "comments": ["# The"],
             "keyword": "Scenario Outline",
-            "type": "scenario_outline",
-            "line": 32,
             "name": "with",
+            "description": "",
+            "line": 32,
             "steps": [
               {
                 "comments": ["# all"],
@@ -198,6 +206,7 @@ Feature: JSON formatter
                 "comments": ["# comments", "# everywhere"],
                 "keyword": "Examples",
                 "name": "An example",
+                "description": "",
                 "line": 38,
                 "table": [
                   {
@@ -231,6 +240,7 @@ Feature: JSON formatter
         "type": "feature", 
         "keyword": "Feature",
         "name": "Kjapp",
+        "description": "",
         "line": 1,
         "uri": "test.feature",
         "elements": [
@@ -239,6 +249,7 @@ Feature: JSON formatter
             "keyword": "Background",
             "line": 3,
             "name": "No idea what Kjapp means",
+            "description": "",
             "steps": [
               {
                 "keyword": "Given ",
@@ -248,9 +259,11 @@ Feature: JSON formatter
             ]
           },
           {
+            "type": "scenario",
             "comments": ["# Writing JSON by hand sucks"],
             "keyword": "Scenario",
-            "type": "scenario",
+            "name": "",
+            "description": "",
             "line": 7,
             "steps": [
               {

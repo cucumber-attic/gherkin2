@@ -19,8 +19,9 @@ begin
     gem.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
     gem.executables = ["gherkin"]
     gem.add_dependency "trollop", "~> 1.16.2"
-    gem.add_development_dependency 'rspec', '~> 2.0.0.beta.15'
-    gem.add_development_dependency "cucumber", "~> 0.8.4"
+    gem.add_development_dependency 'awesome_print', '~> 0.2.1'
+    gem.add_development_dependency 'rspec', '~> 2.0.0.beta.17'
+    gem.add_development_dependency "cucumber", "~> 0.8.5"
     gem.add_development_dependency "rake-compiler", "~> 0.7.0" unless defined?(JRUBY_VERSION)
 
     gem.files -= FileList['ikvm/**/*']

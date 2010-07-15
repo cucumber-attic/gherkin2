@@ -1,3 +1,4 @@
+require 'ap' # awesome_print gem
 require 'stringio'
 require 'gherkin/formatter/json_formatter'
 require 'gherkin/listener/formatter_listener'
@@ -17,16 +18,10 @@ end
 
 Then /^the outputted JSON should be:$/ do |expected_json|
   require 'json'
-  expected = JSON.pretty_generate(JSON.parse(expected_json))
-  actual   = JSON.pretty_generate(JSON.parse(@io.string))
-  announce actual
-  begin
-    actual.should == expected
-  rescue # Haven't figured out how to order Hash on JRuby (JSON pure). Retry with possibly worse error message.
-    expected = JSON.parse(expected_json)
-    actual   = JSON.parse(@io.string)
-    actual.should == expected
-  end
+  announce JSON.pretty_generate(JSON.parse(@io.string))
+  expected = JSON.parse(expected_json).ai
+  actual   = JSON.parse(@io.string).ai
+  actual.should == expected
 end
 
 
