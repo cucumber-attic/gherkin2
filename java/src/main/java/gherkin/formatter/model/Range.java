@@ -16,4 +16,8 @@ public class Range {
     public int getLast() {
         return last;
     }
+
+    public boolean isInclude(int n) {
+        return first <= n && n <= last;
+    }
 }

@@ -92,6 +92,11 @@ module Gherkin
 
       context "lines" do
         context "on the same line as feature element keyword" do
+          it "should filter on scenario without line" do
+            self.file = 'scenario_without_steps.feature'
+            verify_filter([3], 1..4)
+          end
+
           it "should filter on scenario line" do
             verify_filter([16], 1..19)
           end

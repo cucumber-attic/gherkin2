@@ -109,28 +109,23 @@ module Gherkin
       def replay!
         case @filter
         when TagExpression
-          background_ok      = false
           feature_element_ok = @filter.eval(tag_names(@feature_tags.to_a + @feature_element_tags.to_a))
           examples_ok        = @filter.eval(tag_names(@feature_tags.to_a + @feature_element_tags.to_a + @examples_tags.to_a)) if @examples_tags
         when RegexpFilter
-          background_ok      = @filter.eval([@background_name]) if @background_name
           feature_element_ok = @filter.eval([@feature_element_name])
           examples_ok        = @filter.eval([@feature_element_name, @examples_name]) if @examples_name
         when LineFilter
-          background_ok      = @filter.eval([@background_range]) if @background_range
           feature_element_ok = @filter.eval([@feature_element_range]) if @feature_element_range
           examples_ok        = @filter.eval([@feature_element_range, @examples_range]) if @examples_range
         end
 
-        if background_ok || feature_element_ok || examples_ok
+        if feature_element_ok || examples_ok
           replay_events!(@feature_events)
           replay_events!(@background_events)
+          replay_events!(@feature_element_events)
 
-          if feature_element_ok || examples_ok
-            replay_events!(@feature_element_events)
-            if examples_ok
-              replay_events!(@examples_events)
-            end
+          if examples_ok
+            replay_events!(@examples_events)
           end
         end
       end
