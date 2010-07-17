@@ -49,7 +49,7 @@ module Gherkin
       end
 
       def code_keyword_for(gherkin_keyword)
-        gherkin_keyword.gsub(/[\s',]/, '').strip
+        gherkin_keyword.gsub(/[\s',!]/, '').strip
       end
 
       def language_table
