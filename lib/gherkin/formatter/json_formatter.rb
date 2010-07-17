@@ -1,6 +1,7 @@
 require 'json'
 require 'json/pure' # Needed to make JSON.generate work.
 require 'gherkin/rubify'
+require 'gherkin/formatter/model'
 
 module Gherkin
   module Formatter
@@ -52,10 +53,26 @@ module Gherkin
           'line' => statement.line,
         }
         element['type'] = type if type
-        element['comments'] = statement.comments.map{|comment| comment.value} if statement.comments && statement.comments.any?
-        element['tags'] = statement.tags.map{|tag| tag.name} if statement.tags && statement.tags.any?
+        add_comments(element, statement)
+        add_tags(element, statement)
         element['description'] = statement.description if statement.description
         element
+      end
+
+      def add_comments(element, comment_holder)
+        if comment_holder.comments && comment_holder.comments.any?
+          element['comments'] = comment_holder.comments.map do |comment|
+            {'value' => comment.value, 'line' => comment.line}
+          end
+        end
+      end
+
+      def add_tags(element, statement)
+        if statement.tags && statement.tags.any?
+          element['tags'] = statement.tags.map do |tag|
+            {'name' => tag.name, 'line' => tag.line}
+          end
+        end
       end
 
       def add_element(type, statement)
@@ -84,15 +101,32 @@ module Gherkin
       def to_hash_array(rows)
         rows.map do |row|
           e = {"cells" => row.cells.to_a, "line" => row.line}
-          e["comments"] = row.comments.map{|comment| comment.value} if row.comments && row.comments.any?
+          add_comments(e, row)
           e
         end
       end
 
       def step_arg_to_hash(multiline_arg)
-        return {} if multiline_arg.nil?
         multiline_arg = rubify(multiline_arg)
-        Array === multiline_arg ? {"table" => to_hash_array(multiline_arg) } : { "py_string" => multiline_arg.value }
+        case multiline_arg
+        when Array
+          {
+            "multiline_arg" => {
+              "type" => "table",
+              "value" => to_hash_array(multiline_arg)
+            }
+          }
+        when Model::PyString
+          {
+            "multiline_arg" => {
+              "type" => "py_string",
+              "value" => multiline_arg.value,
+              "line" => multiline_arg.line
+            }
+          }
+        else
+          {}
+        end
       end
     end
   end

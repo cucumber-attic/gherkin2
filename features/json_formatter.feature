@@ -17,7 +17,7 @@ Feature: JSON formatter
       """
       {
         "type": "feature", 
-        "comments": ["# language: no", "# Another comment"],
+        "comments": [{"value": "# language: no", "line": 1}, {"value": "# Another comment", "line": 2}],
         "keyword": "Egenskap",
         "name": "Kjapp",
         "description": "",
@@ -74,7 +74,7 @@ Feature: JSON formatter
       """
       {
         "type": "feature", 
-        "tags": ["@one"],
+        "tags": [{"name": "@one", "line":1}],
         "keyword": "Feature",
         "name": "OH HAI",
         "description": "",
@@ -102,7 +102,7 @@ Feature: JSON formatter
           },
           {
             "type": "scenario",
-            "tags": ["@two"],
+            "tags": [{"name": "@two", "line":8}],
             "keyword": "Scenario",
             "name": "_why",
             "description": "",
@@ -122,7 +122,7 @@ Feature: JSON formatter
           },
           {
             "type": "scenario_outline",
-            "tags": ["@three", "@four"],
+            "tags": [{"name": "@three", "line":13}, {"name": "@four", "line":13}],
             "keyword": "Scenario Outline",
             "name": "Life",
             "description": "",
@@ -137,7 +137,7 @@ Feature: JSON formatter
             "examples": [
               {
                 "type": "examples", 
-                "tags": ["@five"],
+                "tags": [{"name": "@five", "line":17}],
                 "keyword": "Examples",
                 "name": "Real life",
                 "description": "",
@@ -170,31 +170,38 @@ Feature: JSON formatter
                 "keyword": "When ",
                 "name": "I was",
                 "line": 24,
-                "table": [
-                  {
-                    "line": 25,
-                    "cells": ["asleep"]
-                  }
-                ]
+                "multiline_arg": {
+                  "type": "table",
+                  "value": [
+                    {
+                      "line": 25,
+                      "cells": ["asleep"]
+                    }
+                  ]
+                }
               },
               {
                 "keyword": "And ",
                 "name": "so",
                 "line": 26,
-                "py_string": "innocent"
+                "multiline_arg": {
+                  "type": "py_string",
+                  "value": "innocent",
+                  "line": 27
+                }
               }
             ]
           },
           {
             "type": "scenario_outline",
-            "comments": ["# The"],
+            "comments": [{"value": "# The", "line":31}],
             "keyword": "Scenario Outline",
             "name": "with",
             "description": "",
             "line": 32,
             "steps": [
               {
-                "comments": ["# all"],
+                "comments": [{"value": "# all", "line":33}],
                 "keyword": "Then ",
                 "line": 34,
                 "name": "nice"
@@ -203,14 +210,14 @@ Feature: JSON formatter
             "examples": [
               {
                 "type": "examples", 
-                "comments": ["# comments", "# everywhere"],
+                "comments": [{"value": "# comments", "line": 36}, {"value": "# everywhere", "line": 37}],
                 "keyword": "Examples",
                 "name": "An example",
                 "description": "",
                 "line": 38,
                 "table": [
                   {
-                    "comments": ["# I mean"],
+                    "comments": [{"value": "# I mean", "line": 39}],
                     "line": 40,
                     "cells": ["partout"]
                   }
@@ -260,7 +267,7 @@ Feature: JSON formatter
           },
           {
             "type": "scenario",
-            "comments": ["# Writing JSON by hand sucks"],
+            "comments": [{"value": "# Writing JSON by hand sucks", "line": 6}],
             "keyword": "Scenario",
             "name": "",
             "description": "",

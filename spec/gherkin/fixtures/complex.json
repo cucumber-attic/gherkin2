@@ -4,8 +4,8 @@
   "keyword": "Feature",
   "description": "In order to test multiline forms",
   "tags": [
-    "@tag1",
-    "@tag2"
+    {"name": "@tag1"},
+    {"name": "@tag2"}
   ],
   "elements": [
     { "type": "background",
@@ -24,15 +24,20 @@
       "keyword": "Scenario Outline",
       "name": "An Scenario Outline",
       "description": "",
-      "tags": [ "@foo" ],
+      "tags": [
+        {"name": "@foo"}
+      ],
       "steps": [
         { "name": "A step with a table",
           "keyword": "Given ",
-          "table" : [
-            {"cells":
-              [ "a","row","for","a","step" ]
-            }
-          ]
+          "multiline_arg": {
+            "type": "table",
+            "value" : [
+              {"cells":
+                [ "a","row","for","a","step" ]
+              }
+            ]
+          }
         }
       ],
       "examples": [
@@ -48,7 +53,7 @@
               [ "The","Blanks" ]
             }
           ],
-          "tags" : [ "@exampletag" ]
+          "tags" : [ {"name": "@exampletag"} ]
         }
       ]
     },
@@ -57,8 +62,8 @@
       "name" : "Reading a Scenario",
       "description": "",
       "tags" : [
-        "@tag3",
-        "@tag4"
+        {"name": "@tag3"},
+        {"name": "@tag4"}
       ],
       "steps" : [
         { "name" : "there is a step",
@@ -71,38 +76,45 @@
       "keyword": "Scenario",
       "name" : "Reading a second scenario",
       "description": "With two lines of text",
-      "tags" : [ "@tag3" ],
+      "tags" : [ {"name": "@tag3"} ],
       "steps" : [
         { "name" : "a third step with a table",
           "keyword": "Given ",
-          "table" : [
-            { "cells" :
-              [ "a","b" ]
-            },
-            { "cells" :
-              [ "c","d" ]
-            },
-            { "cells" :
-              [ "e", "f" ]
-            }
-          ]
+          "multiline_arg": {
+            "type": "table",
+            "value": [
+              {
+                "cells" : [ "a","b" ],
+                "line" : 987
+              },
+              { "cells" :
+                [ "c","d" ]
+              },
+              { "cells" :
+                [ "e", "f" ]
+              }
+            ]
+          }
         },
         { "name" : "I am still testing things",
           "keyword": "Given ",
-          "table" : [
-            { "cells" :
-              [ "g","h" ]
-            },
-            { "cells" :
-              [ "e","r" ]
-            },
-            { "cells" :
-              [ "k", "i" ]
-            },
-            { "cells" :
-              [ "n", "" ]
-            }
-          ]
+          "multiline_arg": {
+            "type": "table",
+            "value": [
+              { "cells" :
+                [ "g","h" ]
+              },
+              { "cells" :
+                [ "e","r" ]
+              },
+              { "cells" :
+                [ "k", "i" ]
+              },
+              { "cells" :
+                [ "n", "" ]
+              }
+            ]
+          }
         },
         { "name" : "I am done testing these tables",
           "keyword": "Given " },
@@ -117,7 +129,12 @@
       "steps" : [
         { "name" : "All work and no play", 
           "keyword": "Given ",
-          "py_string" : "Makes Homer something something\nAnd something else" },
+          "multiline_arg": {
+            "type": "py_string",
+            "value": "Makes Homer something something\nAnd something else",
+            "line": 777
+          }
+        },
         { "name" : "crazy",
           "keyword": "Given " }
       ]

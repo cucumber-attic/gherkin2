@@ -11,7 +11,10 @@ Feature: JSON lexer
       """
       {
         "type": "feature",
-        "comments": ["# language: no", "# Another comment"],
+        "comments": [
+          {"value": "# language: no"}, 
+          {"value": "# Another comment"}
+        ],
         "description": "",
         "keyword": "Egenskap",
         "name": "Kjapp",
@@ -34,7 +37,7 @@ Feature: JSON lexer
         "comments": [],
         "keyword": "Feature",
         "name": "OH HAI",
-        "tags": ["@one"],
+        "tags": [{"name": "@one"}],
         "uri": "test.feature",
         "description": "",
         "elements":[
@@ -63,7 +66,7 @@ Feature: JSON lexer
           },
           {
             "comments": [],
-            "tags": ["@two"],
+            "tags": [{"name": "@two"}],
             "keyword": "Scenario",
             "name": "_why",
             "description": "",
@@ -86,7 +89,7 @@ Feature: JSON lexer
           },
           {
             "comments": [],
-            "tags": ["@three", "@four"],
+            "tags": [{"name": "@three"}, {"name": "@four"}],
             "keyword": "Scenario Outline",
             "name": "Life",
             "description": "",
@@ -104,7 +107,7 @@ Feature: JSON lexer
               {
                 "type": "examples",
                 "comments": [],
-                "tags": ["@five"],
+                "tags": [{"name": "@five"}],
                 "keyword": "Examples",
                 "name": "Real life",
                 "description": "",
@@ -143,25 +146,32 @@ Feature: JSON lexer
                 "keyword": "When ",
                 "name": "I was",
                 "line": 24,
-                "table": [
-                  {
-                    "comments": [],
-                    "line": 25,
-                    "cells": ["asleep"]
-                  }
-                ]
+                "multiline_arg": {
+                  "type": "table",
+                  "value": [
+                    {
+                      "comments": [],
+                      "line": 25,
+                      "cells": ["asleep"]
+                    }
+                  ]
+                }
               },
               {
                 "comments": [],
                 "keyword": "And ",
                 "name": "so",
                 "line": 26,
-                "py_string": "innocent"
+                "multiline_arg": {
+                  "type": "py_string",
+                  "value": "innocent",
+                  "line": 27
+                }
               }
             ]
           },
           {
-            "comments": ["# The"],
+            "comments": [{"value": "# The"}],
             "tags": [],
             "keyword": "Scenario Outline",
             "description": "",
@@ -170,7 +180,7 @@ Feature: JSON lexer
             "name": "with",
             "steps": [
               {
-                "comments": ["# all"],
+                "comments": [{"value": "# all"}],
                 "keyword": "Then ",
                 "line": 34,
                 "name": "nice"
@@ -179,22 +189,20 @@ Feature: JSON lexer
             "examples": [
               {
                 "type": "examples",
-                "comments": ["# comments", "# everywhere"],
+                "comments": [{"value": "# comments"}, {"value": "# everywhere"}],
                 "tags": [],
                 "keyword": "Examples",
                 "name": "An example",
-                // TODO - the description should now be the comment
-                // It should be on the first row of the examples_table!
                 "description": "",
                 "line": 38,
                 "table": [
                   {
-                    "comments": ["# I mean"],
+                    "comments": [{"value": "# I mean"}],
                     "line": 40,
                     "cells": ["partout"]
                   },
                   {
-                    "comments": ["# I really mean"],
+                    "comments": [{"value": "# I really mean"}],
                     "line": 40,
                     "cells": ["bartout"]
                   }
@@ -281,7 +289,7 @@ Feature: JSON lexer
           },
           {
             "type": "scenario",
-            "comments": ["# Writing JSON by hand sucks"],
+            "comments": [{"value": "# Writing JSON by hand sucks"}],
             "tags": [],
             "keyword": "Scenario",
             "name": "",
