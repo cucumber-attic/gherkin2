@@ -27,6 +27,7 @@ public class I18n {
             return '"' + (String) o + '"';
         }
     };
+
     private static final Mapper CODE_KEYWORD_MAPPER = new Mapper() {
         public String map(Object keyword) {
             return codeKeywordFor((String) keyword);
@@ -64,6 +65,10 @@ public class I18n {
 
     public String getIsoCode() {
         return isoCode;
+    }
+
+    public String getUnderscoredIsoCode() {
+        return getIsoCode().replaceAll("[\\s-]", "_").toLowerCase();
     }
 
     public Lexer lexer(Listener listener) {
