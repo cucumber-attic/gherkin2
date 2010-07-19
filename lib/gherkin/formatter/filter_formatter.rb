@@ -1,18 +1,18 @@
-require 'gherkin/rubify'
 require 'gherkin/tag_expression'
 require 'gherkin/formatter/regexp_filter'
 require 'gherkin/formatter/line_filter'
+require 'gherkin/formatter/tag_filter'
 require 'gherkin/formatter/model'
+require 'gherkin/native'
 
 module Gherkin
   module Formatter
     class FilterFormatter
-      include Rubify
+      native_impl('gherkin')
       
       def initialize(formatter, filters)
         @formatter = formatter
         @filter    = detect_filter(filters)
-
 
         @feature_tags           = []
         @feature_element_tags   = []
@@ -42,7 +42,6 @@ module Gherkin
         @feature_element_name   = statement.name
         @feature_element_range  = statement.line_range
         @feature_element_events = [[:scenario, statement]]
-        @examples_events.clear
       end
 
       def scenario_outline(statement)
@@ -51,7 +50,6 @@ module Gherkin
         @feature_element_name   = statement.name
         @feature_element_range  = statement.line_range
         @feature_element_events = [[:scenario_outline, statement]]
-        @examples_events.clear
       end
 
       def examples(statement, examples_rows)
@@ -59,32 +57,30 @@ module Gherkin
         @examples_tags = statement.tags
         @examples_name = statement.name
 
-        table_body_range = examples_rows.to_a[1].line..examples_rows.to_a[-1].line
+        table_body_range = examples_rows[1].line..examples_rows[-1].line
         @examples_range = statement.line_range.first..table_body_range.last
-        if(LineFilter === @filter && @filter.eval([table_body_range]))
+        if(@filter.eval([], [], [table_body_range]))
           examples_rows = @filter.filter_table_body_rows(examples_rows)
         end
         @examples_events = [[:examples, statement, examples_rows]]
       end
 
       def step(statement, multiline_arg, result)
-        args = [:step, statement, multiline_arg, result]
+        event = [:step, statement, multiline_arg, result]
         if @feature_element_events.any?
-          @feature_element_events << args
+          @feature_element_events << event
         else
-          @background_events << args
+          @background_events << event
         end
 
-        if LineFilter === @filter
-          step_range = statement.line_range
-          case rubify(multiline_arg)
-          when Model::PyString
-            step_range = step_range.first..multiline_arg.line_range.last
-          when Array
-            step_range = step_range.first..multiline_arg.to_a[-1].line
-          end
-          @feature_element_range = @feature_element_range.first..step_range.last
+        step_range = statement.line_range
+        case multiline_arg
+        when Model::PyString
+          step_range = step_range.first..multiline_arg.line_range.last
+        when Array
+          step_range = step_range.first..multiline_arg[-1].line
         end
+        @feature_element_range = @feature_element_range.first..step_range.last
       end
 
       def eof
@@ -102,22 +98,21 @@ module Gherkin
         when Regexp 
           RegexpFilter.new(filters)
         when String 
-          TagExpression.new(filters)
+          TagFilter.new(filters)
         end
       end
 
       def replay!
-        case @filter
-        when TagExpression
-          feature_element_ok = @filter.eval(tag_names(@feature_tags.to_a + @feature_element_tags.to_a))
-          examples_ok        = @filter.eval(tag_names(@feature_tags.to_a + @feature_element_tags.to_a + @examples_tags.to_a)) if @examples_tags
-        when RegexpFilter
-          feature_element_ok = @filter.eval([@feature_element_name])
-          examples_ok        = @filter.eval([@feature_element_name, @examples_name]) if @examples_name
-        when LineFilter
-          feature_element_ok = @filter.eval([@feature_element_range]) if @feature_element_range
-          examples_ok        = @filter.eval([@feature_element_range, @examples_range]) if @examples_range
-        end
+        feature_element_ok = @filter.eval(
+          (@feature_tags + @feature_element_tags), 
+          [@feature_name, @feature_element_name].compact, 
+          [@feature_element_range].compact
+        )
+        examples_ok = @filter.eval(
+          (@feature_tags + @feature_element_tags + @examples_tags), 
+          [@feature_name, @feature_element_name, @examples_name].compact, 
+          [@feature_element_range, @examples_range].compact
+        )
 
         if feature_element_ok || examples_ok
           replay_events!(@feature_events)
@@ -128,10 +123,10 @@ module Gherkin
             replay_events!(@examples_events)
           end
         end
-      end
 
-      def tag_names(tags)
-        tags.to_a.uniq.map{|tag| tag.name}
+        @examples_events.clear
+        @examples_tags.clear
+        @examples_name = nil
       end
 
       def replay_events!(events)

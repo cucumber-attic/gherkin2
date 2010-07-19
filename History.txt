@@ -1,3 +1,8 @@
+== In Git
+
+=== New Features
+* Pure Java FilterFormatter. (Aslak Hellesøy)
+
 == 2.1.5 (2010-07-17)
 
 === Bugfixes

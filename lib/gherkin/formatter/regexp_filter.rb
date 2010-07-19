@@ -5,12 +5,16 @@ module Gherkin
         @regexen = regexen
       end
 
-      def eval(names)
+      def eval(tags, names, ranges)
         @regexen.detect do |regexp| 
           names.detect do |name|
             name =~ regexp
           end
         end
+      end
+
+      def filter_table_body_rows(rows)
+        rows
       end
     end
   end

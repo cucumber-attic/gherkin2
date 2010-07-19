@@ -27,7 +27,7 @@ public class Main {
         this.out = out;
         final Formatter formatter = prettyOrNull ? new PrettyFormatter(out, true) : new NullFormatter() {
             @Override
-            public void step(Statement statement, PyString stepString, Result result) {
+            public void step(Statement statement, PyString pyString, Result result) {
                 step();
             }
 

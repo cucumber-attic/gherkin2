@@ -69,4 +69,20 @@ public class Statement {
     public void replayExamples(Formatter formatter, List<Row> examplesRows) {
         formatter.examples(this, examplesRows);
     }
+
+    public void replayBackground(Formatter formatter) {
+        formatter.background(this);
+    }
+
+    public void replayFeature(Formatter formatter, String uri) {
+        formatter.feature(this, uri);
+    }
+
+    public void replayScenarioOutline(Formatter formatter) {
+        formatter.scenarioOutline(this);
+    }
+
+    public void replayScenario(Formatter formatter) {
+        formatter.scenario(this);
+    }
 }
