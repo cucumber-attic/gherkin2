@@ -112,7 +112,7 @@ Feature: JSON lexer
                 "name": "Real life",
                 "description": "",
                 "line": 18,
-                "table": [
+                "rows": [
                   {
                     "comments": [],
                     "cells": ["boredom"],
@@ -195,7 +195,7 @@ Feature: JSON lexer
                 "name": "An example",
                 "description": "",
                 "line": 38,
-                "table": [
+                "rows": [
                   {
                     "comments": [{"value": "# I mean"}],
                     "line": 40,

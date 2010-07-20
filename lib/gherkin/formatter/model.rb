@@ -3,7 +3,151 @@ require 'gherkin/native'
 module Gherkin
   module Formatter
     module Model
-      class Comment
+      class Hashable
+        def to_hash
+          instance_variables.inject({}) do |hash, ivar|
+            value = instance_variable_get(ivar)
+            value = value.to_hash if value.respond_to?(:to_hash)
+            if Array === value
+              value = value.map do |e|
+                e.respond_to?(:to_hash) ? e.to_hash : e
+              end
+            end
+            hash[ivar[1..-1]] = value unless [[], nil].index(value)
+            hash
+          end
+        end
+      end
+      
+      class BasicStatement < Hashable
+        attr_reader :comments, :keyword, :name, :description, :line
+        
+        def initialize(comments, keyword, name, description, line)
+          @comments, @keyword, @name, @description, @line = comments, keyword, name, description, line
+        end
+
+        def line_range
+          first = @comments.any? ? @comments[0].line : first_non_comment_line
+          first..line
+        end
+
+        def first_non_comment_line
+          @line
+        end
+      end
+
+      class TagStatement < BasicStatement
+        attr_reader :tags
+
+        def initialize(comments, tags, keyword, name, description, line)
+          super(comments, keyword, name, description, line)
+          @tags = tags
+        end
+
+        def first_non_comment_line
+          @tags.any? ? @tags[0].line : @line
+        end
+      end
+
+      class Feature < TagStatement
+        native_impl('gherkin')
+
+        def initialize(comments, tags, keyword, name, description, line)
+          super(comments, tags, keyword, name, description, line)
+          @type = "feature"
+        end
+
+        def replay(formatter)
+          formatter.feature(self)
+        end
+      end
+
+      class Background < BasicStatement
+        native_impl('gherkin')
+
+        def initialize(comments, keyword, name, description, line)
+          super(comments, keyword, name, description, line)
+          @type = "background"
+        end
+
+        def replay(formatter)
+          formatter.background(self)
+        end
+      end
+
+      class Scenario < TagStatement
+        native_impl('gherkin')
+
+        def initialize(comments, tags, keyword, name, description, line)
+          super(comments, tags, keyword, name, description, line)
+          @type = "scenario"
+        end
+
+        def replay(formatter)
+          formatter.scenario(self)
+        end
+      end
+
+      class ScenarioOutline < TagStatement
+        native_impl('gherkin')
+
+        def initialize(comments, tags, keyword, name, description, line)
+          super(comments, tags, keyword, name, description, line)
+          @type = "scenario_outline"
+        end
+
+        def replay(formatter)
+          formatter.scenario_outline(self)
+        end
+      end
+
+      class Examples < TagStatement
+        native_impl('gherkin')
+
+        attr_accessor :rows
+
+        def initialize(comments, tags, keyword, name, description, line, rows=nil)
+          super(comments, tags, keyword, name, description, line)
+          @rows = rows
+        end
+
+        def replay(formatter)
+          formatter.examples(self)
+        end
+      end
+
+      class Step < BasicStatement
+        native_impl('gherkin')
+
+        attr_accessor :multiline_arg, :result
+
+        def initialize(comments, keyword, name, description, line, multiline_arg=nil, result=nil)
+          super(comments, keyword, name, nil, line)
+          @multiline_arg = multiline_arg
+          @result = result
+        end
+
+        def replay(formatter)
+          formatter.step(self)
+        end
+
+        def to_hash
+          hash = super
+          if hash['multiline_arg']
+            if Array === @multiline_arg
+              hash['multiline_arg'] = {
+                'type' => 'table',
+                'value' => hash['multiline_arg']
+              }
+            else
+              hash['multiline_arg']['type'] = 'py_string'
+            end
+          end
+          hash
+        end
+      end
+
+      class Comment < Hashable
         native_impl('gherkin')
 
         attr_reader :value, :line
@@ -13,7 +157,7 @@ module Gherkin
         end
       end
 
-      class Tag
+      class Tag < Hashable
         native_impl('gherkin')
 
         attr_reader :name, :line
@@ -31,7 +175,7 @@ module Gherkin
         end
       end
 
-      class PyString
+      class PyString < Hashable
         native_impl('gherkin')
 
         attr_reader :value, :line
@@ -46,28 +190,13 @@ module Gherkin
         end
       end
 
-      class Row
+      class Row < Hashable
         native_impl('gherkin')
 
         attr_reader :comments, :cells, :line
 
         def initialize(comments, cells, line)
           @comments, @cells, @line = comments, cells, line
-        end
-      end
-
-      class Statement
-        native_impl('gherkin')
-
-        attr_reader :comments, :tags, :keyword, :name, :description, :line
-        
-        def initialize(comments, tags, keyword, name, description, line)
-          @comments, @tags, @keyword, @name, @description, @line = comments, tags, keyword, name, description, line
-        end
-
-        def line_range
-          first = @comments[0] ? @comments[0].line : (@tags[0] ? @tags[0].line : line)
-          first..line
         end
       end
 

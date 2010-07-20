@@ -14,7 +14,7 @@ module Gherkin
         @steps     = 0
       end
 
-      def location(file, uri)
+      def location(uri)
       end
 
       def tag(name, line)

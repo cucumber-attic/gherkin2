@@ -24,61 +24,66 @@ module Gherkin
         @examples_events        = []
       end
 
-      def feature(statement, uri)
-        @feature_tags   = statement.tags
-        @feature_name   = statement.name
-        @feature_events = [[:feature, statement, uri]]
+      def uri(uri)
+        @formatter.uri(uri)
       end
 
-      def background(statement)
-        @feature_element_name   = statement.name
-        @feature_element_range  = statement.line_range
-        @background_events      = [[:background, statement]]
+      def feature(feature)
+        @feature_tags   = feature.tags
+        @feature_name   = feature.name
+        @feature_events = [feature]
       end
 
-      def scenario(statement)
+      def background(background)
+        @feature_element_name   = background.name
+        @feature_element_range  = background.line_range
+        @background_events      = [background]
+      end
+
+      def scenario(scenario)
         replay!
-        @feature_element_tags   = statement.tags
-        @feature_element_name   = statement.name
-        @feature_element_range  = statement.line_range
-        @feature_element_events = [[:scenario, statement]]
+        @feature_element_tags   = scenario.tags
+        @feature_element_name   = scenario.name
+        @feature_element_range  = scenario.line_range
+        @feature_element_events = [scenario]
       end
 
-      def scenario_outline(statement)
+      def scenario_outline(scenario_outline)
         replay!
-        @feature_element_tags   = statement.tags
-        @feature_element_name   = statement.name
-        @feature_element_range  = statement.line_range
-        @feature_element_events = [[:scenario_outline, statement]]
+        @feature_element_tags   = scenario_outline.tags
+        @feature_element_name   = scenario_outline.name
+        @feature_element_range  = scenario_outline.line_range
+        @feature_element_events = [scenario_outline]
       end
 
-      def examples(statement, examples_rows)
+      def examples(examples)
         replay!
-        @examples_tags = statement.tags
-        @examples_name = statement.name
+        @examples_tags = examples.tags
+        @examples_name = examples.name
 
-        table_body_range = examples_rows[1].line..examples_rows[-1].line
-        @examples_range = statement.line_range.first..table_body_range.last
+        table_body_range = examples.rows[1].line..examples.rows[-1].line
+        @examples_range = examples.line_range.first..table_body_range.last
         if(@filter.eval([], [], [table_body_range]))
-          examples_rows = @filter.filter_table_body_rows(examples_rows)
+          examples.rows = @filter.filter_table_body_rows(examples.rows)
         end
-        @examples_events = [[:examples, statement, examples_rows]]
+        @examples_events = [examples]
       end
 
-      def step(statement, multiline_arg, result)
-        event = [:step, statement, multiline_arg, result]
+      def step(step)
         if @feature_element_events.any?
-          @feature_element_events << event
+          @feature_element_events << step
         else
-          @background_events << event
+          @background_events << step
         end
 
-        step_range = statement.line_range
-        case multiline_arg
+        step_range = step.line_range
+        
+        # TODO: Move to Step class
+        case step.multiline_arg
         when Model::PyString
-          step_range = step_range.first..multiline_arg.line_range.last
+          step_range = step_range.first..step.multiline_arg.line_range.last
         when Array
-          step_range = step_range.first..multiline_arg[-1].line
+          step_range = step_range.first..step.multiline_arg[-1].line
         end
         @feature_element_range = @feature_element_range.first..step_range.last
       end
@@ -131,7 +136,7 @@ module Gherkin
 
       def replay_events!(events)
         events.each do |event|
-          @formatter.__send__(*event)
+          event.replay(@formatter)
         end
         events.clear
       end

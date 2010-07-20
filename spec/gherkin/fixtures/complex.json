@@ -41,11 +41,11 @@
         }
       ],
       "examples": [
-        { "type": "examples",
+        {
           "name": "Sweet Example", 
           "keyword": "Examples",
           "description": "",
-          "table" : [
+          "rows" : [
             {"cells" :
               [ "Fill","In" ]
             },

@@ -4,6 +4,9 @@
 * Pure Java FilterFormatter. (Aslak Hellesøy)
 * Pure Java JSONFormatter. (Aslak Hellesøy)
 
+=== Changed Features
+* All formatter events take exactly one argument. Each argument is a single object with all data. (Aslak Hellesøy)
+
 == 2.1.5 (2010-07-17)
 
 === Bugfixes

@@ -26,9 +26,8 @@ module Gherkin
       end
 
       def parse(gherkin, feature_uri, line_offset)
-        @feature_uri = feature_uri
+        @formatter.uri(feature_uri)
         @line_offset = line_offset
-        @listener.location(feature_uri)
         @lexer.scan(gherkin)
       end
 
@@ -148,7 +147,7 @@ module Gherkin
             @rows = []
           end
 
-          def location(uri, offset)
+          def uri(uri)
           end
 
           def row(row, line_number)

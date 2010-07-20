@@ -35,14 +35,15 @@ module Gherkin
       end
 
       it "should print comments when scenario is longer" do
-        @l.feature(Model::Statement.new([], [], "Feature", "Hello", "World", 1), "features/foo.feature")
+        @l.uri("features/foo.feature")
+        @l.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1))
         @l.steps([
           ['Given ', 'some stuff'],
           ['When ', 'foo']
         ])
-        @l.scenario(Model::Statement.new([], [], "Scenario", "The scenario", "", 4))
-        @l.step(Model::Statement.new([], [], "Given ", "some stuff", "", 5), nil, result('passed', nil, nil, "features/step_definitions/bar.rb:56"))
-        @l.step(Model::Statement.new([], [], "When ", "foo", "", 6), nil, result('passed', nil, nil, "features/step_definitions/bar.rb:96"))
+        @l.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4))
+        @l.step(Model::Step.new([], "Given ", "some stuff", "", 5, nil, result('passed', nil, nil, "features/step_definitions/bar.rb:56")))
+        @l.step(Model::Step.new([], "When ", "foo", "", 6, nil, result('passed', nil, nil, "features/step_definitions/bar.rb:96")))
 
         assert_io(%{Feature: Hello
   World
@@ -54,12 +55,13 @@ module Gherkin
       end
 
       it "should print comments when step is longer" do
-        @l.feature(Model::Statement.new([], [], "Feature", "Hello", "World", 1), "features/foo.feature")
+        @l.uri("features/foo.feature")
+        @l.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1))
         @l.steps([
           ['Given ', 'some stuff that is longer']
         ])
-        @l.scenario(Model::Statement.new([], [], "Scenario", "The scenario", "", 4))
-        @l.step(Model::Statement.new([], [], "Given ", "some stuff that is longer", "", 5), nil, result('passed', nil, nil, "features/step_definitions/bar.rb:56"))
+        @l.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4))
+        @l.step(Model::Step.new([], "Given ", "some stuff that is longer", "", 5, nil, result('passed', nil, nil, "features/step_definitions/bar.rb:56")))
 
         assert_io(%{Feature: Hello
   World
@@ -70,7 +72,8 @@ module Gherkin
       end
 
       it "should highlight arguments for regular steps" do
-        @l.step(Model::Statement.new([], [], "Given ", "I have 999 cukes in my belly", "", 3), nil, result('passed', nil, [Gherkin::Formatter::Argument.new(7, '999')], nil))
+        step = Model::Step.new([], "Given ", "I have 999 cukes in my belly", "", 3, nil, result('passed', nil, [Gherkin::Formatter::Argument.new(7, '999')], nil))
+        @l.step(step)
         assert_io("    Given I have 999 cukes in my belly\n")
       end
 

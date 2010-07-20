@@ -21,8 +21,7 @@ Feature: JSON formatter
         "keyword": "Egenskap",
         "name": "Kjapp",
         "description": "",
-        "line": 3,
-        "uri": "test.feature"
+        "line": 3
       }
       """
 
@@ -79,7 +78,6 @@ Feature: JSON formatter
         "name": "OH HAI",
         "description": "",
         "line": 2,
-        "uri": "test.feature",
         "elements":[
           {
             "type": "scenario",
@@ -136,13 +134,12 @@ Feature: JSON formatter
             ],
             "examples": [
               {
-                "type": "examples", 
                 "tags": [{"name": "@five", "line":17}],
                 "keyword": "Examples",
                 "name": "Real life",
                 "description": "",
                 "line": 18,
-                "table": [
+                "rows": [
                   {
                     "cells": ["boredom"],
                     "line": 19
@@ -209,13 +206,12 @@ Feature: JSON formatter
             ],
             "examples": [
               {
-                "type": "examples", 
                 "comments": [{"value": "# comments", "line": 36}, {"value": "# everywhere", "line": 37}],
                 "keyword": "Examples",
                 "name": "An example",
                 "description": "",
                 "line": 38,
-                "table": [
+                "rows": [
                   {
                     "comments": [{"value": "# I mean", "line": 39}],
                     "line": 40,
@@ -249,7 +245,6 @@ Feature: JSON formatter
         "name": "Kjapp",
         "description": "",
         "line": 1,
-        "uri": "test.feature",
         "elements": [
           {
             "type": "background",

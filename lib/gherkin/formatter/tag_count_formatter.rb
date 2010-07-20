@@ -6,10 +6,13 @@ module Gherkin
         @tag_counts = tag_counts
       end
 
-      def feature(statement, uri)
-        @feature_tags = statement.tags
+      def uri(uri)
         @uri = uri
-        @formatter.feature(statement, uri)
+      end
+
+      def feature(statement)
+        @feature_tags = statement.tags
+        @formatter.feature(statement)
       end
 
       def scenario(statement)
@@ -22,9 +25,9 @@ module Gherkin
         @formatter.scenario_outline(statement)
       end
 
-      def examples(statement, examples_rows)
-        record_tags((@feature_tags.to_a + @scenario_outline_tags.to_a + statement.tags.to_a).uniq, statement.line)
-        @formatter.examples(statement, examples_rows)
+      def examples(examples)
+        record_tags((@feature_tags.to_a + @scenario_outline_tags.to_a + examples.tags.to_a).uniq, examples.line)
+        @formatter.examples(examples)
       end
 
     private

@@ -20,12 +20,15 @@ module Gherkin
         @format = MonochromeFormat.new #@monochrome ? MonochromeFormat.new : AnsiColorFormat.new
       end
 
-      def feature(statement, uri)
+      def uri(uri)
         @uri = uri
-        print_comments(statement.comments, '')
-        print_tags(statement.tags, '')
-        @io.puts "#{statement.keyword}: #{statement.name}"
-        print_description(statement.description, '  ', false)
+      end
+
+      def feature(feature)
+        print_comments(feature.comments, '')
+        print_tags(feature.tags, '')
+        @io.puts "#{feature.keyword}: #{feature.name}"
+        print_description(feature.description, '  ', false)
       end
 
       def background(statement)
@@ -43,35 +46,32 @@ module Gherkin
         print_description(statement.description, '    ')
       end
 
-      def scenario_outline(statement)
-        scenario(statement)
+      def scenario_outline(scenario_outline)
+        scenario(scenario_outline)
       end
 
-      def examples(statement, examples_rows)
+      def examples(examples)
         @io.puts
-        print_comments(statement.comments, '    ')
-        print_tags(statement.tags, '    ')
-        @io.puts "    #{statement.keyword}: #{statement.name}"
-        print_description(statement.description, '    ')
-        table(examples_rows)
+        print_comments(examples.comments, '    ')
+        print_tags(examples.tags, '    ')
+        @io.puts "    #{examples.keyword}: #{examples.name}"
+        print_description(examples.description, '    ')
+        table(examples.rows)
       end
 
-      def step(statement, multiline_arg, result)
-        name = Gherkin::Formatter::Argument.format(statement.name, @format, (result ? result.arguments : []))
+      def step(step)
+        name = Gherkin::Formatter::Argument.format(step.name, @format, (step.result ? step.result.arguments : []))
 
-        step = "#{statement.keyword}#{statement.name}"
-        step = self.__send__(result.status, step, @monochrome) if result
+        step_text = "#{step.keyword}#{step.name}"
+        step_text = self.__send__(step.result.status, step_text, @monochrome) if step.result
 
-        print_comments(statement.comments, '    ')
-        @io.puts("    #{step}#{indented_step_location!(result ? result.stepdef_location : nil)}")
-        case multiline_arg
+        print_comments(step.comments, '    ')
+        @io.puts("    #{step_text}#{indented_step_location!(step.result ? step.result.stepdef_location : nil)}")
+        case step.multiline_arg
         when Model::PyString
-          py_string(multiline_arg)
+          py_string(step.multiline_arg)
         when Array
-          table(multiline_arg)
-        when NilClass
-        else
-          raise "Bad multiline_arg: #{multiline_arg.inspect}"
+          table(step.multiline_arg)
         end
       end
 
