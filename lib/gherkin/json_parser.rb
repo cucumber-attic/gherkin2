@@ -58,19 +58,6 @@ module Gherkin
       o.map{|row| Formatter::Model::Row.new(comments(row), row['cells'], row['line'])}
     end
 
-    def parse_element(feature_element)
-      s = statement(feature_element)
-
-      if feature_element["type"] == "scenario_outline"
-        (feature_element["examples"] || []).each do |examples|
-          comments_for(examples)
-          tags_for(examples)
-          multiline_event(examples)
-          rows_for(examples['table'])
-        end
-      end
-    end
-
     def comments(o)
       (o['comments'] || []).map do |comment|
         Formatter::Model::Comment.new(comment['value'], comment['line'])
