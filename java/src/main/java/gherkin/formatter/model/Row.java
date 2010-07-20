@@ -2,7 +2,7 @@ package gherkin.formatter.model;
 
 import java.util.List;
 
-public class Row {
+public class Row implements CommentHolder {
     private final List<Comment> comments;
     private final List<String> cells;
     private final int line;

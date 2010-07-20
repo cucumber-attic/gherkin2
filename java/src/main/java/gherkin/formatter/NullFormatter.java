@@ -33,7 +33,7 @@ public class NullFormatter implements Formatter {
         throw new UnsupportedOperationException();
     }
 
-    public void step(Statement statement, PyString stepString, Result result) {
+    public void step(Statement statement, PyString pyString, Result result) {
         throw new UnsupportedOperationException();
     }
 

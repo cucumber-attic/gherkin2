@@ -4,7 +4,7 @@ import gherkin.formatter.Formatter;
 
 import java.util.List;
 
-public class Statement {
+public class Statement implements CommentHolder {
     private final List<Comment> comments;
     private final List<Tag> tags;
     private final String keyword;

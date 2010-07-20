@@ -1,20 +1,20 @@
 require 'json'
 require 'json/pure' # Needed to make JSON.generate work.
-require 'gherkin/rubify'
 require 'gherkin/formatter/model'
+require 'gherkin/native'
 
 module Gherkin
   module Formatter
     class JSONFormatter
-      include Rubify
+      native_impl('gherkin')
       
       def initialize(io)
         @io = io
       end
 
       def feature(statement, uri)
-        @json_hash = statement_hash('feature', statement)
-        @json_hash['uri'] = uri
+        @feature_hash = statement_hash('feature', statement)
+        @feature_hash['uri'] = uri
       end
 
       def background(statement)
@@ -30,18 +30,18 @@ module Gherkin
       end
 
       def examples(statement, examples_rows)
-        @table_container = add_examples(statement)
-        @table_container['table'] = to_hash_array(examples_rows)
+        table_container = add_examples(statement)
+        table_container['table'] = to_hash_array(examples_rows)
       end
 
       def step(statement, multiline_arg, result)
-        @table_container = statement_hash(nil, statement).merge(step_arg_to_hash(multiline_arg))
+        step = statement_hash(nil, statement).merge(step_arg_to_hash(multiline_arg))
         last_element['steps'] ||= []
-        last_element['steps'] << @table_container
+        last_element['steps'] << step
       end
 
       def eof
-        @io.write(@json_hash.to_json)
+        @io.write(@feature_hash.to_json)
       end
 
     private
@@ -75,13 +75,6 @@ module Gherkin
         end
       end
 
-      def add_element(type, statement)
-        element = statement_hash(type, statement)
-        @json_hash['elements'] ||= []
-        @json_hash['elements'] << element
-        element
-      end
-
       def add_examples(statement)
         element = statement_hash('examples', statement)
         last_element['examples'] ||= []
@@ -94,20 +87,25 @@ module Gherkin
         last_element['steps'] = []
       end
 
+      def add_element(type, statement)
+        element = statement_hash(type, statement)
+        @feature_hash['elements'] ||= []
+        @feature_hash['elements'] << element
+      end
+
       def last_element
-        @json_hash['elements'][-1]
+        @feature_hash['elements'][-1]
       end
 
       def to_hash_array(rows)
         rows.map do |row|
-          e = {"cells" => row.cells.to_a, "line" => row.line}
+          e = {"cells" => row.cells, "line" => row.line}
           add_comments(e, row)
           e
         end
       end
 
       def step_arg_to_hash(multiline_arg)
-        multiline_arg = rubify(multiline_arg)
         case multiline_arg
         when Array
           {

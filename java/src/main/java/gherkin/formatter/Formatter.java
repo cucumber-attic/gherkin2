@@ -24,7 +24,7 @@ public interface Formatter {
 
     void step(Statement statement, List<Row> stepTable, Result result);
 
-    void step(Statement statement, PyString stepString, Result result);
+    void step(Statement statement, PyString pyString, Result result);
 
     void eof();
 

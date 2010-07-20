@@ -3,8 +3,9 @@
   $LOAD_PATH << File.expand_path(File.dirname(__FILE__) + path)
 end
 require 'gherkin'
-require "gherkin/sexp_recorder"
+require 'gherkin/sexp_recorder'
 require 'gherkin/output_stream_string_io'
+require 'gherkin/json'
 
 module TransformHelpers
   def tr_line_number(step_arg)

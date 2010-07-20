@@ -86,10 +86,10 @@ public class PrettyFormatter implements Formatter {
         }
     }
 
-    public void step(Statement statement, PyString stepString, Result result) {
+    public void step(Statement statement, PyString pyString, Result result) {
         step(statement, result);
-        if (stepString != null) {
-            pyString(stepString);
+        if (pyString != null) {
+            pyString(pyString);
         }
     }
 
