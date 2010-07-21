@@ -21,7 +21,6 @@ module Gherkin
 
     it "should parse a barely empty feature" do
       check_json(%{{
-        "type": "feature", 
         "keyword": "Feature", 
         "name": "One", 
         "description": "", 
@@ -31,7 +30,6 @@ module Gherkin
 
     it "should parse feature with tags and one scenario" do
       check_json(%{{
-        "type": "feature",
         "tags": [
           {
             "name": "@foo",

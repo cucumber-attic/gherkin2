@@ -41,23 +41,34 @@ public class PrettyFormatter implements Formatter {
         this(new OutputStreamWriter(out, "UTF-8"), monochrome);
     }
 
-    public void feature(Statement statement, String uri) {
+    public void uri(String uri) {
         this.uri = uri;
-        printComments(statement.getComments(), "");
-        printTags(statement.getTags(), "");
-        out.println(statement.getKeyword() + ": " + statement.getName());
-        printDescription(statement.getDescription(), "  ", false);
+    }
+
+    public void feature(Feature feature) {
+        printComments(feature.getComments(), "");
+        printTags(feature.getTags(), "");
+        out.println(feature.getKeyword() + ": " + feature.getName());
+        printDescription(feature.getDescription(), "  ", false);
         out.flush();
     }
 
-    public void background(Statement statement) {
+    public void background(Background background) {
         out.println();
-        printComments(statement.getComments(), "  ");
-        out.println("  " + statement.getKeyword() + ": " + statement.getName());
-        printDescription(statement.getDescription(), "    ", true);
+        printComments(background.getComments(), "  ");
+        out.println("  " + background.getKeyword() + ": " + background.getName());
+        printDescription(background.getDescription(), "    ", true);
     }
 
-    public void scenario(Statement statement) {
+    public void scenario(Scenario statement) {
+        printTagStatement(statement);
+    }
+
+    public void scenarioOutline(ScenarioOutline statement) {
+        printTagStatement(statement);
+    }
+
+    private void printTagStatement(TagStatement statement) {
         out.println();
         printComments(statement.getComments(), "  ");
         printTags(statement.getTags(), "  ");
@@ -66,37 +77,28 @@ public class PrettyFormatter implements Formatter {
         out.flush();
     }
 
-    public void scenarioOutline(Statement statement) {
-        scenario(statement);
-    }
-
-    public void examples(Statement statement, List<Row> exampleRows) {
+    public void examples(Examples examples) {
         out.println();
-        printComments(statement.getComments(), "    ");
-        printTags(statement.getTags(), "    ");
-        out.println("    " + statement.getKeyword() + ": " + statement.getName());
-        printDescription(statement.getDescription(), "    ", true);
-        table(exampleRows);
+        printComments(examples.getComments(), "    ");
+        printTags(examples.getTags(), "    ");
+        out.println("    " + examples.getKeyword() + ": " + examples.getName());
+        printDescription(examples.getDescription(), "    ", true);
+        table(examples.getRows());
     }
 
-    public void step(Statement statement, List<Row> stepTable, Result result) {
-        step(statement, result);
-        if (stepTable != null) {
-            table(stepTable);
+    public void step(Step step) {
+        printStep(step);
+        if (step.getMultilineArg() instanceof List) {
+            table((List<Row>) step.getMultilineArg());
+        } else if(step.getMultilineArg() instanceof PyString) {
+            pyString((PyString) step.getMultilineArg());
         }
     }
 
-    public void step(Statement statement, PyString pyString, Result result) {
-        step(statement, result);
-        if (pyString != null) {
-            pyString(pyString);
-        }
-    }
-
-    private void step(Statement statement, Result result) {
-        printComments(statement.getComments(), "    ");
-        String location = result != null ? result.getStepdefLocation() : null;
-        out.println("    " + statement.getKeyword() + statement.getName() + indentedStepLocation(location));
+    private void printStep(Step step) {
+        printComments(step.getComments(), "    ");
+        String location = step.getResult() != null ? step.getResult().getStepdefLocation() : null;
+        out.println("    " + step.getKeyword() + step.getName() + indentedStepLocation(location));
         out.flush();
     }
 
@@ -130,6 +132,10 @@ public class PrettyFormatter implements Formatter {
             out.println();
         }
         out.flush();
+    }
+
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, long line) {
+        throw new UnsupportedOperationException();
     }
 
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
@@ -188,7 +194,7 @@ public class PrettyFormatter implements Formatter {
         out.flush();
     }
 
-    private String indentedScenarioLocation(String keyword, String name, int line) {
+    private String indentedScenarioLocation(String keyword, String name, long line) {
         if (maxStepLength == -1) return "";
         int l = keyword.length() + name.length();
         maxStepLength = Math.max(maxStepLength, l);

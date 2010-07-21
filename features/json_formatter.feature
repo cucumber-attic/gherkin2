@@ -16,7 +16,6 @@ Feature: JSON formatter
     Then the outputted JSON should be:
       """
       {
-        "type": "feature", 
         "comments": [{"value": "# language: no", "line": 1}, {"value": "# Another comment", "line": 2}],
         "keyword": "Egenskap",
         "name": "Kjapp",
@@ -72,7 +71,6 @@ Feature: JSON formatter
     Then the outputted JSON should be:
       """
       {
-        "type": "feature", 
         "tags": [{"name": "@one", "line":1}],
         "keyword": "Feature",
         "name": "OH HAI",
@@ -240,7 +238,6 @@ Feature: JSON formatter
     Then the outputted JSON should be:
       """
       {
-        "type": "feature", 
         "keyword": "Feature",
         "name": "Kjapp",
         "description": "",

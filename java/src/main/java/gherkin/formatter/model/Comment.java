@@ -1,6 +1,6 @@
 package gherkin.formatter.model;
 
-public class Comment {
+public class Comment extends Mappable {
     private final String value;
     private final int line;
 

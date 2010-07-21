@@ -54,7 +54,6 @@ module Gherkin
 
         def initialize(comments, tags, keyword, name, description, line)
           super(comments, tags, keyword, name, description, line)
-          @type = "feature"
         end
 
         def replay(formatter)
@@ -133,15 +132,13 @@ module Gherkin
 
         def to_hash
           hash = super
-          if hash['multiline_arg']
-            if Array === @multiline_arg
-              hash['multiline_arg'] = {
-                'type' => 'table',
-                'value' => hash['multiline_arg']
-              }
-            else
-              hash['multiline_arg']['type'] = 'py_string'
-            end
+          if Array === @multiline_arg
+            hash['multiline_arg'] = {
+              'type' => 'table',
+              'value' => hash['multiline_arg']
+            }
+          elsif PyString === @multiline_arg
+            hash['multiline_arg']['type'] = 'py_string'
           end
           hash
         end

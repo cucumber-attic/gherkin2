@@ -1,19 +1,19 @@
 package gherkin.formatter.model;
 
 public class Range {
-    private final int first;
-    private final int last;
+    private final long first;
+    private final long last;
 
-    public Range(int first, int last) {
+    public Range(long first, long last) {
         this.first = first;
         this.last = last;
     }
 
-    public int getFirst() {
+    public long getFirst() {
         return first;
     }
 
-    public int getLast() {
+    public long getLast() {
         return last;
     }
 

@@ -47,7 +47,6 @@ public class Parser implements Listener {
         this.featureURI = featureURI;
         this.lineOffset = lineOffset;
         pushMachine(machineName);
-        listener.location(featureURI);
         lexer.scan(gherkin);
         popMachine();
     }
@@ -128,6 +127,10 @@ public class Parser implements Listener {
         if (event("eof", 1)) {
             listener.eof();
         }
+    }
+
+    public void syntaxError(String state, String event, List<String> legalEvents, int line) {
+        throw new UnsupportedOperationException();
     }
 
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {

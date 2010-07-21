@@ -1,9 +1,6 @@
 package gherkin.formatter;
 
-import gherkin.formatter.model.PyString;
-import gherkin.formatter.model.Result;
-import gherkin.formatter.model.Row;
-import gherkin.formatter.model.Statement;
+import gherkin.formatter.model.*;
 
 import java.util.List;
 
@@ -12,19 +9,19 @@ import java.util.List;
  * formatter.
  */
 public interface Formatter {
-    void feature(Statement statement, String uri);
+    void uri(String uri);
 
-    void background(Statement statement);
+    void feature(Feature feature);
 
-    void scenario(Statement statement);
+    void background(Background background);
 
-    void scenarioOutline(Statement statement);
+    void scenario(Scenario statement);
 
-    void examples(Statement statement, List<Row> exampleRows);
+    void scenarioOutline(ScenarioOutline statement);
 
-    void step(Statement statement, List<Row> stepTable, Result result);
+    void examples(Examples examples);
 
-    void step(Statement statement, PyString pyString, Result result);
+    void step(Step step);
 
     void eof();
 

@@ -9,20 +9,15 @@ import java.util.List;
 
 public class FormatterListener implements Listener {
     private final Formatter formatter;
-    private String uri;
     private List<Comment> comments = new ArrayList<Comment>();
     private List<Tag> tags = new ArrayList<Tag>();
-    private Statement step;
+    private Step step;
     private List<Row> table;
-    private Statement examples;
+    private Examples examples;
     private PyString pyString;
 
     public FormatterListener(Formatter formatter) {
         this.formatter = formatter;
-    }
-
-    public void location(String uri) {
-        this.uri = uri;
     }
 
     public void comment(String comment, int line) {
@@ -34,31 +29,31 @@ public class FormatterListener implements Listener {
     }
 
     public void feature(String keyword, String name, String description, int line) {
-        formatter.feature(statement(grabComments(), grabTags(), keyword, name, description, line), uri);
+        formatter.feature(new Feature(grabComments(), grabTags(), keyword, name, description, line));
     }
 
     public void background(String keyword, String name, String description, int line) {
-        formatter.background(statement(grabComments(), grabTags(), keyword, name, description, line));
+        formatter.background(new Background(grabComments(), keyword, name, description, line));
     }
 
     public void scenario(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        formatter.scenario(statement(grabComments(), grabTags(), keyword, name, description, line));
+        formatter.scenario(new Scenario(grabComments(), grabTags(), keyword, name, description, line));
     }
 
     public void scenarioOutline(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        formatter.scenarioOutline(statement(grabComments(), grabTags(), keyword, name, description, line));
+        formatter.scenarioOutline(new ScenarioOutline(grabComments(), grabTags(), keyword, name, description, line));
     }
 
     public void examples(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        examples = statement(grabComments(), grabTags(), keyword, name, description, line);
+        examples = new Examples(grabComments(), grabTags(), keyword, name, description, line, null);
     }
 
     public void step(String keyword, String name, int line) {
         replayStepsOrExamples();
-        step = statement(grabComments(), grabTags(), keyword, name, null, line);
+        step = new Step(grabComments(), keyword, name, null, line, null, null);
     }
 
     public void row(List<String> cells, int line) {
@@ -77,12 +72,12 @@ public class FormatterListener implements Listener {
         formatter.eof();
     }
 
-    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
-        formatter.syntaxError(state, event, legalEvents, uri, line);
+    public void syntaxError(String state, String event, List<String> legalEvents, int line) {
+        throw new UnsupportedOperationException();
     }
 
-    private Statement statement(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, int line) {
-        return new Statement(comments, tags, keyword, name, description, line);
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+        formatter.syntaxError(state, event, legalEvents, uri, line);
     }
 
     private List<Comment> grabComments() {
@@ -97,7 +92,7 @@ public class FormatterListener implements Listener {
         return tags;
     }
 
-    private List<Row> grabTable() {
+    private List<Row> grabRows() {
         List<Row> table = this.table;
         this.table = null;
         return table;
@@ -112,18 +107,18 @@ public class FormatterListener implements Listener {
     private void replayStepsOrExamples() {
         if (step != null) {
             PyString pyString;
-            List<Row> table;
+            List<Row> rows;
             if ((pyString = grabPyString()) != null) {
-                step.replayStep(formatter, pyString, null);
-            } else if ((table = grabTable()) != null) {
-                step.replayStep(formatter, table, null);
-            } else {
-                step.replayStep(formatter, (PyString) null, null);
+                step.setMultilineArg(pyString);
+            } else if ((rows = grabRows()) != null) {
+                step.setMultilineArg(rows);
             }
+            step.replay(formatter);
             step = null;
         }
         if (examples != null) {
-            examples.replayExamples(formatter, grabTable());
+            examples.setRows(grabRows());
+            examples.replay(formatter);
             examples = null;
         }
     }

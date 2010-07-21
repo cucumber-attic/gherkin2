@@ -10,7 +10,6 @@ Feature: JSON lexer
     Given the following JSON is parsed:
       """
       {
-        "type": "feature",
         "comments": [
           {"value": "# language: no"}, 
           {"value": "# Another comment"}
@@ -33,7 +32,6 @@ Feature: JSON lexer
     Given the following JSON is parsed:
       """
       {
-        "type": "feature",
         "comments": [],
         "keyword": "Feature",
         "name": "OH HAI",
@@ -263,7 +261,6 @@ Feature: JSON lexer
     Given the following JSON is parsed:
       """
       {
-        "type": "feature",
         "comments": [],
         "description": "",
         "keyword": "Feature",

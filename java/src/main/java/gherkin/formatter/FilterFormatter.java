@@ -1,6 +1,5 @@
 package gherkin.formatter;
 
-import gherkin.formatter.events.*;
 import gherkin.formatter.model.*;
 
 import java.util.ArrayList;
@@ -16,10 +15,10 @@ public class FilterFormatter implements Formatter {
     private List<Tag> featureElementTags;
     private List<Tag> examplesTags;
 
-    private List<AbstractEvent> featureEvents;
-    private List<AbstractEvent> backgroundEvents;
-    private List<AbstractEvent> featureElementEvents;
-    private List<AbstractEvent> examplesEvents;
+    private List<BasicStatement> featureEvents;
+    private List<BasicStatement> backgroundEvents;
+    private List<BasicStatement> featureElementEvents;
+    private List<BasicStatement> examplesEvents;
     private String featureName;
     private String featureElementName;
     private String examplesName;
@@ -34,10 +33,10 @@ public class FilterFormatter implements Formatter {
         featureElementTags = new ArrayList<Tag>();
         examplesTags = new ArrayList<Tag>();
 
-        featureEvents = new ArrayList<AbstractEvent>();
-        backgroundEvents = new ArrayList<AbstractEvent>();
-        featureElementEvents = new ArrayList<AbstractEvent>();
-        examplesEvents = new ArrayList<AbstractEvent>();
+        featureEvents = new ArrayList<BasicStatement>();
+        backgroundEvents = new ArrayList<BasicStatement>();
+        featureElementEvents = new ArrayList<BasicStatement>();
+        examplesEvents = new ArrayList<BasicStatement>();
     }
 
     private Filter detectFilter(List filters) {
@@ -53,77 +52,64 @@ public class FilterFormatter implements Formatter {
         }
     }
 
-    public void feature(Statement statement, String uri) {
-        featureTags = statement.getTags();
-        featureName = statement.getName();
-        featureEvents = new ArrayList<AbstractEvent>();
-        featureEvents.add(new FeatureEvent(statement, uri));
+    public void uri(String uri) {
+        formatter.uri(uri);        
     }
 
-    public void background(Statement statement) {
-        featureElementName = statement.getName();
-        featureElementRange = statement.getLineRange();
-        backgroundEvents = new ArrayList<AbstractEvent>();
-        backgroundEvents.add(new BackgroundEvent(statement));
+    public void feature(Feature feature) {
+        featureTags = feature.getTags();
+        featureName = feature.getName();
+        featureEvents = new ArrayList<BasicStatement>();
+        featureEvents.add(feature);
     }
 
-    public void scenario(Statement statement) {
+    public void background(Background background) {
+        featureElementName = background.getName();
+        featureElementRange = background.getLineRange();
+        backgroundEvents = new ArrayList<BasicStatement>();
+        backgroundEvents.add(background);
+    }
+
+    public void scenario(Scenario scenario) {
         replay();
-        featureElementTags = statement.getTags();
-        featureElementName = statement.getName();
-        featureElementRange = statement.getLineRange();
-        featureElementEvents = new ArrayList<AbstractEvent>();
-        featureElementEvents.add(new ScenarioEvent(statement));
+        featureElementTags = scenario.getTags();
+        featureElementName = scenario.getName();
+        featureElementRange = scenario.getLineRange();
+        featureElementEvents = new ArrayList<BasicStatement>();
+        featureElementEvents.add(scenario);
     }
 
-    public void scenarioOutline(Statement statement) {
+    public void scenarioOutline(ScenarioOutline scenarioOutline) {
         replay();
-        featureElementTags = statement.getTags();
-        featureElementName = statement.getName();
-        featureElementRange = statement.getLineRange();
-        featureElementEvents = new ArrayList<AbstractEvent>();
-        featureElementEvents.add(new ScenarioOutlineEvent(statement));
+        featureElementTags = scenarioOutline.getTags();
+        featureElementName = scenarioOutline.getName();
+        featureElementRange = scenarioOutline.getLineRange();
+        featureElementEvents = new ArrayList<BasicStatement>();
+        featureElementEvents.add(scenarioOutline);
     }
 
-    public void examples(Statement statement, List<Row> exampleRows) {
+    public void examples(Examples examples) {
         replay();
-        examplesTags = statement.getTags();
-        examplesName = statement.getName();
+        examplesTags = examples.getTags();
+        examplesName = examples.getName();
 
-        Range tableBodyRange = new Range(exampleRows.get(1).getLine(), exampleRows.get(exampleRows.size()-1).getLine());
-        examplesRange = new Range(statement.getLineRange().getFirst(), tableBodyRange.getLast());
+        Range tableBodyRange = new Range(examples.getRows().get(1).getLine(), examples.getRows().get(examples.getRows().size()-1).getLine());
+        examplesRange = new Range(examples.getLineRange().getFirst(), tableBodyRange.getLast());
         if(filter.eval(Collections.<Tag>emptyList(), Collections.<String>emptyList(), Collections.singletonList(tableBodyRange))) {
-            exampleRows = filter.filterTableBodyRows(exampleRows);
+            examples.setRows(filter.filterTableBodyRows(examples.getRows()));
         }
-        examplesEvents = new ArrayList<AbstractEvent>();
-        examplesEvents.add(new ExamplesEvent(statement, exampleRows));
+        examplesEvents = new ArrayList<BasicStatement>();
+        examplesEvents.add(examples);
 
     }
 
-    public void step(Statement statement, List<Row> stepTable, Result result) {
-        addStep(new StepEvent(statement, stepTable, result));
-        if(stepTable != null && stepTable.size() > 0) {
-            featureElementRange = new Range(featureElementRange.getFirst(), stepTable.get(stepTable.size() - 1).getLine());
-        } else {
-            featureElementRange = new Range(featureElementRange.getFirst(), statement.getLine());
-        }
-    }
-
-    public void step(Statement statement, PyString pyString, Result result) {
-        addStep(new StepEvent(statement, pyString, result));
-        if(pyString != null) {
-            featureElementRange = new Range(featureElementRange.getFirst(), pyString.getLineRange().getLast());
-        } else {
-            featureElementRange = new Range(featureElementRange.getFirst(), statement.getLine());
-        }
-    }
-
-    private void addStep(AbstractEvent event) {
+    public void step(Step step) {
         if(!featureElementEvents.isEmpty()) {
-            featureElementEvents.add(event);
+            featureElementEvents.add(step);
         } else {
-            backgroundEvents.add(event);
+            backgroundEvents.add(step);
         }
+        featureElementRange = new Range(featureElementRange.getFirst(), step.getLineRange().getLast());
     }
 
     public void eof() {
@@ -136,9 +122,8 @@ public class FilterFormatter implements Formatter {
     }
 
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
-        throw new UnsupportedOperationException("SYNTAX ERROR");
+        throw new UnsupportedOperationException();
     }
-
 
     private void replay() {
         List<Tag> feTags = new ArrayList<Tag>(featureTags);
@@ -168,8 +153,8 @@ public class FilterFormatter implements Formatter {
         examplesName = null;
     }
 
-    private void replayEvents(List<AbstractEvent> events) {
-        for (AbstractEvent event: events) {
+    private void replayEvents(List<BasicStatement> events) {
+        for (BasicStatement event: events) {
             event.replay(formatter);
         }
         events.clear();

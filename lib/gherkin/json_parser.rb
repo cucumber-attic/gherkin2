@@ -11,47 +11,44 @@ module Gherkin
     end
 
     def parse(src, feature_uri='unknown.json', line_offset=0)
+      @formatter.uri(feature_uri)
       o = JSON.parse(src)
 
-      model(o).replay(@formatter)
+      Formatter::Model::Feature.new(comments(o), tags(o), keyword(o), name(o), description(o), line(o)).replay(@formatter)
       (o["elements"] || []).each do |feature_element|
-        model(feature_element).replay(@formatter)
+        feature_element(feature_element).replay(@formatter)
         (feature_element["steps"] || []).each do |step|
-          model(step, 'step').replay(@formatter)
+          step(step).replay(@formatter)
         end
         (feature_element["examples"] || []).each do |eo|
-          examples = Formatter::Model::Examples.new(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), rows(eo['rows']))
-          examples.replay(@formatter)
+          Formatter::Model::Examples.new(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), rows(eo['rows'])).replay(@formatter)
         end
       end
 
       @formatter.eof
     end
 
-    def model(o, type = nil)
-      type ||= o['type']
-      case type
-      when 'feature'
-        Formatter::Model::Feature.new(comments(o), tags(o), keyword(o), name(o), description(o), line(o))
+    def feature_element(o)
+      case o['type']
       when 'background'
         Formatter::Model::Background.new(comments(o), keyword(o), name(o), description(o), line(o))
       when 'scenario'
         Formatter::Model::Scenario.new(comments(o), tags(o), keyword(o), name(o), description(o), line(o))
       when 'scenario_outline'
         Formatter::Model::ScenarioOutline.new(comments(o), tags(o), keyword(o), name(o), description(o), line(o))
-      when 'step'
-        multiline_arg = nil
-        if(ma = o['multiline_arg'])
-          if(ma['type'] == 'table')
-            multiline_arg = rows(ma['value'])
-          else
-            multiline_arg = Formatter::Model::PyString.new(ma['value'], ma['line'])
-          end
-        end
-        Formatter::Model::Step.new(comments(o), keyword(o), name(o), description(o), line(o), multiline_arg)
-      else
-        raise "unknown type: #{o['type'].inspect}"
       end
+    end
+
+    def step(o)
+      multiline_arg = nil
+      if(ma = o['multiline_arg'])
+        if(ma['type'] == 'table')
+          multiline_arg = rows(ma['value'])
+        else
+          multiline_arg = Formatter::Model::PyString.new(ma['value'], ma['line'])
+        end
+      end
+      Formatter::Model::Step.new(comments(o), keyword(o), name(o), nil, line(o), multiline_arg)
     end
 
     def rows(o)

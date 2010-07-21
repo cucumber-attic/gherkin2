@@ -1,17 +1,11 @@
 package gherkin;
 
 import gherkin.formatter.Formatter;
-import gherkin.formatter.NullFormatter;
 import gherkin.formatter.PrettyFormatter;
-import gherkin.formatter.model.PyString;
-import gherkin.formatter.model.Result;
-import gherkin.formatter.model.Row;
-import gherkin.formatter.model.Statement;
 import gherkin.parser.Parser;
 import gherkin.util.FixJava;
 
 import java.io.*;
-import java.util.List;
 
 public class Main {
     private FileFilter featureFilter = new FileFilter() {
@@ -23,27 +17,9 @@ public class Main {
     private Parser parser;
     private final Writer out;
 
-    public Main(final Writer out, boolean prettyOrNull) {
+    public Main(final Writer out) {
         this.out = out;
-        final Formatter formatter = prettyOrNull ? new PrettyFormatter(out, true) : new NullFormatter() {
-            @Override
-            public void step(Statement statement, PyString pyString, Result result) {
-                step();
-            }
-
-            @Override
-            public void step(Statement statement, List<Row> stepTable, Result result) {
-                step();
-            }
-
-            private void step() {
-                try {
-                    out.append('.').flush();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        };
+        final Formatter formatter = new PrettyFormatter(out, true);
         parser = new Parser(formatter);
     }
 
@@ -74,7 +50,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        new Main(new OutputStreamWriter(System.out, "UTF-8"), args.length > 1).scanAll(new File(args[0]));
+        new Main(new OutputStreamWriter(System.out, "UTF-8")).scanAll(new File(args[0]));
     }
 
 }

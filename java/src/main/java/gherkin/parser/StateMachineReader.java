@@ -23,6 +23,9 @@ public class StateMachineReader implements Listener {
         return transitionTable;
     }
 
+    public void location(String uri, int offset) {
+    }
+
     public void tag(String tag, int line) {
     }
 
@@ -53,7 +56,7 @@ public class StateMachineReader implements Listener {
     public void eof() {
     }
 
-    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
+    public void syntaxError(String name, String event, List<String> strings, int line) {
     }
 
     public void row(List<String> cells, int line) {

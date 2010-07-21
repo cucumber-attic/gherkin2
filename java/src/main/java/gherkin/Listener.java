@@ -25,5 +25,5 @@ public interface Listener {
 
     void eof();
 
-    void syntaxError(String state, String event, List<String> legalEvents, String uri, int line);
+    void syntaxError(String state, String event, List<String> legalEvents, int line);
 }

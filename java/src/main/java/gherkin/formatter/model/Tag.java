@@ -1,6 +1,6 @@
 package gherkin.formatter.model;
 
-public class Tag {
+public class Tag extends Mappable {
     private final String name;
     private final int line;
 
@@ -15,15 +15,5 @@ public class Tag {
 
     public int getLine() {
         return line;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return name.equals(((Tag) o).getName());
-    }
-
-    @Override
-    public int hashCode() {
-        return name.hashCode();
     }
 }
