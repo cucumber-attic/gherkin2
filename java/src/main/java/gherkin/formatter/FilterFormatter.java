@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class FilterFormatter implements Formatter {
     private final Formatter formatter;
     private final Filter filter;
-    private  List<Tag> featureTags;
+    private List<Tag> featureTags;
     private List<Tag> featureElementTags;
     private List<Tag> examplesTags;
 
@@ -53,7 +53,7 @@ public class FilterFormatter implements Formatter {
     }
 
     public void uri(String uri) {
-        formatter.uri(uri);        
+        formatter.uri(uri);
     }
 
     public void feature(Feature feature) {
@@ -93,9 +93,9 @@ public class FilterFormatter implements Formatter {
         examplesTags = examples.getTags();
         examplesName = examples.getName();
 
-        Range tableBodyRange = new Range(examples.getRows().get(1).getLine(), examples.getRows().get(examples.getRows().size()-1).getLine());
+        Range tableBodyRange = new Range(examples.getRows().get(1).getLine(), examples.getRows().get(examples.getRows().size() - 1).getLine());
         examplesRange = new Range(examples.getLineRange().getFirst(), tableBodyRange.getLast());
-        if(filter.eval(Collections.<Tag>emptyList(), Collections.<String>emptyList(), Collections.singletonList(tableBodyRange))) {
+        if (filter.eval(Collections.<Tag>emptyList(), Collections.<String>emptyList(), Collections.singletonList(tableBodyRange))) {
             examples.setRows(filter.filterTableBodyRows(examples.getRows()));
         }
         examplesEvents = new ArrayList<BasicStatement>();
@@ -104,7 +104,7 @@ public class FilterFormatter implements Formatter {
     }
 
     public void step(Step step) {
-        if(!featureElementEvents.isEmpty()) {
+        if (!featureElementEvents.isEmpty()) {
             featureElementEvents.add(step);
         } else {
             backgroundEvents.add(step);
@@ -140,11 +140,11 @@ public class FilterFormatter implements Formatter {
         exRanges.add(examplesRange);
         boolean examplesOk = filter.eval(exTags, exNames, exRanges);
 
-        if(featureElementOk || examplesOk) {
+        if (featureElementOk || examplesOk) {
             replayEvents(featureEvents);
             replayEvents(backgroundEvents);
             replayEvents(featureElementEvents);
-            if(examplesOk) {
+            if (examplesOk) {
                 replayEvents(examplesEvents);
             }
         }
@@ -154,7 +154,7 @@ public class FilterFormatter implements Formatter {
     }
 
     private void replayEvents(List<BasicStatement> events) {
-        for (BasicStatement event: events) {
+        for (BasicStatement event : events) {
             event.replay(formatter);
         }
         events.clear();

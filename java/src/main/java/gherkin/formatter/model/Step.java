@@ -19,15 +19,26 @@ public class Step extends BasicStatement {
     @Override
     public Map toMap() {
         Map map = super.toMap();
-        if(multiline_arg instanceof List) {
+        if (getRows() != null) {
             Map multilineArg = new HashMap();
             multilineArg.put("type", "table");
             multilineArg.put("value", map.get("multiline_arg"));
             map.put("multiline_arg", multilineArg);
-        } else if(multiline_arg instanceof PyString) {
-            ((Map)map.get("multiline_arg")).put("type", "py_string");
+        } else if (getPyString() != null) {
+            ((Map) map.get("multiline_arg")).put("type", "py_string");
         }
         return map;
+    }
+
+    @Override
+    public Range getLineRange() {
+        Range range = super.getLineRange();
+        if (getRows() != null) {
+            range = new Range(range.getFirst(), getRows().get(getRows().size() - 1).getLine());
+        } else if (getPyString() != null) {
+            range = new Range(range.getFirst(), getPyString().getLineRange().getLast());
+        }
+        return range;
     }
 
     @Override
@@ -45,5 +56,13 @@ public class Step extends BasicStatement {
 
     public Result getResult() {
         return result;
+    }
+
+    private List<Row> getRows() {
+        return multiline_arg instanceof List ? (List<Row>) multiline_arg : null;
+    }
+
+    private PyString getPyString() {
+        return multiline_arg instanceof PyString ? (PyString) multiline_arg : null;
     }
 }

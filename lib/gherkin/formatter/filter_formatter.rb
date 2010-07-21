@@ -76,16 +76,7 @@ module Gherkin
           @background_events << step
         end
 
-        step_range = step.line_range
-        
-        # TODO: Move to Step class
-        case step.multiline_arg
-        when Model::PyString
-          step_range = step_range.first..step.multiline_arg.line_range.last
-        when Array
-          step_range = step_range.first..step.multiline_arg[-1].line
-        end
-        @feature_element_range = @feature_element_range.first..step_range.last
+        @feature_element_range = @feature_element_range.first..step.line_range.last
       end
 
       def eof

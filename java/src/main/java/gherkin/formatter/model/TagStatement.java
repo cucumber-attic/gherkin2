@@ -16,7 +16,7 @@ public abstract class TagStatement extends BasicStatement {
 
     @Override
     protected int getFirstNonCommentLine() {
-        if(getTags().isEmpty()) {
+        if (getTags().isEmpty()) {
             return getLine();
         } else {
             return getTags().get(0).getLine();

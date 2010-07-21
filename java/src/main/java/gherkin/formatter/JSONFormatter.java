@@ -1,9 +1,6 @@
 package gherkin.formatter;
 
-import com.sun.tools.jdi.EventSetImpl;
 import gherkin.formatter.model.*;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import java.io.*;
@@ -69,7 +66,7 @@ public class JSONFormatter implements Formatter {
 
     private List getFeatureElements() {
         List featureElements = (List) featureHash.get("elements");
-        if(featureElements == null) {
+        if (featureElements == null) {
             featureElements = new ArrayList();
             featureHash.put("elements", featureElements);
         }
@@ -82,7 +79,7 @@ public class JSONFormatter implements Formatter {
 
     private List getAllExamples() {
         List allExamples = (List) getFeatureElement().get("examples");
-        if(allExamples == null) {
+        if (allExamples == null) {
             allExamples = new ArrayList();
             getFeatureElement().put("examples", allExamples);
         }
@@ -91,7 +88,7 @@ public class JSONFormatter implements Formatter {
 
     private List getSteps() {
         List steps = (List) getFeatureElement().get("steps");
-        if(steps == null) {
+        if (steps == null) {
             steps = new ArrayList();
             getFeatureElement().put("steps", steps);
         }

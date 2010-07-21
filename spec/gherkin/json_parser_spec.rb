@@ -12,7 +12,6 @@ module Gherkin
       f = Formatter::JSONFormatter.new(io)
       p = JSONParser.new(f)
       p.parse(json, 'unknown.json')
-
       expected = JSON.parse(json)
       actual   = JSON.parse(io.string)
 

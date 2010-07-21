@@ -90,7 +90,7 @@ public class PrettyFormatter implements Formatter {
         printStep(step);
         if (step.getMultilineArg() instanceof List) {
             table((List<Row>) step.getMultilineArg());
-        } else if(step.getMultilineArg() instanceof PyString) {
+        } else if (step.getMultilineArg() instanceof PyString) {
             pyString((PyString) step.getMultilineArg());
         }
     }
@@ -115,7 +115,7 @@ public class PrettyFormatter implements Formatter {
         }
 
         for (int i = 0; i < rows.size(); i++) {
-            for(Comment comment : rows.get(i).getComments()) {
+            for (Comment comment : rows.get(i).getComments()) {
                 out.write("      ");
                 out.println(comment.getValue());
             }
@@ -188,7 +188,7 @@ public class PrettyFormatter implements Formatter {
     }
 
     private void printTags(List<Tag> tags, String indent) {
-        if(tags.isEmpty()) return;
+        if (tags.isEmpty()) return;
         out.print(indent);
         out.println(join(map(tags, tagNameMapper), " "));
         out.flush();
@@ -217,9 +217,9 @@ public class PrettyFormatter implements Formatter {
     }
 
     private void printDescription(String description, String indentation, boolean newline) {
-        if(!"".equals(description)) {
+        if (!"".equals(description)) {
             out.println(indent(description, indentation));
-            if(newline) out.println();
+            if (newline) out.println();
         }
     }
 

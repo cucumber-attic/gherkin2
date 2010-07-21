@@ -126,6 +126,17 @@ module Gherkin
           @result = result
         end
 
+        def line_range
+          range = super
+          case multiline_arg
+          when Array
+            range = range.first..multiline_arg[-1].line
+          when Model::PyString
+            range = range.first..multiline_arg.line_range.last
+          end
+          range
+        end
+
         def replay(formatter)
           formatter.step(self)
         end

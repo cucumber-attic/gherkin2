@@ -2,8 +2,7 @@ package gherkin.formatter.model;
 
 import gherkin.formatter.Formatter;
 
-import java.lang.reflect.Field;
-import java.util.*;
+import java.util.List;
 
 public abstract class BasicStatement extends Mappable implements CommentHolder {
     private final List<Comment> comments;
@@ -22,7 +21,7 @@ public abstract class BasicStatement extends Mappable implements CommentHolder {
 
     public Range getLineRange() {
         int first;
-        if(getComments().size() > 0) {
+        if (getComments().size() > 0) {
             first = getComments().get(0).getLine();
         } else {
             first = getFirstNonCommentLine();
@@ -34,7 +33,7 @@ public abstract class BasicStatement extends Mappable implements CommentHolder {
     protected int getFirstNonCommentLine() {
         return line;
     }
-    
+
     public List<Comment> getComments() {
         return comments;
     }

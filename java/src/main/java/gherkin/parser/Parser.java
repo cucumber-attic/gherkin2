@@ -19,6 +19,7 @@ public class Parser implements Listener {
     private I18nLexer lexer;
     private String featureURI;
     private int lineOffset;
+    private final Formatter formatter;
 
     public Parser(Formatter formatter) {
         this(formatter, true);
@@ -33,6 +34,7 @@ public class Parser implements Listener {
     }
 
     public Parser(Formatter formatter, boolean throwOnError, String machineName, boolean forceRubyDummy) {
+        this.formatter = formatter;
         this.listener = new FormatterListener(formatter);
         this.throwOnError = throwOnError;
         this.machineName = machineName;
@@ -44,6 +46,7 @@ public class Parser implements Listener {
      * @param lineOffset the line offset within the uri document the gherkin was taken from. Typically 0.
      */
     public void parse(String gherkin, String featureURI, int lineOffset) {
+        formatter.uri(featureURI);
         this.featureURI = featureURI;
         this.lineOffset = lineOffset;
         pushMachine(machineName);
