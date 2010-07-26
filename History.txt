@@ -1,4 +1,7 @@
-== In Git
+== 2.2.0 (2010-07-26)
+
+This release breaks some APIs since the previous 2.1.5 release. If you install gherkin 2.2.0 you must also upgrade to
+Cucumber 0.9.0.
 
 === Bugfixes
 * I18nLexer doesn't recognise language header with \r\n on OS X. (#70 Aslak Hellesøy)
@@ -9,6 +12,7 @@
 
 === Changed Features
 * All formatter events take exactly one argument. Each argument is a single object with all data. (Aslak Hellesøy)
+* Several java classes have moved to a different package in order to improve separation of concerns. (Aslak Hellesøy)
 
 == 2.1.5 (2010-07-17)
 

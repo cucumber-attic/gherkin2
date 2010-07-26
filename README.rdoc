@@ -32,6 +32,7 @@ E.g. in Bash, export RL_LANG="en,fr,no". This can be quite helpful when modifyin
 ** java/pom.xml
 ** ikvm/Gherkin/Gherkin.csproj
 * Make sure both JRuby and MRI has the latest Cucumber installed (from source) otherwise the jruby gem might not get the jar inside it.
+** Install cucumber without gherkin dep: gem install --ignore-dependencies pkg/cucumber
 * rake release:ALL
 * Announce on Cucumber list, IRC and Twitter.
 
