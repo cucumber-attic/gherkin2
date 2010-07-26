@@ -10,7 +10,7 @@ CLEAN.include [
   'lib/gherkin/rb_lexer/*.rb',
   'lib/*.dll',
   'ext/**/*.c',
-  'java/src/main/java/gherkin/lexer/*.java',
+  'java/src/main/java/gherkin/lexer/i18n/*.java',
   'java/src/main/resources/gherkin/*.properties',
 ]
 

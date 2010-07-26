@@ -1,4 +1,4 @@
-package gherkin;
+package gherkin.lexer;
 
 public class LexingError extends RuntimeException {
     public LexingError(String message) {

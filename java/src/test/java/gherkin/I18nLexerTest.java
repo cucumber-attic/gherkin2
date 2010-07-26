@@ -1,5 +1,8 @@
 package gherkin;
 
+import gherkin.lexer.I18nLexer;
+import gherkin.lexer.Lexer;
+import gherkin.lexer.Listener;
 import gherkin.util.FixJava;
 import org.junit.Test;
 

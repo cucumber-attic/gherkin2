@@ -1,5 +1,5 @@
 require 'gherkin/i18n'
-require 'gherkin/i18n_lexer'
+require 'gherkin/lexer/i18n_lexer'
 require 'gherkin/native'
 require 'gherkin/listener/formatter_listener'
 
@@ -22,7 +22,7 @@ module Gherkin
         @machine_name = machine_name
         @machines = []
         push_machine(@machine_name)
-        @lexer = I18nLexer.new(self, force_ruby)
+        @lexer = Gherkin::Lexer::I18nLexer.new(self, force_ruby)
       end
 
       def parse(gherkin, feature_uri, line_offset)

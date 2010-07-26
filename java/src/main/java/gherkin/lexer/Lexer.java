@@ -1,4 +1,4 @@
-package gherkin;
+package gherkin.lexer;
 
 public interface Lexer {
     /**

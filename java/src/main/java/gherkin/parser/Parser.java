@@ -1,10 +1,10 @@
 package gherkin.parser;
 
 import gherkin.I18n;
-import gherkin.I18nLexer;
-import gherkin.Listener;
+import gherkin.lexer.I18nLexer;
+import gherkin.lexer.Listener;
 import gherkin.formatter.Formatter;
-import gherkin.listener.FormatterListener;
+import gherkin.parser.FormatterListener;
 
 import java.util.*;
 import java.util.regex.Matcher;

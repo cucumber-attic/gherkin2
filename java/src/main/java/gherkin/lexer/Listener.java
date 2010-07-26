@@ -1,4 +1,4 @@
-package gherkin;
+package gherkin.lexer;
 
 import java.util.List;
 
@@ -24,6 +24,4 @@ public interface Listener {
     void pyString(String string, int line);
 
     void eof();
-
-    void syntaxError(String state, String event, List<String> legalEvents, int line);
 }

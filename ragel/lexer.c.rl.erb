@@ -57,6 +57,7 @@ typedef struct lexer_state {
 } lexer_state;
 
 static VALUE mGherkin;
+static VALUE mGherkinLexer;
 static VALUE mCLexer;
 static VALUE cI18nLexer;
 static VALUE rb_eGherkinLexingError;
@@ -442,7 +443,8 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
 void Init_gherkin_lexer_<%= @i18n.underscored_iso_code %>()
 {
   mGherkin = rb_define_module("Gherkin");
-  rb_eGherkinLexingError = rb_const_get(mGherkin, rb_intern("LexingError"));
+  mGherkinLexer = rb_define_module_under(mGherkin, "Lexer");
+  rb_eGherkinLexingError = rb_const_get(mGherkinLexer, rb_intern("LexingError"));
 
   mCLexer = rb_define_module_under(mGherkin, "CLexer");
   cI18nLexer = rb_define_class_under(mCLexer, "<%= @i18n.underscored_iso_code.capitalize %>", rb_cObject);

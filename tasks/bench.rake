@@ -124,9 +124,9 @@ class Benchmarker
 
   def run_native_gherkin_no_parser
     require 'gherkin'
-    require 'gherkin/i18n_lexer'
+    require 'gherkin/lexer/i18n_lexer'
     require 'null_listener'
-    lexer = Gherkin::I18nLexer.new(NullListener.new, false)
+    lexer = Gherkin::Lexer::I18nLexer.new(NullListener.new, false)
     @features.each do |feature|
       lexer.scan(File.read(feature), feature, 0)
     end

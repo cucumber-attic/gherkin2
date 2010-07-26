@@ -1,6 +1,6 @@
-package gherkin.listener;
+package gherkin.parser;
 
-import gherkin.Listener;
+import gherkin.lexer.Listener;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.model.*;
 

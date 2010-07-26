@@ -1,9 +1,10 @@
 package gherkin;
 
-import gherkin.formatter.Formatter;
 import gherkin.formatter.PrettyFormatter;
 import gherkin.formatter.model.Comment;
 import gherkin.formatter.model.Row;
+import gherkin.lexer.Lexer;
+import gherkin.lexer.Listener;
 import gherkin.util.Mapper;
 
 import java.io.StringWriter;
@@ -72,7 +73,7 @@ public class I18n {
     }
 
     public Lexer lexer(Listener listener) {
-        String qualifiedI18nLexerClassName = "gherkin.lexer." + localeName().toUpperCase();
+        String qualifiedI18nLexerClassName = "gherkin.lexer.i18n." + localeName().toUpperCase();
         try {
             Class<?> delegateClass = getClass().getClassLoader().loadClass(qualifiedI18nLexerClassName);
             return (Lexer) delegateClass.getConstructor(Listener.class).newInstance(listener);

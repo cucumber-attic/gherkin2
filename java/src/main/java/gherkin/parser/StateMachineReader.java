@@ -1,8 +1,8 @@
 package gherkin.parser;
 
-import gherkin.Lexer;
-import gherkin.Listener;
-import gherkin.lexer.EN;
+import gherkin.lexer.Lexer;
+import gherkin.lexer.Listener;
+import gherkin.lexer.i18n.EN;
 import gherkin.util.FixJava;
 
 import java.util.ArrayList;
@@ -21,9 +21,6 @@ public class StateMachineReader implements Listener {
         Lexer lexer = new EN(this);
         lexer.scan(FixJava.readResource(machinePath));
         return transitionTable;
-    }
-
-    public void location(String uri, int offset) {
     }
 
     public void tag(String tag, int line) {
@@ -54,9 +51,6 @@ public class StateMachineReader implements Listener {
     }
 
     public void eof() {
-    }
-
-    public void syntaxError(String name, String event, List<String> strings, int line) {
     }
 
     public void row(List<String> cells, int line) {

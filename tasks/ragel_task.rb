@@ -28,7 +28,7 @@ class RagelTask
   def target
     {
       'c'    => "ext/gherkin_lexer_#{@i18n.underscored_iso_code}/gherkin_lexer_#{@i18n.underscored_iso_code}.c",
-      'java' => "java/src/main/java/gherkin/lexer/#{@i18n.underscored_iso_code.upcase}.java",
+      'java' => "java/src/main/java/gherkin/lexer/i18n/#{@i18n.underscored_iso_code.upcase}.java",
       'rb'   => "lib/gherkin/rb_lexer/#{@i18n.underscored_iso_code}.rb"
     }[@lang]
   end

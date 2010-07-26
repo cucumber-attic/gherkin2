@@ -7,7 +7,7 @@ module Gherkin
     describe "Java Lexer" do
       before do
         @listener = Gherkin::SexpRecorder.new
-        @lexer = Java::Gherkin::I18nLexer.new(@listener)
+        @lexer = Java::GherkinLexer::I18nLexer.new(@listener)
       end
 
       it_should_behave_like "a Gherkin lexer"

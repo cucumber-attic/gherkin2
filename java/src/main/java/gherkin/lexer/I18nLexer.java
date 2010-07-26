@@ -1,4 +1,6 @@
-package gherkin;
+package gherkin.lexer;
+
+import gherkin.I18n;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
