@@ -117,10 +117,6 @@ public class FilterFormatter implements Formatter {
         formatter.eof();
     }
 
-    public void table(List<Row> rows) {
-        throw new UnsupportedOperationException("TABLE");
-    }
-
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
         throw new UnsupportedOperationException();
     }

@@ -25,7 +25,5 @@ public interface Formatter {
 
     void eof();
 
-    void table(List<Row> rows);
-
     void syntaxError(String state, String event, List<String> legalEvents, String uri, int line);
 }
