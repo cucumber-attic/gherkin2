@@ -47,6 +47,8 @@ namespace :ikvm do
 end
 
 task :ikvm => ['ikvm:copy_ikvm_dlls', 'ikvm:exe', 'ikvm:dll'] do
+  puts "************** Pretty printing some features with .NET. **************"
   sh "mono release/gherkin-#{GHERKIN_VERSION}.exe features"
+  puts "************** DONE Pretty printing some features with .NET. All OK. **************"
 end
 
