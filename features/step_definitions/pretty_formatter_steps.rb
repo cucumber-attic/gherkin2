@@ -23,7 +23,7 @@ module PrettyPlease
     result              = StringIO.new
     pretty_formatter    = Gherkin::Formatter::PrettyFormatter.new(result, false)
     json_parser         = Gherkin::JSONParser.new(pretty_formatter)
-    json_parser.parse(json.string, "#{feature_path}.json")
+    json_parser.parse(json.string, "#{feature_path}.json", 0)
     
     result.string
   end

@@ -49,7 +49,7 @@ module Gherkin
 
       def step(keyword, name, line)
         replay_step_or_examples
-        @step_statement = Formatter::Model::Step.new(grab_comments!, keyword, name, nil, line)
+        @step_statement = Formatter::Model::Step.new(grab_comments!, keyword, name, line)
       end
 
       def row(cells, line)

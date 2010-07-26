@@ -8,14 +8,12 @@ public abstract class BasicStatement extends Mappable implements CommentHolder {
     private final List<Comment> comments;
     private final String keyword;
     private final String name;
-    private final String description;
     private final int line;
 
-    public BasicStatement(List<Comment> comments, String keyword, String name, String description, int line) {
+    public BasicStatement(List<Comment> comments, String keyword, String name, int line) {
         this.comments = comments;
         this.keyword = keyword;
         this.name = name;
-        this.description = description;
         this.line = line;
     }
 
@@ -44,10 +42,6 @@ public abstract class BasicStatement extends Mappable implements CommentHolder {
 
     public String getName() {
         return name;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public int getLine() {

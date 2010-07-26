@@ -20,10 +20,10 @@ module Gherkin
       end
       
       class BasicStatement < Hashable
-        attr_reader :comments, :keyword, :name, :description, :line
+        attr_reader :comments, :keyword, :name, :line
         
-        def initialize(comments, keyword, name, description, line)
-          @comments, @keyword, @name, @description, @line = comments, keyword, name, description, line
+        def initialize(comments, keyword, name, line)
+          @comments, @keyword, @name, @line = comments, keyword, name, line
         end
 
         def line_range
@@ -36,7 +36,16 @@ module Gherkin
         end
       end
 
-      class TagStatement < BasicStatement
+      class DescribedStatement < BasicStatement
+        attr_reader :description
+
+        def initialize(comments, keyword, name, description, line)
+          super(comments, keyword, name, line)
+          @description = description
+        end
+      end
+
+      class TagStatement < DescribedStatement
         attr_reader :tags
 
         def initialize(comments, tags, keyword, name, description, line)
@@ -61,7 +70,7 @@ module Gherkin
         end
       end
 
-      class Background < BasicStatement
+      class Background < DescribedStatement
         native_impl('gherkin')
 
         def initialize(comments, keyword, name, description, line)
@@ -120,8 +129,8 @@ module Gherkin
 
         attr_accessor :multiline_arg, :result
 
-        def initialize(comments, keyword, name, description, line, multiline_arg=nil, result=nil)
-          super(comments, keyword, name, nil, line)
+        def initialize(comments, keyword, name, line, multiline_arg=nil, result=nil)
+          super(comments, keyword, name, line)
           @multiline_arg = multiline_arg
           @result = result
         end

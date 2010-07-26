@@ -2,7 +2,7 @@ package gherkin.formatter.model;
 
 import java.util.List;
 
-public abstract class TagStatement extends BasicStatement {
+public abstract class TagStatement extends DescribedStatement {
     private final List<Tag> tags;
 
     public TagStatement(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, int line) {

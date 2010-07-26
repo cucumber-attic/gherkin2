@@ -59,7 +59,7 @@ public class JSONParser implements FeatureParser {
                 multilineArg = new PyString(getString(ma, "value"), getInt(ma, "line"));
             }
         }
-        return new Step(comments(o), keyword(o), name(o), null, line(o), multilineArg, null);
+        return new Step(comments(o), keyword(o), name(o), line(o), multilineArg, null);
     }
 
     private List<Row> rows(List o) {

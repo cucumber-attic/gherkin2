@@ -48,7 +48,7 @@ module Gherkin
           multiline_arg = Formatter::Model::PyString.new(ma['value'], ma['line'])
         end
       end
-      Formatter::Model::Step.new(comments(o), keyword(o), name(o), nil, line(o), multiline_arg)
+      Formatter::Model::Step.new(comments(o), keyword(o), name(o), line(o), multiline_arg)
     end
 
     def rows(o)

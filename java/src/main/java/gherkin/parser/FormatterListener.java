@@ -53,7 +53,7 @@ public class FormatterListener implements Listener {
 
     public void step(String keyword, String name, int line) {
         replayStepsOrExamples();
-        step = new Step(grabComments(), keyword, name, null, line, null, null);
+        step = new Step(grabComments(), keyword, name, line, null, null);
     }
 
     public void row(List<String> cells, int line) {

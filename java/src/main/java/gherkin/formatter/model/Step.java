@@ -10,8 +10,8 @@ public class Step extends BasicStatement {
     private Object multiline_arg;
     private Result result;
 
-    public Step(List<Comment> comments, String keyword, String name, String description, int line, Object multilineArg, Result result) {
-        super(comments, keyword, name, description, line);
+    public Step(List<Comment> comments, String keyword, String name, int line, Object multilineArg, Result result) {
+        super(comments, keyword, name, line);
         this.multiline_arg = multilineArg;
         this.result = result;
     }
