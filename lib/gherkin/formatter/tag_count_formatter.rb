@@ -10,19 +10,19 @@ module Gherkin
         @uri = uri
       end
 
-      def feature(statement)
-        @feature_tags = statement.tags
-        @formatter.feature(statement)
+      def feature(feature)
+        @feature_tags = feature.tags
+        @formatter.feature(feature)
       end
 
-      def scenario(statement)
-        record_tags((@feature_tags.to_a + statement.tags.to_a).uniq, statement.line)
-        @formatter.scenario(statement)
+      def scenario(scenario)
+        record_tags((@feature_tags.to_a + scenario.tags.to_a).uniq, scenario.line)
+        @formatter.scenario(scenario)
       end
 
-      def scenario_outline(statement)
-        @scenario_outline_tags = statement.tags
-        @formatter.scenario_outline(statement)
+      def scenario_outline(scenario_outline)
+        @scenario_outline_tags = scenario_outline.tags
+        @formatter.scenario_outline(scenario_outline)
       end
 
       def examples(examples)

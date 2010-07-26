@@ -10,14 +10,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class JSONParser {
+public class JSONParser implements FeatureParser {
     private final Formatter formatter;
 
     public JSONParser(Formatter formatter) {
         this.formatter = formatter;
     }
 
-    public void parse(String src, String uri) {
+    public void parse(String src, String uri, int offset) {
         formatter.uri(uri);
         JSONObject o = (JSONObject) JSONValue.parse(src);
         new Feature(comments(o), tags(o), keyword(o), name(o), description(o), line(o)).replay(formatter);

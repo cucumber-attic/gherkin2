@@ -4,7 +4,6 @@ import gherkin.I18n;
 import gherkin.lexer.I18nLexer;
 import gherkin.lexer.Listener;
 import gherkin.formatter.Formatter;
-import gherkin.parser.FormatterListener;
 
 import java.util.*;
 import java.util.regex.Matcher;
