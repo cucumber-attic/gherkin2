@@ -20,16 +20,19 @@ require File.dirname(__FILE__) + '/../spec/gherkin/json'
 #   [mono] mono ikvm/Gherkin/bin/Debug/Gherkin.exe features/steps_parser.feature
 #
 namespace :ikvm do
-  desc 'Make a .NET .exe'
-  task :exe => 'lib/gherkin.jar' do
+  task :dependent_dlls do
     mkdir_p 'release' unless File.directory?('release')
-    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:exe lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.exe")
+    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:library #{JSON_SIMPLE_JAR} -out:release/json-simple.dll")
+  end
+
+  desc 'Make a .NET .exe'
+  task :exe => ['lib/gherkin.jar', :dependent_dlls] do
+    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:exe lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.exe -reference:release/json-simple.dll")
   end
 
   desc 'Make a .NET .dll'
-  task :dll => 'lib/gherkin.jar' do
+  task :dll => ['lib/gherkin.jar', :dependent_dlls] do
     mkdir_p 'release' unless File.directory?('release')
-    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:library #{JSON_SIMPLE_JAR} -out:release/json-simple.dll")
     sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:library lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.dll -reference:release/json-simple.dll")
     cp "release/gherkin-#{GHERKIN_VERSION}.dll", 'lib/gherkin.dll'
   end
