@@ -1,3 +1,4 @@
+require File.dirname(__FILE__) + '/../spec/gherkin/json'
 # To test out the pure Java main program on .NET, execute:
 #
 #   rake ikvm
@@ -28,7 +29,8 @@ namespace :ikvm do
   desc 'Make a .NET .dll'
   task :dll => 'lib/gherkin.jar' do
     mkdir_p 'release' unless File.directory?('release')
-    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:library lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.dll")
+    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:library #{JSON_SIMPLE_JAR} -out:release/json-simple.dll")
+    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:library lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.dll -reference:release/json-simple.dll")
     cp "release/gherkin-#{GHERKIN_VERSION}.dll", 'lib/gherkin.dll'
   end
 
