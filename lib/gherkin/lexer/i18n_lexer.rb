@@ -10,7 +10,7 @@ module Gherkin
     class I18nLexer
       native_impl('gherkin')
 
-      LANGUAGE_PATTERN = /language\s*:\s*(.*)/ #:nodoc:
+      LANGUAGE_PATTERN = /^\s*#\s*language\s*:\s*([a-zA-Z\-]+)/ #:nodoc:
       attr_reader :i18n_language
 
       def initialize(listener, force_ruby=false)

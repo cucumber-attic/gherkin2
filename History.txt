@@ -1,5 +1,8 @@
 == In Git
 
+=== Bugfixes
+* I18nLexer doesn't recognise language header with \r\n on OS X. (#70 Aslak Hellesøy)
+
 === New Features
 * Pure Java FilterFormatter. (Aslak Hellesøy)
 * Pure Java JSONFormatter. (Aslak Hellesøy)

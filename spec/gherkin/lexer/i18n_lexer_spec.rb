@@ -15,6 +15,11 @@ module Gherkin
         @lexer.i18n_language.iso_code.should == "no"
       end
 
+      it "should detect language when there are spaces and CRLF" do
+        @lexer.scan("# language: da  \r\n")
+        @lexer.i18n_language.iso_code.should == "da"
+      end
+
       it "should use English i18n by default" do
         @lexer.scan("Feature: foo\n")
         @lexer.i18n_language.iso_code.should == "en"

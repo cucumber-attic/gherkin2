@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class I18nLexer implements Lexer {
-    private static final Pattern LANGUAGE_PATTERN = Pattern.compile("language\\s*:\\s*(.*)");
+    private static final Pattern LANGUAGE_PATTERN = Pattern.compile("^\\s*#\\s*language\\s*:\\s*([a-zA-Z\\-]+)");
     private final Listener listener;
     private I18n i18n;
 
