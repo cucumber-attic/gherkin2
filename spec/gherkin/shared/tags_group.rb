@@ -5,7 +5,7 @@ module Gherkin
   module Lexer
     shared_examples_for "a Gherkin lexer lexing tags" do
       def scan(gherkin)
-        @lexer.scan(gherkin, "test.feature", 0)
+        @lexer.scan(gherkin)
       end
 
       it "should lex a single tag" do

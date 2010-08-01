@@ -5,7 +5,7 @@ module Gherkin
   module Lexer
     shared_examples_for "a Gherkin lexer lexing py_strings" do
       def scan(gherkin)
-        @lexer.scan(gherkin, "test.feature", 0)
+        @lexer.scan(gherkin)
       end
 
       def ps(content)
