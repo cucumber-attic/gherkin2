@@ -10,8 +10,7 @@ module Gherkin
         each do |file|
           io = defined?(JRUBY_VERSION) ? Java.java.io.StringWriter.new : StringIO.new
           formatter = Formatter::PrettyFormatter.new(io, true)
-          listener = Listener::FormatterListener.new(formatter)
-          scan(file, listener)
+          parse(file, formatter)
           string = defined?(JRUBY_VERSION) ? io.getBuffer.toString : io.string
           File.open(file, 'w') {|io| io.write(string)}
         end

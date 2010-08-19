@@ -20,7 +20,7 @@ module Gherkin
         Dir[*globs].uniq.sort.each(&proc)
       end
 
-      def scan(file, formatter)
+      def parse(file, formatter)
         parser = Gherkin::Parser::Parser.new(formatter, true, "root")
         begin
           parser.parse(IO.read(file), file, 0)
