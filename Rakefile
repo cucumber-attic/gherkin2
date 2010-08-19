@@ -1,6 +1,9 @@
 # encoding: utf-8
-require 'rbconfig'
 require 'rubygems'
+require 'bundler'
+Bundler.setup
+
+require 'rbconfig'
 require 'rake'
 require 'rake/clean'
 require 'yaml'
@@ -18,11 +21,8 @@ begin
     gem.homepage = "http://github.com/aslakhellesoy/gherkin"
     gem.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
     gem.executables = ["gherkin"]
-    gem.add_dependency "trollop", "~> 1.16.2"
-    gem.add_development_dependency 'awesome_print', '~> 0.2.1'
-    gem.add_development_dependency 'rspec', '~> 2.0.0.beta.17'
-    gem.add_development_dependency "cucumber", "~> 0.9.0"
-    gem.add_development_dependency "rake-compiler", "~> 0.7.0" unless defined?(JRUBY_VERSION)
+
+    gem.add_bundler_dependencies
 
     gem.files -= FileList['ikvm/**/*']
     gem.files -= FileList['java/**/*']

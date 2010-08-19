@@ -1,3 +1,7 @@
+require 'rubygems'
+require 'bundler'
+Bundler.setup
+
 # I'm sure there's a better way than this...
 %w{ /../../spec /../../lib}.each do |path|
   $LOAD_PATH << File.expand_path(File.dirname(__FILE__) + path)

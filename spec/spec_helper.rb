@@ -1,4 +1,7 @@
 require 'rubygems'
+require 'bundler'
+Bundler.setup
+
 require 'rspec/autorun'
 require 'gherkin'
 require 'stringio'
