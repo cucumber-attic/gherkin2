@@ -1,4 +1,5 @@
 *.sw?
+*.rbc
 .DS_Store
 coverage
 rdoc

@@ -4,7 +4,7 @@ require 'gherkin/i18n'
 
 CLEAN.include [
   'pkg', 'tmp',
-  '**/*.{o,bundle,jar,so,obj,pdb,lib,def,exp,log}', 'ext',
+  '**/*.{o,bundle,jar,so,obj,pdb,lib,def,exp,log,rbc}', 'ext',
   'java/target',
   'ragel/i18n/*.rl',
   'lib/gherkin/rb_lexer/*.rb',
