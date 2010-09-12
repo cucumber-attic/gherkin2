@@ -41,7 +41,7 @@ In order to build Windows binaries (so we can release Windows gems from OS X/Lin
 
 http://github.com/luislavena/rake-compiler/
 
-I didn't want to install macports (I'm on homebrew) and I couldn't figure out how to build MinGW myself. I got prebuilt binaries:
+I didn't want to install macports (I'm on homebrew) and I couldn't figure out how to build MinGW myself. I got prebuilt binaries (version 4.3.0):
 http://crossgcc.rts-software.org/doku.php - just add the bin folder to your PATH
 
 == Note on Patches/Pull Requests
