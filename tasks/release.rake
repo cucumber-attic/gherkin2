@@ -3,7 +3,7 @@ namespace :release do
   task :ALL => ['gems:sanity', :push_dll, :push_jar, :push_native_gems, :release]
 
   desc 'Push all gems to rubygems.org (gemcutter)'
-  task :push_gems do
+  task :push_native_gems do
     Dir.chdir('release') do
       Dir['*.gem'].each do |gem_file|
         sh("gem push #{gem_file}")
@@ -15,7 +15,9 @@ namespace :release do
   task :push_dll => :ikvm do
     Dir.chdir('release') do
       # No known way to do scripted uploads. github/upload or aslakhellesoy's fork of github-gem no longer work
-      gets "Manually upload gherkin-#{Gherkin::VERSION}.dll to http://github.com/aslakhellesoy/gherkin/downloads"
+      puts "Manually upload gherkin-#{Gherkin::VERSION}.dll to http://github.com/aslakhellesoy/gherkin/downloads"
+      puts "Then press enter"
+      STDIN.gets
     end
   end
 
