@@ -1,6 +1,6 @@
 namespace :release do
   desc 'Upload all packages and tag git'
-  task :ALL => [:gems, :push_dll, :push_jar, :push_gems, 'git:release']
+  task :ALL => ['gems:sanity', :push_dll, :push_jar, :push_native_gems, :release]
 
   desc 'Push all gems to rubygems.org (gemcutter)'
   task :push_gems do
