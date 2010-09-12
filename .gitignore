@@ -7,4 +7,4 @@ pkg
 ext
 tmp
 release
-gherkin.gemspec
+.bundle
