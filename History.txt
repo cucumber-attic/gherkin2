@@ -1,10 +1,10 @@
-== In Git
+== 2.2.1
 
 === New Features
-* Windows gems are now built against 1.8.6-p114 and 1.9.2-p0, on both mswin32 and mingw32 (Aslak Hellesøy)
+* Windows gems are now built against 1.8.6-p287 and 1.9.1-p243, on both mswin32 and mingw32, and should work on 1.8.6, 1.8.7, 1.9.1 and 1.9.2 versions of rubyinstaller.org as well as older windows rubies. (Aslak Hellesøy)
 
 === Changed features
-* Build system no longer uses Jeweler, only Rake, Bundler and Rubygems (Aslak Hellesøy)
+* Build system no longer uses Jeweler - only Rake, Bundler and Rubygems (Aslak Hellesøy)
 
 == 2.2.0 (2010-07-26)
 
