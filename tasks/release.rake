@@ -14,18 +14,8 @@ namespace :release do
   desc 'Push dll to Github'
   task :push_dll => :ikvm do
     Dir.chdir('release') do
-      # This requires aslakhellesoy's build of the github gem,
-      # which has tekkub's upload command.
-      begin
-        sh("../github/github upload gherkin-#{Gherkin::VERSION}.dll")
-      rescue => e
-        # For some reason we're getting an error even if the upload is successful. Verify that here...
-        head = `curl -I -X HEAD http://github.com/downloads/aslakhellesoy/gherkin/gherkin-#{Gherkin::VERSION}.dll`
-        if !(head =~ /302 Found/in)
-          e.message << "\n\nUpload of gherkin-#{Gherkin::VERSION}.dll failed:\n\n#{head}"
-          raise e
-        end
-      end
+      # No known way to do scripted uploads. github/upload or aslakhellesoy's fork of github-gem no longer work
+      gets "Manually upload gherkin-#{Gherkin::VERSION}.dll to http://github.com/aslakhellesoy/gherkin/downloads"
     end
   end
 
