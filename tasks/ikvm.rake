@@ -27,14 +27,14 @@ namespace :ikvm do
 
   desc 'Make a .NET .exe'
   task :exe => ['lib/gherkin.jar', :dependent_dlls] do
-    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:exe lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.exe -reference:release/json-simple.dll")
+    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:exe lib/gherkin.jar -out:release/gherkin-#{Gherkin::VERSION}.exe -reference:release/json-simple.dll")
   end
 
   desc 'Make a .NET .dll'
   task :dll => ['lib/gherkin.jar', :dependent_dlls] do
     mkdir_p 'release' unless File.directory?('release')
-    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:library lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.dll -reference:release/json-simple.dll")
-    cp "release/gherkin-#{GHERKIN_VERSION}.dll", 'lib/gherkin.dll'
+    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:library lib/gherkin.jar -out:release/gherkin-#{Gherkin::VERSION}.dll -reference:release/json-simple.dll")
+    cp "release/gherkin-#{Gherkin::VERSION}.dll", 'lib/gherkin.dll'
   end
 
   desc 'Copy the IKVM .dll files over to the pkg dir'
@@ -48,7 +48,7 @@ end
 
 task :ikvm => ['ikvm:copy_ikvm_dlls', 'ikvm:exe', 'ikvm:dll'] do
   puts "************** Pretty printing some features with .NET. **************"
-  sh "mono release/gherkin-#{GHERKIN_VERSION}.exe features"
+  sh "mono release/gherkin-#{Gherkin::VERSION}.exe features"
   puts "************** DONE Pretty printing some features with .NET. All OK. **************"
 end
 

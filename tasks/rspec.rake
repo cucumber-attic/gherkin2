@@ -1,7 +1,6 @@
 require 'rspec/core/rake_task'
 
 RSpec::Core::RakeTask.new(:spec)
-task :spec => [:check_dependencies]
 
 RSpec::Core::RakeTask.new(:rcov) do |t|
   t.rcov = true

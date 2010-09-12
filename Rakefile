@@ -2,55 +2,12 @@
 require 'rubygems'
 require 'bundler'
 Bundler.setup
+Bundler::GemHelper.install_tasks
 
-require 'rbconfig'
-require 'rake'
 require 'rake/clean'
-require 'yaml'
 
-config = YAML.load_file('VERSION.yml')
-GHERKIN_VERSION = "#{config[:major]}.#{config[:minor]}.#{config[:patch]}"
-
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = "gherkin"
-    gem.summary = %Q{Fast Gherkin lexer/parser}
-    gem.description = %Q{A fast Gherkin lexer/parser based on the Ragel State Machine Compiler.}
-    gem.email = "cukes@googlegroups.com"
-    gem.homepage = "http://github.com/aslakhellesoy/gherkin"
-    gem.authors = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
-    gem.executables = ["gherkin"]
-
-    gem.add_bundler_dependencies
-
-    gem.files -= FileList['ikvm/**/*']
-    gem.files -= FileList['java/**/*']
-    case ENV['PLATFORM']
-    when 'java'
-      gem.platform = 'java'
-      gem.files += FileList['lib/gherkin.jar']
-      gem.extensions = []
-    when 'i386-mswin32', 'i386-mingw32'
-      gem.platform = ENV['PLATFORM']
-      gem.files += FileList['lib/*/*.so']
-      gem.extensions = []
-    when 'universal-dotnet'
-      gem.platform = ENV['PLATFORM']
-      gem.files += FileList['lib/*.dll']
-      gem.extensions = []
-    else
-      gem.files += FileList['lib/gherkin/rb_lexer/*.rb']
-      gem.files += FileList['ext/**/*.c']
-      gem.extensions = FileList['ext/**/extconf.rb']
-    end
-    
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
-  end
-  Jeweler::GemcutterTasks.new
-rescue LoadError
-  warn "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
-end
+$:.unshift(File.dirname(__FILE__) + '/lib')
+require 'gherkin/version'
 
 Dir['tasks/**/*.rake'].each { |rake| load File.expand_path(rake) }
 

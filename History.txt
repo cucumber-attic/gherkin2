@@ -1,3 +1,11 @@
+== In Git
+
+=== New Features
+* Windows gems are now built against 1.8.6-p114 and 1.9.2-p0, on both mswin32 and mingw32 (Aslak Hellesøy)
+
+=== Changed features
+* Build system no longer uses Jeweler, only Rake, Bundler and Rubygems (Aslak Hellesøy)
+
 == 2.2.0 (2010-07-26)
 
 This release breaks some APIs since the previous 2.1.5 release. If you install gherkin 2.2.0 you must also upgrade to
