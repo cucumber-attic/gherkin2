@@ -8,3 +8,4 @@ ext
 tmp
 release
 .bundle
+Gemfile.lock
