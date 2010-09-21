@@ -1,5 +1,4 @@
 require 'json'
-require 'json/pure' # Needed to make JSON.generate work.
 require 'gherkin/formatter/model'
 require 'gherkin/native'
 
@@ -18,11 +17,12 @@ module Gherkin
       end
 
       def uri(uri)
-        @gherkin_object = {'uri' => uri}
+        # We're ignoring the uri - we don't want it as part of the JSON
+        # (The pretty formatter uses it just for visual niceness - comments)
       end
 
       def feature(feature)
-        @gherkin_object.merge!(feature.to_hash)
+        @gherkin_object = feature.to_hash
       end
 
       def background(background)
