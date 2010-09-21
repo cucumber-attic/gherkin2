@@ -198,7 +198,9 @@ static VALUE rb_eGherkinLexingError;
     if (cs < lexer_first_final) {
       if (raise_lexer_error != NULL) {
         size_t count = 0;
-        int newstr_count = 0;
+    	VALUE newstr_val;
+        char *newstr;
+        int newstr_count = 0;        
         size_t len;
         const char *buff;
         if (lexer->last_newline != 0) {
@@ -209,7 +211,9 @@ static VALUE rb_eGherkinLexingError;
           buff = data;
         }
 
-        char newstr[len]; 
+        // Allocate as a ruby string so that it gets cleaned up by GC
+        newstr_val = rb_str_new(buff, len);
+        newstr = RSTRING_PTR(newstr_val);
 
         for (count = 0; count < len; count++) {
           if(buff[count] == 10) {
