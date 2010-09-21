@@ -8,15 +8,21 @@ module Gherkin
     class JSONFormatter
       native_impl('gherkin')
       
+      attr_reader :gherkin_object
+      
+      # Creates a new instance that writes the resulting JSON to +io+.
+      # If +io+ is nil, the JSON will not be written, but instead a Ruby
+      # object can be retrieved with #gherkin_object
       def initialize(io)
         @io = io
       end
 
       def uri(uri)
+        @gherkin_object = {'uri' => uri}
       end
 
       def feature(feature)
-        @feature_hash = feature.to_hash
+        @gherkin_object.merge!(feature.to_hash)
       end
 
       def background(background)
@@ -40,13 +46,13 @@ module Gherkin
       end
 
       def eof
-        @io.write(@feature_hash.to_json)
+        @io.write(@gherkin_object.to_json) if @io
       end
 
     private
 
       def feature_elements
-        @feature_hash['elements'] ||= []
+        @gherkin_object['elements'] ||= []
       end
 
       def feature_element

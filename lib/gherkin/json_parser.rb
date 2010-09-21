@@ -10,9 +10,11 @@ module Gherkin
       @formatter = formatter
     end
 
-    def parse(src, feature_uri='unknown.json', line_offset=0)
+    # Parse a gherkin object +o+, which can either be a JSON String,
+    # or a Hash (from a parser JSON String).
+    def parse(o, feature_uri='unknown.json', line_offset=0)
+      o = JSON.parse(o) if String === o
       @formatter.uri(feature_uri)
-      o = JSON.parse(src)
 
       Formatter::Model::Feature.new(comments(o), tags(o), keyword(o), name(o), description(o), line(o)).replay(@formatter)
       (o["elements"] || []).each do |feature_element|

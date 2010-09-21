@@ -50,6 +50,9 @@ Gem::Specification.new do |s|
   end
 
   s.add_dependency('trollop', '~> 1.16.2')
+  s.add_dependency('json_pure', '1.4.6')
+  s.add_dependency('term-ansicolor', '1.0.5')
+
   s.add_development_dependency('rake', '~> 0.8.7')
   s.add_development_dependency('awesome_print', '~> 0.2.1')
   s.add_development_dependency('rspec', '~> 2.0.0.beta.22')
