@@ -56,5 +56,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rake', '~> 0.8.7')
   s.add_development_dependency('awesome_print', '~> 0.2.1')
   s.add_development_dependency('rspec', '~> 2.0.0.beta.22')
-  s.add_development_dependency('cucumber', '~> 0.9.0') unless File.directory?(File.join(gherkin_dir, '../cucumber'))
+  s.add_development_dependency('cucumber', '~> 0.9.0')
 end
