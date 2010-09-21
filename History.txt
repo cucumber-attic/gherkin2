@@ -1,3 +1,9 @@
+== 2.2.2
+
+=== New Features
+* Use json instead of json_pure (Aslak Hellesøy)
+* JSON formatter and parser can now omit JSON serialization (for speed) and work directly on objects (Aslak Hellesøy)
+
 == 2.2.1
 
 === New Features
