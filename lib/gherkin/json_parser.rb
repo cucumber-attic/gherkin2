@@ -11,7 +11,7 @@ module Gherkin
     end
 
     # Parse a gherkin object +o+, which can either be a JSON String,
-    # or a Hash (from a parser JSON String).
+    # or a Hash (from a parsed JSON String).
     def parse(o, feature_uri='unknown.json', line_offset=0)
       o = JSON.parse(o) if String === o
       @formatter.uri(feature_uri)

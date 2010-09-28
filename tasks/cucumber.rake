@@ -1,4 +1,3 @@
-begin
 require 'cucumber/rake/task'
 
 Cucumber::Rake::Task.new(:cucumber) do |t|
@@ -16,10 +15,4 @@ namespace :cucumber do
     t.cucumber_opts = "--profile native_lexer"
   end
   task :native_lexer => [:clean, :compile]
-end
-
-rescue LoadError
-  task :cucumber do
-    raise "Cucumber not installed"
-  end
 end
