@@ -25,6 +25,11 @@ module Gherkin
         @lexer.i18n_language.iso_code.should == "no"
       end
 
+      it "should detect language when the language is on the third line, and there are empty lines above" do
+        @lexer.scan("# hello\n\n# language: no\n")
+        @lexer.i18n_language.iso_code.should == "no"
+      end
+
       it "should use English i18n by default" do
         @lexer.scan("Feature: foo\n")
         @lexer.i18n_language.iso_code.should == "en"

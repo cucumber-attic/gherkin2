@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class I18nLexer implements Lexer {
+    private static final Pattern COMMENT_OR_EMPTY_LINE_PATTERN = Pattern.compile("^\\s*#|^\\s*$");
     private static final Pattern LANGUAGE_PATTERN = Pattern.compile("^\\s*#\\s*language\\s*:\\s*([a-zA-Z\\-]+)");
     private final Listener listener;
     private I18n i18n;
@@ -35,11 +36,16 @@ public class I18nLexer implements Lexer {
     }
 
     private I18n i18nLanguage(String source) {
-        String lineOne = source.split("\\n")[0];
-        Matcher matcher = LANGUAGE_PATTERN.matcher(lineOne);
         String key = "en";
-        if (matcher.find()) {
-            key = matcher.group(1);
+        for(String line : source.split("\\n")) {
+            if (!COMMENT_OR_EMPTY_LINE_PATTERN.matcher(line).find()) {
+                break;
+            }
+            Matcher matcher = LANGUAGE_PATTERN.matcher(line);
+            if (matcher.find()) {
+                key = matcher.group(1);
+                break;
+            }
         }
         return new I18n(key);
     }

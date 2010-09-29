@@ -10,7 +10,7 @@ module Gherkin
     class I18nLexer
       native_impl('gherkin')
 
-      COMMENT_PATTERN = /^\s*#/
+      COMMENT_OR_EMPTY_LINE_PATTERN = /^\s*#|^\s*$/
       LANGUAGE_PATTERN = /^\s*#\s*language\s*:\s*([a-zA-Z\-]+)/ #:nodoc:
       attr_reader :i18n_language
 
@@ -31,15 +31,15 @@ module Gherkin
       end
 
       def lang(source)
-        lang = 'en'
+        key = 'en'
         source.split(/\n/).each do |line|
-          break unless COMMENT_PATTERN =~ line
+          break unless COMMENT_OR_EMPTY_LINE_PATTERN =~ line
           if LANGUAGE_PATTERN =~ line
-            lang = $1
+            key = $1
             break
           end
         end
-        I18n.get(lang)
+        I18n.get(key)
       end
 
     end
