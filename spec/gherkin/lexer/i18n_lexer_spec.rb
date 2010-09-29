@@ -20,6 +20,11 @@ module Gherkin
         @lexer.i18n_language.iso_code.should == "da"
       end
 
+      it "should detect language when the language comment is not the first line" do
+        @lexer.scan("# hello\n# language: no\n")
+        @lexer.i18n_language.iso_code.should == "no"
+      end
+
       it "should use English i18n by default" do
         @lexer.scan("Feature: foo\n")
         @lexer.i18n_language.iso_code.should == "en"

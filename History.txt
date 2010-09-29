@@ -1,3 +1,8 @@
+== In Git
+
+=== New Features
+* Gherkin will look for the language comment for all the comments at the top of the feature. (Aslak Hellesøy)
+
 == 2.2.4 (2010-09-22)
 
 === Bugfixes
