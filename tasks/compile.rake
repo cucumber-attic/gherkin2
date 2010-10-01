@@ -78,7 +78,7 @@ EOF
     Rake::ExtensionTask.new("gherkin_lexer_#{i18n.underscored_iso_code}") do |ext|
       if ENV['RUBY_CC_VERSION']
         ext.cross_compile = true
-        ext.cross_platform = 'i386-mingw32'
+        ext.cross_platform = 'x86-mingw32'
       end
     end
 
