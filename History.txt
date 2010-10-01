@@ -1,7 +1,7 @@
-== In Git
+== 2.2.5 (2010-10-1)
 
 === New Features
-* Gherkin will look for the language comment for all the comments at the top of the feature. (Aslak Hellesøy)
+* Gherkin will scan all top comments for the language comment. (Aslak Hellesøy)
 
 == 2.2.4 (2010-09-22)
 
