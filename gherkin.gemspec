@@ -32,7 +32,6 @@ Gem::Specification.new do |s|
   
   if ENV['GEM_PLATFORM']
     puts "GEM_PLATFORM:#{ENV['GEM_PLATFORM']}"
-    puts "PLATFORM:#{PLATFORM}"
   end
   s.platform = ENV['GEM_PLATFORM'] if ENV['GEM_PLATFORM'] 
   case s.platform.to_s
