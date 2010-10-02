@@ -101,7 +101,9 @@ public class I18n {
     }
 
     public List<String> getCodeKeywords() {
-        return map(getStepKeywords(), CODE_KEYWORD_MAPPER);
+        List<String> result = map(getStepKeywords(), CODE_KEYWORD_MAPPER);
+        result.remove("*");
+        return result;
     }
 
     public List<String> getStepKeywords() {

@@ -68,6 +68,10 @@ module Gherkin
           end
         end
 
+        it "should reject the bullet stars" do
+          Gherkin::I18n.code_keywords.should_not include('*')
+        end
+
         it "should report keyword regexp" do
           Gherkin::I18n.keyword_regexp(:step).should =~ /\|Quando \|Quand \|Quan \|Pryd \|Pokud \|/
         end

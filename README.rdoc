@@ -31,6 +31,7 @@ E.g. in Bash, export RL_LANG="en,fr,no". This can be quite helpful when modifyin
 * Bump version in the VERSION file and:
 ** java/pom.xml
 ** ikvm/Gherkin/Gherkin.csproj
+* Commit changes.
 * rake gems:prepare && ./build_native_gems.sh && rake release:ALL
 * Announce on Cucumber list, IRC and Twitter.
 
