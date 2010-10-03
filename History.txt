@@ -1,3 +1,8 @@
+== 2.2.7 (2010-10-1)
+
+=== Bugfixes
+* I18n.getCodeKeywords() on Java didn't strip '!'. Not anymore. (Aslak Hellesøy)
+
 == 2.2.6 (2010-10-1)
 
 === Bugfixes

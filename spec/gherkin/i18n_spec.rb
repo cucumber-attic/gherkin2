@@ -62,8 +62,8 @@ module Gherkin
       end
 
       describe 'keywords' do
-        it "should have code keywords without space, comma or apostrophe" do
-          ['Akkor', 'Etantdonné', 'Lorsque', '假設'].each do |code_keyword|
+        it "should have code keywords without space, comma, exclamation or apostrophe" do
+          ['Avast', 'Akkor', 'Etantdonné', 'Lorsque', '假設'].each do |code_keyword|
             Gherkin::I18n.code_keywords.should include(code_keyword)
           end
         end
