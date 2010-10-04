@@ -1,14 +1,19 @@
-== 2.2.7 (2010-10-1)
+== 2.2.8 (2010-10-04)
+
+=== Removed Features
+* Trollop based CLI - didn't find a good use for it yet. (Aslak Hellesøy)
+
+== 2.2.7 (2010-10-01)
 
 === Bugfixes
 * I18n.getCodeKeywords() on Java didn't strip '!'. Not anymore. (Aslak Hellesøy)
 
-== 2.2.6 (2010-10-1)
+== 2.2.6 (2010-10-01)
 
 === Bugfixes
 * I18n.getCodeKeywords() on Java included '*'. Not anymore. (Aslak Hellesøy)
 
-== 2.2.5 (2010-10-1)
+== 2.2.5 (2010-10-01)
 
 === New Features
 * Gherkin will scan all top comments for the language comment. (Aslak Hellesøy)
