@@ -121,6 +121,9 @@ public class FilterFormatter implements Formatter {
         throw new UnsupportedOperationException();
     }
 
+    public void steps(List<Step> steps) {
+    }
+
     private void replay() {
         List<Tag> feTags = new ArrayList<Tag>(featureTags);
         feTags.addAll(featureElementTags);

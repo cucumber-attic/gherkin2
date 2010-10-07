@@ -64,6 +64,9 @@ public class JSONFormatter implements Formatter {
         throw new UnsupportedOperationException();
     }
 
+    public void steps(List<Step> steps) {
+    }
+
     private List getFeatureElements() {
         List featureElements = (List) featureHash.get("elements");
         if (featureElements == null) {

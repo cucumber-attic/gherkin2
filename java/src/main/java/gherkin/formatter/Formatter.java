@@ -26,4 +26,6 @@ public interface Formatter {
     void eof();
 
     void syntaxError(String state, String event, List<String> legalEvents, String uri, int line);
+
+    void steps(List<Step> steps);
 }

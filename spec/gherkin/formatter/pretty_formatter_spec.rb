@@ -37,13 +37,12 @@ module Gherkin
       it "should print comments when scenario is longer" do
         @l.uri("features/foo.feature")
         @l.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1))
-        @l.steps([
-          ['Given ', 'some stuff'],
-          ['When ', 'foo']
-        ])
+        step1 = Model::Step.new([], "Given ", "some stuff", 5, nil, result('passed', nil, nil, "features/step_definitions/bar.rb:56"))
+        step2 = Model::Step.new([], "When ", "foo", 6, nil, result('passed', nil, nil, "features/step_definitions/bar.rb:96"))
+        @l.steps([step1, step2])
         @l.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4))
-        @l.step(Model::Step.new([], "Given ", "some stuff", 5, nil, result('passed', nil, nil, "features/step_definitions/bar.rb:56")))
-        @l.step(Model::Step.new([], "When ", "foo", 6, nil, result('passed', nil, nil, "features/step_definitions/bar.rb:96")))
+        @l.step(step1)
+        @l.step(step2)
 
         assert_io(%{Feature: Hello
   World
@@ -57,11 +56,10 @@ module Gherkin
       it "should print comments when step is longer" do
         @l.uri("features/foo.feature")
         @l.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1))
-        @l.steps([
-          ['Given ', 'some stuff that is longer']
-        ])
+        step = Model::Step.new([], "Given ", "some stuff that is longer", 5, nil, result('passed', nil, nil, "features/step_definitions/bar.rb:56"))
+        @l.steps([step])
         @l.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4))
-        @l.step(Model::Step.new([], "Given ", "some stuff that is longer", 5, nil, result('passed', nil, nil, "features/step_definitions/bar.rb:56")))
+        @l.step(step)
 
         assert_io(%{Feature: Hello
   World

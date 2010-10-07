@@ -99,6 +99,9 @@ public class PrettyFormatter implements Formatter {
         printComments(step.getComments(), "    ");
         String location = step.getResult() != null ? step.getResult().getStepdefLocation() : null;
         out.println("    " + step.getKeyword() + step.getName() + indentedStepLocation(location));
+        if(step.getResult() != null && step.getResult().getErrorMessage() != null) {
+            out.println(indent(step.getResult().getErrorMessage(), "      "));
+        }
         out.flush();
     }
 
@@ -156,11 +159,11 @@ public class PrettyFormatter implements Formatter {
         out.flush();
     }
 
-    public void steps(List<List<String>> steps) {
+    public void steps(List<Step> steps) {
         stepLengths = new int[steps.size()];
         int i = 0;
-        for (List<String> step : steps) {
-            int stepLength = step.get(0).length() + step.get(1).length();
+        for (Step step : steps) {
+            int stepLength = step.getKeyword().length() + step.getName().length();
             stepLengths[i++] = stepLength;
             maxStepLength = Math.max(maxStepLength, stepLength);
         }

@@ -81,7 +81,7 @@ module Gherkin
 
       # This method can be invoked before a #scenario, to ensure location arguments are aligned
       def steps(steps)
-        @step_lengths = steps.map {|keyword, name| (keyword+name).unpack("U*").length}
+        @step_lengths = steps.map {|step| (step.keyword+step.name).unpack("U*").length}
         @max_step_length = @step_lengths.max
         @step_index = -1
       end
