@@ -6,8 +6,8 @@ import java.util.*;
 public class Mappable {
     private static final Integer NO_LINE = -1;
 
-    public Map toMap() {
-        Map map = new HashMap();
+    public Map<Object,Object> toMap() {
+        Map<Object,Object> map = new HashMap<Object,Object>();
         for (Field field : getFields()) {
             Object value;
             try {
@@ -20,7 +20,7 @@ public class Mappable {
                 value = ((Mappable) value).toMap();
             }
             if (value != null && List.class.isAssignableFrom(value.getClass())) {
-                List mappedValue = new ArrayList();
+                List<Object> mappedValue = new ArrayList<Object>();
                 for (Object o : (List) value) {
                     if (Mappable.class.isAssignableFrom(o.getClass())) {
                         mappedValue.add(((Mappable) o).toMap());

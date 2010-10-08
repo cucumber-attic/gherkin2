@@ -88,17 +88,21 @@ public class PrettyFormatter implements Formatter {
 
     public void step(Step step) {
         printStep(step);
-        if (step.getMultilineArg() instanceof List) {
-            table((List<Row>) step.getMultilineArg());
-        } else if (step.getMultilineArg() instanceof PyString) {
-            pyString((PyString) step.getMultilineArg());
+        if (step.getRows() != null) {
+            table(step.getRows());
+        } else if (step.getPyString() != null) {
+            pyString(step.getPyString());
         }
     }
 
     private void printStep(Step step) {
         printComments(step.getComments(), "    ");
-        String location = step.getResult() != null ? step.getResult().getStepdefLocation() : null;
-        out.println("    " + step.getKeyword() + step.getName() + indentedStepLocation(location));
+        Result result = step.getResult();
+        String location = result != null ? result.getStepdefLocation() : null;
+        out.print("    ");
+        out.print(step.getKeyword());
+        out.print(step.getName());
+        out.println(indentedStepLocation(location));
         if(step.getResult() != null && step.getResult().getErrorMessage() != null) {
             out.println(indent(step.getResult().getErrorMessage(), "      "));
         }
@@ -135,10 +139,6 @@ public class PrettyFormatter implements Formatter {
             out.println();
         }
         out.flush();
-    }
-
-    public void syntaxError(String state, String event, List<String> legalEvents, String uri, long line) {
-        throw new UnsupportedOperationException();
     }
 
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {

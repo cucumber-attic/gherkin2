@@ -17,15 +17,15 @@ public class Step extends BasicStatement {
     }
 
     @Override
-    public Map toMap() {
-        Map map = super.toMap();
+    public Map<Object,Object> toMap() {
+        Map<Object,Object> map = super.toMap();
         if (getRows() != null) {
-            Map multilineArg = new HashMap();
+            Map<Object,Object> multilineArg = new HashMap<Object,Object>();
             multilineArg.put("type", "table");
             multilineArg.put("value", map.get("multiline_arg"));
             map.put("multiline_arg", multilineArg);
         } else if (getPyString() != null) {
-            ((Map) map.get("multiline_arg")).put("type", "py_string");
+            ((Map<Object,Object>) map.get("multiline_arg")).put("type", "py_string");
         }
         return map;
     }
@@ -58,11 +58,11 @@ public class Step extends BasicStatement {
         return result;
     }
 
-    private List<Row> getRows() {
+    public List<Row> getRows() {
         return multiline_arg instanceof List ? (List<Row>) multiline_arg : null;
     }
 
-    private PyString getPyString() {
+    public PyString getPyString() {
         return multiline_arg instanceof PyString ? (PyString) multiline_arg : null;
     }
 }
