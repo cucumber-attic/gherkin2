@@ -1,10 +1,11 @@
 require 'stringio'
 require 'gherkin/formatter/pretty_formatter'
+require 'gherkin/formatter/monochrome_io'
 require 'gherkin/json_parser'
 
 Given /^a PrettyFormatter$/ do
-  @io = StringIO.new
-  @formatter = Gherkin::Formatter::PrettyFormatter.new(@io, true)
+  @io = Gherkin::Formatter::MonochromeIO.new(StringIO.new)
+  @formatter = Gherkin::Formatter::PrettyFormatter.new(@io)
 end
 
 Given /^a JSON lexer$/ do

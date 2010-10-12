@@ -12,7 +12,7 @@ import java.util.Arrays;
 public class PrettyFormatterTest {
     @Test
     public void testShouldPrintNiceColors() throws UnsupportedEncodingException {
-        PrettyFormatter f = new PrettyFormatter(System.out, false);
+        PrettyFormatter f = new PrettyFormatter(System.out);
         Argument arg = new Argument(7, "6");
         Result result = new Result("passed", null, Arrays.asList(arg), null);
         Step step = new Step(new ArrayList<Comment>(), "Given ", "I have 6 cukes", 1, null, result);

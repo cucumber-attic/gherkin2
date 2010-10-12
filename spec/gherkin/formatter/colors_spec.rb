@@ -11,7 +11,7 @@ module Gherkin
       end
 
       it "should be possible to specify no colouring" do
-        failed("hello", true).should == "hello"
+        uncolored(failed("hello")).should == "hello"
       end
     end
   end

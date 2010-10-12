@@ -4,6 +4,7 @@ require 'spec_helper'
 require 'gherkin/parser/parser'
 require 'gherkin/formatter/filter_formatter'
 require 'gherkin/formatter/pretty_formatter'
+require 'gherkin/formatter/monochrome_io'
 
 module Gherkin
   module Formatter
@@ -15,8 +16,8 @@ module Gherkin
       end
 
       def verify_filter(filters, *line_ranges)
-        io = StringIO.new
-        pretty_formatter = Gherkin::Formatter::PrettyFormatter.new(io, true)
+        io = MonochromeIO.new(StringIO.new)
+        pretty_formatter = Gherkin::Formatter::PrettyFormatter.new(io)
         filter_formatter = Gherkin::Formatter::FilterFormatter.new(pretty_formatter, filters)
         parser = Gherkin::Parser::Parser.new(filter_formatter)
 

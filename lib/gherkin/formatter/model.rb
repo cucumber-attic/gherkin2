@@ -150,6 +150,14 @@ module Gherkin
           formatter.step(self)
         end
 
+        def status
+          result ? result.status : 'undefined'
+        end
+
+        def arguments
+          result ? result.arguments : []
+        end
+
         def to_hash
           hash = super
           if Array === @multiline_arg

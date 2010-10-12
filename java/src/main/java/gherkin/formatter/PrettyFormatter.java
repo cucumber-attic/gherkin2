@@ -1,13 +1,26 @@
 package gherkin.formatter;
 
-import gherkin.formatter.model.*;
+import gherkin.formatter.model.Background;
+import gherkin.formatter.model.Comment;
+import gherkin.formatter.model.Examples;
+import gherkin.formatter.model.Feature;
+import gherkin.formatter.model.PyString;
+import gherkin.formatter.model.Result;
+import gherkin.formatter.model.Row;
+import gherkin.formatter.model.Scenario;
+import gherkin.formatter.model.ScenarioOutline;
+import gherkin.formatter.model.Step;
+import gherkin.formatter.model.Tag;
+import gherkin.formatter.model.TagStatement;
 import gherkin.util.Mapper;
 
-import java.io.*;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static gherkin.formatter.Colors.comments;
 import static gherkin.util.FixJava.join;
 import static gherkin.util.FixJava.map;
 
@@ -19,7 +32,6 @@ import static gherkin.util.FixJava.map;
  */
 public class PrettyFormatter implements Formatter {
     private final PrintWriter out;
-    private final boolean monochrome;
     private int maxStepLength = -1;
     private int[] stepLengths;
     private int stepIndex;
@@ -32,13 +44,12 @@ public class PrettyFormatter implements Formatter {
         }
     };
 
-    public PrettyFormatter(Writer out, boolean monochrome) {
+    public PrettyFormatter(Writer out) {
         this.out = new PrintWriter(out);
-        this.monochrome = monochrome;
     }
 
-    public PrettyFormatter(OutputStream out, boolean monochrome) throws UnsupportedEncodingException {
-        this(new OutputStreamWriter(out, "UTF-8"), monochrome);
+    public PrettyFormatter(OutputStream out) {
+        this(new OutputStreamWriter(out));
     }
 
     public void uri(String uri) {
@@ -72,7 +83,12 @@ public class PrettyFormatter implements Formatter {
         out.println();
         printComments(statement.getComments(), "  ");
         printTags(statement.getTags(), "  ");
-        out.println("  " + statement.getKeyword() + ": " + statement.getName() + indentedScenarioLocation(statement.getKeyword(), statement.getName(), statement.getLine()));
+        out.print("  ");
+        out.print(statement.getKeyword());
+        out.print(": ");
+        out.print(statement.getName());
+        printIndentedScenarioLocation(statement.getKeyword(), statement.getName(), statement.getLine());
+        out.println();
         printDescription(statement.getDescription(), "    ", true);
         out.flush();
     }
@@ -81,7 +97,11 @@ public class PrettyFormatter implements Formatter {
         out.println();
         printComments(examples.getComments(), "    ");
         printTags(examples.getTags(), "    ");
-        out.println("    " + examples.getKeyword() + ": " + examples.getName());
+        out.print("    ");
+        out.print(examples.getKeyword());
+        out.print(": ");
+        out.print(examples.getName());
+        out.println();
         printDescription(examples.getDescription(), "    ", true);
         table(examples.getRows());
     }
@@ -102,7 +122,8 @@ public class PrettyFormatter implements Formatter {
         out.print("    ");
         out.print(step.getKeyword());
         out.print(step.getName());
-        out.println(indentedStepLocation(location));
+        printIndentedStepLocation(location);
+        out.println();
         if(step.getResult() != null && step.getResult().getErrorMessage() != null) {
             out.println(indent(step.getResult().getErrorMessage(), "      "));
         }
@@ -170,12 +191,6 @@ public class PrettyFormatter implements Formatter {
         stepIndex = -1;
     }
 
-    private void padSpace(int indent, StringBuffer buffer) {
-        for (int i = 0; i < indent; i++) {
-            buffer.append(" ");
-        }
-    }
-
     private void padSpace(int indent) {
         for (int i = 0; i < indent; i++) {
             out.write(" ");
@@ -197,26 +212,22 @@ public class PrettyFormatter implements Formatter {
         out.flush();
     }
 
-    private String indentedScenarioLocation(String keyword, String name, long line) {
-        if (maxStepLength == -1) return "";
+    private void printIndentedScenarioLocation(String keyword, String name, long line) {
+        if (maxStepLength == -1) return;
         int l = keyword.length() + name.length();
         maxStepLength = Math.max(maxStepLength, l);
         int indent = maxStepLength - l;
 
-        StringBuffer buffer = new StringBuffer();
-        padSpace(indent, buffer);
-        buffer.append(" ").append(comments("# " + uri + ":" + line, monochrome));
-        return buffer.toString();
+        padSpace(indent);
+        out.append(" ").append("# ").append(uri).append(":").print(line);
     }
 
-    private String indentedStepLocation(String location) {
-        if (location == null || "".equals(location)) return "";
+    private void printIndentedStepLocation(String location) {
+        if (location == null || "".equals(location)) return;
         int indent = maxStepLength - stepLengths[stepIndex += 1];
 
-        StringBuffer buffer = new StringBuffer();
-        padSpace(indent, buffer);
-        buffer.append(" ").append(comments("# " + location, monochrome));
-        return buffer.toString();
+        padSpace(indent);
+        out.append(" ").append("# ").append(location);
     }
 
     private void printDescription(String description, String indentation, boolean newline) {

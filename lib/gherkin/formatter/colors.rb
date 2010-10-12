@@ -65,14 +65,11 @@ module Gherkin
       ALIASES.each do |method, color|
         unless method =~ /.*_param/
           code = <<-EOF
-          def #{method}(string=nil, monochrome=false, &proc)
-            return string if monochrome
+          def #{method}(string=nil, &proc)
             #{ALIASES[method].split(",").join("(") + "(string, &proc" + ")" * ALIASES[method].split(",").length}
           end
-          # This resets the colour to the non-param colour
-          def #{method}_param(string=nil, monochrome=false, &proc)
-            return string if monochrome
-            #{ALIASES[method+'_param'].split(",").join("(") + "(string, &proc" + ")" * ALIASES[method+'_param'].split(",").length} + #{ALIASES[method].split(",").join(' + ')}
+          def #{method}_param(string=nil, &proc)
+            #{ALIASES[method+'_param'].split(",").join("(") + "(string, &proc" + ")" * ALIASES[method+'_param'].split(",").length}
           end
           EOF
           eval(code)
@@ -112,8 +109,13 @@ module Gherkin
           "\e[90m#{m}\e[0m"
         end
       end
-    
+
       define_grey
+
+      COLOR_PATTERN = /\e\[(?:[34][0-7]|[0-9]|90)?m/
+      def monochrome(string)
+        string.gsub(COLOR_PATTERN, '')
+      end
     end
   end
 end

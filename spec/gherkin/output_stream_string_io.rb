@@ -1,15 +1,11 @@
 if defined?(JRUBY_VERSION)
-  class OutputStreamStringIO < Java.java.io.ByteArrayOutputStream
+  class WriterStringIO < Java.java.io.StringWriter
     def write(what)
-      if String === what
-        super(Java.java.lang.String.new(what).getBytes("UTF-8"))
-      else
-        super(what)
-      end
+      super(Java.java.lang.String.new(what.to_s))
     end
 
     def string
-      toString("UTF-8")
+      toString()
     end
   end
 
@@ -17,7 +13,7 @@ if defined?(JRUBY_VERSION)
   class StringIO
     class << self
       def new
-        OutputStreamStringIO.new
+        WriterStringIO.new
       end
     end
   end

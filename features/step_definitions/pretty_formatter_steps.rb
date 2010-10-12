@@ -3,12 +3,13 @@ require 'fileutils'
 require 'gherkin'
 require 'gherkin/formatter/pretty_formatter'
 require 'gherkin/formatter/json_formatter'
+require 'gherkin/formatter/monochrome_io'
 require 'gherkin/json_parser'
 
 module PrettyPlease
   def pretty_machinery(gherkin, feature_path)
-    io        = StringIO.new
-    formatter = Gherkin::Formatter::PrettyFormatter.new(io, false)
+    io        = Gherkin::Formatter::MonochromeIO.new(StringIO.new)
+    formatter = Gherkin::Formatter::PrettyFormatter.new(io)
     parser    = Gherkin::Parser::Parser.new(formatter, true)
     parse(parser, gherkin, feature_path)
     io.string
@@ -20,8 +21,8 @@ module PrettyPlease
     gherkin_parser      = Gherkin::Parser::Parser.new(json_formatter, true)
     parse(gherkin_parser, gherkin, feature_path)
 
-    result              = StringIO.new
-    pretty_formatter    = Gherkin::Formatter::PrettyFormatter.new(result, false)
+    result              = Gherkin::Formatter::MonochromeIO.new(StringIO.new)
+    pretty_formatter    = Gherkin::Formatter::PrettyFormatter.new(result)
     json_parser         = Gherkin::JSONParser.new(pretty_formatter)
     json_parser.parse(json.string, "#{feature_path}.json", 0)
     

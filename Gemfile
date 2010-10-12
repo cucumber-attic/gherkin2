@@ -3,4 +3,3 @@ gemspec
 
 @dependencies.reject!{|dep| dep.name == 'cucumber'}
 gem 'cucumber', :path => '../cucumber'
-gem 'jruby-openssl'

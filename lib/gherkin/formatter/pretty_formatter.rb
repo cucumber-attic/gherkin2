@@ -1,6 +1,6 @@
 # encoding: utf-8
 require 'gherkin/formatter/colors'
-require 'gherkin/formatter/monochrome_format'
+require 'gherkin/formatter/step_printer'
 require 'gherkin/formatter/argument'
 require 'gherkin/formatter/escaping'
 require 'gherkin/formatter/model'
@@ -14,10 +14,9 @@ module Gherkin
       include Colors
       include Escaping
 
-      def initialize(io, monochrome)
+      def initialize(io)
         @io = io
-        @monochrome = monochrome
-        @format = MonochromeFormat.new #@monochrome ? MonochromeFormat.new : AnsiColorFormat.new
+        @step_printer = StepPrinter.new
       end
 
       def uri(uri)
@@ -60,19 +59,42 @@ module Gherkin
       end
 
       def step(step)
-        name = Gherkin::Formatter::Argument.format(step.name, @format, (step.result ? step.result.arguments : []))
-
-        step_text = "#{step.keyword}#{step.name}"
-        step_text = self.__send__(step.result.status, step_text, @monochrome) if step.result
-
         print_comments(step.comments, '    ')
-        @io.puts("    #{step_text}#{indented_step_location!(step.result ? step.result.stepdef_location : nil)}")
+        @io.write('    ')
+        step_format(step).write_text(@io, step.keyword)
+        @step_printer.write_step(@io, step_format(step), step.name, step.arguments)
+        print_indented_stepdef_location!(step.result.stepdef_location) if step.result
+        @io.puts
         case step.multiline_arg
         when Model::PyString
           py_string(step.multiline_arg)
         when Array
           table(step.multiline_arg)
         end
+      end
+
+      class ColorStepFormat
+        include Colors
+        
+        def initialize(status)
+          @status = status
+        end
+
+        def write_text(io, text)
+          io.write(self.__send__(@status, text))
+        end
+
+        def write_arg(io, arg)
+          io.write(self.__send__("#{@status}_param", arg))
+        end
+      end
+
+      STEP_FORMATS = Hash.new do |formats, status|
+        formats[status] = ColorStepFormat.new(status)
+      end
+
+      def step_format(step)
+        STEP_FORMATS[step.status]
       end
 
       def eof
@@ -114,12 +136,12 @@ module Gherkin
 
       def exception(exception)
         exception_text = "#{exception.message} (#{exception.class})\n#{(exception.backtrace || []).join("\n")}".gsub(/^/, '      ')
-        @io.puts(failed(exception_text, @monochrome))
+        @io.puts(failed(exception_text))
       end
 
       def color(cell, statuses, col)
         if statuses
-          self.__send__(statuses[col], escape_cell(cell), @monochrome) + (@monochrome ? '' : reset)
+          self.__send__(statuses[col], escape_cell(cell)) + reset
         else
           escape_cell(cell)
         end
@@ -161,13 +183,13 @@ module Gherkin
         l = (keyword+name).unpack("U*").length
         @max_step_length = [@max_step_length, l].max
         indent = @max_step_length - l
-        ' ' * indent + ' ' + comments("# #{@uri}:#{line}", @monochrome)
+        ' ' * indent + ' ' + comments("# #{@uri}:#{line}")
       end
 
-      def indented_step_location!(location)
-        return '' if location.nil?
+      def print_indented_stepdef_location!(location)
         indent = @max_step_length - @step_lengths[@step_index+=1]
-        ' ' * indent + ' ' + comments("# #{location}", @monochrome)
+        return if location.nil?
+        @io.write(' ' * indent + ' ' + comments("# #{location}"))
       end
     end
   end
