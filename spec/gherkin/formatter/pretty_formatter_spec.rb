@@ -1,7 +1,6 @@
 # encoding: utf-8
 require 'spec_helper'
 require 'gherkin/formatter/pretty_formatter'
-require 'gherkin/formatter/monochrome_io'
 require 'gherkin/formatter/argument'
 require 'gherkin/formatter/model'
 require 'gherkin/listener/formatter_listener'
@@ -14,17 +13,18 @@ module Gherkin
 
       def assert_io(s)
         actual = @io.string
+        actual.gsub!(/\e\[m/, "\e[0m") # JANSI resets without the 0.
         actual.should == s
       end
       
-      def assert_pretty(input, output=input)
+      def assert_pretty(input, expected_output=input)
         [true, false].each do |force_ruby|
-          io = MonochromeIO.new(StringIO.new)
+          io = StringIO.new
           pf = Gherkin::Formatter::PrettyFormatter.new(io)
           parser = Gherkin::Parser::Parser.new(pf, true, "root", force_ruby)
           parser.parse(input, "test.feature", 0)
-          actual = io.string
-          actual.should == output
+          output = io.string
+          monochrome(output).should == expected_output
         end
       end
 
@@ -76,7 +76,12 @@ module Gherkin
         step = Model::Step.new([], "Given ", "I have 999 cukes in my belly", 3, nil, result('passed', nil, [Gherkin::Formatter::Argument.new(7, '999')], nil))
         @l.steps([step])
         @l.step(step)
-        assert_io("    #{green('Given ')}#{green('I have ')}#{green(bold('999'))}#{green(' cukes in my belly')}\n")
+        if defined?(JRUBY_VERSION)
+          # Not terribly readable. The result on Java is different because JANSI uses semicolons when there are several codes.
+          assert_io("    \e[32mGiven \e[0m\e[32mI have \e[0m\e[32;1m999\e[0m\e[32m cukes in my belly\e[0m\n")
+        else
+          assert_io("    #{green('Given ')}#{green('I have ')}#{green(bold('999'))}#{green(' cukes in my belly')}\n")
+        end
       end
 
       it "should prettify scenario" do

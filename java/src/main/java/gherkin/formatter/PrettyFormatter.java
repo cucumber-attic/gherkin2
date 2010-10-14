@@ -13,16 +13,22 @@ import gherkin.formatter.model.Step;
 import gherkin.formatter.model.Tag;
 import gherkin.formatter.model.TagStatement;
 import gherkin.util.Mapper;
+import org.fusesource.jansi.Ansi;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static gherkin.util.FixJava.join;
 import static gherkin.util.FixJava.map;
+import static org.fusesource.jansi.Ansi.*;
+import static org.fusesource.jansi.Ansi.Attribute.INTENSITY_BOLD;
+import static org.fusesource.jansi.Ansi.Color.*;
 
 /**
  * This class pretty prints feature files like they were in the source, only
@@ -43,6 +49,7 @@ public class PrettyFormatter implements Formatter {
             return ((Tag) tag).getName();
         }
     };
+    private final StepPrinter stepPrinter = new StepPrinter();
 
     public PrettyFormatter(Writer out) {
         this.out = new PrintWriter(out);
@@ -117,18 +124,45 @@ public class PrettyFormatter implements Formatter {
 
     private void printStep(Step step) {
         printComments(step.getComments(), "    ");
+        out.print("    ");
+        getTextFormat(step).writeText(out, step.getKeyword());
+        stepPrinter.writeStep(out, getTextFormat(step), getArgFormat(step), step.getName(), step.getArguments());
+
         Result result = step.getResult();
         String location = result != null ? result.getStepdefLocation() : null;
-        out.print("    ");
-        out.print(step.getKeyword());
-        out.print(step.getName());
         printIndentedStepLocation(location);
         out.println();
-        if(step.getResult() != null && step.getResult().getErrorMessage() != null) {
+        if (step.getResult() != null && step.getResult().getErrorMessage() != null) {
             out.println(indent(step.getResult().getErrorMessage(), "      "));
         }
         out.flush();
     }
+
+    private static Format getTextFormat(Step step) {
+        return FORMATS.get(step.getStatus());
+    }
+
+    private static Format getArgFormat(Step step) {
+        return FORMATS.get(step.getStatus() + "_param");
+    }
+
+    private static final String GREY = new StringBuilder().append((char)27).append("[90m").toString();
+
+    private static final Map<String, Format> FORMATS = new HashMap<String, Format>() {{
+        put("undefined", new ColorFormat(YELLOW, null));
+        put("pending", new ColorFormat(YELLOW, null));
+        put("pending_param", new ColorFormat(YELLOW, INTENSITY_BOLD));
+        put("failed", new ColorFormat(RED, null));
+        put("failed_param", new ColorFormat(RED, INTENSITY_BOLD));
+        put("passed", new ColorFormat(GREEN, null));
+        put("passed_param", new ColorFormat(GREEN, INTENSITY_BOLD));
+        put("outline", new ColorFormat(CYAN, null));
+        put("outline_param", new ColorFormat(CYAN, INTENSITY_BOLD));
+        put("skipped", new ColorFormat(CYAN, null));
+        put("skipped_param", new ColorFormat(CYAN, INTENSITY_BOLD));
+        put("comment", new ColorFormat(GREY, null));
+        put("tag", new ColorFormat(CYAN, null));
+    }};
 
     public void table(List<Row> rows) {
         int columnCount = rows.get(0).getCells().size();
@@ -219,7 +253,8 @@ public class PrettyFormatter implements Formatter {
         int indent = maxStepLength - l;
 
         padSpace(indent);
-        out.append(" ").append("# ").append(uri).append(":").print(line);
+        out.append(" ");
+        FORMATS.get("comment").writeText(out, "# " + uri + ":" + line);
     }
 
     private void printIndentedStepLocation(String location) {
@@ -227,7 +262,8 @@ public class PrettyFormatter implements Formatter {
         int indent = maxStepLength - stepLengths[stepIndex += 1];
 
         padSpace(indent);
-        out.append(" ").append("# ").append(location);
+        out.append(" ");
+        FORMATS.get("comment").writeText(out, "# " + location);
     }
 
     private void printDescription(String description, String indentation, boolean newline) {
@@ -245,4 +281,26 @@ public class PrettyFormatter implements Formatter {
         return TRIPLE_QUOTES.matcher(s).replaceAll("\\\\\"\\\\\"\\\\\"");
     }
 
+    public static class ColorFormat implements Format {
+        private final Object color;
+        private final Attribute attribute;
+
+        public ColorFormat(Object color, Attribute attribute) {
+            this.color = color;
+            this.attribute = attribute;
+        }
+
+        public void writeText(PrintWriter out, String text) {
+            Ansi a = ansi();
+            if(color instanceof Color) {
+                a.fg((Color) color);
+            } else {
+                a.a(color);
+            }
+            if (attribute != null) {
+                a.a(attribute);
+            }
+            out.write(a.a(text).reset().toString());
+        }
+    }
 }

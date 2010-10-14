@@ -1,7 +1,10 @@
 package gherkin.formatter.model;
 
+import gherkin.formatter.Argument;
 import gherkin.formatter.Formatter;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,5 +67,13 @@ public class Step extends BasicStatement {
 
     public PyString getPyString() {
         return multiline_arg instanceof PyString ? (PyString) multiline_arg : null;
+    }
+
+    public List<Argument> getArguments() {
+        return result != null ? result.getArguments() : Collections.<Argument>emptyList();
+    }
+
+    public String getStatus() {
+        return result != null ? result.getStatus() : "undefined";
     }
 }

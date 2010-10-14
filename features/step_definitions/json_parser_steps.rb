@@ -1,10 +1,11 @@
 require 'stringio'
 require 'gherkin/formatter/pretty_formatter'
-require 'gherkin/formatter/monochrome_io'
 require 'gherkin/json_parser'
 
+World(Gherkin::Formatter::Colors)
+
 Given /^a PrettyFormatter$/ do
-  @io = Gherkin::Formatter::MonochromeIO.new(StringIO.new)
+  @io = StringIO.new
   @formatter = Gherkin::Formatter::PrettyFormatter.new(@io)
 end
 
@@ -17,5 +18,5 @@ Given /^the following JSON is parsed:$/ do |text|
 end
 
 Then /^the outputted text should be:$/ do |expected_text|
-  @io.string.strip.should == expected_text
+  monochrome(@io.string).strip.should == expected_text
 end

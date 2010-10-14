@@ -14,8 +14,9 @@ public class PrettyFormatterTest {
     public void testShouldPrintNiceColors() throws UnsupportedEncodingException {
         PrettyFormatter f = new PrettyFormatter(System.out);
         Argument arg = new Argument(7, "6");
-        Result result = new Result("passed", null, Arrays.asList(arg), null);
+        Result result = new Result("passed", null, Arrays.asList(arg), "somewhere");
         Step step = new Step(new ArrayList<Comment>(), "Given ", "I have 6 cukes", 1, null, result);
+        f.steps(Arrays.asList(step));
         f.step(step);
     }
 

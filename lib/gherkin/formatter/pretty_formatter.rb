@@ -59,18 +59,23 @@ module Gherkin
       end
 
       def step(step)
-        print_comments(step.comments, '    ')
-        @io.write('    ')
-        step_format(step).write_text(@io, step.keyword)
-        @step_printer.write_step(@io, step_format(step), step.name, step.arguments)
-        print_indented_stepdef_location!(step.result.stepdef_location) if step.result
-        @io.puts
+        print_step(step)
         case step.multiline_arg
         when Model::PyString
           py_string(step.multiline_arg)
         when Array
           table(step.multiline_arg)
         end
+      end
+
+      def print_step(step)
+        print_comments(step.comments, '    ')
+        @io.write('    ')
+        step_format(step).write_text(@io, step.keyword)
+        @step_printer.write_step(@io, step_format(step), step.name, step.arguments)
+        print_indented_stepdef_location!(step.result.stepdef_location) if step.result
+        # TODO: Print error message
+        @io.puts
       end
 
       class ColorStepFormat

@@ -4,11 +4,12 @@ require 'spec_helper'
 require 'gherkin/parser/parser'
 require 'gherkin/formatter/filter_formatter'
 require 'gherkin/formatter/pretty_formatter'
-require 'gherkin/formatter/monochrome_io'
 
 module Gherkin
   module Formatter
     describe FilterFormatter do
+      include Colors
+
       attr_accessor :file
 
       before do
@@ -16,7 +17,7 @@ module Gherkin
       end
 
       def verify_filter(filters, *line_ranges)
-        io = MonochromeIO.new(StringIO.new)
+        io = StringIO.new
         pretty_formatter = Gherkin::Formatter::PrettyFormatter.new(io)
         filter_formatter = Gherkin::Formatter::FilterFormatter.new(pretty_formatter, filters)
         parser = Gherkin::Parser::Parser.new(filter_formatter)
@@ -29,7 +30,7 @@ module Gherkin
         expected = (line_ranges.map do |line_range|
           source_lines[(line_range.first-1..line_range.last-1)]
         end.flatten).join("\n").gsub(/# __EOF__/, '')
-        io.string.should == expected
+        monochrome(io.string).should == expected
       end
 
       context "tags" do

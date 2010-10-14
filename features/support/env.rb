@@ -9,6 +9,7 @@ end
 require 'gherkin'
 require 'gherkin/sexp_recorder'
 require 'gherkin/output_stream_string_io'
+require 'gherkin/java_libs'
 require 'gherkin/json'
 
 module TransformHelpers
