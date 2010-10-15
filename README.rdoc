@@ -9,7 +9,6 @@ Fast Gherkin lexer and parser based on Ragel. Gherkin is two things:
 
 You'll need MRI (any version) if you want to build for MRI. To build the Java implementation you'll need JRuby.
 You'll also need Ragel installed and on your PATH.
-Finally you'll need the jeweler gem. (Jeweler will tell you what other gems you need when you run rake)
 
 === MRI
 
