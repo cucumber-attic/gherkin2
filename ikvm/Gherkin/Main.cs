@@ -17,7 +17,7 @@ namespace Gherkin
 			try 
 			{
 				java.io.Writer output = new TextWriterAdapter(Console.Out);
-				Parser parser = new Parser(new PrettyFormatter(output, true));
+				Parser parser = new Parser(new PrettyFormatter(output, false));
 				Lexer lexer = new I18nLexer(parser);
 				string source = File.OpenText(args[0]).ReadToEnd();
 				lexer.scan(source, args[0], 0);

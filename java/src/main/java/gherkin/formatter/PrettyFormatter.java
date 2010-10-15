@@ -56,6 +56,7 @@ public class PrettyFormatter implements Formatter {
             try {
                 formats = colorFormats();
             } catch (Exception e) {
+                System.err.println("WARNING: Couldn't load color formatter: " + e.getMessage());
                 formats = new MonochromeFormats();
             }
         }
