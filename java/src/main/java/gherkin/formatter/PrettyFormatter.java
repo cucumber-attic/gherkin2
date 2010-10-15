@@ -42,21 +42,26 @@ public class PrettyFormatter implements Formatter {
     private int[] stepLengths;
     private int stepIndex;
     private String uri;
-    private static final Pattern START = Pattern.compile("^", Pattern.MULTILINE);
-    private static final Pattern TRIPLE_QUOTES = Pattern.compile("\"\"\"", Pattern.MULTILINE);
     private Mapper tagNameMapper = new Mapper() {
         public String map(Object tag) {
             return ((Tag) tag).getName();
         }
     };
     private final StepPrinter stepPrinter = new StepPrinter();
+    private final boolean monochrome;
+    private static final Format MONOCHROME_FORMAT = new Format() {
+        public void writeText(PrintWriter out, String text) {
+            out.write(text);
+        }
+    };
 
-    public PrettyFormatter(Writer out) {
+    public PrettyFormatter(Writer out, boolean monochrome) {
+        this.monochrome = monochrome;
         this.out = new PrintWriter(out);
     }
 
     public PrettyFormatter(OutputStream out) {
-        this(new OutputStreamWriter(out));
+        this(new OutputStreamWriter(out), false);
     }
 
     public void uri(String uri) {
@@ -138,31 +143,41 @@ public class PrettyFormatter implements Formatter {
         out.flush();
     }
 
-    private static Format getTextFormat(Step step) {
-        return FORMATS.get(step.getStatus());
+    private Format getTextFormat(Step step) {
+        return getFormat(step.getStatus());
     }
 
-    private static Format getArgFormat(Step step) {
-        return FORMATS.get(step.getStatus() + "_param");
+    private Format getArgFormat(Step step) {
+        return getFormat(step.getStatus() + "_param");
+    }
+
+    private Map<String, Format> formats;
+
+    private Format getFormat(String key) {
+        if(monochrome) {
+            return MONOCHROME_FORMAT;
+        }
+        if(formats == null) {
+            formats = new HashMap<String, Format>() {{
+                put("undefined", new ColorFormat(YELLOW, null));
+                put("pending", new ColorFormat(YELLOW, null));
+                put("pending_param", new ColorFormat(YELLOW, INTENSITY_BOLD));
+                put("failed", new ColorFormat(RED, null));
+                put("failed_param", new ColorFormat(RED, INTENSITY_BOLD));
+                put("passed", new ColorFormat(GREEN, null));
+                put("passed_param", new ColorFormat(GREEN, INTENSITY_BOLD));
+                put("outline", new ColorFormat(CYAN, null));
+                put("outline_param", new ColorFormat(CYAN, INTENSITY_BOLD));
+                put("skipped", new ColorFormat(CYAN, null));
+                put("skipped_param", new ColorFormat(CYAN, INTENSITY_BOLD));
+                put("comment", new ColorFormat(GREY, null));
+                put("tag", new ColorFormat(CYAN, null));
+            }};
+        }
+        return formats.get(key);
     }
 
     private static final String GREY = new StringBuilder().append((char)27).append("[90m").toString();
-
-    private static final Map<String, Format> FORMATS = new HashMap<String, Format>() {{
-        put("undefined", new ColorFormat(YELLOW, null));
-        put("pending", new ColorFormat(YELLOW, null));
-        put("pending_param", new ColorFormat(YELLOW, INTENSITY_BOLD));
-        put("failed", new ColorFormat(RED, null));
-        put("failed_param", new ColorFormat(RED, INTENSITY_BOLD));
-        put("passed", new ColorFormat(GREEN, null));
-        put("passed_param", new ColorFormat(GREEN, INTENSITY_BOLD));
-        put("outline", new ColorFormat(CYAN, null));
-        put("outline_param", new ColorFormat(CYAN, INTENSITY_BOLD));
-        put("skipped", new ColorFormat(CYAN, null));
-        put("skipped_param", new ColorFormat(CYAN, INTENSITY_BOLD));
-        put("comment", new ColorFormat(GREY, null));
-        put("tag", new ColorFormat(CYAN, null));
-    }};
 
     public void table(List<Row> rows) {
         int columnCount = rows.get(0).getCells().size();
@@ -254,7 +269,7 @@ public class PrettyFormatter implements Formatter {
 
         padSpace(indent);
         out.append(" ");
-        FORMATS.get("comment").writeText(out, "# " + uri + ":" + line);
+        getFormat("comment").writeText(out, "# " + uri + ":" + line);
     }
 
     private void printIndentedStepLocation(String location) {
@@ -263,7 +278,7 @@ public class PrettyFormatter implements Formatter {
 
         padSpace(indent);
         out.append(" ");
-        FORMATS.get("comment").writeText(out, "# " + location);
+        getFormat("comment").writeText(out, "# " + location);
     }
 
     private void printDescription(String description, String indentation, boolean newline) {
@@ -273,12 +288,15 @@ public class PrettyFormatter implements Formatter {
         }
     }
 
-    private String indent(String s, String indentation) {
+    private static final Pattern START = Pattern.compile("^", Pattern.MULTILINE);
+    private static String indent(String s, String indentation) {
         return START.matcher(s).replaceAll(indentation);
     }
 
-    private String escapeTripleQuotes(String s) {
-        return TRIPLE_QUOTES.matcher(s).replaceAll("\\\\\"\\\\\"\\\\\"");
+    private static final Pattern TRIPLE_QUOTES = Pattern.compile("\"\"\"", Pattern.MULTILINE);
+    private static final String ESCAPED_TRIPLE_QUOTES = "\\\\\"\\\\\"\\\\\"";
+    private static String escapeTripleQuotes(String s) {
+        return TRIPLE_QUOTES.matcher(s).replaceAll(ESCAPED_TRIPLE_QUOTES);
     }
 
     public static class ColorFormat implements Format {

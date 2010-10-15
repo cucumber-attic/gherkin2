@@ -14,9 +14,10 @@ module Gherkin
       include Colors
       include Escaping
 
-      def initialize(io)
+      def initialize(io, monochrome=false)
         @io = io
         @step_printer = StepPrinter.new
+        @monochrome = monochrome
       end
 
       def uri(uri)
@@ -71,14 +72,20 @@ module Gherkin
       def print_step(step)
         print_comments(step.comments, '    ')
         @io.write('    ')
-        step_format(step).write_text(@io, step.keyword)
-        @step_printer.write_step(@io, step_format(step), step.name, step.arguments)
+        text_format(step).write_text(@io, step.keyword)
+        @step_printer.write_step(@io, text_format(step), arg_format(step), step.name, step.arguments)
         print_indented_stepdef_location!(step.result.stepdef_location) if step.result
         # TODO: Print error message
         @io.puts
       end
 
-      class ColorStepFormat
+      class MonochromeFormat
+        def write_text(io, text)
+          io.write(text)
+        end
+      end
+
+      class ColorFormat
         include Colors
         
         def initialize(status)
@@ -88,18 +95,27 @@ module Gherkin
         def write_text(io, text)
           io.write(self.__send__(@status, text))
         end
+      end
 
-        def write_arg(io, arg)
-          io.write(self.__send__("#{@status}_param", arg))
+      def text_format(step)
+        format(step.status)
+      end
+
+      def arg_format(step)
+        format(step.status + '_param')
+      end
+
+      def format(key)
+        if @formats.nil?
+          if @monochrome
+            @formats = Hash.new(MonochromeFormat.new)
+          else
+            @formats = Hash.new do |formats, status|
+              formats[status] = ColorFormat.new(status)
+            end
+          end
         end
-      end
-
-      STEP_FORMATS = Hash.new do |formats, status|
-        formats[status] = ColorStepFormat.new(status)
-      end
-
-      def step_format(step)
-        STEP_FORMATS[step.status]
+        @formats[key]
       end
 
       def eof

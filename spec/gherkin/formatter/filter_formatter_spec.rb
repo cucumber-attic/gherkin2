@@ -18,7 +18,7 @@ module Gherkin
 
       def verify_filter(filters, *line_ranges)
         io = StringIO.new
-        pretty_formatter = Gherkin::Formatter::PrettyFormatter.new(io)
+        pretty_formatter = Gherkin::Formatter::PrettyFormatter.new(io, true)
         filter_formatter = Gherkin::Formatter::FilterFormatter.new(pretty_formatter, filters)
         parser = Gherkin::Parser::Parser.new(filter_formatter)
 
@@ -30,7 +30,7 @@ module Gherkin
         expected = (line_ranges.map do |line_range|
           source_lines[(line_range.first-1..line_range.last-1)]
         end.flatten).join("\n").gsub(/# __EOF__/, '')
-        monochrome(io.string).should == expected
+        io.string.should == expected
       end
 
       context "tags" do

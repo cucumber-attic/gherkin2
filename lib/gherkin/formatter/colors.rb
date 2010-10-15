@@ -111,11 +111,6 @@ module Gherkin
       end
 
       define_grey
-
-      COLOR_PATTERN = /\e\[(?:[34][0-7]|[0-9]|90)?m/m
-      def monochrome(string)
-        string.gsub(COLOR_PATTERN, '')
-      end
     end
   end
 end

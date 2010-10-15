@@ -7,8 +7,10 @@ public class StepPrinter {
     public void writeStep(PrintWriter out, Format textFormat, Format argFormat, String stepName, List<Argument> arguments) {
         int textStart = 0;
         for (Argument argument : arguments) {
-            String text = stepName.substring(textStart, argument.getOffset());
-            textFormat.writeText(out, text);
+            if(argument.getOffset() != 0) {
+                String text = stepName.substring(textStart, argument.getOffset());
+                textFormat.writeText(out, text);
+            }
             String val = argument.getVal();
             argFormat.writeText(out, val);
             textStart = argument.getOffset() + argument.getVal().length();

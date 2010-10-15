@@ -6,7 +6,7 @@ World(Gherkin::Formatter::Colors)
 
 Given /^a PrettyFormatter$/ do
   @io = StringIO.new
-  @formatter = Gherkin::Formatter::PrettyFormatter.new(@io)
+  @formatter = Gherkin::Formatter::PrettyFormatter.new(@io, true)
 end
 
 Given /^a JSON lexer$/ do
@@ -18,5 +18,5 @@ Given /^the following JSON is parsed:$/ do |text|
 end
 
 Then /^the outputted text should be:$/ do |expected_text|
-  monochrome(@io.string).strip.should == expected_text
+  @io.string.strip.should == expected_text
 end

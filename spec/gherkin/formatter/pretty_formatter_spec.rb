@@ -20,11 +20,11 @@ module Gherkin
       def assert_pretty(input, expected_output=input)
         [true, false].each do |force_ruby|
           io = StringIO.new
-          pf = Gherkin::Formatter::PrettyFormatter.new(io)
+          pf = Gherkin::Formatter::PrettyFormatter.new(io, true)
           parser = Gherkin::Parser::Parser.new(pf, true, "root", force_ruby)
           parser.parse(input, "test.feature", 0)
           output = io.string
-          monochrome(output).should == expected_output
+          output.should == expected_output
         end
       end
 
@@ -34,18 +34,18 @@ module Gherkin
 
       before do
         @io = StringIO.new
-        @l = Gherkin::Formatter::PrettyFormatter.new(@io)
+        @colf = Gherkin::Formatter::PrettyFormatter.new(@io, false)
       end
 
       it "should print comments when scenario is longer" do
-        @l.uri("features/foo.feature")
-        @l.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1))
+        @colf.uri("features/foo.feature")
+        @colf.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1))
         step1 = Model::Step.new([], "Given ", "some stuff", 5, nil, result('passed', nil, [], "features/step_definitions/bar.rb:56"))
         step2 = Model::Step.new([], "When ", "foo", 6, nil, result('passed', nil, [], "features/step_definitions/bar.rb:96"))
-        @l.steps([step1, step2])
-        @l.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4))
-        @l.step(step1)
-        @l.step(step2)
+        @colf.steps([step1, step2])
+        @colf.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4))
+        @colf.step(step1)
+        @colf.step(step2)
 
         assert_io(%{Feature: Hello
   World
@@ -57,12 +57,12 @@ module Gherkin
       end
 
       it "should print comments when step is longer" do
-        @l.uri("features/foo.feature")
-        @l.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1))
+        @colf.uri("features/foo.feature")
+        @colf.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1))
         step = Model::Step.new([], "Given ", "some stuff that is longer", 5, nil, result('passed', nil, [], "features/step_definitions/bar.rb:56"))
-        @l.steps([step])
-        @l.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4))
-        @l.step(step)
+        @colf.steps([step])
+        @colf.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4))
+        @colf.step(step)
 
         assert_io(%{Feature: Hello
   World
@@ -74,8 +74,8 @@ module Gherkin
 
       it "should highlight arguments for regular steps" do
         step = Model::Step.new([], "Given ", "I have 999 cukes in my belly", 3, nil, result('passed', nil, [Gherkin::Formatter::Argument.new(7, '999')], nil))
-        @l.steps([step])
-        @l.step(step)
+        @colf.steps([step])
+        @colf.step(step)
         if defined?(JRUBY_VERSION)
           # Not terribly readable. The result on Java is different because JANSI uses semicolons when there are several codes.
           assert_io("    \e[32mGiven \e[0m\e[32mI have \e[0m\e[32;1m999\e[0m\e[32m cukes in my belly\e[0m\n")
@@ -138,7 +138,7 @@ Feature: Feature Description
 
       it "should escape backslashes and pipes" do
         io = StringIO.new
-        l = Gherkin::Formatter::PrettyFormatter.new(io)
+        l = Gherkin::Formatter::PrettyFormatter.new(io, true)
         l.__send__(:table, [Gherkin::Formatter::Model::Row.new([], ['|', '\\'], nil)])
         io.string.should == '      | \\| | \\\\ |' + "\n"
       end
