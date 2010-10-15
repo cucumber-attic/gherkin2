@@ -13,22 +13,16 @@ import gherkin.formatter.model.Step;
 import gherkin.formatter.model.Tag;
 import gherkin.formatter.model.TagStatement;
 import gherkin.util.Mapper;
-import org.fusesource.jansi.Ansi;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import static gherkin.util.FixJava.join;
 import static gherkin.util.FixJava.map;
-import static org.fusesource.jansi.Ansi.*;
-import static org.fusesource.jansi.Ansi.Attribute.INTENSITY_BOLD;
-import static org.fusesource.jansi.Ansi.Color.*;
 
 /**
  * This class pretty prints feature files like they were in the source, only
@@ -48,16 +42,27 @@ public class PrettyFormatter implements Formatter {
         }
     };
     private final StepPrinter stepPrinter = new StepPrinter();
-    private final boolean monochrome;
-    private static final Format MONOCHROME_FORMAT = new Format() {
-        public void writeText(PrintWriter out, String text) {
-            out.write(text);
-        }
-    };
+    private Formats formats;
 
     public PrettyFormatter(Writer out, boolean monochrome) {
-        this.monochrome = monochrome;
         this.out = new PrintWriter(out);
+        setFormats(monochrome);
+    }
+
+    private void setFormats(boolean monochrome) {
+        if (monochrome) {
+            formats = new MonochromeFormats();
+        } else {
+            try {
+                formats = colorFormats();
+            } catch (Exception e) {
+                formats = new MonochromeFormats();
+            }
+        }
+    }
+
+    private Formats colorFormats() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        return (Formats) getClass().getClassLoader().loadClass("gherkin.formatter.JansiFormats").newInstance();
     }
 
     public PrettyFormatter(OutputStream out) {
@@ -151,33 +156,9 @@ public class PrettyFormatter implements Formatter {
         return getFormat(step.getStatus() + "_param");
     }
 
-    private Map<String, Format> formats;
-
     private Format getFormat(String key) {
-        if(monochrome) {
-            return MONOCHROME_FORMAT;
-        }
-        if(formats == null) {
-            formats = new HashMap<String, Format>() {{
-                put("undefined", new ColorFormat(YELLOW, null));
-                put("pending", new ColorFormat(YELLOW, null));
-                put("pending_param", new ColorFormat(YELLOW, INTENSITY_BOLD));
-                put("failed", new ColorFormat(RED, null));
-                put("failed_param", new ColorFormat(RED, INTENSITY_BOLD));
-                put("passed", new ColorFormat(GREEN, null));
-                put("passed_param", new ColorFormat(GREEN, INTENSITY_BOLD));
-                put("outline", new ColorFormat(CYAN, null));
-                put("outline_param", new ColorFormat(CYAN, INTENSITY_BOLD));
-                put("skipped", new ColorFormat(CYAN, null));
-                put("skipped_param", new ColorFormat(CYAN, INTENSITY_BOLD));
-                put("comment", new ColorFormat(GREY, null));
-                put("tag", new ColorFormat(CYAN, null));
-            }};
-        }
         return formats.get(key);
     }
-
-    private static final String GREY = new StringBuilder().append((char)27).append("[90m").toString();
 
     public void table(List<Row> rows) {
         int columnCount = rows.get(0).getCells().size();
@@ -289,36 +270,15 @@ public class PrettyFormatter implements Formatter {
     }
 
     private static final Pattern START = Pattern.compile("^", Pattern.MULTILINE);
+
     private static String indent(String s, String indentation) {
         return START.matcher(s).replaceAll(indentation);
     }
 
     private static final Pattern TRIPLE_QUOTES = Pattern.compile("\"\"\"", Pattern.MULTILINE);
     private static final String ESCAPED_TRIPLE_QUOTES = "\\\\\"\\\\\"\\\\\"";
+
     private static String escapeTripleQuotes(String s) {
         return TRIPLE_QUOTES.matcher(s).replaceAll(ESCAPED_TRIPLE_QUOTES);
-    }
-
-    public static class ColorFormat implements Format {
-        private final Object color;
-        private final Attribute attribute;
-
-        public ColorFormat(Object color, Attribute attribute) {
-            this.color = color;
-            this.attribute = attribute;
-        }
-
-        public void writeText(PrintWriter out, String text) {
-            Ansi a = ansi();
-            if(color instanceof Color) {
-                a.fg((Color) color);
-            } else {
-                a.a(color);
-            }
-            if (attribute != null) {
-                a.a(attribute);
-            }
-            out.write(a.a(text).reset().toString());
-        }
     }
 }

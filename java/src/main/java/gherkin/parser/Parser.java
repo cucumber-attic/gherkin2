@@ -1,11 +1,15 @@
 package gherkin.parser;
 
 import gherkin.I18n;
+import gherkin.formatter.Formatter;
 import gherkin.lexer.I18nLexer;
 import gherkin.lexer.Listener;
-import gherkin.formatter.Formatter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,7 +45,7 @@ public class Parser implements Listener {
     }
 
     /**
-     * @param featureURI    the URI where the gherkin originated from. Typically a file path.
+     * @param featureURI the URI where the gherkin originated from. Typically a file path.
      * @param lineOffset the line offset within the uri document the gherkin was taken from. Typically 0.
      */
     public void parse(String gherkin, String featureURI, int lineOffset) {
@@ -169,7 +173,7 @@ public class Parser implements Listener {
         private Map<String, Map<String, String>> transitionMap;
 
         public Machine(Parser parser, String name, String uri) {
-            if(uri == null) {
+            if (uri == null) {
                 throw new NullPointerException("uri");
             }
             this.parser = parser;

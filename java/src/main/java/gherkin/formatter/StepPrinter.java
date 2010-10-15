@@ -7,7 +7,7 @@ public class StepPrinter {
     public void writeStep(PrintWriter out, Format textFormat, Format argFormat, String stepName, List<Argument> arguments) {
         int textStart = 0;
         for (Argument argument : arguments) {
-            if(argument.getOffset() != 0) {
+            if (argument.getOffset() != 0) {
                 String text = stepName.substring(textStart, argument.getOffset());
                 textFormat.writeText(out, text);
             }
@@ -15,7 +15,7 @@ public class StepPrinter {
             argFormat.writeText(out, val);
             textStart = argument.getOffset() + argument.getVal().length();
         }
-        if(textStart != stepName.length()) {
+        if (textStart != stepName.length()) {
             String text = stepName.substring(textStart, stepName.length());
             textFormat.writeText(out, text);
         }

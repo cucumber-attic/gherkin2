@@ -1,7 +1,5 @@
 package gherkin;
 
-import gherkin.formatter.Filter;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

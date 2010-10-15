@@ -37,7 +37,7 @@ public class I18nLexer implements Lexer {
 
     private I18n i18nLanguage(String source) {
         String key = "en";
-        for(String line : source.split("\\n")) {
+        for (String line : source.split("\\n")) {
             if (!COMMENT_OR_EMPTY_LINE_PATTERN.matcher(line).find()) {
                 break;
             }

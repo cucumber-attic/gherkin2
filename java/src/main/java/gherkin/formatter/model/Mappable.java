@@ -1,13 +1,18 @@
 package gherkin.formatter.model;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Mappable {
     private static final Integer NO_LINE = -1;
 
-    public Map<Object,Object> toMap() {
-        Map<Object,Object> map = new HashMap<Object,Object>();
+    public Map<Object, Object> toMap() {
+        Map<Object, Object> map = new HashMap<Object, Object>();
         for (Field field : getFields()) {
             Object value;
             try {

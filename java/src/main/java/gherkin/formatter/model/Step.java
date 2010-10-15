@@ -3,7 +3,6 @@ package gherkin.formatter.model;
 import gherkin.formatter.Argument;
 import gherkin.formatter.Formatter;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -20,15 +19,15 @@ public class Step extends BasicStatement {
     }
 
     @Override
-    public Map<Object,Object> toMap() {
-        Map<Object,Object> map = super.toMap();
+    public Map<Object, Object> toMap() {
+        Map<Object, Object> map = super.toMap();
         if (getRows() != null) {
-            Map<Object,Object> multilineArg = new HashMap<Object,Object>();
+            Map<Object, Object> multilineArg = new HashMap<Object, Object>();
             multilineArg.put("type", "table");
             multilineArg.put("value", map.get("multiline_arg"));
             map.put("multiline_arg", multilineArg);
         } else if (getPyString() != null) {
-            ((Map<Object,Object>) map.get("multiline_arg")).put("type", "py_string");
+            ((Map<Object, Object>) map.get("multiline_arg")).put("type", "py_string");
         }
         return map;
     }
