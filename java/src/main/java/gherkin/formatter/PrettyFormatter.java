@@ -49,6 +49,10 @@ public class PrettyFormatter implements Formatter {
         setFormats(monochrome);
     }
 
+    public PrettyFormatter(OutputStream out, boolean monochrome) {
+        this(new OutputStreamWriter(out), monochrome);
+    }
+
     private void setFormats(boolean monochrome) {
         if (monochrome) {
             formats = new MonochromeFormats();
@@ -64,10 +68,6 @@ public class PrettyFormatter implements Formatter {
 
     private Formats colorFormats() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         return (Formats) getClass().getClassLoader().loadClass("gherkin.formatter.JansiFormats").newInstance();
-    }
-
-    public PrettyFormatter(OutputStream out) {
-        this(new OutputStreamWriter(out), false);
     }
 
     public void uri(String uri) {
