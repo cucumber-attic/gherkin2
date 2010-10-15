@@ -1,4 +1,4 @@
-== 2.2.9 (In Git)
+== 2.2.9 (2010-10-15)
 
 === New Features
 * PrettyFormatter can format features both with and without ANSI Colors. Using Jansi on Java. (Aslak Hellesøy)
