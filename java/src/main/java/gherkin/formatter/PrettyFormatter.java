@@ -59,7 +59,7 @@ public class PrettyFormatter implements Formatter {
         } else {
             try {
                 formats = colorFormats();
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 System.err.println("WARNING: Couldn't load color formatter: " + e.getMessage());
                 formats = new MonochromeFormats();
             }
