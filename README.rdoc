@@ -10,6 +10,14 @@ Fast Gherkin lexer and parser based on Ragel. Gherkin is two things:
 You'll need MRI (any version) if you want to build for MRI. To build the Java implementation you'll need JRuby.
 You'll also need Ragel installed and on your PATH.
 
+=== Any Ruby
+
+Before you can build you must install some gems:
+
+  gem install bundler && bundle install
+
+You also need to clone the cucumber git repo to a "cucumber" sibling folder of your gherkin folder.
+
 === MRI
 
   rake clean compile
@@ -20,7 +28,7 @@ You'll also need Ragel installed and on your PATH.
 
 == Running RSpec and Cucumber tests
 
-rake clean spec cucumber
+  rake clean spec cucumber
 
 If the RL_LANG environment variable is set, only the parsers for the languages specified there will be built.
 E.g. in Bash, export RL_LANG="en,fr,no". This can be quite helpful when modifying the Ragel grammar.
