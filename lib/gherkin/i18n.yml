@@ -17,7 +17,7 @@
   feature: Feature
   background: Background
   scenario: Scenario
-  scenario_outline: Scenario Outline
+  scenario_outline: Scenario Outline|Scenario Template
   examples: Examples|Scenarios
   given: "*|Given"
   when: "*|When"
@@ -397,7 +397,7 @@
   feature: Egenskap
   background: Bakgrunn
   scenario: Scenario
-  scenario_outline: Abstrakt Scenario
+  scenario_outline: Scenariomal|Abstrakt Scenario
   examples: Eksempler
   given: "*|Gitt"
   when: "*|Når"
