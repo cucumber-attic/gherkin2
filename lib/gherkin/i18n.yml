@@ -475,7 +475,7 @@
   feature: Egenskap
   background: Bakgrund
   scenario: Scenario
-  scenario_outline: Scenariomall
+  scenario_outline: Abstrakt Scenario|Scenariomall
   examples: Exempel
   given: "*|Givet"
   when: "*|När"
