@@ -1,0 +1,163 @@
+%%{
+  machine lexer;
+
+  action begin_content {
+    console.log('begin_content');
+//    @content_start = p
+//    @current_line = @line_number
+  }
+
+  action start_pystring {
+    console.log('start_pystring');
+//    @current_line = @line_number
+//    @start_col = p - @last_newline
+  }
+  
+  action begin_pystring_content {
+    console.log('begin_pystring_content');
+//    @content_start = p
+  }
+
+  action store_pystring_content {
+    console.log('store_pystring_content');
+//    con = unindent(@start_col, utf8_pack(data[@content_start...@next_keyword_start-1]).sub(/(\r?\n)?([\t ])*\Z/, '').gsub(/\\"\\"\\"/, '"""'))
+//    @listener.py_string(con, @current_line) 
+  }
+
+  action store_feature_content {
+    console.log('store_feature_content');
+//    store_keyword_content(:feature, data, p, eof) { |con| multiline_strip(con) }
+//    p = @next_keyword_start - 1 if @next_keyword_start          
+//    @next_keyword_start = nil
+  }
+
+  action store_background_content {
+    console.log('store_background_content');
+//    store_keyword_content(:background, data, p, eof) { |con| multiline_strip(con) }
+//    p = @next_keyword_start - 1 if @next_keyword_start                    
+//    @next_keyword_start = nil
+  }
+
+  action store_scenario_content {
+    console.log('store_scenario_content');
+//    store_keyword_content(:scenario, data, p, eof) { |con| multiline_strip(con) }
+//    p = @next_keyword_start - 1 if @next_keyword_start                    
+//    @next_keyword_start = nil
+  }
+
+  action store_scenario_outline_content {
+    console.log('store_scenario_outline_content');
+//    store_keyword_content(:scenario_outline, data, p, eof) { |con| multiline_strip(con) }
+//    p = @next_keyword_start - 1 if @next_keyword_start                    
+//    @next_keyword_start = nil
+  }
+
+  action store_examples_content {
+    console.log('store_examples_content');
+//    store_keyword_content(:examples, data, p, eof) { |con| multiline_strip(con) }
+//    p = @next_keyword_start - 1 if @next_keyword_start                    
+//    @next_keyword_start = nil
+  }
+
+  action store_step_content {
+    console.log('store_step_content');
+//    con = utf8_pack(data[@content_start...p]).strip
+//    @listener.step(@keyword, con, @current_line)
+  }
+
+  action store_comment_content {
+    console.log('store_comment_content');
+//    con = utf8_pack(data[@content_start...p]).strip
+//    @listener.comment(con, @line_number)
+//    @keyword_start = nil
+  }
+
+  action store_tag_content {
+    console.log('store_tag_content');
+//    con = utf8_pack(data[@content_start...p]).strip
+//    @listener.tag(con, @current_line)
+//    @keyword_start = nil
+  }
+
+  action inc_line_number {
+    console.log('inc_line_number');
+//    @line_number += 1
+  }
+
+  action last_newline {
+    console.log('last_newline');
+//    @last_newline = p + 1
+  }
+
+  action start_keyword {
+    console.log('start_keyword');
+//    @keyword_start ||= p
+  }
+
+  action end_keyword {
+    console.log('end_keyword');
+//    @keyword = utf8_pack(data[@keyword_start...p]).sub(/:$/,'')
+//    @keyword_start = nil
+  }
+
+  action next_keyword_start {
+    console.log('next_keyword_start');
+//    @next_keyword_start = p
+  }
+
+  action start_row {
+    console.log('start_row');
+//    p = p - 1
+//    current_row = []
+//    @current_line = @line_number
+  }
+
+  action begin_cell_content {
+    console.log('begin_cell_content');
+//    @content_start = p
+  }
+
+  action store_cell_content {
+    console.log('store_cell_content');
+//    con = utf8_pack(data[@content_start...p]).strip
+//    current_row << con.gsub(/\\\|/, "|").gsub(/\\\\/, "\\")
+  }
+
+  action store_row {
+    console.log('store_row');
+//    @listener.row(current_row, @current_line)
+  }
+
+  action end_feature {
+    console.log('end_feature');
+//    if cs < lexer_first_final
+//      content = current_line_content(data, p)
+//      raise Gherkin::Lexer::LexingError.new("Lexing error on line %d: '%s'. See http://wiki.github.com/aslakhellesoy/gherkin/lexingerror for more information." % [@line_number, content])
+//    else
+//      @listener.eof
+//    end
+  }
+
+  include lexer_common "lexer_common.<%= @i18n.underscored_iso_code %>.rl"; 
+}%%
+
+%% write data;
+%% access this.;
+%% variable data data;
+
+var Lexer = function(listener) {
+  this.listener = listener
+  %% write init;
+};
+
+Lexer.prototype.scan = function(data) {
+  var p = 0;
+  var pe = data.length;
+  var eof = 0;
+
+  %% write exec;
+}
+
+// Main
+var fs = require('fs')
+new Lexer(null).scan("Feature: Hello\nScenario: World\nGiven I like JS");
