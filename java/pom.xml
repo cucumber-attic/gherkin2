@@ -29,15 +29,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>fusesource.snapshot</id>
-            <url>http://repo.fusesource.com/nexus/content/repositories/snapshots/</url>
-            <snapshots><enabled>true</enabled></snapshots>
-            <releases><enabled>false</enabled></releases>
-        </repository>
-    </repositories>
-    
     <dependencies>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
@@ -47,7 +38,7 @@
         <dependency>
             <groupId>org.fusesource.jansi</groupId>
             <artifactId>jansi</artifactId>
-            <version>1.5-SNAPSHOT</version>
+            <version>1.4</version>
         </dependency>
         
         <dependency>

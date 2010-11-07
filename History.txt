@@ -2,6 +2,7 @@
 
 === New Features
 * New aliases for Scenario Outline in Swedish, Norwegian and English. (Peter Krantz, Aslak Hellesøy)
+* Improved build documentation for people who want to contribute (Aslak Hellesøy)
 
 == 2.2.9 (2010-10-15)
 

@@ -1,19 +1,12 @@
 namespace :gems do
   task :win do
     unless File.directory?(File.expand_path('~/.rake-compiler'))
-      STDERR.puts <<-EOM
-
-You must install Windows rubies to ~/.rake-compiler with:
-
-  rake-compiler cross-ruby VERSION=1.8.6-p287
-  # (Later 1.9.1 patch levels don't compile on mingw) 
-  rake-compiler cross-ruby VERSION=1.9.1-p243
-EOM
+      STDERR.puts "[ERROR] You must install MinGW rubies to build gherkin gems for Windows. See README.rdoc"
       exit(1)
     end
     # rvm and mingw ruby versions have to match to avoid errors
-    sh "rvm 1.8.6@cucumber rake cross compile RUBY_CC_VERSION=1.8.6"
-    sh "rvm 1.9.1@cucumber rake cross compile RUBY_CC_VERSION=1.9.1"
+    sh "rvm 1.8.6-p399@cucumber rake cross compile RUBY_CC_VERSION=1.8.6"
+    sh "rvm 1.9.1-p243@cucumber rake cross compile RUBY_CC_VERSION=1.9.1"
     # This will copy the .so files to the proper place
     sh "rake cross compile RUBY_CC_VERSION=1.8.6:1.9.1"
   end
