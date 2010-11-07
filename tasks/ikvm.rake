@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../spec/gherkin/json'
+require File.dirname(__FILE__) + '/../spec/gherkin/java_libs'
 # To test out the pure Java main program on .NET, execute:
 #
 #   rake ikvm
@@ -20,20 +20,45 @@ require File.dirname(__FILE__) + '/../spec/gherkin/json'
 #   [mono] mono ikvm/Gherkin/bin/Debug/Gherkin.exe features/steps_parser.feature
 #
 namespace :ikvm do
+  def mono(args)
+    if(`which mono`.strip =~ /mono/)
+      sh("mono #{args}")
+    else
+      raise "[ERROR] You must install Mono and IKVM build gherkin for .NET. See README.rdoc"
+    end
+  end
+
+  def ikvmc(args)
+    begin
+      mono("/usr/local/ikvm/bin/ikvmc.exe #{args}")
+    rescue => e
+      if e.message =~ /Cannot open assembly/
+        e.message << "\n\n[ERROR] You must install Mono and IKVM build gherkin for .NET. See README.rdoc"
+      end
+      raise e
+    end
+  end
+
+  def references
+    JAVA_LIBS.keys.map{|name| "-reference:release/#{name}.dll"}.join(' ')
+  end
+
   task :dependent_dlls do
     mkdir_p 'release' unless File.directory?('release')
-    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:library #{JSON_SIMPLE_JAR} -out:release/json-simple.dll")
+    JAVA_LIBS.each do |name, jar|
+      ikvmc("-target:library #{jar} -out:release/#{name}.dll")
+    end
   end
 
   desc 'Make a .NET .exe'
   task :exe => ['lib/gherkin.jar', :dependent_dlls] do
-    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:exe lib/gherkin.jar -out:release/gherkin-#{Gherkin::VERSION}.exe -reference:release/json-simple.dll")
+    ikvmc("-target:exe lib/gherkin.jar -out:release/gherkin-#{Gherkin::VERSION}.exe #{references}")
   end
 
   desc 'Make a .NET .dll'
   task :dll => ['lib/gherkin.jar', :dependent_dlls] do
     mkdir_p 'release' unless File.directory?('release')
-    sh("mono /usr/local/ikvm/bin/ikvmc.exe -target:library lib/gherkin.jar -out:release/gherkin-#{Gherkin::VERSION}.dll -reference:release/json-simple.dll")
+    ikvmc("-target:library lib/gherkin.jar -out:release/gherkin-#{Gherkin::VERSION}.dll  #{references}")
     cp "release/gherkin-#{Gherkin::VERSION}.dll", 'lib/gherkin.dll'
   end
 
@@ -48,7 +73,7 @@ end
 
 task :ikvm => ['ikvm:copy_ikvm_dlls', 'ikvm:exe', 'ikvm:dll'] do
   puts "************** Pretty printing some features with .NET. **************"
-  sh "mono release/gherkin-#{Gherkin::VERSION}.exe features"
+  mono "release/gherkin-#{Gherkin::VERSION}.exe features"
   puts "************** DONE Pretty printing some features with .NET. All OK. **************"
 end
 
