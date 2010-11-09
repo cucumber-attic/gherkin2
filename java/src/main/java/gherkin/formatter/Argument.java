@@ -1,6 +1,6 @@
 package gherkin.formatter;
 
-public class Argument {
+public class Argument extends Mappable {
     private final int offset;
     private final String val;
 

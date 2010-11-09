@@ -60,6 +60,44 @@ module Gherkin
       }})
     end
 
+    it "should parse feature with step results" do
+      check_json(%{{
+        "tags": [
+          {
+            "name": "@foo",
+            "line": 22
+          }
+        ],
+        "keyword": "Feature", 
+        "name": "One", 
+        "description": "", 
+        "line": 3,
+        "elements": [
+          {
+            "type": "scenario",
+            "steps": [
+              {
+                "keyword": "Given ",
+                "name": "a passing step",
+                "line": 6,
+                "result": {
+                  "status": "failed",
+                  "error_message": "You suck",
+                  "arguments": [
+                    {
+                      "offset": 22,
+                      "val": "cukes"
+                    }
+                  ],
+                  "stepdef_location": "features/step_definitions/steps.rb:1"
+                }
+              }
+            ]
+          }
+        ]
+      }})
+    end
+
     it "shoud parse a complex feature" do
       check_json(fixture("complex.json"))
     end

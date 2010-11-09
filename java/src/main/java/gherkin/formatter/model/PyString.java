@@ -1,5 +1,7 @@
 package gherkin.formatter.model;
 
+import gherkin.formatter.Mappable;
+
 public class PyString extends Mappable {
     private final String value;
     private final int line;

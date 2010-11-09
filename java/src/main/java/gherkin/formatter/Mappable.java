@@ -1,4 +1,4 @@
-package gherkin.formatter.model;
+package gherkin.formatter;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

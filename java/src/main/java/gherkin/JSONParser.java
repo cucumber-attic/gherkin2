@@ -1,17 +1,8 @@
 package gherkin;
 
+import gherkin.formatter.Argument;
 import gherkin.formatter.Formatter;
-import gherkin.formatter.model.Background;
-import gherkin.formatter.model.BasicStatement;
-import gherkin.formatter.model.Comment;
-import gherkin.formatter.model.Examples;
-import gherkin.formatter.model.Feature;
-import gherkin.formatter.model.PyString;
-import gherkin.formatter.model.Row;
-import gherkin.formatter.model.Scenario;
-import gherkin.formatter.model.ScenarioOutline;
-import gherkin.formatter.model.Step;
-import gherkin.formatter.model.Tag;
+import gherkin.formatter.model.*;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
@@ -69,7 +60,12 @@ public class JSONParser implements FeatureParser {
                 multilineArg = new PyString(getString(ma, "value"), getInt(ma, "line"));
             }
         }
-        return new Step(comments(o), keyword(o), name(o), line(o), multilineArg, null);
+        Result result = null;
+        if(o.containsKey("result")) {
+            Map r = (Map) o.get("result");
+            result = new Result(status(r), errorMessage(r), arguments(r), stepdefLocation(r));
+        }
+        return new Step(comments(o), keyword(o), name(o), line(o), multilineArg, result);
     }
 
     private List<Row> rows(List o) {
@@ -117,6 +113,28 @@ public class JSONParser implements FeatureParser {
 
     private int line(Map o) {
         return getInt(o, "line");
+    }
+
+    private String status(Map r) {
+        return getString(r, "status");
+    }
+
+    private String errorMessage(Map r) {
+        return getString(r, "error_message");
+    }
+
+    private List<Argument> arguments(Map r) {
+        List arguments = getList(r, "arguments");
+        List<Argument> result = new ArrayList<Argument>();
+        for (Object argument : arguments) {
+            Map argMap = (Map) argument;
+            result.add(new Argument(getInt(argMap, "offset"), getString(argMap, "val")));
+        }
+        return result;
+    }
+
+    private String stepdefLocation(Map r) {
+        return getString(r, "stepdef_location");
     }
 
     private String getString(Map map, String key) {

@@ -1,5 +1,7 @@
 package gherkin.formatter.model;
 
+import gherkin.formatter.Mappable;
+
 import java.util.List;
 
 public class Row extends Mappable implements CommentHolder {

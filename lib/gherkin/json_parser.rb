@@ -1,5 +1,6 @@
 require 'json'
 require 'gherkin/formatter/model'
+require 'gherkin/formatter/argument'
 require 'gherkin/native'
 
 module Gherkin
@@ -50,7 +51,11 @@ module Gherkin
           multiline_arg = Formatter::Model::PyString.new(ma['value'], ma['line'])
         end
       end
-      Formatter::Model::Step.new(comments(o), keyword(o), name(o), line(o), multiline_arg)
+      result = nil
+      if(r = o['result'])
+        result = Formatter::Model::Result.new(status(r), error_message(r), arguments(r), stepdef_location(r))
+      end
+      Formatter::Model::Step.new(comments(o), keyword(o), name(o), line(o), multiline_arg, result)
     end
 
     def rows(o)
@@ -83,6 +88,22 @@ module Gherkin
 
     def line(o)
       o['line']
+    end
+
+    def status(r)
+      r['status']
+    end
+
+    def error_message(r)
+      r['error_message']
+    end
+
+    def arguments(r)
+      r['arguments'].map{|a| Formatter::Argument.new(a['offset'], a['val'])}
+    end
+
+    def stepdef_location(r)
+      r['stepdef_location']
     end
   end
 end

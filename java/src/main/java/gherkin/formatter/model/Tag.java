@@ -1,5 +1,7 @@
 package gherkin.formatter.model;
 
+import gherkin.formatter.Mappable;
+
 public class Tag extends Mappable {
     private final String name;
     private final int line;
