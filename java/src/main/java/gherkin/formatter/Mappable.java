@@ -1,12 +1,7 @@
 package gherkin.formatter;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Mappable {
     private static final Integer NO_LINE = -1;

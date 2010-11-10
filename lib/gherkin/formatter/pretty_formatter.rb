@@ -60,23 +60,32 @@ module Gherkin
       end
 
       def step(step)
-        print_step(step)
-        case step.multiline_arg
-        when Model::PyString
-          py_string(step.multiline_arg)
-        when Array
-          table(step.multiline_arg)
-        end
+        @step = step
+        match(Model::Match.new([], nil)) if @monochrome
       end
 
-      def print_step(step)
-        print_comments(step.comments, '    ')
-        @io.write('    ')
-        text_format(step).write_text(@io, step.keyword)
-        @step_printer.write_step(@io, text_format(step), arg_format(step), step.name, step.arguments)
-        print_indented_stepdef_location!(step.result.stepdef_location) if step.result
+      def match(match)
+        print_step(format('executing'), format('executing_param'), match.arguments, match.location)
+      end
+
+      def result(result)
         # TODO: Print error message
+      end
+
+      def print_step(text_format, arg_format, arguments, location)
+        print_comments(@step.comments, '    ')
+        @io.write('    ')
+        text_format.write_text(@io, @step.keyword)
+        @step_printer.write_step(@io, text_format, arg_format, @step.name, arguments)
+        print_indented_stepdef_location!(location) if location
+
         @io.puts
+        case @step.multiline_arg
+        when Model::PyString
+          py_string(@step.multiline_arg)
+        when Array
+          table(@step.multiline_arg)
+        end
       end
 
       class MonochromeFormat

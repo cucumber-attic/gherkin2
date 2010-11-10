@@ -10,19 +10,21 @@ module Gherkin
     #
     # The colours that you can change are:
     #
-    # * <tt>undefined</tt>     - defaults to <tt>yellow</tt>
-    # * <tt>pending</tt>       - defaults to <tt>yellow</tt>
-    # * <tt>pending_param</tt> - defaults to <tt>yellow,bold</tt>
-    # * <tt>failed</tt>        - defaults to <tt>red</tt>
-    # * <tt>failed_param</tt>  - defaults to <tt>red,bold</tt>
-    # * <tt>passed</tt>        - defaults to <tt>green</tt>
-    # * <tt>passed_param</tt>  - defaults to <tt>green,bold</tt>
-    # * <tt>outline</tt>       - defaults to <tt>cyan</tt>
-    # * <tt>outline_param</tt> - defaults to <tt>cyan,bold</tt>
-    # * <tt>skipped</tt>       - defaults to <tt>cyan</tt>
-    # * <tt>skipped_param</tt> - defaults to <tt>cyan,bold</tt>
-    # * <tt>comment</tt>       - defaults to <tt>grey</tt>
-    # * <tt>tag</tt>           - defaults to <tt>cyan</tt>
+    # * <tt>undefined</tt>       - defaults to <tt>yellow</tt>
+    # * <tt>pending</tt>         - defaults to <tt>yellow</tt>
+    # * <tt>pending_param</tt>   - defaults to <tt>yellow,bold</tt>
+    # * <tt>executing</tt>       - defaults to <tt>magenta</tt>
+    # * <tt>executing_param</tt> - defaults to <tt>magenta,bold</tt>
+    # * <tt>failed</tt>          - defaults to <tt>red</tt>
+    # * <tt>failed_param</tt>    - defaults to <tt>red,bold</tt>
+    # * <tt>passed</tt>          - defaults to <tt>green</tt>
+    # * <tt>passed_param</tt>    - defaults to <tt>green,bold</tt>
+    # * <tt>outline</tt>         - defaults to <tt>cyan</tt>
+    # * <tt>outline_param</tt>   - defaults to <tt>cyan,bold</tt>
+    # * <tt>skipped</tt>         - defaults to <tt>cyan</tt>
+    # * <tt>skipped_param</tt>   - defaults to <tt>cyan,bold</tt>
+    # * <tt>comment</tt>         - defaults to <tt>grey</tt>
+    # * <tt>tag</tt>             - defaults to <tt>cyan</tt>
     #
     # For instance, if your shell has a black background and a green font (like the
     # "Homebrew" settings for OS X' Terminal.app), you may want to override passed
@@ -47,6 +49,7 @@ module Gherkin
       end.merge({
         'undefined' => 'yellow',
         'pending'   => 'yellow',
+        'executing' => 'magenta',
         'failed'    => 'red',
         'passed'    => 'green',
         'outline'   => 'cyan',

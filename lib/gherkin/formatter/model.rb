@@ -112,13 +112,7 @@ module Gherkin
       class Step < BasicStatement
         native_impl('gherkin')
 
-        attr_accessor :multiline_arg, :result
-
-        def initialize(comments, keyword, name, line, multiline_arg=nil, result=nil)
-          super(comments, keyword, name, line)
-          @multiline_arg = multiline_arg
-          @result = result
-        end
+        attr_accessor :multiline_arg
 
         def line_range
           range = super
@@ -210,13 +204,31 @@ module Gherkin
         end
       end
 
+      class Match < Hashable
+        native_impl('gherkin')
+
+        attr_reader :arguments, :location
+        
+        def initialize(arguments, location)
+          @arguments, @location = arguments, location
+        end
+
+        def replay(formatter)
+          formatter.match(self)
+        end
+      end
+
       class Result < Hashable
         native_impl('gherkin')
 
-        attr_reader :status, :error_message, :arguments, :stepdef_location
+        attr_reader :status, :error_message
         
-        def initialize(status, error_message, arguments, stepdef_location)
-          @status, @error_message, @arguments, @stepdef_location = status, error_message, arguments, stepdef_location
+        def initialize(status, error_message)
+          @status, @error_message = status, error_message
+        end
+
+        def replay(formatter)
+          formatter.result(self)
         end
       end
     end

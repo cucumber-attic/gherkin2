@@ -2,6 +2,7 @@ require 'rubygems'
 require 'bundler'
 Bundler.setup
 
+require 'rspec'
 require 'gherkin'
 require 'stringio'
 require 'gherkin/sexp_recorder'

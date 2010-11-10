@@ -80,16 +80,18 @@ module Gherkin
                 "keyword": "Given ",
                 "name": "a passing step",
                 "line": 6,
-                "result": {
-                  "status": "failed",
-                  "error_message": "You suck",
+                "match": {
                   "arguments": [
                     {
                       "offset": 22,
                       "val": "cukes"
                     }
                   ],
-                  "stepdef_location": "features/step_definitions/steps.rb:1"
+                  "location": "features/step_definitions/steps.rb:1"
+                },
+                "result": {
+                  "status": "failed",
+                  "error_message": "You suck"
                 }
               }
             ]

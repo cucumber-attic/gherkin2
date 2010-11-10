@@ -1,23 +1,13 @@
 package gherkin.formatter;
 
-import gherkin.formatter.model.Background;
-import gherkin.formatter.model.Comment;
-import gherkin.formatter.model.Examples;
-import gherkin.formatter.model.Feature;
-import gherkin.formatter.model.PyString;
-import gherkin.formatter.model.Result;
-import gherkin.formatter.model.Row;
-import gherkin.formatter.model.Scenario;
-import gherkin.formatter.model.ScenarioOutline;
-import gherkin.formatter.model.Step;
-import gherkin.formatter.model.Tag;
-import gherkin.formatter.model.TagStatement;
+import gherkin.formatter.model.*;
 import gherkin.util.Mapper;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -43,9 +33,12 @@ public class PrettyFormatter implements Formatter {
     };
     private final StepPrinter stepPrinter = new StepPrinter();
     private Formats formats;
+    private Step step;
+    private boolean monochrome;
 
     public PrettyFormatter(Writer out, boolean monochrome) {
         this.out = new PrintWriter(out);
+        this.monochrome = monochrome;
         setFormats(monochrome);
     }
 
@@ -125,27 +118,36 @@ public class PrettyFormatter implements Formatter {
     }
 
     public void step(Step step) {
-        printStep(step);
+        this.step = step;
+        if(monochrome) {
+            match(new Match(Collections.<Argument>emptyList(), null));
+        }
+    }
+
+    public void match(Match match) {
+        printStep(getFormat("executing"), getFormat("executing_param"), match.getArguments(), match.getLocation());
+    }
+
+    public void result(Result result) {
+        if (result.getErrorMessage() != null) {
+            out.println(indent(result.getErrorMessage(), "      "));
+        }
+    }
+
+    private void printStep(Format textFormat, Format argFormat, List<Argument> arguments, String location) {
+        printComments(step.getComments(), "    ");
+        out.print("    ");
+        textFormat.writeText(out, step.getKeyword());
+        stepPrinter.writeStep(out, textFormat, argFormat, step.getName(), arguments);
+        printIndentedStepLocation(location);
+
+        out.println();
         if (step.getRows() != null) {
             table(step.getRows());
         } else if (step.getPyString() != null) {
             pyString(step.getPyString());
         }
-    }
 
-    private void printStep(Step step) {
-        printComments(step.getComments(), "    ");
-        out.print("    ");
-        getTextFormat(step).writeText(out, step.getKeyword());
-        stepPrinter.writeStep(out, getTextFormat(step), getArgFormat(step), step.getName(), step.getArguments());
-
-        Result result = step.getResult();
-        String location = result != null ? result.getStepdefLocation() : null;
-        printIndentedStepLocation(location);
-        out.println();
-        if (step.getResult() != null && step.getResult().getErrorMessage() != null) {
-            out.println(indent(step.getResult().getErrorMessage(), "      "));
-        }
         out.flush();
     }
 

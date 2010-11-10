@@ -10,12 +10,11 @@ import java.util.Map;
 
 public class Step extends BasicStatement {
     private Object multiline_arg;
+    private Match match;
     private Result result;
 
-    public Step(List<Comment> comments, String keyword, String name, int line, Object multilineArg, Result result) {
+    public Step(List<Comment> comments, String keyword, String name, int line) {
         super(comments, keyword, name, line);
-        this.multiline_arg = multilineArg;
-        this.result = result;
     }
 
     @Override
@@ -56,6 +55,14 @@ public class Step extends BasicStatement {
         return multiline_arg;
     }
 
+    public void setMatch(Match match) {
+        this.match = match;
+    }
+
+    public void setResult(Result result) {
+        this.result = result;
+    }
+
     public Result getResult() {
         return result;
     }
@@ -69,7 +76,7 @@ public class Step extends BasicStatement {
     }
 
     public List<Argument> getArguments() {
-        return result != null ? result.getArguments() : Collections.<Argument>emptyList();
+        return match != null ? match.getArguments() : Collections.<Argument>emptyList();
     }
 
     public String getStatus() {

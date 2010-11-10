@@ -51,21 +51,25 @@ public class JSONParser implements FeatureParser {
     }
 
     private Step step(JSONObject o) {
-        Object multilineArg = null;
+        Step step = new Step(comments(o), keyword(o), name(o), line(o));
         if (o.containsKey("multiline_arg")) {
             Map ma = (Map) o.get("multiline_arg");
             if (ma.get("type").equals("table")) {
-                multilineArg = rows(getList(ma, "value"));
+                step.setMultilineArg(rows(getList(ma, "value")));
             } else {
-                multilineArg = new PyString(getString(ma, "value"), getInt(ma, "line"));
+                step.setMultilineArg(new PyString(getString(ma, "value"), getInt(ma, "line")));
             }
         }
-        Result result = null;
+        if(o.containsKey("match")) {
+            Map m = (Map) o.get("match");
+            step.setMatch(new Match(arguments(m), location(m)));
+        }
+
         if(o.containsKey("result")) {
             Map r = (Map) o.get("result");
-            result = new Result(status(r), errorMessage(r), arguments(r), stepdefLocation(r));
+            step.setResult(new Result(status(r), errorMessage(r)));
         }
-        return new Step(comments(o), keyword(o), name(o), line(o), multilineArg, result);
+        return step;
     }
 
     private List<Row> rows(List o) {
@@ -115,16 +119,8 @@ public class JSONParser implements FeatureParser {
         return getInt(o, "line");
     }
 
-    private String status(Map r) {
-        return getString(r, "status");
-    }
-
-    private String errorMessage(Map r) {
-        return getString(r, "error_message");
-    }
-
-    private List<Argument> arguments(Map r) {
-        List arguments = getList(r, "arguments");
+    private List<Argument> arguments(Map m) {
+        List arguments = getList(m, "arguments");
         List<Argument> result = new ArrayList<Argument>();
         for (Object argument : arguments) {
             Map argMap = (Map) argument;
@@ -133,8 +129,16 @@ public class JSONParser implements FeatureParser {
         return result;
     }
 
-    private String stepdefLocation(Map r) {
-        return getString(r, "stepdef_location");
+    private String location(Map m) {
+        return getString(m, "location");
+    }
+
+    private String status(Map r) {
+        return getString(r, "status");
+    }
+
+    private String errorMessage(Map r) {
+        return getString(r, "error_message");
     }
 
     private String getString(Map map, String key) {

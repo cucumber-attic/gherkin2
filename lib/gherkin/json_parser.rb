@@ -22,6 +22,8 @@ module Gherkin
         feature_element(feature_element).replay(@formatter)
         (feature_element["steps"] || []).each do |step|
           step(step).replay(@formatter)
+          match(step)
+          result(step)
         end
         (feature_element["examples"] || []).each do |eo|
           Formatter::Model::Examples.new(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), rows(eo['rows'])).replay(@formatter)
@@ -30,6 +32,8 @@ module Gherkin
 
       @formatter.eof
     end
+
+  private
 
     def feature_element(o)
       case o['type']
@@ -43,19 +47,29 @@ module Gherkin
     end
 
     def step(o)
-      multiline_arg = nil
+      step = Formatter::Model::Step.new(comments(o), keyword(o), name(o), line(o))
+
       if(ma = o['multiline_arg'])
         if(ma['type'] == 'table')
-          multiline_arg = rows(ma['value'])
+          step.multiline_arg = rows(ma['value'])
         else
-          multiline_arg = Formatter::Model::PyString.new(ma['value'], ma['line'])
+          step.multiline_arg = Formatter::Model::PyString.new(ma['value'], ma['line'])
         end
       end
-      result = nil
-      if(r = o['result'])
-        result = Formatter::Model::Result.new(status(r), error_message(r), arguments(r), stepdef_location(r))
+
+      step
+    end
+
+    def match(o)
+      if(m = o['match'])
+        Formatter::Model::Match.new(arguments(m), location(m)).replay(@formatter)
       end
-      Formatter::Model::Step.new(comments(o), keyword(o), name(o), line(o), multiline_arg, result)
+    end
+
+    def result(o)
+      if(r = o['result'])
+        Formatter::Model::Result.new(status(r), error_message(r)).replay(@formatter)
+      end
     end
 
     def rows(o)
@@ -90,20 +104,20 @@ module Gherkin
       o['line']
     end
 
+    def arguments(m)
+      m['arguments'].map{|a| Formatter::Argument.new(a['offset'], a['val'])}
+    end
+
+    def location(m)
+      m['location']
+    end
+
     def status(r)
       r['status']
     end
 
     def error_message(r)
       r['error_message']
-    end
-
-    def arguments(r)
-      r['arguments'].map{|a| Formatter::Argument.new(a['offset'], a['val'])}
-    end
-
-    def stepdef_location(r)
-      r['stepdef_location']
     end
   end
 end

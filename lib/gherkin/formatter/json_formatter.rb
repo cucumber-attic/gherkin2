@@ -45,6 +45,14 @@ module Gherkin
         steps << step.to_hash
       end
 
+      def match(match)
+        last_step['match'] = match.to_hash
+      end
+
+      def result(result)
+        last_step['result'] = result.to_hash
+      end
+
       def eof
         @io.write(@gherkin_object.to_json) if @io
       end
@@ -65,6 +73,10 @@ module Gherkin
 
       def steps
         feature_element['steps'] ||= []
+      end
+
+      def last_step
+        steps[-1]
       end
     end
   end
