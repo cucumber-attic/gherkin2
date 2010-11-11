@@ -1,12 +1,14 @@
 require 'json'
 require 'gherkin/formatter/model'
 require 'gherkin/native'
+require 'base64'
 
 module Gherkin
   module Formatter
     class JSONFormatter
       native_impl('gherkin')
       
+      include Base64
       attr_reader :gherkin_object
       
       # Creates a new instance that writes the resulting JSON to +io+.
@@ -53,6 +55,10 @@ module Gherkin
         last_step['result'] = result.to_hash
       end
 
+      def embedding(mime_type, data)
+        embeddings << {'mime_type' => mime_type, 'data' => encode64s(data)}
+      end
+
       def eof
         @io.write(@gherkin_object.to_json) if @io
       end
@@ -77,6 +83,15 @@ module Gherkin
 
       def last_step
         steps[-1]
+      end
+
+      def embeddings
+        last_step['embeddings'] ||= []
+      end
+
+      def encode64s(data)
+        # Strip newlines
+        encode64(data).gsub(/\n/, '')
       end
     end
   end

@@ -119,6 +119,9 @@ public class FilterFormatter implements Formatter {
     public void result(Result result) {
     }
 
+    public void embedding(String mimeType, byte[] data) {
+    }
+
     public void eof() {
         replay();
         formatter.eof();

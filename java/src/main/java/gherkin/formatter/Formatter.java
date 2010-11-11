@@ -32,4 +32,6 @@ public interface Formatter {
     void syntaxError(String state, String event, List<String> legalEvents, String uri, int line);
 
     void steps(List<Step> steps);
+
+    void embedding(String mimeType, byte[] data);
 }

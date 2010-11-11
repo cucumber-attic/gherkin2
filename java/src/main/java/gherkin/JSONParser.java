@@ -3,9 +3,11 @@ package gherkin;
 import gherkin.formatter.Argument;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.model.*;
+import net.iharder.Base64;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +29,7 @@ public class JSONParser implements FeatureParser {
             featureElement(featureElement).replay(formatter);
             for (Object s : getList(featureElement, "steps")) {
                 JSONObject step = (JSONObject) s;
-                step(step).replay(formatter);
+                step(step);
             }
             for (Object s : getList(featureElement, "examples")) {
                 JSONObject eo = (JSONObject) s;
@@ -50,7 +52,7 @@ public class JSONParser implements FeatureParser {
         }
     }
 
-    private Step step(JSONObject o) {
+    private void step(JSONObject o) {
         Step step = new Step(comments(o), keyword(o), name(o), line(o));
         if (o.containsKey("multiline_arg")) {
             Map ma = (Map) o.get("multiline_arg");
@@ -60,16 +62,28 @@ public class JSONParser implements FeatureParser {
                 step.setMultilineArg(new PyString(getString(ma, "value"), getInt(ma, "line")));
             }
         }
+        step.replay(formatter);
+
         if(o.containsKey("match")) {
             Map m = (Map) o.get("match");
-            step.setMatch(new Match(arguments(m), location(m)));
+            new Match(arguments(m), location(m)).replay(formatter);
         }
 
         if(o.containsKey("result")) {
             Map r = (Map) o.get("result");
-            step.setResult(new Result(status(r), errorMessage(r)));
+            new Result(status(r), errorMessage(r)).replay(formatter);
         }
-        return step;
+
+        if(o.containsKey("embeddings")) {
+            List<Map> es = (List<Map>) o.get("embeddings");
+            for (Map e : es) {
+                try {
+                    formatter.embedding(getString(e, "mime_type"), Base64.decode(getString(e, "data")));
+                } catch (IOException ex) {
+                    throw new RuntimeException("Couldn't decode data", ex);
+                }
+            }
+        }
     }
 
     private List<Row> rows(List o) {

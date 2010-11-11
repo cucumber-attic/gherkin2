@@ -5,12 +5,7 @@ import gherkin.formatter.PrettyFormatter;
 import gherkin.parser.Parser;
 import gherkin.util.FixJava;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
 
 public class Main {
     private FileFilter featureFilter = new FileFilter() {

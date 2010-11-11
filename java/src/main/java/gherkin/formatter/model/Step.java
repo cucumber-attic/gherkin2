@@ -1,17 +1,13 @@
 package gherkin.formatter.model;
 
-import gherkin.formatter.Argument;
 import gherkin.formatter.Formatter;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Step extends BasicStatement {
     private Object multiline_arg;
-    private Match match;
-    private Result result;
 
     public Step(List<Comment> comments, String keyword, String name, int line) {
         super(comments, keyword, name, line);
@@ -55,31 +51,11 @@ public class Step extends BasicStatement {
         return multiline_arg;
     }
 
-    public void setMatch(Match match) {
-        this.match = match;
-    }
-
-    public void setResult(Result result) {
-        this.result = result;
-    }
-
-    public Result getResult() {
-        return result;
-    }
-
     public List<Row> getRows() {
         return multiline_arg instanceof List ? (List<Row>) multiline_arg : null;
     }
 
     public PyString getPyString() {
         return multiline_arg instanceof PyString ? (PyString) multiline_arg : null;
-    }
-
-    public List<Argument> getArguments() {
-        return match != null ? match.getArguments() : Collections.<Argument>emptyList();
-    }
-
-    public String getStatus() {
-        return result != null ? result.getStatus() : "undefined";
     }
 }

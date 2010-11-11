@@ -2,10 +2,13 @@ require 'json'
 require 'gherkin/formatter/model'
 require 'gherkin/formatter/argument'
 require 'gherkin/native'
+require 'base64'
 
 module Gherkin
   class JSONParser
     native_impl('gherkin')
+
+    include Base64
 
     def initialize(formatter)
       @formatter = formatter
@@ -24,6 +27,7 @@ module Gherkin
           step(step).replay(@formatter)
           match(step)
           result(step)
+          embeddings(step)
         end
         (feature_element["examples"] || []).each do |eo|
           Formatter::Model::Examples.new(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), rows(eo['rows'])).replay(@formatter)
@@ -69,6 +73,12 @@ module Gherkin
     def result(o)
       if(r = o['result'])
         Formatter::Model::Result.new(status(r), error_message(r)).replay(@formatter)
+      end
+    end
+
+    def embeddings(o)
+      (o['embeddings'] || []).each do |embedding|
+        @formatter.embedding(embedding['mime_type'], decode64(embedding['data']))
       end
     end
 

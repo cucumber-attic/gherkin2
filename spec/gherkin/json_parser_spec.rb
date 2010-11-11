@@ -14,7 +14,6 @@ module Gherkin
       p.parse(json, 'unknown.json', 0)
       expected = JSON.parse(json)
       actual   = JSON.parse(io.string)
-
       actual.should == expected
     end
 
@@ -60,7 +59,7 @@ module Gherkin
       }})
     end
 
-    it "should parse feature with step results" do
+    it "should parse feature with match, result and embedding" do
       check_json(%{{
         "tags": [
           {
@@ -92,7 +91,13 @@ module Gherkin
                 "result": {
                   "status": "failed",
                   "error_message": "You suck"
-                }
+                },
+                "embeddings": [
+                  {
+                    "mime_type": "text/plain",
+                    "data": "Tm8sIEknbSBub3QgaW50ZXJlc3RlZCBpbiBkZXZlbG9waW5nIGEgcG93ZXJmdWwgYnJhaW4uIEFsbCBJJ20gYWZ0ZXIgaXMganVzdCBhIG1lZGlvY3JlIGJyYWluLCBzb21ldGhpbmcgbGlrZSB0aGUgUHJlc2lkZW50IG9mIHRoZSBBbWVyaWNhbiBUZWxlcGhvbmUgYW5kIFRlbGVncmFwaCBDb21wYW55Lg=="
+                  }
+                ]
               }
             ]
           }

@@ -151,14 +151,6 @@ public class PrettyFormatter implements Formatter {
         out.flush();
     }
 
-    private Format getTextFormat(Step step) {
-        return getFormat(step.getStatus());
-    }
-
-    private Format getArgFormat(Step step) {
-        return getFormat(step.getStatus() + "_param");
-    }
-
     private Format getFormat(String key) {
         return formats.get(key);
     }
@@ -222,6 +214,9 @@ public class PrettyFormatter implements Formatter {
             maxStepLength = Math.max(maxStepLength, stepLength);
         }
         stepIndex = -1;
+    }
+
+    public void embedding(String mimeType, byte[] data) {
     }
 
     private void padSpace(int indent) {

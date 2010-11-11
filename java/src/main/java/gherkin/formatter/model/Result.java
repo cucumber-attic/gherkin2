@@ -1,5 +1,6 @@
 package gherkin.formatter.model;
 
+import gherkin.formatter.Formatter;
 import gherkin.formatter.Mappable;
 
 public class Result extends Mappable {
@@ -17,5 +18,9 @@ public class Result extends Mappable {
 
     public String getErrorMessage() {
         return error_message;
+    }
+
+    public void replay(Formatter formatter) {
+        formatter.result(this);
     }
 }
