@@ -23,9 +23,11 @@ the C code.
 
 === Common dependencies
 
+These are the minimal tools you need to install, even if you are building non-Ruby packages.
+
 * Ragel (brew install ragel or apt-get install ragel)
-* Ruby (any version should do) - to run the Rake build script
-* A clone of the cucumber git repo to a "cucumber" sibling folder of your gherkin folder.
+* Ruby (any version should do).
+* A clone of the cucumber git repo to a "cucumber" sibling folder of your gherkin folder. (Only needed to run cucumber tests)
 * RVM (you may not need this if you are only building for a single platform)
 
 With this minimal toolchain installed, install Ruby gems needed by the build:
