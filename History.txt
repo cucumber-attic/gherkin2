@@ -1,9 +1,10 @@
-== In Git
+== 2.3.0 (2010-11-12)
 
 === New Features
 * New aliases for Scenario Outline in Swedish, Norwegian and English. (Peter Krantz, Aslak Hellesøy)
 * Improved build documentation for people who want to contribute. (Aslak Hellesøy)
 * Results can now be outputted/parsed in JSON. (Aslak Hellesøy)
+* JSON output now contains optional "match", "result" and "embeddings" elements underneath each step. (Aslak Hellesøy)
 * Added support for Base64 encoded embeddings in JSON representation. Useful for screenshots etc. (Aslak Hellesøy)
 
 == 2.2.9 (2010-10-15)
