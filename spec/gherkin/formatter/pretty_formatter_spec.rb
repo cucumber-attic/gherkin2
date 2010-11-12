@@ -30,12 +30,12 @@ module Gherkin
 
       before do
         @io = StringIO.new
-        @colf = Gherkin::Formatter::PrettyFormatter.new(@io, false)
+        @f = Gherkin::Formatter::PrettyFormatter.new(@io, false)
       end
 
       it "should print comments when scenario is longer" do
-        @colf.uri("features/foo.feature")
-        @colf.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1))
+        @f.uri("features/foo.feature")
+        @f.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1))
 
         step1 = Model::Step.new([], "Given ", "some stuff", 5)
         match1 = Model::Match.new([], "features/step_definitions/bar.rb:56")
@@ -45,16 +45,16 @@ module Gherkin
         match2 = Model::Match.new([], "features/step_definitions/bar.rb:96")
         result2 = Model::Result.new('passed', nil)
 
-        @colf.steps([step1, step2])
-        @colf.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4))
+        @f.steps([step1, step2])
+        @f.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4))
 
-        @colf.step(step1)
-        @colf.match(match1)
-        @colf.result(result1)
+        @f.step(step1)
+        @f.match(match1)
+        @f.result(result1)
 
-        @colf.step(step2)
-        @colf.match(match2)
-        @colf.result(result2)
+        @f.step(step2)
+        @f.match(match2)
+        @f.result(result2)
 
         assert_io(%{Feature: Hello
   World
@@ -66,17 +66,17 @@ module Gherkin
       end
 
       it "should print comments when step is longer" do
-        @colf.uri("features/foo.feature")
-        @colf.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1))
+        @f.uri("features/foo.feature")
+        @f.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1))
         step = Model::Step.new([], "Given ", "some stuff that is longer", 5)
         match = Model::Match.new([], "features/step_definitions/bar.rb:56")
         result = Model::Result.new('passed', nil)
 
-        @colf.steps([step])
-        @colf.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4))
-        @colf.step(step)
-        @colf.match(match)
-        @colf.result(result)
+        @f.steps([step])
+        @f.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4))
+        @f.step(step)
+        @f.match(match)
+        @f.result(result)
 
         assert_io(%{Feature: Hello
   World
@@ -91,10 +91,10 @@ module Gherkin
         match = Model::Match.new([Gherkin::Formatter::Argument.new(7, '999')], nil)
         result = Model::Result.new('passed', nil)
 
-        @colf.steps([step])
-        @colf.step(step)
-        @colf.match(match)
-        @colf.result(result)
+        @f.steps([step])
+        @f.step(step)
+        @f.match(match)
+        @f.result(result)
 
         if defined?(JRUBY_VERSION)
           # Not terribly readable. The result on Java is different because JANSI uses semicolons when there are several codes.
