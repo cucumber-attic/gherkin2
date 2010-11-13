@@ -25,7 +25,7 @@ public class JansiFormats implements Formats {
         put("outline", new ColorFormat(CYAN, null));
         put("outline_arg", new ColorFormat(CYAN, INTENSITY_BOLD));
         put("skipped", new ColorFormat(CYAN, null));
-        put("skipped_ag", new ColorFormat(CYAN, INTENSITY_BOLD));
+        put("skipped_arg", new ColorFormat(CYAN, INTENSITY_BOLD));
         put("comment", new ColorFormat(GREY, null));
         put("tag", new ColorFormat(CYAN, null));
     }};

@@ -129,12 +129,12 @@ module Gherkin
           formatter.step(self)
         end
 
-        def status
-          result ? result.status : 'undefined'
-        end
-
-        def arguments
-          result ? result.arguments : []
+        def outline_args
+          offset = 0
+          name.scan(/<[^<]*>/).map do |val|
+            offset = name.index(val, offset)
+            Argument.new(offset, val)
+          end
         end
 
         def to_hash

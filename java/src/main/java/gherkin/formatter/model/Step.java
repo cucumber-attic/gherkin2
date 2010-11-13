@@ -1,10 +1,15 @@
 package gherkin.formatter.model;
 
+import gherkin.formatter.Argument;
 import gherkin.formatter.Formatter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Step extends BasicStatement {
     private Object multiline_arg;
@@ -41,6 +46,17 @@ public class Step extends BasicStatement {
     @Override
     public void replay(Formatter formatter) {
         formatter.step(this);
+    }
+
+    public List<Argument> getOutlineArgs() {
+        List<Argument> result = new ArrayList<Argument>();
+        Pattern p = Pattern.compile("<[^<]*>");
+        Matcher matcher = p.matcher(getName());
+        while(matcher.find()) {
+            MatchResult matchResult = matcher.toMatchResult();
+            result.add(new Argument(matchResult.start(), matchResult.group()));
+        }
+        return result;
     }
 
     public void setMultilineArg(Object multilineArg) {
