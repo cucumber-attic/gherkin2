@@ -142,7 +142,7 @@ public class PrettyFormatter implements Formatter {
 
     private void printStep(String status, List<Argument> arguments, String location) {
         Format textFormat = getFormat(status);
-        Format argFormat = getParamFormat(status);
+        Format argFormat = getArgFormat(status);
 
         printComments(step.getComments(), "    ");
         out.print("    ");
@@ -164,8 +164,8 @@ public class PrettyFormatter implements Formatter {
         return formats.get(key);
     }
 
-    private Format getParamFormat(String key) {
-        return formats.get(key + "_param");
+    private Format getArgFormat(String key) {
+        return formats.get(key + "_arg");
     }
 
     public void table(List<Row> rows) {

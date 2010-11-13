@@ -10,28 +10,28 @@ module Gherkin
     #
     # The colours that you can change are:
     #
-    # * <tt>undefined</tt>       - defaults to <tt>yellow</tt>
-    # * <tt>pending</tt>         - defaults to <tt>yellow</tt>
-    # * <tt>pending_param</tt>   - defaults to <tt>yellow,bold</tt>
-    # * <tt>executing</tt>       - defaults to <tt>magenta</tt>
-    # * <tt>executing_param</tt> - defaults to <tt>magenta,bold</tt>
-    # * <tt>failed</tt>          - defaults to <tt>red</tt>
-    # * <tt>failed_param</tt>    - defaults to <tt>red,bold</tt>
-    # * <tt>passed</tt>          - defaults to <tt>green</tt>
-    # * <tt>passed_param</tt>    - defaults to <tt>green,bold</tt>
-    # * <tt>outline</tt>         - defaults to <tt>cyan</tt>
-    # * <tt>outline_param</tt>   - defaults to <tt>cyan,bold</tt>
-    # * <tt>skipped</tt>         - defaults to <tt>cyan</tt>
-    # * <tt>skipped_param</tt>   - defaults to <tt>cyan,bold</tt>
-    # * <tt>comment</tt>         - defaults to <tt>grey</tt>
-    # * <tt>tag</tt>             - defaults to <tt>cyan</tt>
+    # <tt>undefined</tt>::     defaults to <tt>yellow</tt>
+    # <tt>pending</tt>::       defaults to <tt>yellow</tt>
+    # <tt>pending_arg</tt>::   defaults to <tt>yellow,bold</tt>
+    # <tt>executing</tt>::     defaults to <tt>magenta</tt>
+    # <tt>executing_arg</tt>:: defaults to <tt>magenta,bold</tt>
+    # <tt>failed</tt>::        defaults to <tt>red</tt>
+    # <tt>failed_arg</tt>::    defaults to <tt>red,bold</tt>
+    # <tt>passed</tt>::        defaults to <tt>green</tt>
+    # <tt>passed_arg</tt>::    defaults to <tt>green,bold</tt>
+    # <tt>outline</tt>::       defaults to <tt>cyan</tt>
+    # <tt>outline_arg</tt>::   defaults to <tt>cyan,bold</tt>
+    # <tt>skipped</tt>::       defaults to <tt>cyan</tt>
+    # <tt>skipped_arg</tt>::   defaults to <tt>cyan,bold</tt>
+    # <tt>comment</tt>::       defaults to <tt>grey</tt>
+    # <tt>tag</tt>::           defaults to <tt>cyan</tt>
     #
     # For instance, if your shell has a black background and a green font (like the
     # "Homebrew" settings for OS X' Terminal.app), you may want to override passed
     # steps to be white instead of green. Examples:
     #
     #   export GHERKIN_COLORS="passed=white"
-    #   export GHERKIN_COLORS="passed=white,bold:passed_param=white,bold,underline"
+    #   export GHERKIN_COLORS="passed=white,bold:passed_arg=white,bold,underline"
     #
     # (If you're on Windows, use SET instead of export).
     # To see what colours and effects are available, just run this in your shell:
@@ -43,7 +43,7 @@ module Gherkin
       include Term::ANSIColor
 
       ALIASES = Hash.new do |h,k|
-        if k.to_s =~ /(.*)_param/
+        if k.to_s =~ /(.*)_arg/
           h[$1] + ',bold'
         end
       end.merge({
@@ -66,13 +66,13 @@ module Gherkin
       end
 
       ALIASES.each do |method, color|
-        unless method =~ /.*_param/
+        unless method =~ /.*_arg$/
           code = <<-EOF
           def #{method}(string=nil, &proc)
             #{ALIASES[method].split(",").join("(") + "(string, &proc" + ")" * ALIASES[method].split(",").length}
           end
-          def #{method}_param(string=nil, &proc)
-            #{ALIASES[method+'_param'].split(",").join("(") + "(string, &proc" + ")" * ALIASES[method+'_param'].split(",").length}
+          def #{method}_arg(string=nil, &proc)
+            #{ALIASES[method+'_arg'].split(",").join("(") + "(string, &proc" + ")" * ALIASES[method+'_arg'].split(",").length}
           end
           EOF
           eval(code)

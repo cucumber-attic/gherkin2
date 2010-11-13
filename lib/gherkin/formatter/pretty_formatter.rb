@@ -77,7 +77,7 @@ module Gherkin
 
       def print_step(status, arguments, location)
         text_format = format(status)
-        arg_format = param_format(status)
+        arg_format = arg_format(status)
         
         print_comments(@step.comments, '    ')
         @io.write('    ')
@@ -112,8 +112,8 @@ module Gherkin
         end
       end
 
-      def param_format(key)
-        format("#{key}_param")
+      def arg_format(key)
+        format("#{key}_arg")
       end
 
       def format(key)

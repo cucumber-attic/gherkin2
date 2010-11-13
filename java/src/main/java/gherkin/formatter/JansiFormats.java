@@ -15,17 +15,17 @@ public class JansiFormats implements Formats {
     private static final Map<String, Format> formats = new HashMap<String, Format>() {{
         put("undefined", new ColorFormat(YELLOW, null));
         put("pending", new ColorFormat(YELLOW, null));
-        put("pending_param", new ColorFormat(YELLOW, INTENSITY_BOLD));
+        put("pending_arg", new ColorFormat(YELLOW, INTENSITY_BOLD));
         put("executing", new ColorFormat(MAGENTA, null));
-        put("executing_param", new ColorFormat(MAGENTA, INTENSITY_BOLD));
+        put("executing_arg", new ColorFormat(MAGENTA, INTENSITY_BOLD));
         put("failed", new ColorFormat(RED, null));
-        put("failed_param", new ColorFormat(RED, INTENSITY_BOLD));
+        put("failed_arg", new ColorFormat(RED, INTENSITY_BOLD));
         put("passed", new ColorFormat(GREEN, null));
-        put("passed_param", new ColorFormat(GREEN, INTENSITY_BOLD));
+        put("passed_arg", new ColorFormat(GREEN, INTENSITY_BOLD));
         put("outline", new ColorFormat(CYAN, null));
-        put("outline_param", new ColorFormat(CYAN, INTENSITY_BOLD));
+        put("outline_arg", new ColorFormat(CYAN, INTENSITY_BOLD));
         put("skipped", new ColorFormat(CYAN, null));
-        put("skipped_param", new ColorFormat(CYAN, INTENSITY_BOLD));
+        put("skipped_ag", new ColorFormat(CYAN, INTENSITY_BOLD));
         put("comment", new ColorFormat(GREY, null));
         put("tag", new ColorFormat(CYAN, null));
     }};
