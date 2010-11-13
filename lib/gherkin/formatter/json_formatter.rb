@@ -27,6 +27,9 @@ module Gherkin
         @gherkin_object = feature.to_hash
       end
 
+      def steps(steps)
+      end
+
       def background(background)
         feature_elements << background.to_hash
       end
@@ -44,7 +47,7 @@ module Gherkin
       end
 
       def step(step)
-        steps << step.to_hash
+        current_steps << step.to_hash
       end
 
       def match(match)
@@ -77,12 +80,12 @@ module Gherkin
         feature_element['examples'] ||= []
       end
 
-      def steps
+      def current_steps
         feature_element['steps'] ||= []
       end
 
       def last_step
-        steps[-1]
+        current_steps[-1]
       end
 
       def embeddings
