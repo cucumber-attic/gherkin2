@@ -2,7 +2,6 @@ package gherkin.formatter;
 
 import org.fusesource.jansi.Ansi;
 
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +39,7 @@ public class JansiFormats implements Formats {
             this.attribute = attribute;
         }
 
-        public void writeText(PrintWriter out, String text) {
+        public String text(String text) {
             Ansi a = ansi();
             if (color instanceof Ansi.Color) {
                 a.fg((Ansi.Color) color);
@@ -50,11 +49,15 @@ public class JansiFormats implements Formats {
             if (attribute != null) {
                 a.a(attribute);
             }
-            out.write(a.a(text).reset().toString());
+            return a.a(text).reset().toString();
         }
     }
 
     public Format get(String key) {
         return formats.get(key);
+    }
+
+    public String up(int n) {
+        return ansi().cursorUp(n).toString();
     }
 }

@@ -61,23 +61,29 @@ module Gherkin
 
       def step(step)
         @step = step
+        @step_index += 1 if @step_index
         match(Model::Match.new([], nil)) if @monochrome
       end
 
       def match(match)
-        print_step(format('executing'), format('executing_param'), match.arguments, match.location)
+        @match = match
+        print_step('executing', @match.arguments, @match.location)
       end
 
       def result(result)
-        # TODO: Print error message
+        @io.write("\033[1A")
+        print_step(result.status, @match.arguments, @match.location)
       end
 
-      def print_step(text_format, arg_format, arguments, location)
+      def print_step(status, arguments, location)
+        text_format = format(status)
+        arg_format = param_format(status)
+        
         print_comments(@step.comments, '    ')
         @io.write('    ')
-        text_format.write_text(@io, @step.keyword)
+        @io.write(text_format.text(@step.keyword))
         @step_printer.write_step(@io, text_format, arg_format, @step.name, arguments)
-        print_indented_stepdef_location!(location) if location
+        print_indented_step_location(location) if location
 
         @io.puts
         case @step.multiline_arg
@@ -89,8 +95,8 @@ module Gherkin
       end
 
       class MonochromeFormat
-        def write_text(io, text)
-          io.write(text)
+        def text(text)
+          text
         end
       end
 
@@ -101,17 +107,13 @@ module Gherkin
           @status = status
         end
 
-        def write_text(io, text)
-          io.write(self.__send__(@status, text))
+        def text(text)
+          self.__send__(@status, text)
         end
       end
 
-      def text_format(step)
-        format(step.status)
-      end
-
-      def arg_format(step)
-        format(step.status + '_param')
+      def param_format(key)
+        format("#{key}_param")
       end
 
       def format(key)
@@ -216,8 +218,8 @@ module Gherkin
         ' ' * indent + ' ' + comments("# #{@uri}:#{line}")
       end
 
-      def print_indented_stepdef_location!(location)
-        indent = @max_step_length - @step_lengths[@step_index+=1]
+      def print_indented_step_location(location)
+        indent = @max_step_length - @step_lengths[@step_index]
         return if location.nil?
         @io.write(' ' * indent + ' ' + comments("# #{location}"))
       end

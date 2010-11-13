@@ -61,7 +61,9 @@ module Gherkin
 
   Scenario: The scenario #{grey('# features/foo.feature:4')}
     #{magenta('Given ')}#{magenta('some stuff')}     #{grey('# features/step_definitions/bar.rb:56')}
+\033[1A    #{green('Given ')}#{green('some stuff')}     #{grey('# features/step_definitions/bar.rb:56')}
     #{magenta('When ')}#{magenta('foo')}             #{grey('# features/step_definitions/bar.rb:96')}
+\033[1A    #{green('When ')}#{green('foo')}             #{grey('# features/step_definitions/bar.rb:96')}
 })
       end
 
@@ -83,6 +85,7 @@ module Gherkin
 
   Scenario: The scenario            #{grey('# features/foo.feature:4')}
     #{magenta('Given ')}#{magenta('some stuff that is longer')} #{grey('# features/step_definitions/bar.rb:56')}
+\033[1A    #{green('Given ')}#{green('some stuff that is longer')} #{grey('# features/step_definitions/bar.rb:56')}
 })
       end
 
@@ -98,9 +101,15 @@ module Gherkin
 
         if defined?(JRUBY_VERSION)
           # Not terribly readable. The result on Java is different because JANSI uses semicolons when there are several codes.
-          assert_io("    \e[35mGiven \e[0m\e[35mI have \e[0m\e[35;1m999\e[0m\e[35m cukes in my belly\e[0m\n")
+          assert_io(
+            "    \e[35mGiven \e[0m\e[35mI have \e[0m\e[35;1m999\e[0m\e[35m cukes in my belly\e[0m\n" +
+            "\033[1A    \e[32mGiven \e[0m\e[32mI have \e[0m\e[32;1m999\e[0m\e[32m cukes in my belly\e[0m\n"
+          )
         else
-          assert_io("    #{magenta('Given ')}#{magenta('I have ')}#{magenta(bold('999'))}#{magenta(' cukes in my belly')}\n")
+          assert_io(
+            "    #{magenta('Given ')}#{magenta('I have ')}#{magenta(bold('999'))}#{magenta(' cukes in my belly')}\n" +
+            "\033[1A    #{green('Given ')}#{green('I have ')}#{green(bold('999'))}#{green(' cukes in my belly')}\n"
+          )
         end
       end
 

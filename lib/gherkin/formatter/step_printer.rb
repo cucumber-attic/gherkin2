@@ -6,11 +6,11 @@ module Gherkin
         
         text_start = 0
         arguments.each do |arg|
-          text_format.write_text(io, unpacked_step_name[text_start..arg.offset-1].pack("U*")) unless arg.offset == 0
-          arg_format.write_text(io, arg.val)
+          io.write(text_format.text(unpacked_step_name[text_start..arg.offset-1].pack("U*"))) unless arg.offset == 0
+          io.write(arg_format.text(arg.val))
           text_start = arg.offset + arg.val.unpack("U*").length
         end
-        text_format.write_text(io, unpacked_step_name[text_start..-1].pack("U*")) unless text_start == unpacked_step_name.length
+        io.write(text_format.text(unpacked_step_name[text_start..-1].pack("U*"))) unless text_start == unpacked_step_name.length
       end
     end
   end

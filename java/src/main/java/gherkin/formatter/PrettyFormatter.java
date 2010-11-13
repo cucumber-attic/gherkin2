@@ -33,8 +33,9 @@ public class PrettyFormatter implements Formatter {
     };
     private final StepPrinter stepPrinter = new StepPrinter();
     private Formats formats;
-    private Step step;
     private boolean monochrome;
+    private Step step;
+    private Match match;
 
     public PrettyFormatter(Writer out, boolean monochrome) {
         this.out = new PrintWriter(out);
@@ -119,25 +120,33 @@ public class PrettyFormatter implements Formatter {
 
     public void step(Step step) {
         this.step = step;
+        stepIndex ++;
         if(monochrome) {
             match(new Match(Collections.<Argument>emptyList(), null));
         }
     }
 
     public void match(Match match) {
-        printStep(getFormat("executing"), getFormat("executing_param"), match.getArguments(), match.getLocation());
+        this.match = match;
+        printStep("executing", match.getArguments(), match.getLocation());
     }
 
     public void result(Result result) {
+        out.print(formats.up(1));
+        printStep(result.getStatus(), match.getArguments(), match.getLocation());
+
         if (result.getErrorMessage() != null) {
             out.println(indent(result.getErrorMessage(), "      "));
         }
     }
 
-    private void printStep(Format textFormat, Format argFormat, List<Argument> arguments, String location) {
+    private void printStep(String status, List<Argument> arguments, String location) {
+        Format textFormat = getFormat(status);
+        Format argFormat = getParamFormat(status);
+
         printComments(step.getComments(), "    ");
         out.print("    ");
-        textFormat.writeText(out, step.getKeyword());
+        out.print(textFormat.text(step.getKeyword()));
         stepPrinter.writeStep(out, textFormat, argFormat, step.getName(), arguments);
         printIndentedStepLocation(location);
 
@@ -153,6 +162,10 @@ public class PrettyFormatter implements Formatter {
 
     private Format getFormat(String key) {
         return formats.get(key);
+    }
+
+    private Format getParamFormat(String key) {
+        return formats.get(key + "_param");
     }
 
     public void table(List<Row> rows) {
@@ -248,16 +261,16 @@ public class PrettyFormatter implements Formatter {
 
         padSpace(indent);
         out.append(" ");
-        getFormat("comment").writeText(out, "# " + uri + ":" + line);
+        out.print(getFormat("comment").text("# " + uri + ":" + line));
     }
 
     private void printIndentedStepLocation(String location) {
         if (location == null || "".equals(location)) return;
-        int indent = maxStepLength - stepLengths[stepIndex += 1];
+        int indent = maxStepLength - stepLengths[stepIndex];
 
         padSpace(indent);
         out.append(" ");
-        getFormat("comment").writeText(out, "# " + location);
+        out.print(getFormat("comment").text("# " + location));
     }
 
     private void printDescription(String description, String indentation, boolean newline) {
