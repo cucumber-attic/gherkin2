@@ -22,6 +22,9 @@ import static gherkin.util.FixJava.map;
  */
 public class PrettyFormatter implements Formatter {
     private final PrintWriter out;
+    private final boolean monochrome;
+    private final boolean executing;
+
     private int maxStepLength = -1;
     private int[] stepLengths;
     private int stepIndex;
@@ -33,18 +36,18 @@ public class PrettyFormatter implements Formatter {
     };
     private final StepPrinter stepPrinter = new StepPrinter();
     private Formats formats;
-    private boolean monochrome;
     private Step step;
     private Match match;
 
-    public PrettyFormatter(Writer out, boolean monochrome) {
+    public PrettyFormatter(Writer out, boolean monochrome, boolean executing) {
+        this.executing = executing;
         this.out = new PrintWriter(out);
         this.monochrome = monochrome;
         setFormats(monochrome);
     }
 
-    public PrettyFormatter(OutputStream out, boolean monochrome) {
-        this(new OutputStreamWriter(out), monochrome);
+    public PrettyFormatter(OutputStream out, boolean monochrome, boolean executing) {
+        this(new OutputStreamWriter(out), monochrome, executing);
     }
 
     private void setFormats(boolean monochrome) {
@@ -121,18 +124,22 @@ public class PrettyFormatter implements Formatter {
     public void step(Step step) {
         this.step = step;
         stepIndex ++;
-        if(monochrome) {
-            match(new Match(Collections.<Argument>emptyList(), null));
+        if(!executing) {
+            printStep("skipped", Collections.<Argument>emptyList(), null);
         }
     }
 
     public void match(Match match) {
         this.match = match;
-        printStep("executing", match.getArguments(), match.getLocation());
+        if(!monochrome) {
+            printStep("executing", match.getArguments(), match.getLocation());
+        }
     }
 
     public void result(Result result) {
-        out.print(formats.up(1));
+        if(!monochrome) {
+            out.print(formats.up(1));
+        }
         printStep(result.getStatus(), match.getArguments(), match.getLocation());
 
         if (result.getErrorMessage() != null) {

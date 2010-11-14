@@ -20,7 +20,7 @@ module Gherkin
       def assert_pretty(input, expected_output=input)
         [true, false].each do |force_ruby|
           io = StringIO.new
-          pf = Gherkin::Formatter::PrettyFormatter.new(io, true)
+          pf = Gherkin::Formatter::PrettyFormatter.new(io, true, false)
           parser = Gherkin::Parser::Parser.new(pf, true, "root", force_ruby)
           parser.parse(input, "test.feature", 0)
           output = io.string
@@ -30,7 +30,7 @@ module Gherkin
 
       before do
         @io = StringIO.new
-        @f = Gherkin::Formatter::PrettyFormatter.new(@io, false)
+        @f = Gherkin::Formatter::PrettyFormatter.new(@io, false, true)
       end
 
       it "should print comments when scenario is longer" do
@@ -167,7 +167,7 @@ Feature: Feature Description
 
       it "should escape backslashes and pipes" do
         io = StringIO.new
-        l = Gherkin::Formatter::PrettyFormatter.new(io, true)
+        l = Gherkin::Formatter::PrettyFormatter.new(io, true, false)
         l.__send__(:table, [Gherkin::Formatter::Model::Row.new([], ['|', '\\'], nil)])
         io.string.should == '      | \\| | \\\\ |' + "\n"
       end

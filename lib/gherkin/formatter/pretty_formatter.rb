@@ -14,10 +14,11 @@ module Gherkin
       include Colors
       include Escaping
 
-      def initialize(io, monochrome=false)
+      def initialize(io, monochrome, executing)
         @io = io
         @step_printer = StepPrinter.new
         @monochrome = monochrome
+        @executing = executing
       end
 
       def uri(uri)
@@ -62,7 +63,12 @@ module Gherkin
       def step(step)
         @step = step
         @step_index += 1 if @step_index
-        match(Model::Match.new([], nil)) if @monochrome
+        # TODO: It feels a little funny to have this logic here in the formatter.
+        # We may have to duplicate it across formatters. So maybe we should move
+        # this out to the callers instead.
+        #
+        # Maybe it's a Filter!! ExecuteFilter and PrettyFilter
+        match(Model::Match.new([], nil)) unless @executing
       end
 
       def match(match)

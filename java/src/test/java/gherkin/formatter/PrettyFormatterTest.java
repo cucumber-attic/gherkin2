@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class PrettyFormatterTest {
     @Test
     public void testShouldPrintNiceColors() throws UnsupportedEncodingException {
-        PrettyFormatter f = new PrettyFormatter(System.out, false);
+        PrettyFormatter f = new PrettyFormatter(System.out, false, false);
         Step step = new Step(new ArrayList<Comment>(), "Given ", "I have 6 cukes", 1);
         f.steps(Arrays.asList(step));
         f.step(step);

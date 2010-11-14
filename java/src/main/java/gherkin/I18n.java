@@ -116,7 +116,7 @@ public class I18n {
 
     public String getKeywordTable() {
         StringWriter writer = new StringWriter();
-        PrettyFormatter pf = new PrettyFormatter(writer, false);
+        PrettyFormatter pf = new PrettyFormatter(writer, false, false);
         List<Row> table = new ArrayList<Row>();
         for (String key : KEYWORD_KEYS) {
             List<String> cells = Arrays.asList(key, join(map(keywords(key), QUOTE_MAPPER), ", "));

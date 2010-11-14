@@ -18,7 +18,7 @@ module Gherkin
 
       def verify_filter(filters, *line_ranges)
         io = StringIO.new
-        pretty_formatter = Gherkin::Formatter::PrettyFormatter.new(io, true)
+        pretty_formatter = Gherkin::Formatter::PrettyFormatter.new(io, true, false)
         filter_formatter = Gherkin::Formatter::FilterFormatter.new(pretty_formatter, filters)
         parser = Gherkin::Parser::Parser.new(filter_formatter)
 

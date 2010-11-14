@@ -19,7 +19,7 @@ public class Main {
 
     public Main(final Writer out) {
         this.out = out;
-        final Formatter formatter = new PrettyFormatter(out, false);
+        final Formatter formatter = new PrettyFormatter(out, false, true);
         parser = new Parser(formatter);
     }
 

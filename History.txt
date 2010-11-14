@@ -1,3 +1,7 @@
+== 2.3.1 (Soon)
+
+This release has no new or changed features, just some internal refactorings.
+
 == 2.3.0 (2010-11-12)
 
 === New Features
