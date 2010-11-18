@@ -94,7 +94,7 @@ module Gherkin
 
       def encode64s(data)
         # Strip newlines
-        encode64(data).gsub(/\n/, '')
+        Base64.encode64(data).gsub(/\n/, '')
       end
     end
   end

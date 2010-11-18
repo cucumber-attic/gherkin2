@@ -78,7 +78,7 @@ module Gherkin
 
     def embeddings(o)
       (o['embeddings'] || []).each do |embedding|
-        @formatter.embedding(embedding['mime_type'], decode64(embedding['data']))
+        @formatter.embedding(embedding['mime_type'], Base64::decode64(embedding['data']))
       end
     end
 
