@@ -212,7 +212,7 @@ public class PrettyFormatter implements Formatter {
     }
 
     private String escapeCell(String cell) {
-        return cell.replaceAll("\\|", "\\\\|").replaceAll("\\\\(?!\\|)", "\\\\\\\\");
+        return cell.replaceAll("\\\\(?!\\|)", "\\\\\\\\").replaceAll("\\n", "\\\\n").replaceAll("\\|", "\\\\|");
     }
 
     public void pyString(PyString pyString) {

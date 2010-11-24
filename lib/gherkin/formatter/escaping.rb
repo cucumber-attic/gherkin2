@@ -8,7 +8,7 @@ module Gherkin
       #
       # This is used in the pretty formatter.
       def escape_cell(s)
-        s.gsub(/\|/, "\\|").gsub(/\\(?!\|)/, "\\\\\\\\")
+        s.gsub(/\\(?!\|)/, "\\\\\\\\").gsub(/\n/, "\\n").gsub(/\|/, "\\|")
       end
     end
   end
