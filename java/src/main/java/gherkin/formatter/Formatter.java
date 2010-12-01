@@ -10,28 +10,12 @@ import java.util.List;
  */
 public interface Formatter {
     void uri(String uri);
-
     void feature(Feature feature);
-
     void background(Background background);
-
-    void scenario(Scenario statement);
-
-    void scenarioOutline(ScenarioOutline statement);
-
+    void scenario(Scenario scenario);
+    void scenarioOutline(ScenarioOutline scenarioOutline);
     void examples(Examples examples);
-
     void step(Step step);
-
-    void match(Match match);
-
-    void result(Result result);
-
     void eof();
-
     void syntaxError(String state, String event, List<String> legalEvents, String uri, int line);
-
-    void steps(List<Step> steps);
-
-    void embedding(String mimeType, byte[] data);
 }

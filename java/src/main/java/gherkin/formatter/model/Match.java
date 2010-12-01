@@ -1,14 +1,16 @@
 package gherkin.formatter.model;
 
 import gherkin.formatter.Argument;
-import gherkin.formatter.Formatter;
 import gherkin.formatter.Mappable;
+import gherkin.formatter.Reporter;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Match extends Mappable {
     private final List<Argument> arguments;
     private final String location;
+    public static final Match NONE = new Match(Collections.<Argument>emptyList(), null);
 
     public Match(List<Argument> arguments, String location) {
         this.arguments = arguments;
@@ -23,7 +25,7 @@ public class Match extends Mappable {
         return location;
     }
 
-    public void replay(Formatter formatter) {
-        formatter.match(this);
+    public void replay(Reporter reporter) {
+        reporter.match(this);
     }
 }

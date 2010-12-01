@@ -56,17 +56,13 @@ module Gherkin
         require 'stringio'
         require 'gherkin/formatter/pretty_formatter'
         require 'gherkin/formatter/model'
-        io = defined?(JRUBY_VERSION) ? Java.java.io.StringWriter.new : StringIO.new
+        io = StringIO.new
         pf = Gherkin::Formatter::PrettyFormatter.new(io, false, false)
         table = all.map do |i18n|
           Formatter::Model::Row.new([], [i18n.iso_code, i18n.keywords('name')[0], i18n.keywords('native')[0]], nil)
         end
         pf.table(table)
-        if defined?(JRUBY_VERSION)
-          io.getBuffer.toString
-        else
-          io.string
-        end
+        io.string
       end
 
       def unicode_escape(word, prefix="\\u")
@@ -163,8 +159,7 @@ module Gherkin
       end
       
       pf.table(gherkin_keyword_table + code_keyword_table)
-      io.rewind
-      io.read
+      io.string
     end
 
     private

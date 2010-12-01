@@ -59,6 +59,10 @@ public class Step extends BasicStatement {
         return result;
     }
 
+    public Match getOutlineMatch(String location) {
+        return new Match(getOutlineArgs(), location);
+    }
+
     public void setMultilineArg(Object multilineArg) {
         this.multiline_arg = multilineArg;
     }

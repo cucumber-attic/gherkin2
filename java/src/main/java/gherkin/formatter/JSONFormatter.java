@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JSONFormatter implements Formatter {
+public class JSONFormatter implements Reporter {
     private final Writer out;
     private Map<Object, Object> featureHash;
 
@@ -65,6 +65,14 @@ public class JSONFormatter implements Formatter {
         getEmbeddings().add(embedding);
     }
 
+    public void table(List<Row> rows) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void row(List<String> cellFormats) {
+        throw new UnsupportedOperationException();
+    }
+
     public void eof() {
         try {
             out.write(JSONValue.toJSONString(featureHash));
@@ -72,10 +80,6 @@ public class JSONFormatter implements Formatter {
         } catch (IOException e) {
             throw new RuntimeException("Failed to write JSON to " + out, e);
         }
-    }
-
-    public void table(List<Row> rows) {
-        throw new UnsupportedOperationException();
     }
 
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {

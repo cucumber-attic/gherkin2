@@ -1,7 +1,7 @@
 package gherkin;
 
 import gherkin.formatter.Argument;
-import gherkin.formatter.Formatter;
+import gherkin.formatter.Reporter;
 import gherkin.formatter.model.*;
 import net.iharder.Base64;
 import org.json.simple.JSONObject;
@@ -14,29 +14,29 @@ import java.util.List;
 import java.util.Map;
 
 public class JSONParser implements FeatureParser {
-    private final Formatter formatter;
+    private final Reporter reporter;
 
-    public JSONParser(Formatter formatter) {
-        this.formatter = formatter;
+    public JSONParser(Reporter reporter) {
+        this.reporter = reporter;
     }
 
     public void parse(String src, String uri, int offset) {
-        formatter.uri(uri);
+        reporter.uri(uri);
         JSONObject o = (JSONObject) JSONValue.parse(src);
-        new Feature(comments(o), tags(o), keyword(o), name(o), description(o), line(o)).replay(formatter);
+        new Feature(comments(o), tags(o), keyword(o), name(o), description(o), line(o)).replay(reporter);
         for (Object e : getList(o, "elements")) {
             JSONObject featureElement = (JSONObject) e;
-            featureElement(featureElement).replay(formatter);
+            featureElement(featureElement).replay(reporter);
             for (Object s : getList(featureElement, "steps")) {
                 JSONObject step = (JSONObject) s;
                 step(step);
             }
             for (Object s : getList(featureElement, "examples")) {
                 JSONObject eo = (JSONObject) s;
-                new Examples(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), rows(getList(eo, "rows"))).replay(formatter);
+                new Examples(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), rows(getList(eo, "rows"))).replay(reporter);
             }
         }
-        formatter.eof();
+        reporter.eof();
     }
 
     private BasicStatement featureElement(JSONObject o) {
@@ -62,23 +62,23 @@ public class JSONParser implements FeatureParser {
                 step.setMultilineArg(new PyString(getString(ma, "value"), getInt(ma, "line")));
             }
         }
-        step.replay(formatter);
+        step.replay(reporter);
 
         if(o.containsKey("match")) {
             Map m = (Map) o.get("match");
-            new Match(arguments(m), location(m)).replay(formatter);
+            new Match(arguments(m), location(m)).replay(reporter);
         }
 
         if(o.containsKey("result")) {
             Map r = (Map) o.get("result");
-            new Result(status(r), errorMessage(r)).replay(formatter);
+            new Result(status(r), errorMessage(r)).replay(reporter);
         }
 
         if(o.containsKey("embeddings")) {
             List<Map> es = (List<Map>) o.get("embeddings");
             for (Map e : es) {
                 try {
-                    formatter.embedding(getString(e, "mime_type"), Base64.decode(getString(e, "data")));
+                    reporter.embedding(getString(e, "mime_type"), Base64.decode(getString(e, "data")));
                 } catch (IOException ex) {
                     throw new RuntimeException("Couldn't decode data", ex);
                 }

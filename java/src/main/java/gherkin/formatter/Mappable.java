@@ -1,6 +1,7 @@
 package gherkin.formatter;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class Mappable {
@@ -41,7 +42,11 @@ public class Mappable {
         List<Field> fields = new ArrayList<Field>();
         Class c = getClass();
         while (c != null) {
-            fields.addAll(Arrays.asList(c.getDeclaredFields()));
+            for (Field field : c.getDeclaredFields()) {
+                if ((field.getModifiers() & Modifier.STATIC) == 0) {
+                    fields.add(field);
+                }
+            }
             c = c.getSuperclass();
         }
         return fields;

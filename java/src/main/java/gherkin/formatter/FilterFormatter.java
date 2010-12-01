@@ -112,14 +112,7 @@ public class FilterFormatter implements Formatter {
         featureElementRange = new Range(featureElementRange.getFirst(), step.getLineRange().getLast());
     }
 
-    public void match(Match match) {
-
-    }
-
-    public void result(Result result) {
-    }
-
-    public void embedding(String mimeType, byte[] data) {
+    public void table(List<Row> table) {
     }
 
     public void eof() {
@@ -129,9 +122,6 @@ public class FilterFormatter implements Formatter {
 
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
         throw new UnsupportedOperationException();
-    }
-
-    public void steps(List<Step> steps) {
     }
 
     private void replay() {

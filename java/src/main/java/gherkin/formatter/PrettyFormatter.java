@@ -7,7 +7,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.Collections;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -20,7 +21,8 @@ import static gherkin.util.FixJava.map;
  * which means it can be used to print execution results - highlighting arguments,
  * printing source information and exception information.
  */
-public class PrettyFormatter implements Formatter {
+public class PrettyFormatter implements Reporter {
+    private final StepPrinter stepPrinter = new StepPrinter();
     private final PrintWriter out;
     private final boolean monochrome;
     private final boolean executing;
@@ -34,20 +36,23 @@ public class PrettyFormatter implements Formatter {
             return ((Tag) tag).getName();
         }
     };
-    private final StepPrinter stepPrinter = new StepPrinter();
     private Formats formats;
     private Step step;
     private Match match;
+    private int[][] cellLengths;
+    private int[] maxLengths;
+    private int rowIndex;
+    private List<Row> rows;
 
     public PrettyFormatter(Writer out, boolean monochrome, boolean executing) {
-        this.executing = executing;
         this.out = new PrintWriter(out);
         this.monochrome = monochrome;
+        this.executing = executing;
         setFormats(monochrome);
     }
 
     public PrettyFormatter(OutputStream out, boolean monochrome, boolean executing) {
-        this(new OutputStreamWriter(out), monochrome, executing);
+        this(new OutputStreamWriter(out, Charset.forName("UTF-8")), monochrome, executing);
     }
 
     private void setFormats(boolean monochrome) {
@@ -86,12 +91,12 @@ public class PrettyFormatter implements Formatter {
         printDescription(background.getDescription(), "    ", true);
     }
 
-    public void scenario(Scenario statement) {
-        printTagStatement(statement);
+    public void scenario(Scenario scenario) {
+        printTagStatement(scenario);
     }
 
-    public void scenarioOutline(ScenarioOutline statement) {
-        printTagStatement(statement);
+    public void scenarioOutline(ScenarioOutline scenarioOutline) {
+        printTagStatement(scenarioOutline);
     }
 
     private void printTagStatement(TagStatement statement) {
@@ -125,7 +130,8 @@ public class PrettyFormatter implements Formatter {
         this.step = step;
         stepIndex ++;
         if(!executing) {
-            printStep("skipped", Collections.<Argument>emptyList(), null);
+            match(Match.NONE);
+            result(Result.SKIPPED);
         }
     }
 
@@ -176,34 +182,58 @@ public class PrettyFormatter implements Formatter {
     }
 
     public void table(List<Row> rows) {
-        int columnCount = rows.get(0).getCells().size();
-        int[][] cellLengths = new int[rows.size()][columnCount];
-        int[] maxLengths = new int[columnCount];
-        for (int i = 0; i < rows.size(); i++) {
-            for (int j = 0; j < columnCount; j++) {
-                int length = escapeCell(rows.get(i).getCells().get(j)).length();
-                cellLengths[i][j] = length;
-                maxLengths[j] = Math.max(maxLengths[j], length);
+        prepareTable(rows);
+        if(!executing) {
+            for (Row row : rows) {
+                row(skippedFormats(row.getCells().size()));
             }
         }
+    }
 
-        for (int i = 0; i < rows.size(); i++) {
-            for (Comment comment : rows.get(i).getComments()) {
-                out.write("      ");
-                out.println(comment.getValue());
-            }
-            out.write("      | ");
-            for (int j = 0; j < columnCount; j++) {
-                out.write(escapeCell(rows.get(i).getCells().get(j)));
-                padSpace(maxLengths[j] - cellLengths[i][j]);
-                if (j < columnCount - 1) {
-                    out.write(" | ");
-                } else {
-                    out.write(" |");
-                }
-            }
-            out.println();
+    private List<String> skippedFormats(int n) {
+        List<String> result = new ArrayList<String>();
+        for (int i = 0; i < n; i++) {
+            result.add("skipped");
         }
+        return result;
+    }
+
+    private void prepareTable(List<Row> rows) {
+        this.rows = rows;
+        int columnCount = rows.get(0).getCells().size();
+        cellLengths = new int[rows.size()][columnCount];
+        maxLengths = new int[columnCount];
+        for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
+            for (int colIndex = 0; colIndex < columnCount; colIndex++) {
+                int length = escapeCell(rows.get(rowIndex).getCells().get(colIndex)).length();
+                cellLengths[rowIndex][colIndex] = length;
+                maxLengths[colIndex] = Math.max(maxLengths[colIndex], length);
+            }
+        }
+        rowIndex = 0;
+    }
+
+    public void row(List<String> formatNames) {
+        Row row = rows.get(rowIndex);
+        for (Comment comment : row.getComments()) {
+            out.write("      ");
+            out.println(comment.getValue());
+        }
+        out.write("      | ");
+        for (int colIndex = 0; colIndex < maxLengths.length; colIndex++) {
+            String cellText = escapeCell(row.getCells().get(colIndex));
+            Format format = formats.get(formatNames.get(colIndex));
+            out.write(format.text(cellText));
+            int padding = maxLengths[colIndex] - cellLengths[rowIndex][colIndex];
+            padSpace(padding);
+            if (colIndex < maxLengths.length - 1) {
+                out.write(" | ");
+            } else {
+                out.write(" |");
+            }
+        }
+        rowIndex++;
+        out.println();
         out.flush();
     }
 
