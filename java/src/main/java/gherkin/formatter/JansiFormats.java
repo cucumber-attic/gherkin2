@@ -54,7 +54,9 @@ public class JansiFormats implements Formats {
     }
 
     public Format get(String key) {
-        return formats.get(key);
+        Format format = formats.get(key);
+        if(format == null) throw new NullPointerException("No format for key " + key);
+        return format;
     }
 
     public String up(int n) {

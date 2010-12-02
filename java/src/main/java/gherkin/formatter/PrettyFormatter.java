@@ -8,7 +8,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -185,17 +184,10 @@ public class PrettyFormatter implements Reporter {
         prepareTable(rows);
         if(!executing) {
             for (Row row : rows) {
-                row(skippedFormats(row.getCells().size()));
+                row(row.createResults("skipped"));
+                nextRow();
             }
         }
-    }
-
-    private List<String> skippedFormats(int n) {
-        List<String> result = new ArrayList<String>();
-        for (int i = 0; i < n; i++) {
-            result.add("skipped");
-        }
-        return result;
     }
 
     private void prepareTable(List<Row> rows) {
@@ -213,7 +205,7 @@ public class PrettyFormatter implements Reporter {
         rowIndex = 0;
     }
 
-    public void row(List<String> formatNames) {
+    public void row(List<CellResult> cellResults) {
         Row row = rows.get(rowIndex);
         for (Comment comment : row.getComments()) {
             out.write("      ");
@@ -222,7 +214,8 @@ public class PrettyFormatter implements Reporter {
         out.write("      | ");
         for (int colIndex = 0; colIndex < maxLengths.length; colIndex++) {
             String cellText = escapeCell(row.getCells().get(colIndex));
-            Format format = formats.get(formatNames.get(colIndex));
+            String status = cellResults.get(colIndex).getStatus();
+            Format format = formats.get(status);
             out.write(format.text(cellText));
             int padding = maxLengths[colIndex] - cellLengths[rowIndex][colIndex];
             padSpace(padding);
@@ -232,9 +225,12 @@ public class PrettyFormatter implements Reporter {
                 out.write(" |");
             }
         }
-        rowIndex++;
         out.println();
         out.flush();
+    }
+
+    public void nextRow() {
+        rowIndex++;
     }
 
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {

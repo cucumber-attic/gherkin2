@@ -69,7 +69,11 @@ public class JSONFormatter implements Reporter {
         throw new UnsupportedOperationException();
     }
 
-    public void row(List<String> cellFormats) {
+    public void row(List<CellResult> cellFormats) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void nextRow() {
         throw new UnsupportedOperationException();
     }
 
