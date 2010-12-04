@@ -34,25 +34,25 @@ module Gherkin
         }
  
         action store_background_content {
-          store_keyword_content(:background, data, p, eof) { |con| multiline_strip(con) }
+          store_keyword_content(:background, data, p, eof) { |con| unindent(@start_col + 2, con) }
           p = @next_keyword_start - 1 if @next_keyword_start                    
           @next_keyword_start = nil
         }
 
         action store_scenario_content {
-          store_keyword_content(:scenario, data, p, eof) { |con| multiline_strip(con) }
+          store_keyword_content(:scenario, data, p, eof) { |con| unindent(@start_col + 2, con) }
           p = @next_keyword_start - 1 if @next_keyword_start                    
           @next_keyword_start = nil
         }
 
         action store_scenario_outline_content {
-          store_keyword_content(:scenario_outline, data, p, eof) { |con| multiline_strip(con) }
+          store_keyword_content(:scenario_outline, data, p, eof) { |con| unindent(@start_col + 2, con) }
           p = @next_keyword_start - 1 if @next_keyword_start                    
           @next_keyword_start = nil
         }
 
         action store_examples_content {
-          store_keyword_content(:examples, data, p, eof) { |con| multiline_strip(con) }
+          store_keyword_content(:examples, data, p, eof) { |con| unindent(@start_col + 2, con) }
           p = @next_keyword_start - 1 if @next_keyword_start                    
           @next_keyword_start = nil
         }
@@ -146,13 +146,6 @@ module Gherkin
       LF_RE = /[^\r]\n/
       CRLF = "\r\n"
       LF = "\n"
-
-      def multiline_strip(text)
-        crlf_count = text.scan(CRLF_RE).size
-        lf_count = text.scan(LF_RE).size
-        eol = crlf_count > lf_count ? CRLF : LF
-        text.split(/\r?\n/).map{|s| s.strip}.join(eol).strip
-      end
 
       def unindent(startcol, text)
         text.gsub(/^[\t ]{0,#{startcol}}/, "")
