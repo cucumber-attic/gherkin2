@@ -13,7 +13,7 @@
   EOL = ('\n' | '\r\n') @inc_line_number @last_newline;
   BOM = 0xEF 0xBB 0xBF; # http://en.wikipedia.org/wiki/Byte_order_mark
 
-  PIPE = '#';
+  PIPE = '|';
   ESCAPED_PIPE = '\\|';
 
   FeatureHeadingEnd = EOL+ space* (I18N_Feature | I18N_Background | I18N_Scenario | I18N_ScenarioOutline | I18N_Examples | '@' | '#' | EOF) >next_keyword_start;
