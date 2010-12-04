@@ -5,10 +5,11 @@ module Gherkin
     class <%= @i18n.underscored_iso_code.capitalize %> #:nodoc:
       %%{
         machine lexer;
- 
+        
         action begin_content {
           @content_start = p
           @current_line = @line_number
+          @start_col = p - @last_newline - "#{@keyword}:".length
         }
 
         action start_pystring {
@@ -26,7 +27,8 @@ module Gherkin
         }
  
         action store_feature_content {
-          store_keyword_content(:feature, data, p, eof) { |con| multiline_strip(con) }
+          
+          store_keyword_content(:feature, data, p, eof) { |con| unindent(@start_col + 2, con) }
           p = @next_keyword_start - 1 if @next_keyword_start          
           @next_keyword_start = nil
         }

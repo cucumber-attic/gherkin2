@@ -275,8 +275,9 @@ Feature: JSON formatter
         ]
       }
       """
-  Scenario: Feature with a description
   
+  Scenario: Feature with a description
+
     We want people to be able to put markdown formatting into their descriptions
     but this means we need to respect whitespace at the start and end of lines
     in the description.
@@ -294,7 +295,7 @@ Feature: JSON formatter
       {
         "keyword": "Feature",
         "name": "Foo",
-        "description": "one line  \nanother line\n    some pre-formatted stuff",
+        "description": "one line  \nanother line  \n\n    some pre-formatted stuff",
         "line": 1
       }
       """
