@@ -275,4 +275,28 @@ Feature: JSON formatter
         ]
       }
       """
+  Scenario: Feature with a description
+  
+    We want people to be able to put markdown formatting into their descriptions
+    but this means we need to respect whitespace at the start and end of lines
+    in the description.
     
+    Given the following text is parsed:
+      """
+      Feature: Foo
+        one line  
+        another line  
+        
+            some pre-formatted stuff
+      """
+    Then the outputted JSON should be:
+      """
+      {
+        "keyword": "Feature",
+        "name": "Foo",
+        "description": "one line  \nanother line\n    some pre-formatted stuff",
+        "line": 1
+      }
+      """
+
+
