@@ -8,7 +8,9 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import static gherkin.util.FixJava.join;
@@ -42,6 +44,7 @@ public class PrettyFormatter implements Reporter {
     private int[] maxLengths;
     private int rowIndex;
     private List<Row> rows;
+    private int rowPrintCount = 0;
 
     public PrettyFormatter(Writer out, boolean monochrome, boolean executing) {
         this.out = new PrintWriter(out);
@@ -207,6 +210,11 @@ public class PrettyFormatter implements Reporter {
 
     public void row(List<CellResult> cellResults) {
         Row row = rows.get(rowIndex);
+        if(rowPrintCount > 0) {
+            // If we already printed this row, move the cursor
+            out.print(formats.up(row.getComments().size() + 1));
+        }
+
         for (Comment comment : row.getComments()) {
             out.write("      ");
             out.println(comment.getValue());
@@ -226,11 +234,25 @@ public class PrettyFormatter implements Reporter {
             }
         }
         out.println();
+
+        // Print each result, but only once
+        Set<Result> seenResults = new HashSet<Result>();
+        for (CellResult cellResult : cellResults) {
+            for (Result result : cellResult.getResults()) {
+                if(result.getErrorMessage() != null && !seenResults.contains(result)) {
+                    out.println(indent(result.getErrorMessage(), "      "));
+                    seenResults.add(result);
+                }
+            }
+        }
+
         out.flush();
+        rowPrintCount++;
     }
 
     public void nextRow() {
         rowIndex++;
+        rowPrintCount=0;
     }
 
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {

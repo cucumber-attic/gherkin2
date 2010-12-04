@@ -16,8 +16,8 @@ public class JansiFormats implements Formats {
         put("undefined", new ColorFormat(YELLOW, null));
         put("pending", new ColorFormat(YELLOW, null));
         put("pending_arg", new ColorFormat(YELLOW, INTENSITY_BOLD));
-        put("executing", new ColorFormat(MAGENTA, null));
-        put("executing_arg", new ColorFormat(MAGENTA, INTENSITY_BOLD));
+        put("executing", new ColorFormat(GREY, null));
+        put("executing_arg", new ColorFormat(GREY, INTENSITY_BOLD));
         put("failed", new ColorFormat(RED, null));
         put("failed_arg", new ColorFormat(RED, INTENSITY_BOLD));
         put("passed", new ColorFormat(GREEN, null));

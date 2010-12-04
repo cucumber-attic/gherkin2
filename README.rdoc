@@ -39,8 +39,8 @@ Running RSpec and Cucumber tests
 
   rake clean spec cucumber
 
-If the RL_LANG environment variable is set, only the parsers for the languages specified there will be built.
-E.g. in Bash, export RL_LANG="en,fr,no". This can be quite helpful when modifying the Ragel grammar.
+If the RL_LANGS environment variable is set, only the parsers for the languages specified there will be built.
+E.g. in Bash, export RL_LANGS="en,fr,no". This can be quite helpful when modifying the Ragel grammar.
 
 See subsections for building for a specific platform.
 
