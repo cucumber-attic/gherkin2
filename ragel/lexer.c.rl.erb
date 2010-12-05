@@ -39,7 +39,6 @@ typedef struct lexer_state {
   int line_number;
   int current_line;
   int start_col;
-  int eol;
   size_t mark;
   size_t keyword_start;
   size_t keyword_end;
@@ -65,8 +64,7 @@ static VALUE rb_eGherkinLexingError;
   store_multiline_kw_con(listener, # EVENT, \
     PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), \
     PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), \
-    lexer->current_line, lexer->eol, \
-    lexer->start_col); \
+    lexer->current_line, lexer->start_col); \
     if (lexer->content_end != 0) { \
       p = PTR_TO(content_end - 1); \
     } \
@@ -275,7 +273,7 @@ static void
 store_multiline_kw_con(VALUE listener, const char * event_name,
                       const char * keyword_at, size_t keyword_length,
                       const char * at,         size_t length,
-                      int current_line, int eol, int start_col)
+                      int current_line, int start_col)
 {
   VALUE con = Qnil, kw = Qnil, name = Qnil, desc = Qnil;
 
