@@ -1,6 +1,8 @@
 == In Git
 
 === Bugfixes
+* Preserve whitespace in descriptions. Leading whitespace in descriptions are stripped upto preceding keyword + 2 spaces (#87 Matt Wynne, Gregory Hnatiuk, Aslak Hellesøy)
+* Fix incorrect indentation of Examples descriptions (Gregory Hnatiuk)
 * Can't define new line characters in Example Table Cell's Content. (#85 George Montana Harkin, Aslak Hellesøy)
 
 == 2.3.0 (2010-11-12)
