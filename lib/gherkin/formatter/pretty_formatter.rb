@@ -56,7 +56,7 @@ module Gherkin
         print_comments(examples.comments, '    ')
         print_tags(examples.tags, '    ')
         @io.puts "    #{examples.keyword}: #{examples.name}"
-        print_description(examples.description, '    ')
+        print_description(examples.description, '      ')
         table(examples.rows)
       end
 

@@ -70,7 +70,8 @@ static VALUE rb_eGherkinLexingError;
   store_multiline_kw_con(listener, # EVENT, \
     PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), \
     PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), \
-    lexer->current_line, lexer->eol); \
+    lexer->current_line, lexer->eol, \
+    lexer->start_col); \
     if (lexer->content_end != 0) { \
       p = PTR_TO(content_end - 1); \
     } \
@@ -87,6 +88,7 @@ static VALUE rb_eGherkinLexingError;
   action begin_content {
 		MARK(content_start, p);
     lexer->current_line = lexer->line_number;
+    lexer->start_col = lexer->content_start - lexer->last_newline - (lexer->keyword_end - lexer->keyword_start) + 2;
   }
   
   action begin_pystring_content {
@@ -249,21 +251,28 @@ static VALUE rb_eGherkinLexingError;
 %% write data;
 
 static VALUE 
-strip_i(VALUE str, VALUE ary)
+strip_r(VALUE str, VALUE ary)
 {
-  rb_funcall(str, rb_intern("strip!"), 0);
+  VALUE re = rb_reg_regcomp(rb_str_new2("\r$"));
+  rb_funcall(str, rb_intern("sub!"), 2, re, rb_str_new2(""));
   rb_ary_push(ary, str);
   
   return Qnil;
 }
 
 static VALUE 
-multiline_strip(VALUE text)
+unindent(VALUE con, int start_col)
 {
+  // Gherkin will crash gracefully if the string representation of start_col pushes the pattern past 32 characters
+  char pat[32]; 
+  snprintf(pat, 32, "^[\t ]{0,%d}", start_col); 
+  VALUE re = rb_reg_regcomp(rb_str_new2(pat));
+  rb_funcall(con, rb_intern("gsub!"), 2, re, rb_str_new2(""));
+
   VALUE map = rb_ary_new();
-  VALUE split = rb_str_split(text, "\n");
+  VALUE split = rb_str_split(con, "\n");
   
-  rb_iterate(rb_each, split, strip_i, map);
+  rb_iterate(rb_each, split, strip_r, map);
   
   return split;
 }
@@ -285,14 +294,14 @@ static void
 store_multiline_kw_con(VALUE listener, const char * event_name,
                       const char * keyword_at, size_t keyword_length,
                       const char * at,         size_t length,
-                      int current_line, int eol)
+                      int current_line, int eol, int start_col)
 {
   VALUE con = Qnil, kw = Qnil, name = Qnil, desc = Qnil;
 
   kw = ENCODED_STR_NEW(keyword_at, keyword_length);
   con = ENCODED_STR_NEW(at, length);
 
-  VALUE split = multiline_strip(con);
+  VALUE split = unindent(con, start_col);
   
   name = rb_funcall(split, rb_intern("shift"), 0);
   desc = rb_ary_join(split, rb_str_new2( \
@@ -307,7 +316,7 @@ store_multiline_kw_con(VALUE listener, const char * event_name,
     desc = rb_str_new2("");
   }
   rb_funcall(name, rb_intern("strip!"), 0);
-  rb_funcall(desc, rb_intern("strip!"), 0);
+  rb_funcall(desc, rb_intern("rstrip!"), 0);
   rb_funcall(listener, rb_intern(event_name), 4, kw, name, desc, INT2FIX(current_line)); 
 }
 
