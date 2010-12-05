@@ -13,8 +13,8 @@ module Gherkin
     # <tt>undefined</tt>::     defaults to <tt>yellow</tt>
     # <tt>pending</tt>::       defaults to <tt>yellow</tt>
     # <tt>pending_arg</tt>::   defaults to <tt>yellow,bold</tt>
-    # <tt>executing</tt>::     defaults to <tt>magenta</tt>
-    # <tt>executing_arg</tt>:: defaults to <tt>magenta,bold</tt>
+    # <tt>executing</tt>::     defaults to <tt>grey</tt>
+    # <tt>executing_arg</tt>:: defaults to <tt>grey,bold</tt>
     # <tt>failed</tt>::        defaults to <tt>red</tt>
     # <tt>failed_arg</tt>::    defaults to <tt>red,bold</tt>
     # <tt>passed</tt>::        defaults to <tt>green</tt>
@@ -49,7 +49,7 @@ module Gherkin
       end.merge({
         'undefined' => 'yellow',
         'pending'   => 'yellow',
-        'executing' => 'magenta',
+        'executing' => 'grey',
         'failed'    => 'red',
         'passed'    => 'green',
         'outline'   => 'cyan',

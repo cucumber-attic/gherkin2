@@ -124,7 +124,7 @@ public class PrettyFormatter implements Reporter {
         out.print(": ");
         out.print(examples.getName());
         out.println();
-        printDescription(examples.getDescription(), "    ", true);
+        printDescription(examples.getDescription(), "      ", true);
         table(examples.getRows());
     }
 

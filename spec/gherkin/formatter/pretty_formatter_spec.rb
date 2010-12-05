@@ -108,7 +108,7 @@ module Gherkin
           )
         else
           assert_io(
-            "    #{grey('Given ')}#{grey('I have ')}#{grey(bold('999'))}#{magenta(' cukes in my belly')}\n" +
+            "    #{grey('Given ')}#{grey('I have ')}#{grey(bold('999'))}#{grey(' cukes in my belly')}\n" +
             "\033[1A    #{green('Given ')}#{green('I have ')}#{green(bold('999'))}#{green(' cukes in my belly')}\n"
           )
         end
