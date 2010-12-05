@@ -1,4 +1,6 @@
-== In Git
+== 2.3.2 (2010-12-05)
+
+(Somehow 2.3.1 was released improperly shortly after 2.3.0 - not sure what fixes went into that!)
 
 === Bugfixes
 * Preserve whitespace in descriptions. Leading whitespace in descriptions are stripped upto preceding keyword + 2 spaces (#87 Matt Wynne, Gregory Hnatiuk, Aslak Hellesøy)
