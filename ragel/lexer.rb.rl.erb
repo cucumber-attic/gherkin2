@@ -28,31 +28,31 @@ module Gherkin
  
         action store_feature_content {
           
-          store_keyword_content(:feature, data, p, eof) { |con| unindent(@start_col + 2, con) }
+          store_keyword_content(:feature, data, p, eof) { |con| unindent(@start_col + 2, con).rstrip }
           p = @next_keyword_start - 1 if @next_keyword_start          
           @next_keyword_start = nil
         }
  
         action store_background_content {
-          store_keyword_content(:background, data, p, eof) { |con| unindent(@start_col + 2, con) }
+          store_keyword_content(:background, data, p, eof) { |con| unindent(@start_col + 2, con).rstrip }
           p = @next_keyword_start - 1 if @next_keyword_start                    
           @next_keyword_start = nil
         }
 
         action store_scenario_content {
-          store_keyword_content(:scenario, data, p, eof) { |con| unindent(@start_col + 2, con) }
+          store_keyword_content(:scenario, data, p, eof) { |con| unindent(@start_col + 2, con).rstrip }
           p = @next_keyword_start - 1 if @next_keyword_start                    
           @next_keyword_start = nil
         }
 
         action store_scenario_outline_content {
-          store_keyword_content(:scenario_outline, data, p, eof) { |con| unindent(@start_col + 2, con) }
+          store_keyword_content(:scenario_outline, data, p, eof) { |con| unindent(@start_col + 2, con).rstrip }
           p = @next_keyword_start - 1 if @next_keyword_start                    
           @next_keyword_start = nil
         }
 
         action store_examples_content {
-          store_keyword_content(:examples, data, p, eof) { |con| unindent(@start_col + 2, con) }
+          store_keyword_content(:examples, data, p, eof) { |con| unindent(@start_col + 2, con).rstrip }
           p = @next_keyword_start - 1 if @next_keyword_start                    
           @next_keyword_start = nil
         }

@@ -294,17 +294,21 @@ Feature: JSON formatter
         
         Background: name
             test  
+            test 
         
         Scenario: name
             test  
+            test 
         
         Scenario Outline: name
             test  
+            test 
           
           Given <foo> 
             
           Examples: name
               test  
+              test 
             | foo   |
             | table |
       """
@@ -317,50 +321,50 @@ Feature: JSON formatter
         "line": 1,
         "elements": [
           {
-            "description": "  test  ",
+            "description": "  test  \n  test",
             "keyword": "Background",
             "line": 7,
             "name": "name",
             "type": "background"
           },
           {
-            "description": "  test  ",
+            "description": "  test  \n  test",
             "keyword": "Scenario",
-            "line": 10,
+            "line": 11,
             "name": "name",
             "type": "scenario"
           },
           {
-            "description": "  test  ",
+            "description": "  test  \n  test",
             "examples": [
               {
-                "description": "  test  ",
+                "description": "  test  \n  test",
                 "keyword": "Examples",
-                "line": 18,
+                "line": 21,
                 "name": "name",
                 "rows": [
                   {
                     "cells": [
                       "foo"
                     ],
-                    "line": 20
+                    "line": 24
                   },
                   {
                     "cells": [
                       "table"
                     ],
-                    "line": 21
+                    "line": 25
                   }
                 ]
               }
             ],
             "keyword": "Scenario Outline",
-            "line": 13,
+            "line": 15,
             "name": "name",
             "steps": [
               {
                 "keyword": "Given ",
-                "line": 16,
+                "line": 19,
                 "name": "<foo>"
               }
             ],
