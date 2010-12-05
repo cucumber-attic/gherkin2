@@ -17,16 +17,19 @@ public class I18nLexerTest {
         Listener listener = mock(Listener.class);
         Lexer lexer = new I18nLexer(listener);
 
-        String feature = "Feature: Hello\n" +
-                "  World\n" +
+        String feature = "" +
+                " Feature: Hello\n" +
+                "     Big    \n" +
+                "       World  \n" +
                 "  Scenario Outline:\n" +
                 "    Given I have an empty stack\n" +
                 "    When I pøsh <x> onto the stack";
 
         lexer.scan(feature);
 
-        verify(listener).feature("Feature", "Hello", "World", 1);
-        verify(listener).step("When ", "I pøsh <x> onto the stack", 5);
+        verify(listener).feature("Feature", "Hello", "  Big    \n    World", 1);
+        verify(listener).step("Given ", "I have an empty stack", 5);
+        verify(listener).step("When ", "I pøsh <x> onto the stack", 6);
     }
 
     @Test

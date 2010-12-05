@@ -234,8 +234,6 @@ public class PrettyFormatter implements Reporter {
             }
         }
         out.println();
-
-        // Print each result, but only once
         Set<Result> seenResults = new HashSet<Result>();
         for (CellResult cellResult : cellResults) {
             for (Result result : cellResult.getResults()) {
