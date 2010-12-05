@@ -7,14 +7,14 @@ require 'stringio'
 module Gherkin
   module Formatter
     class ParenthesisFormat
-      def write_text(io, text)
-        io.write("(#{text})")
+      def text(text)
+        "(#{text})"
       end
     end
     
     class BracketFormat
-      def write_text(io, text)
-        io.write("[#{text}]")
+      def text(text)
+        "[#{text}]"
       end
     end
     

@@ -1,24 +1,16 @@
 package gherkin.formatter;
 
-import gherkin.formatter.model.Background;
-import gherkin.formatter.model.Comment;
-import gherkin.formatter.model.Examples;
-import gherkin.formatter.model.Feature;
-import gherkin.formatter.model.PyString;
-import gherkin.formatter.model.Result;
-import gherkin.formatter.model.Row;
-import gherkin.formatter.model.Scenario;
-import gherkin.formatter.model.ScenarioOutline;
-import gherkin.formatter.model.Step;
-import gherkin.formatter.model.Tag;
-import gherkin.formatter.model.TagStatement;
+import gherkin.formatter.model.*;
 import gherkin.util.Mapper;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import static gherkin.util.FixJava.join;
@@ -30,8 +22,12 @@ import static gherkin.util.FixJava.map;
  * which means it can be used to print execution results - highlighting arguments,
  * printing source information and exception information.
  */
-public class PrettyFormatter implements Formatter {
+public class PrettyFormatter implements Reporter {
+    private final StepPrinter stepPrinter = new StepPrinter();
     private final PrintWriter out;
+    private final boolean monochrome;
+    private final boolean executing;
+
     private int maxStepLength = -1;
     private int[] stepLengths;
     private int stepIndex;
@@ -41,16 +37,24 @@ public class PrettyFormatter implements Formatter {
             return ((Tag) tag).getName();
         }
     };
-    private final StepPrinter stepPrinter = new StepPrinter();
     private Formats formats;
+    private Step step;
+    private Match match;
+    private int[][] cellLengths;
+    private int[] maxLengths;
+    private int rowIndex;
+    private List<Row> rows;
+    private int rowPrintCount = 0;
 
-    public PrettyFormatter(Writer out, boolean monochrome) {
+    public PrettyFormatter(Writer out, boolean monochrome, boolean executing) {
         this.out = new PrintWriter(out);
+        this.monochrome = monochrome;
+        this.executing = executing;
         setFormats(monochrome);
     }
 
-    public PrettyFormatter(OutputStream out, boolean monochrome) {
-        this(new OutputStreamWriter(out), monochrome);
+    public PrettyFormatter(OutputStream out, boolean monochrome, boolean executing) {
+        this(new OutputStreamWriter(out, Charset.forName("UTF-8")), monochrome, executing);
     }
 
     private void setFormats(boolean monochrome) {
@@ -89,12 +93,12 @@ public class PrettyFormatter implements Formatter {
         printDescription(background.getDescription(), "    ", true);
     }
 
-    public void scenario(Scenario statement) {
-        printTagStatement(statement);
+    public void scenario(Scenario scenario) {
+        printTagStatement(scenario);
     }
 
-    public void scenarioOutline(ScenarioOutline statement) {
-        printTagStatement(statement);
+    public void scenarioOutline(ScenarioOutline scenarioOutline) {
+        printTagStatement(scenarioOutline);
     }
 
     private void printTagStatement(TagStatement statement) {
@@ -120,77 +124,133 @@ public class PrettyFormatter implements Formatter {
         out.print(": ");
         out.print(examples.getName());
         out.println();
-        printDescription(examples.getDescription(), "    ", true);
+        printDescription(examples.getDescription(), "      ", true);
         table(examples.getRows());
     }
 
     public void step(Step step) {
-        printStep(step);
+        this.step = step;
+        stepIndex ++;
+        if(!executing) {
+            match(Match.NONE);
+            result(Result.SKIPPED);
+        }
+    }
+
+    public void match(Match match) {
+        this.match = match;
+        if(!monochrome) {
+            printStep("executing", match.getArguments(), match.getLocation());
+        }
+    }
+
+    public void result(Result result) {
+        if(!monochrome) {
+            out.print(formats.up(1));
+        }
+        printStep(result.getStatus(), match.getArguments(), match.getLocation());
+
+        if (result.getErrorMessage() != null) {
+            out.println(indent(result.getErrorMessage(), "      "));
+        }
+    }
+
+    private void printStep(String status, List<Argument> arguments, String location) {
+        Format textFormat = getFormat(status);
+        Format argFormat = getArgFormat(status);
+
+        printComments(step.getComments(), "    ");
+        out.print("    ");
+        out.print(textFormat.text(step.getKeyword()));
+        stepPrinter.writeStep(out, textFormat, argFormat, step.getName(), arguments);
+        printIndentedStepLocation(location);
+
+        out.println();
         if (step.getRows() != null) {
             table(step.getRows());
         } else if (step.getPyString() != null) {
             pyString(step.getPyString());
         }
-    }
 
-    private void printStep(Step step) {
-        printComments(step.getComments(), "    ");
-        out.print("    ");
-        getTextFormat(step).writeText(out, step.getKeyword());
-        stepPrinter.writeStep(out, getTextFormat(step), getArgFormat(step), step.getName(), step.getArguments());
-
-        Result result = step.getResult();
-        String location = result != null ? result.getStepdefLocation() : null;
-        printIndentedStepLocation(location);
-        out.println();
-        if (step.getResult() != null && step.getResult().getErrorMessage() != null) {
-            out.println(indent(step.getResult().getErrorMessage(), "      "));
-        }
         out.flush();
-    }
-
-    private Format getTextFormat(Step step) {
-        return getFormat(step.getStatus());
-    }
-
-    private Format getArgFormat(Step step) {
-        return getFormat(step.getStatus() + "_param");
     }
 
     private Format getFormat(String key) {
         return formats.get(key);
     }
 
+    private Format getArgFormat(String key) {
+        return formats.get(key + "_arg");
+    }
+
     public void table(List<Row> rows) {
+        prepareTable(rows);
+        if(!executing) {
+            for (Row row : rows) {
+                row(row.createResults("skipped"));
+                nextRow();
+            }
+        }
+    }
+
+    private void prepareTable(List<Row> rows) {
+        this.rows = rows;
         int columnCount = rows.get(0).getCells().size();
-        int[][] cellLengths = new int[rows.size()][columnCount];
-        int[] maxLengths = new int[columnCount];
-        for (int i = 0; i < rows.size(); i++) {
-            for (int j = 0; j < columnCount; j++) {
-                int length = escapeCell(rows.get(i).getCells().get(j)).length();
-                cellLengths[i][j] = length;
-                maxLengths[j] = Math.max(maxLengths[j], length);
+        cellLengths = new int[rows.size()][columnCount];
+        maxLengths = new int[columnCount];
+        for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
+            for (int colIndex = 0; colIndex < columnCount; colIndex++) {
+                int length = escapeCell(rows.get(rowIndex).getCells().get(colIndex)).length();
+                cellLengths[rowIndex][colIndex] = length;
+                maxLengths[colIndex] = Math.max(maxLengths[colIndex], length);
+            }
+        }
+        rowIndex = 0;
+    }
+
+    public void row(List<CellResult> cellResults) {
+        Row row = rows.get(rowIndex);
+        if(rowPrintCount > 0) {
+            // If we already printed this row, move the cursor
+            out.print(formats.up(row.getComments().size() + 1));
+        }
+
+        for (Comment comment : row.getComments()) {
+            out.write("      ");
+            out.println(comment.getValue());
+        }
+        out.write("      | ");
+        for (int colIndex = 0; colIndex < maxLengths.length; colIndex++) {
+            String cellText = escapeCell(row.getCells().get(colIndex));
+            String status = cellResults.get(colIndex).getStatus();
+            Format format = formats.get(status);
+            out.write(format.text(cellText));
+            int padding = maxLengths[colIndex] - cellLengths[rowIndex][colIndex];
+            padSpace(padding);
+            if (colIndex < maxLengths.length - 1) {
+                out.write(" | ");
+            } else {
+                out.write(" |");
+            }
+        }
+        out.println();
+        Set<Result> seenResults = new HashSet<Result>();
+        for (CellResult cellResult : cellResults) {
+            for (Result result : cellResult.getResults()) {
+                if(result.getErrorMessage() != null && !seenResults.contains(result)) {
+                    out.println(indent(result.getErrorMessage(), "      "));
+                    seenResults.add(result);
+                }
             }
         }
 
-        for (int i = 0; i < rows.size(); i++) {
-            for (Comment comment : rows.get(i).getComments()) {
-                out.write("      ");
-                out.println(comment.getValue());
-            }
-            out.write("      | ");
-            for (int j = 0; j < columnCount; j++) {
-                out.write(escapeCell(rows.get(i).getCells().get(j)));
-                padSpace(maxLengths[j] - cellLengths[i][j]);
-                if (j < columnCount - 1) {
-                    out.write(" | ");
-                } else {
-                    out.write(" |");
-                }
-            }
-            out.println();
-        }
         out.flush();
+        rowPrintCount++;
+    }
+
+    public void nextRow() {
+        rowIndex++;
+        rowPrintCount=0;
     }
 
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
@@ -198,7 +258,7 @@ public class PrettyFormatter implements Formatter {
     }
 
     private String escapeCell(String cell) {
-        return cell.replaceAll("\\|", "\\\\|").replaceAll("\\\\(?!\\|)", "\\\\\\\\");
+        return cell.replaceAll("\\\\(?!\\|)", "\\\\\\\\").replaceAll("\\n", "\\\\n").replaceAll("\\|", "\\\\|");
     }
 
     public void pyString(PyString pyString) {
@@ -220,6 +280,9 @@ public class PrettyFormatter implements Formatter {
             maxStepLength = Math.max(maxStepLength, stepLength);
         }
         stepIndex = -1;
+    }
+
+    public void embedding(String mimeType, byte[] data) {
     }
 
     private void padSpace(int indent) {
@@ -251,16 +314,16 @@ public class PrettyFormatter implements Formatter {
 
         padSpace(indent);
         out.append(" ");
-        getFormat("comment").writeText(out, "# " + uri + ":" + line);
+        out.print(getFormat("comment").text("# " + uri + ":" + line));
     }
 
     private void printIndentedStepLocation(String location) {
         if (location == null || "".equals(location)) return;
-        int indent = maxStepLength - stepLengths[stepIndex += 1];
+        int indent = maxStepLength - stepLengths[stepIndex];
 
         padSpace(indent);
         out.append(" ");
-        getFormat("comment").writeText(out, "# " + location);
+        out.print(getFormat("comment").text("# " + location));
     }
 
     private void printDescription(String description, String indentation, boolean newline) {

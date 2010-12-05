@@ -1,12 +1,8 @@
-package gherkin.formatter.model;
+package gherkin.formatter;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 public class Mappable {
     private static final Integer NO_LINE = -1;
@@ -46,7 +42,11 @@ public class Mappable {
         List<Field> fields = new ArrayList<Field>();
         Class c = getClass();
         while (c != null) {
-            fields.addAll(Arrays.asList(c.getDeclaredFields()));
+            for (Field field : c.getDeclaredFields()) {
+                if ((field.getModifiers() & Modifier.STATIC) == 0) {
+                    fields.add(field);
+                }
+            }
             c = c.getSuperclass();
         }
         return fields;

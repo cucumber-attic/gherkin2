@@ -1,5 +1,8 @@
 package gherkin.formatter.model;
 
+import gherkin.formatter.Mappable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Row extends Mappable implements CommentHolder {
@@ -29,5 +32,13 @@ public class Row extends Mappable implements CommentHolder {
 
     public int getLine() {
         return line;
+    }
+
+    public List<CellResult> createResults(String status) {
+        List<CellResult> results = new ArrayList<CellResult>();
+        for (String cell : cells) {
+            results.add(new CellResult(status));
+        }
+        return results;
     }
 }

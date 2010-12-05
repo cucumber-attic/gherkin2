@@ -2,12 +2,12 @@ require 'rubygems'
 require 'bundler'
 Bundler.setup
 
+require 'rspec'
 require 'gherkin'
 require 'stringio'
 require 'gherkin/sexp_recorder'
 require 'gherkin/output_stream_string_io'
 require 'gherkin/java_libs'
-require 'gherkin/json'
 require 'gherkin/shared/lexer_group'
 require 'gherkin/shared/tags_group'
 require 'gherkin/shared/py_string_group'

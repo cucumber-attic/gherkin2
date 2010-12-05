@@ -14,7 +14,6 @@ module Gherkin
       p.parse(json, 'unknown.json', 0)
       expected = JSON.parse(json)
       actual   = JSON.parse(io.string)
-
       actual.should == expected
     end
 
@@ -53,6 +52,52 @@ module Gherkin
                     }
                   ]
                 }
+              }
+            ]
+          }
+        ]
+      }})
+    end
+
+    it "should parse feature with match, result and embedding" do
+      check_json(%{{
+        "tags": [
+          {
+            "name": "@foo",
+            "line": 22
+          }
+        ],
+        "keyword": "Feature", 
+        "name": "One", 
+        "description": "", 
+        "line": 3,
+        "elements": [
+          {
+            "type": "scenario",
+            "steps": [
+              {
+                "keyword": "Given ",
+                "name": "a passing step",
+                "line": 6,
+                "match": {
+                  "arguments": [
+                    {
+                      "offset": 22,
+                      "val": "cukes"
+                    }
+                  ],
+                  "location": "features/step_definitions/steps.rb:1"
+                },
+                "result": {
+                  "status": "failed",
+                  "error_message": "You suck"
+                },
+                "embeddings": [
+                  {
+                    "mime_type": "text/plain",
+                    "data": "Tm8sIEknbSBub3QgaW50ZXJlc3RlZCBpbiBkZXZlbG9waW5nIGEgcG93ZXJmdWwgYnJhaW4uIEFsbCBJJ20gYWZ0ZXIgaXMganVzdCBhIG1lZGlvY3JlIGJyYWluLCBzb21ldGhpbmcgbGlrZSB0aGUgUHJlc2lkZW50IG9mIHRoZSBBbWVyaWNhbiBUZWxlcGhvbmUgYW5kIFRlbGVncmFwaCBDb21wYW55Lg=="
+                  }
+                ]
               }
             ]
           }

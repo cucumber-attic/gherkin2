@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 import gherkin.lexer.Lexer;
 import gherkin.lexer.Listener;
 import gherkin.lexer.LexingError;
@@ -17,6 +16,9 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
     action begin_content {
       contentStart = p;
       currentLine = lineNumber;
+      if(keyword != null) {
+        startCol = p - lastNewline - (keyword.length() + 1);
+      }
     }
 
     action start_pystring {
@@ -34,35 +36,35 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
     }
 
     action store_feature_content {
-      String[] nameDescription = nameAndDescriptionWithPlatformNewlinesIntact(keywordContent(data, p, eof, nextKeywordStart, contentStart));
+      String[] nameDescription = nameAndUnindentedDescription(startCol, keywordContent(data, p, eof, nextKeywordStart, contentStart));
       listener.feature(keyword, nameDescription[0], nameDescription[1], currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
 
     action store_background_content {
-      String[] nameDescription = nameAndDescriptionWithPlatformNewlinesIntact(keywordContent(data, p, eof, nextKeywordStart, contentStart));
+      String[] nameDescription = nameAndUnindentedDescription(startCol, keywordContent(data, p, eof, nextKeywordStart, contentStart));
       listener.background(keyword, nameDescription[0], nameDescription[1], currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
 
     action store_scenario_content {
-      String[] nameDescription = nameAndDescriptionWithPlatformNewlinesIntact(keywordContent(data, p, eof, nextKeywordStart, contentStart));
+      String[] nameDescription = nameAndUnindentedDescription(startCol, keywordContent(data, p, eof, nextKeywordStart, contentStart));
       listener.scenario(keyword, nameDescription[0], nameDescription[1], currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
 
     action store_scenario_outline_content {
-      String[] nameDescription = nameAndDescriptionWithPlatformNewlinesIntact(keywordContent(data, p, eof, nextKeywordStart, contentStart));
+      String[] nameDescription = nameAndUnindentedDescription(startCol, keywordContent(data, p, eof, nextKeywordStart, contentStart));
       listener.scenarioOutline(keyword, nameDescription[0], nameDescription[1], currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
     }
 
     action store_examples_content {
-      String[] nameDescription = nameAndDescriptionWithPlatformNewlinesIntact(keywordContent(data, p, eof, nextKeywordStart, contentStart));
+      String[] nameDescription = nameAndUnindentedDescription(startCol, keywordContent(data, p, eof, nextKeywordStart, contentStart));
       listener.examples(keyword, nameDescription[0], nameDescription[1], currentLine);
       if(nextKeywordStart != -1) p = nextKeywordStart - 1;
       nextKeywordStart = -1;
@@ -115,7 +117,11 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
 
     action store_cell_content {
       String con = substring(data, contentStart, p).trim();
-      currentRow.add(con.replaceAll("\\\\\\|", "|").replaceAll("\\\\\\\\", "\\\\"));
+      currentRow.add(con
+        .replaceAll("\\\\\\|", "|")
+        .replaceAll("\\\\n", "\n")
+        .replaceAll("\\\\\\\\", "\\\\")
+      );
     }
 
     action store_row {
@@ -173,37 +179,15 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
     return substring(data, contentStart, endPoint);
   }
 
-  private static final Pattern CRLF_RE = Pattern.compile("\r\n");
-  private static final Pattern LF_RE = Pattern.compile("[^\r]\n");
-  private static final String CRLF = "\r\n";
-  private static final String LF = "\n";
-
-  private String[] nameAndDescriptionWithPlatformNewlinesIntact(String text) {
-    int crlfCount = matchCount(CRLF_RE.matcher(text));
-    int lfCount = matchCount(LF_RE.matcher(text));
-    String eol = crlfCount > lfCount ? CRLF : LF;
-
-    String name = null;
+  private String[] nameAndUnindentedDescription(int startCol, String text) {
+    String[] lines = text.split("\n");
+    String name = lines.length > 0 ? lines[0].trim() : "";
     StringBuffer description = new StringBuffer();
-    for(String s : text.split("\r?\n")) {
-      if(name == null) {
-        name = s.trim();
-      } else {
-        description.append(s.trim()).append(eol);
-      }
+    for(int i = 1; i < lines.length; i++) {
+      description.append(lines[i]);
+      description.append("\n");
     }
-    if(name == null) {
-      name = "";
-    }
-    return new String[]{name, description.toString().trim()};
-  }
-
-  private int matchCount(Matcher m) {
-    int count = 0;
-    while(m.find()) {
-      count++;
-    }
-    return count;
+    return new String[]{name, unindent(startCol+2, description.toString()).replaceAll("\\s+$", "")};
   }
 
   private String unindent(int startCol, String text) {

@@ -1,24 +1,9 @@
 require 'gherkin/native'
+require 'gherkin/formatter/hashable'
 
 module Gherkin
   module Formatter
     module Model
-      class Hashable
-        def to_hash
-          instance_variables.inject({}) do |hash, ivar|
-            value = instance_variable_get(ivar)
-            value = value.to_hash if value.respond_to?(:to_hash)
-            if Array === value
-              value = value.map do |e|
-                e.respond_to?(:to_hash) ? e.to_hash : e
-              end
-            end
-            hash[ivar[1..-1]] = value unless [[], nil].index(value)
-            hash
-          end
-        end
-      end
-      
       class BasicStatement < Hashable
         attr_reader :comments, :keyword, :name, :line
         
@@ -127,13 +112,7 @@ module Gherkin
       class Step < BasicStatement
         native_impl('gherkin')
 
-        attr_accessor :multiline_arg, :result
-
-        def initialize(comments, keyword, name, line, multiline_arg=nil, result=nil)
-          super(comments, keyword, name, line)
-          @multiline_arg = multiline_arg
-          @result = result
-        end
+        attr_accessor :multiline_arg
 
         def line_range
           range = super
@@ -150,12 +129,12 @@ module Gherkin
           formatter.step(self)
         end
 
-        def status
-          result ? result.status : 'undefined'
-        end
-
-        def arguments
-          result ? result.arguments : []
+        def outline_args
+          offset = 0
+          name.scan(/<[^<]*>/).map do |val|
+            offset = name.index(val, offset)
+            Argument.new(offset, val)
+          end
         end
 
         def to_hash
@@ -225,13 +204,31 @@ module Gherkin
         end
       end
 
-      class Result
+      class Match < Hashable
         native_impl('gherkin')
 
-        attr_reader :status, :error_message, :arguments, :stepdef_location
+        attr_reader :arguments, :location
         
-        def initialize(status, error_message, arguments, stepdef_location)
-          @status, @error_message, @arguments, @stepdef_location = status, error_message, arguments, stepdef_location
+        def initialize(arguments, location)
+          @arguments, @location = arguments, location
+        end
+
+        def replay(formatter)
+          formatter.match(self)
+        end
+      end
+
+      class Result < Hashable
+        native_impl('gherkin')
+
+        attr_reader :status, :error_message
+        
+        def initialize(status, error_message)
+          @status, @error_message = status, error_message
+        end
+
+        def replay(formatter)
+          formatter.result(self)
         end
       end
     end

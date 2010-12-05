@@ -1,16 +1,7 @@
 package gherkin.parser;
 
 import gherkin.formatter.Formatter;
-import gherkin.formatter.model.Background;
-import gherkin.formatter.model.Comment;
-import gherkin.formatter.model.Examples;
-import gherkin.formatter.model.Feature;
-import gherkin.formatter.model.PyString;
-import gherkin.formatter.model.Row;
-import gherkin.formatter.model.Scenario;
-import gherkin.formatter.model.ScenarioOutline;
-import gherkin.formatter.model.Step;
-import gherkin.formatter.model.Tag;
+import gherkin.formatter.model.*;
 import gherkin.lexer.Listener;
 
 import java.util.ArrayList;
@@ -62,7 +53,7 @@ public class FormatterListener implements Listener {
 
     public void step(String keyword, String name, int line) {
         replayStepsOrExamples();
-        step = new Step(grabComments(), keyword, name, line, null, null);
+        step = new Step(grabComments(), keyword, name, line);
     }
 
     public void row(List<String> cells, int line) {

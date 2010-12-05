@@ -1,15 +1,17 @@
 package gherkin.formatter;
 
-import java.io.PrintWriter;
-
 public class MonochromeFormats implements Formats {
     private static final Format FORMAT = new Format() {
-        public void writeText(PrintWriter out, String text) {
-            out.write(text);
+        public String text(String text) {
+            return text;
         }
     };
 
     public Format get(String key) {
         return FORMAT;
+    }
+
+    public String up(int n) {
+        return "";
     }
 }

@@ -3,19 +3,19 @@ package gherkin.formatter.model;
 import gherkin.formatter.Argument;
 import gherkin.formatter.Formatter;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Step extends BasicStatement {
     private Object multiline_arg;
-    private Result result;
 
-    public Step(List<Comment> comments, String keyword, String name, int line, Object multilineArg, Result result) {
+    public Step(List<Comment> comments, String keyword, String name, int line) {
         super(comments, keyword, name, line);
-        this.multiline_arg = multilineArg;
-        this.result = result;
     }
 
     @Override
@@ -48,6 +48,21 @@ public class Step extends BasicStatement {
         formatter.step(this);
     }
 
+    public List<Argument> getOutlineArgs() {
+        List<Argument> result = new ArrayList<Argument>();
+        Pattern p = Pattern.compile("<[^<]*>");
+        Matcher matcher = p.matcher(getName());
+        while(matcher.find()) {
+            MatchResult matchResult = matcher.toMatchResult();
+            result.add(new Argument(matchResult.start(), matchResult.group()));
+        }
+        return result;
+    }
+
+    public Match getOutlineMatch(String location) {
+        return new Match(getOutlineArgs(), location);
+    }
+
     public void setMultilineArg(Object multilineArg) {
         this.multiline_arg = multilineArg;
     }
@@ -56,23 +71,11 @@ public class Step extends BasicStatement {
         return multiline_arg;
     }
 
-    public Result getResult() {
-        return result;
-    }
-
     public List<Row> getRows() {
         return multiline_arg instanceof List ? (List<Row>) multiline_arg : null;
     }
 
     public PyString getPyString() {
         return multiline_arg instanceof PyString ? (PyString) multiline_arg : null;
-    }
-
-    public List<Argument> getArguments() {
-        return result != null ? result.getArguments() : Collections.<Argument>emptyList();
-    }
-
-    public String getStatus() {
-        return result != null ? result.getStatus() : "undefined";
     }
 }

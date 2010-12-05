@@ -1,7 +1,22 @@
 == In Git
 
+== 2.3.2 (2010-12-05)
+
+(Somehow 2.3.1 was released improperly shortly after 2.3.0 - not sure what fixes went into that!)
+
+=== Bugfixes
+* Preserve whitespace in descriptions. Leading whitespace in descriptions are stripped upto preceding keyword + 2 spaces (#87 Matt Wynne, Gregory Hnatiuk, Aslak Hellesøy)
+* Fix incorrect indentation of Examples descriptions (Gregory Hnatiuk)
+* Can't define new line characters in Example Table Cell's Content. (#85 George Montana Harkin, Aslak Hellesøy)
+
+== 2.3.0 (2010-11-12)
+
 === New Features
 * New aliases for Scenario Outline in Swedish, Norwegian and English. (Peter Krantz, Aslak Hellesøy)
+* Improved build documentation for people who want to contribute. (Aslak Hellesøy)
+* Results can now be outputted/parsed in JSON. (Aslak Hellesøy)
+* JSON output now contains optional "match", "result" and "embeddings" elements underneath each step. (Aslak Hellesøy)
+* Added support for Base64 encoded embeddings in JSON representation. Useful for screenshots etc. (Aslak Hellesøy)
 
 == 2.2.9 (2010-10-15)
 

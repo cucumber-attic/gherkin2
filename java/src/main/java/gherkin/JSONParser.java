@@ -1,49 +1,42 @@
 package gherkin;
 
-import gherkin.formatter.Formatter;
-import gherkin.formatter.model.Background;
-import gherkin.formatter.model.BasicStatement;
-import gherkin.formatter.model.Comment;
-import gherkin.formatter.model.Examples;
-import gherkin.formatter.model.Feature;
-import gherkin.formatter.model.PyString;
-import gherkin.formatter.model.Row;
-import gherkin.formatter.model.Scenario;
-import gherkin.formatter.model.ScenarioOutline;
-import gherkin.formatter.model.Step;
-import gherkin.formatter.model.Tag;
+import gherkin.formatter.Argument;
+import gherkin.formatter.Reporter;
+import gherkin.formatter.model.*;
+import net.iharder.Base64;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class JSONParser implements FeatureParser {
-    private final Formatter formatter;
+    private final Reporter reporter;
 
-    public JSONParser(Formatter formatter) {
-        this.formatter = formatter;
+    public JSONParser(Reporter reporter) {
+        this.reporter = reporter;
     }
 
     public void parse(String src, String uri, int offset) {
-        formatter.uri(uri);
+        reporter.uri(uri);
         JSONObject o = (JSONObject) JSONValue.parse(src);
-        new Feature(comments(o), tags(o), keyword(o), name(o), description(o), line(o)).replay(formatter);
+        new Feature(comments(o), tags(o), keyword(o), name(o), description(o), line(o)).replay(reporter);
         for (Object e : getList(o, "elements")) {
             JSONObject featureElement = (JSONObject) e;
-            featureElement(featureElement).replay(formatter);
+            featureElement(featureElement).replay(reporter);
             for (Object s : getList(featureElement, "steps")) {
                 JSONObject step = (JSONObject) s;
-                step(step).replay(formatter);
+                step(step);
             }
             for (Object s : getList(featureElement, "examples")) {
                 JSONObject eo = (JSONObject) s;
-                new Examples(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), rows(getList(eo, "rows"))).replay(formatter);
+                new Examples(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), rows(getList(eo, "rows"))).replay(reporter);
             }
         }
-        formatter.eof();
+        reporter.eof();
     }
 
     private BasicStatement featureElement(JSONObject o) {
@@ -59,17 +52,38 @@ public class JSONParser implements FeatureParser {
         }
     }
 
-    private Step step(JSONObject o) {
-        Object multilineArg = null;
+    private void step(JSONObject o) {
+        Step step = new Step(comments(o), keyword(o), name(o), line(o));
         if (o.containsKey("multiline_arg")) {
             Map ma = (Map) o.get("multiline_arg");
             if (ma.get("type").equals("table")) {
-                multilineArg = rows(getList(ma, "value"));
+                step.setMultilineArg(rows(getList(ma, "value")));
             } else {
-                multilineArg = new PyString(getString(ma, "value"), getInt(ma, "line"));
+                step.setMultilineArg(new PyString(getString(ma, "value"), getInt(ma, "line")));
             }
         }
-        return new Step(comments(o), keyword(o), name(o), line(o), multilineArg, null);
+        step.replay(reporter);
+
+        if(o.containsKey("match")) {
+            Map m = (Map) o.get("match");
+            new Match(arguments(m), location(m)).replay(reporter);
+        }
+
+        if(o.containsKey("result")) {
+            Map r = (Map) o.get("result");
+            new Result(status(r), errorMessage(r)).replay(reporter);
+        }
+
+        if(o.containsKey("embeddings")) {
+            List<Map> es = (List<Map>) o.get("embeddings");
+            for (Map e : es) {
+                try {
+                    reporter.embedding(getString(e, "mime_type"), Base64.decode(getString(e, "data")));
+                } catch (IOException ex) {
+                    throw new RuntimeException("Couldn't decode data", ex);
+                }
+            }
+        }
     }
 
     private List<Row> rows(List o) {
@@ -117,6 +131,28 @@ public class JSONParser implements FeatureParser {
 
     private int line(Map o) {
         return getInt(o, "line");
+    }
+
+    private List<Argument> arguments(Map m) {
+        List arguments = getList(m, "arguments");
+        List<Argument> result = new ArrayList<Argument>();
+        for (Object argument : arguments) {
+            Map argMap = (Map) argument;
+            result.add(new Argument(getInt(argMap, "offset"), getString(argMap, "val")));
+        }
+        return result;
+    }
+
+    private String location(Map m) {
+        return getString(m, "location");
+    }
+
+    private String status(Map r) {
+        return getString(r, "status");
+    }
+
+    private String errorMessage(Map r) {
+        return getString(r, "error_message");
     }
 
     private String getString(Map map, String key) {

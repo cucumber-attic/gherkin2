@@ -1,8 +1,9 @@
 require 'gherkin/native'
+require 'gherkin/formatter/hashable'
 
 module Gherkin
   module Formatter
-    class Argument
+    class Argument < Hashable
       native_impl('gherkin')
       attr_reader :offset, :val
 

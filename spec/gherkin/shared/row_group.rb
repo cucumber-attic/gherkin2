@@ -34,6 +34,11 @@ module Gherkin
         @listener.should_receive(:row).with(r(['|', 'the', '\a', '\\', '|\\|']), 1)
         scan('| \| | the | \a | \\ |   \|\\\|    |' + "\n")
       end
+
+      it "should parse cells with newlines" do
+        @listener.should_receive(:row).with(r(["\n"]), 1)
+        scan("|\\n|" + "\n")
+      end
     
       it "should parse cells with spaces within the content" do
         @listener.should_receive(:row).with(r(["Dill pickle", "Valencia orange"]), 1)

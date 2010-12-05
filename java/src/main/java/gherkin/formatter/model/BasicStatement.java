@@ -1,6 +1,7 @@
 package gherkin.formatter.model;
 
 import gherkin.formatter.Formatter;
+import gherkin.formatter.Mappable;
 
 import java.util.List;
 

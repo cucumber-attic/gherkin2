@@ -8,17 +8,7 @@ import gherkin.lexer.Listener;
 import gherkin.util.Mapper;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 import static gherkin.util.FixJava.join;
 import static gherkin.util.FixJava.map;
@@ -126,7 +116,7 @@ public class I18n {
 
     public String getKeywordTable() {
         StringWriter writer = new StringWriter();
-        PrettyFormatter pf = new PrettyFormatter(writer, false);
+        PrettyFormatter pf = new PrettyFormatter(writer, true, false);
         List<Row> table = new ArrayList<Row>();
         for (String key : KEYWORD_KEYS) {
             List<String> cells = Arrays.asList(key, join(map(keywords(key), QUOTE_MAPPER), ", "));

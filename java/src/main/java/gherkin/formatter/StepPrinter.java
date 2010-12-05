@@ -9,15 +9,15 @@ public class StepPrinter {
         for (Argument argument : arguments) {
             if (argument.getOffset() != 0) {
                 String text = stepName.substring(textStart, argument.getOffset());
-                textFormat.writeText(out, text);
+                out.print(textFormat.text(text));
             }
             String val = argument.getVal();
-            argFormat.writeText(out, val);
+            out.print(argFormat.text(val));
             textStart = argument.getOffset() + argument.getVal().length();
         }
         if (textStart != stepName.length()) {
             String text = stepName.substring(textStart, stepName.length());
-            textFormat.writeText(out, text);
+            out.print(textFormat.text(text));
         }
     }
 }

@@ -10,7 +10,6 @@ require 'gherkin'
 require 'gherkin/sexp_recorder'
 require 'gherkin/output_stream_string_io'
 require 'gherkin/java_libs'
-require 'gherkin/json'
 
 module TransformHelpers
   def tr_line_number(step_arg)

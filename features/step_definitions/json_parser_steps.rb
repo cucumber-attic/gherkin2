@@ -6,7 +6,7 @@ World(Gherkin::Formatter::Colors)
 
 Given /^a PrettyFormatter$/ do
   @io = StringIO.new
-  @formatter = Gherkin::Formatter::PrettyFormatter.new(@io, true)
+  @formatter = Gherkin::Formatter::PrettyFormatter.new(@io, true, false)
 end
 
 Given /^a JSON lexer$/ do

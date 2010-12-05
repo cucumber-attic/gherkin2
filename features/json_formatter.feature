@@ -275,4 +275,103 @@ Feature: JSON formatter
         ]
       }
       """
+  
+  Scenario: Feature with a description
+
+    We want people to be able to put markdown formatting into their descriptions
+    but this means we need to respect whitespace at the start and end of lines
+    in the description.
     
+    Pay close attention to the whitespace in this example.
+    
+    Given the following text is parsed:
+      """
+      Feature: Foo
+        one line  
+        another line  
+        
+            some pre-formatted stuff
+        
+        Background: name
+            test  
+            test 
+        
+        Scenario: name
+            test  
+            test 
+        
+        Scenario Outline: name
+            test  
+            test 
+          
+          Given <foo> 
+            
+          Examples: name
+              test  
+              test 
+            | foo   |
+            | table |
+      """
+    Then the outputted JSON should be:
+      """
+      {
+        "keyword": "Feature",
+        "name": "Foo",
+        "description": "one line  \nanother line  \n\n    some pre-formatted stuff",
+        "line": 1,
+        "elements": [
+          {
+            "description": "  test  \n  test",
+            "keyword": "Background",
+            "line": 7,
+            "name": "name",
+            "type": "background"
+          },
+          {
+            "description": "  test  \n  test",
+            "keyword": "Scenario",
+            "line": 11,
+            "name": "name",
+            "type": "scenario"
+          },
+          {
+            "description": "  test  \n  test",
+            "examples": [
+              {
+                "description": "  test  \n  test",
+                "keyword": "Examples",
+                "line": 21,
+                "name": "name",
+                "rows": [
+                  {
+                    "cells": [
+                      "foo"
+                    ],
+                    "line": 24
+                  },
+                  {
+                    "cells": [
+                      "table"
+                    ],
+                    "line": 25
+                  }
+                ]
+              }
+            ],
+            "keyword": "Scenario Outline",
+            "line": 15,
+            "name": "name",
+            "steps": [
+              {
+                "keyword": "Given ",
+                "line": 19,
+                "name": "<foo>"
+              }
+            ],
+            "type": "scenario_outline"
+          }
+        ]
+      }
+      """
+
+

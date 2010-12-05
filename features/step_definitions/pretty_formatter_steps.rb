@@ -10,7 +10,7 @@ module PrettyPlease
   
   def pretty_machinery(gherkin, feature_path)
     io        = StringIO.new
-    formatter = Gherkin::Formatter::PrettyFormatter.new(io, true)
+    formatter = Gherkin::Formatter::PrettyFormatter.new(io, true, false)
     parser    = Gherkin::Parser::Parser.new(formatter, true)
     parse(parser, gherkin, feature_path)
     io.string
@@ -23,7 +23,7 @@ module PrettyPlease
     parse(gherkin_parser, gherkin, feature_path)
 
     io                  = StringIO.new
-    pretty_formatter    = Gherkin::Formatter::PrettyFormatter.new(io, true)
+    pretty_formatter    = Gherkin::Formatter::PrettyFormatter.new(io, true, false)
     json_parser         = Gherkin::JSONParser.new(pretty_formatter)
     json_parser.parse(json.string, "#{feature_path}.json", 0)
     
