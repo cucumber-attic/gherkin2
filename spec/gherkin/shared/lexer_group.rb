@@ -96,24 +96,24 @@ module Gherkin
           ]
         end
         
-        it "should allow multiline names ending at eof" do
-          scan("Background: I have several\n   Lines to look at\n None starting with Given")
+        it "should allow multiline descriptions ending at eof" do
+          scan("Background: I have several\n   Lines to look at\n   None starting with Given")
           @listener.to_sexp.should == [
-            [:background, "Background", "I have several", "Lines to look at\nNone starting with Given", 1],
+            [:background, "Background", "I have several", " Lines to look at\n None starting with Given", 1],
             [:eof]
           ]
         end
          
-        it "should allow multiline names" do
+        it "should allow multiline descriptions, including whitespace" do
           scan(%{Feature: Hi
 Background: It is my ambition to say 
-            in ten sentences
-            what others say 
-            in a whole book.
+  in ten sentences
+    what others say 
+  in a whole book.
 Given I am a step})
           @listener.to_sexp.should == [
             [:feature, "Feature", "Hi", "", 1],
-            [:background, "Background", "It is my ambition to say", "in ten sentences\nwhat others say\nin a whole book.",2],
+            [:background, "Background", "It is my ambition to say", "in ten sentences\n  what others say \nin a whole book.",2],
             [:step, "Given ", "I am a step", 6],
             [:eof]
           ]
@@ -141,22 +141,22 @@ Given I am a step})
           ]
         end
         
-        it "should allow multiline names" do
+        it "should allow multiline descriptions, including whitespace" do
           scan(%{Scenario: It is my ambition to say
-                          in ten sentences
-                          what others say 
-                          in a whole book.
-                          Given I am a step
-                          })
+  in ten sentences
+  what others say 
+      in a whole book.
+  Given I am a step
+})
           @listener.to_sexp.should == [
-            [:scenario, "Scenario", "It is my ambition to say", "in ten sentences\nwhat others say\nin a whole book.", 1],
+            [:scenario, "Scenario", "It is my ambition to say", "in ten sentences\nwhat others say \n    in a whole book.", 1],
             [:step, "Given ", "I am a step", 5],
             [:eof]
           ]
         end
 
         it "should allow multiline names ending at eof" do
-          scan("Scenario: I have several\n       Lines to look at\n None starting with Given")
+          scan("Scenario: I have several\nLines to look at\n None starting with Given")
           @listener.to_sexp.should == [
             [:scenario, "Scenario", "I have several", "Lines to look at\nNone starting with Given", 1],
             [:eof]
@@ -165,9 +165,9 @@ Given I am a step})
   
         it "should ignore gherkin keywords embedded in other words" do
           scan(%{Scenario: I have a Button
-          Buttons are great
-  Given I have some
-  But I might not because I am a Charles Dickens character
+Buttons are great
+Given I have some
+But I might not because I am a Charles Dickens character
 })
           @listener.to_sexp.should == [
             [:scenario, "Scenario", "I have a Button", "Buttons are great", 1],
@@ -179,7 +179,7 @@ Given I am a step})
         
         it "should allow step keywords in Scenario names" do
           scan(%{Scenario: When I have when in scenario
-          I should be fine
+I should be fine
 Given I am a step
 })
           @listener.to_sexp.should == [
@@ -192,14 +192,15 @@ Given I am a step
 
       describe "Scenario Outlines" do
         it "should be parsed" do
-          scan(%{Scenario Outline: Hello
-                          With a description
-                          Given a <what> cucumber
-                          Examples: With a name
-                          and a description
-                          |what|
-                          |green|
-                          })
+          scan(<<-HERE)
+Scenario Outline: Hello
+  With a description
+  Given a <what> cucumber
+  Examples: With a name
+    and a description
+    |what|
+    |green|
+HERE
           @listener.to_sexp.should == [
             [:scenario_outline, "Scenario Outline", "Hello", "With a description", 1],
             [:step, "Given ", "a <what> cucumber", 3],
@@ -224,15 +225,15 @@ Given I am a step
         end
 
         it "should allow multiline description" do
-          scan(%{Scenario Outline: It is my ambition to say 
-                          in ten sentences
-                          what others say 
-                          in a whole book.
-                          Given I am a step
-
-                          })
+          scan(<<-HERE)
+Scenario Outline: It is my ambition to say 
+  in ten sentences
+    what others say 
+  in a whole book.
+  Given I am a step
+HERE
           @listener.to_sexp.should == [
-            [:scenario_outline, "Scenario Outline", "It is my ambition to say", "in ten sentences\nwhat others say\nin a whole book.", 1],
+            [:scenario_outline, "Scenario Outline", "It is my ambition to say", "in ten sentences\n  what others say \nin a whole book.", 1],
             [:step, "Given ", "I am a step", 5],
             [:eof]
           ]
@@ -255,11 +256,11 @@ Given I am a step
         
         it "should parse multiline example names" do
           scan(%{Examples: I'm a multiline name
-                          and I'm ok
-                          f'real
-                          |x|
-                          |5|
-                          })
+and I'm ok
+f'real
+|x|
+|5|
+})
           @listener.to_sexp.should == [
             [:examples, "Examples", "I'm a multiline name", "and I'm ok\nf'real", 1],
             [:row, ["x"], 4],
