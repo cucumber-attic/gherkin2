@@ -142,11 +142,6 @@ module Gherkin
         %% write exec;
       end
 
-      CRLF_RE = /\r\n/
-      LF_RE = /[^\r]\n/
-      CRLF = "\r\n"
-      LF = "\n"
-
       def unindent(startcol, text)
         text.gsub(/^[\t ]{0,#{startcol}}/, "")
       end
@@ -166,8 +161,14 @@ module Gherkin
         utf8_pack(rest[0..rest.index(10)||-1]).strip
       end
 
-      def utf8_pack(array)
-        (RUBY_VERSION =~ /^1\.9/) ? array.pack("c*").force_encoding("UTF-8") : array.pack("c*")
+      if (RUBY_VERSION =~ /^1\.9/)
+        def utf8_pack(array)
+          array.pack("c*").force_encoding("UTF-8")
+        end
+      else
+        def utf8_pack(array)
+          array.pack("c*")
+        end
       end
     end
   end
