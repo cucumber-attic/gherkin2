@@ -3,10 +3,7 @@ package gherkin.formatter;
 import gherkin.formatter.model.*;
 import gherkin.util.Mapper;
 
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.List;
@@ -61,17 +58,8 @@ public class PrettyFormatter implements Reporter {
         if (monochrome) {
             formats = new MonochromeFormats();
         } else {
-            try {
-                formats = colorFormats();
-            } catch (Throwable e) {
-                System.err.println("WARNING: Couldn't load color formatter: " + e.getMessage());
-                formats = new MonochromeFormats();
-            }
+            formats = new AnsiFormats();
         }
-    }
-
-    private Formats colorFormats() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-        return (Formats) getClass().getClassLoader().loadClass("gherkin.formatter.JansiFormats").newInstance();
     }
 
     public void uri(String uri) {
@@ -130,8 +118,8 @@ public class PrettyFormatter implements Reporter {
 
     public void step(Step step) {
         this.step = step;
-        stepIndex ++;
-        if(!executing) {
+        stepIndex++;
+        if (!executing) {
             match(Match.NONE);
             result(Result.SKIPPED);
         }
@@ -139,13 +127,13 @@ public class PrettyFormatter implements Reporter {
 
     public void match(Match match) {
         this.match = match;
-        if(!monochrome) {
+        if (!monochrome) {
             printStep("executing", match.getArguments(), match.getLocation());
         }
     }
 
     public void result(Result result) {
-        if(!monochrome) {
+        if (!monochrome) {
             out.print(formats.up(1));
         }
         printStep(result.getStatus(), match.getArguments(), match.getLocation());
@@ -155,7 +143,7 @@ public class PrettyFormatter implements Reporter {
         }
     }
 
-    private void printStep(String status, List<Argument> arguments, String location) {
+    private void printStep(String status, List<Argument> arguments, String location)  {
         Format textFormat = getFormat(status);
         Format argFormat = getArgFormat(status);
 
@@ -185,7 +173,7 @@ public class PrettyFormatter implements Reporter {
 
     public void table(List<Row> rows) {
         prepareTable(rows);
-        if(!executing) {
+        if (!executing) {
             for (Row row : rows) {
                 row(row.createResults("skipped"));
                 nextRow();
@@ -210,7 +198,7 @@ public class PrettyFormatter implements Reporter {
 
     public void row(List<CellResult> cellResults) {
         Row row = rows.get(rowIndex);
-        if(rowPrintCount > 0) {
+        if (rowPrintCount > 0) {
             // If we already printed this row, move the cursor
             out.print(formats.up(row.getComments().size() + 1));
         }
@@ -237,7 +225,7 @@ public class PrettyFormatter implements Reporter {
         Set<Result> seenResults = new HashSet<Result>();
         for (CellResult cellResult : cellResults) {
             for (Result result : cellResult.getResults()) {
-                if(result.getErrorMessage() != null && !seenResults.contains(result)) {
+                if (result.getErrorMessage() != null && !seenResults.contains(result)) {
                     out.println(indent(result.getErrorMessage(), "      "));
                     seenResults.add(result);
                 }
@@ -250,7 +238,7 @@ public class PrettyFormatter implements Reporter {
 
     public void nextRow() {
         rowIndex++;
-        rowPrintCount=0;
+        rowPrintCount = 0;
     }
 
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {

@@ -1,5 +1,5 @@
 # encoding: utf-8
-require 'gherkin/formatter/colors'
+require 'gherkin/formatter/ansi_escapes'
 require 'gherkin/formatter/step_printer'
 require 'gherkin/formatter/argument'
 require 'gherkin/formatter/escaping'
@@ -11,7 +11,7 @@ module Gherkin
     class PrettyFormatter
       native_impl('gherkin')
 
-      include Colors
+      include AnsiEscapes
       include Escaping
 
       def initialize(io, monochrome, executing)
@@ -77,7 +77,7 @@ module Gherkin
       end
 
       def result(result)
-        @io.write("\033[1A")
+        @io.write(up(1))
         print_step(result.status, @match.arguments, @match.location)
       end
 
@@ -107,14 +107,14 @@ module Gherkin
       end
 
       class ColorFormat
-        include Colors
+        include AnsiEscapes
         
         def initialize(status)
           @status = status
         end
 
         def text(text)
-          self.__send__(@status, text)
+          self.__send__(@status) + text + reset
         end
       end
 
@@ -221,13 +221,13 @@ module Gherkin
         l = (keyword+name).unpack("U*").length
         @max_step_length = [@max_step_length, l].max
         indent = @max_step_length - l
-        ' ' * indent + ' ' + comments("# #{@uri}:#{line}")
+        ' ' * indent + ' ' + comments + "# #{@uri}:#{line}" + reset
       end
 
       def print_indented_step_location(location)
         indent = @max_step_length - @step_lengths[@step_index]
         return if location.nil?
-        @io.write(' ' * indent + ' ' + comments("# #{location}"))
+        @io.write(' ' * indent + ' ' + comments + "# #{location}" + reset)
       end
     end
   end

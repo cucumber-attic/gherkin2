@@ -2,8 +2,6 @@ require 'stringio'
 require 'gherkin/formatter/pretty_formatter'
 require 'gherkin/json_parser'
 
-World(Gherkin::Formatter::Colors)
-
 Given /^a PrettyFormatter$/ do
   @io = StringIO.new
   @formatter = Gherkin::Formatter::PrettyFormatter.new(@io, true, false)

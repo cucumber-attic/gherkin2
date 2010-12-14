@@ -49,10 +49,9 @@ Gem::Specification.new do |s|
   end
 
   s.add_dependency('json', '~> 1.4.6')
-  s.add_dependency('term-ansicolor','~> 1.0.5')
 
   s.add_development_dependency('rake', '~> 0.8.7')
   s.add_development_dependency('awesome_print', '~> 0.2.1')
-  s.add_development_dependency('rspec', '~> 2.0.1')
+  s.add_development_dependency('rspec', '~> 2.3.0')
   s.add_development_dependency('cucumber', '~> 0.10.0')
 end

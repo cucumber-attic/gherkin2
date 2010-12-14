@@ -10,7 +10,7 @@ require 'stringio'
 module Gherkin
   module Formatter
     describe PrettyFormatter do
-      include Colors
+      include AnsiEscapes
 
       def assert_io(s)
         actual = @io.string
@@ -60,11 +60,11 @@ module Gherkin
         assert_io(%{Feature: Hello
   World
 
-  Scenario: The scenario #{grey('# features/foo.feature:4')}
-    #{grey('Given ')}#{grey('some stuff')}     #{grey('# features/step_definitions/bar.rb:56')}
-\033[1A    #{green('Given ')}#{green('some stuff')}     #{grey('# features/step_definitions/bar.rb:56')}
-    #{grey('When ')}#{grey('foo')}             #{grey('# features/step_definitions/bar.rb:96')}
-\033[1A    #{green('When ')}#{green('foo')}             #{grey('# features/step_definitions/bar.rb:96')}
+  Scenario: The scenario #{comments}# features/foo.feature:4#{reset}
+    #{executing}Given #{reset}#{executing}some stuff#{reset}     #{comments}# features/step_definitions/bar.rb:56#{reset}
+#{up(1)}    #{passed}Given #{reset}#{passed}some stuff#{reset}     #{comments}# features/step_definitions/bar.rb:56#{reset}
+    #{executing}When #{reset}#{executing}foo#{reset}             #{comments}# features/step_definitions/bar.rb:96#{reset}
+#{up(1)}    #{passed}When #{reset}#{passed}foo#{reset}             #{comments}# features/step_definitions/bar.rb:96#{reset}
 })
       end
 
@@ -84,9 +84,9 @@ module Gherkin
         assert_io(%{Feature: Hello
   World
 
-  Scenario: The scenario            #{grey('# features/foo.feature:4')}
-    #{grey('Given ')}#{grey('some stuff that is longer')} #{grey('# features/step_definitions/bar.rb:56')}
-\033[1A    #{green('Given ')}#{green('some stuff that is longer')} #{grey('# features/step_definitions/bar.rb:56')}
+  Scenario: The scenario            #{comments}# features/foo.feature:4#{reset}
+    #{executing}Given #{reset}#{executing}some stuff that is longer#{reset} #{comments}# features/step_definitions/bar.rb:56#{reset}
+#{up(1)}    #{passed}Given #{reset}#{passed}some stuff that is longer#{reset} #{comments}# features/step_definitions/bar.rb:56#{reset}
 })
       end
 
@@ -100,18 +100,10 @@ module Gherkin
         @f.match(match)
         @f.result(result)
 
-        if defined?(JRUBY_VERSION)
-          # Not terribly readable. The result on Java is different because JANSI uses semicolons when there are several codes.
-          assert_io(
-            "    \e[90mGiven \e[0m\e[90mI have \e[0m\e[90m\e[1m999\e[0m\e[90m cukes in my belly\e[0m\n" + 
-            "\e[1A    \e[32mGiven \e[0m\e[32mI have \e[0m\e[32;1m999\e[0m\e[32m cukes in my belly\e[0m\n"
-          )
-        else
-          assert_io(
-            "    #{grey('Given ')}#{grey('I have ')}#{grey(bold('999'))}#{grey(' cukes in my belly')}\n" +
-            "\033[1A    #{green('Given ')}#{green('I have ')}#{green(bold('999'))}#{green(' cukes in my belly')}\n"
-          )
-        end
+        assert_io(
+          "    #{executing}Given #{reset}#{executing}I have #{reset}#{executing_arg}999#{reset}#{executing} cukes in my belly#{reset}\n" +
+          "#{up(1)}    #{passed}Given #{reset}#{passed}I have #{reset}#{passed_arg}999#{reset}#{passed} cukes in my belly#{reset}\n"
+        )
       end
 
       it "should prettify scenario" do

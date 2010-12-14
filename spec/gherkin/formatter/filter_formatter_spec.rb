@@ -8,8 +8,6 @@ require 'gherkin/formatter/pretty_formatter'
 module Gherkin
   module Formatter
     describe FilterFormatter do
-      include Colors
-
       attr_accessor :file
 
       before do
