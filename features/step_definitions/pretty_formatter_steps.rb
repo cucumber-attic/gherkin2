@@ -6,7 +6,6 @@ require 'gherkin/formatter/json_formatter'
 require 'gherkin/json_parser'
 
 module PrettyPlease
-  include Gherkin::Formatter::Colors
   
   def pretty_machinery(gherkin, feature_path)
     io        = StringIO.new

@@ -40,11 +40,6 @@
             <artifactId>base64</artifactId>
             <version>2.3.8</version>
         </dependency>
-        <dependency>
-            <groupId>org.fusesource.jansi</groupId>
-            <artifactId>jansi</artifactId>
-            <version>1.4</version>
-        </dependency>
 
         <dependency>
             <groupId>junit</groupId>

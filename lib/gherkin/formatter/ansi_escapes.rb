@@ -1,9 +1,6 @@
-require 'term/ansicolor'
-
 module Gherkin
   module Formatter
-    # Defines aliases for coloured output. You don't invoke any methods from this
-    # module directly, but you can change the output colours by defining
+    # Defines aliases for ANSI coloured output. Default colours can be overridden by defining
     # a <tt>GHERKIN_COLORS</tt> variable in your shell, very much like how you can
     # tweak the familiar POSIX command <tt>ls</tt> with
     # <a href="http://mipsisrisc.com/rambling/2008/06/27/lscolorsls_colors-now-with-linux-support/">$LSCOLORS/$LS_COLORS</a>
@@ -39,8 +36,19 @@ module Gherkin
     #   ruby -e "require 'rubygems'; require 'term/ansicolor'; puts Term::ANSIColor.attributes"
     #
     # Although not listed, you can also use <tt>grey</tt>
-    module Colors
-      include Term::ANSIColor
+    module AnsiEscapes
+      COLORS = {
+        'black'   => "\e[30m",
+        'red'     => "\e[31m",
+        'green'   => "\e[32m",
+        'yellow'  => "\e[33m",
+        'blue'    => "\e[34m",
+        'magenta' => "\e[35m",
+        'cyan'    => "\e[36m",
+        'white'   => "\e[37m",
+        'grey'    => "\e[90m",
+        'bold'    => "\e[1m"
+      }
 
       ALIASES = Hash.new do |h,k|
         if k.to_s =~ /(.*)_arg/
@@ -65,55 +73,23 @@ module Gherkin
         end
       end
 
-      ALIASES.each do |method, color|
-        unless method =~ /.*_arg$/
-          code = <<-EOF
-          def #{method}(string=nil, &proc)
-            #{ALIASES[method].split(",").join("(") + "(string, &proc" + ")" * ALIASES[method].split(",").length}
-          end
-          def #{method}_arg(string=nil, &proc)
-            #{ALIASES[method+'_arg'].split(",").join("(") + "(string, &proc" + ")" * ALIASES[method+'_arg'].split(",").length}
-          end
-          EOF
-          eval(code)
+      ALIASES.keys.each do |key|
+        define_method(key) do
+          ALIASES[key].split(',').map{|color| COLORS[color]}.join('')
+        end
+
+        define_method("#{key}_arg") do
+          ALIASES["#{key}_arg"].split(',').map{|color| COLORS[color]}.join('')
         end
       end
-    
-      def self.define_grey #:nodoc:
-        begin
-          gem 'genki-ruby-terminfo'
-          require 'terminfo'
-          case TermInfo.default_object.tigetnum("colors")
-          when 0
-            raise "Your terminal doesn't support colours"
-          when 1
-            ::Term::ANSIColor.coloring = false
-            alias grey white
-          when 2..8
-            alias grey white
-          else
-            define_real_grey
-          end
-        rescue Exception => e
-          if e.class.name == 'TermInfo::TermInfoError'
-            STDERR.puts "*** WARNING ***"
-            STDERR.puts "You have the genki-ruby-terminfo gem installed, but you haven't set your TERM variable."
-            STDERR.puts "Try setting it to TERM=xterm-256color to get grey colour in output"
-            STDERR.puts "\n"
-            alias grey white
-          else
-            define_real_grey
-          end
-        end
-      end
-    
-      def self.define_real_grey #:nodoc:
-        def grey(m) #:nodoc:
-          "\e[90m#{m}\e[0m"
-        end
+      
+      def reset
+        "\e[0m"
       end
 
-      define_grey
+      def up(n)
+        "\e[#{n}A"
+      end
     end
   end
 end
