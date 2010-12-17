@@ -3,7 +3,10 @@ package gherkin.formatter;
 import gherkin.formatter.model.*;
 import gherkin.util.Mapper;
 
-import java.io.*;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.List;
@@ -41,7 +44,8 @@ public class PrettyFormatter implements Reporter {
     private int[] maxLengths;
     private int rowIndex;
     private List<Row> rows;
-    private int rowPrintCount = 0;
+    private Integer rowHeight = null;
+    private boolean rowsAbove = false;
 
     public PrettyFormatter(Writer out, boolean monochrome, boolean executing) {
         this.out = new PrintWriter(out);
@@ -139,7 +143,7 @@ public class PrettyFormatter implements Reporter {
         printStep(result.getStatus(), match.getArguments(), match.getLocation());
 
         if (result.getErrorMessage() != null) {
-            out.println(indent(result.getErrorMessage(), "      "));
+            printError(result);
         }
     }
 
@@ -198,14 +202,17 @@ public class PrettyFormatter implements Reporter {
 
     public void row(List<CellResult> cellResults) {
         Row row = rows.get(rowIndex);
-        if (rowPrintCount > 0) {
-            // If we already printed this row, move the cursor
-            out.print(formats.up(row.getComments().size() + 1));
+        if (rowsAbove) {
+            out.print(formats.up(rowHeight));
+        } else {
+            rowsAbove = true;
         }
+        rowHeight = 1;
 
         for (Comment comment : row.getComments()) {
             out.write("      ");
             out.println(comment.getValue());
+            rowHeight++;
         }
         out.write("      | ");
         for (int colIndex = 0; colIndex < maxLengths.length; colIndex++) {
@@ -222,23 +229,28 @@ public class PrettyFormatter implements Reporter {
             }
         }
         out.println();
+        rowHeight++;
         Set<Result> seenResults = new HashSet<Result>();
         for (CellResult cellResult : cellResults) {
             for (Result result : cellResult.getResults()) {
                 if (result.getErrorMessage() != null && !seenResults.contains(result)) {
-                    out.println(indent(result.getErrorMessage(), "      "));
+                    printError(result);
+                    rowHeight += result.getErrorMessage().split("\n").length;                    
                     seenResults.add(result);
                 }
             }
         }
-
         out.flush();
-        rowPrintCount++;
+    }
+
+    private void printError(Result result) {
+        Format failed = formats.get("failed");
+        out.println(indent(failed.text(result.getErrorMessage()), "      "));
     }
 
     public void nextRow() {
         rowIndex++;
-        rowPrintCount = 0;
+        rowsAbove = false;
     }
 
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
