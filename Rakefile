@@ -1,8 +1,10 @@
 # encoding: utf-8
 require 'rubygems'
 require 'bundler'
-Bundler.setup
-Bundler::GemHelper.install_tasks
+unless ENV['RUBY_CC_VERSION']
+  Bundler.setup
+  Bundler::GemHelper.install_tasks
+end
 ENV['RUBYOPT'] = nil # Necessary to prevent Bundler from *&^%$#ing up rake-compiler.
 
 require 'rake/clean'
