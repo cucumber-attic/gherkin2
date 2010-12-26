@@ -1,4 +1,4 @@
-== In Git
+== 2.3.3 (2010-12-26)
 
 === Changes
 * No more dependencies on external ANSI escape libraries (Ruby:term-ansicolor, Java:Jansi). DIY is better! (Aslak Hellesøy)
