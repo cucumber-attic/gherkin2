@@ -221,10 +221,10 @@ module Gherkin
       class Result < Hashable
         native_impl('gherkin')
 
-        attr_reader :status, :error_message
+        attr_reader :status, :duration, :error_message
         
-        def initialize(status, error_message)
-          @status, @error_message = status, error_message
+        def initialize(status, duration, error_message)
+          @status, @duration, @error_message = status, duration, error_message
         end
 
         def replay(formatter)

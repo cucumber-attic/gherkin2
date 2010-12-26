@@ -81,8 +81,7 @@ public class PrettyFormatter implements Reporter {
     public void background(Background background) {
         out.println();
         printComments(background.getComments(), "  ");
-        out.println("  " + background.getKeyword() + ": " + background.getName());
-        printDescription(background.getDescription(), "    ", true);
+        printDescribedStatement(background);
     }
 
     public void scenario(Scenario scenario) {
@@ -97,11 +96,15 @@ public class PrettyFormatter implements Reporter {
         out.println();
         printComments(statement.getComments(), "  ");
         printTags(statement.getTags(), "  ");
+        printDescribedStatement(statement);
+    }
+
+    private void printDescribedStatement(DescribedStatement statement) {
         out.print("  ");
         out.print(statement.getKeyword());
         out.print(": ");
         out.print(statement.getName());
-        printIndentedScenarioLocation(statement.getKeyword(), statement.getName(), statement.getLine());
+        printIndentedLocation(statement.getKeyword(), statement.getName(), statement.getLine());
         out.println();
         printDescription(statement.getDescription(), "    ", true);
         out.flush();
@@ -306,7 +309,7 @@ public class PrettyFormatter implements Reporter {
         out.flush();
     }
 
-    private void printIndentedScenarioLocation(String keyword, String name, long line) {
+    private void printIndentedLocation(String keyword, String name, long line) {
         if (maxStepLength == -1) return;
         int l = keyword.length() + name.length();
         maxStepLength = Math.max(maxStepLength, l);

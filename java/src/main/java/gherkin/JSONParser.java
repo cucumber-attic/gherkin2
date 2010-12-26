@@ -71,7 +71,7 @@ public class JSONParser implements FeatureParser {
 
         if(o.containsKey("result")) {
             Map r = (Map) o.get("result");
-            new Result(status(r), errorMessage(r)).replay(reporter);
+            new Result(status(r), duration(r), errorMessage(r)).replay(reporter);
         }
 
         if(o.containsKey("embeddings")) {
@@ -151,6 +151,10 @@ public class JSONParser implements FeatureParser {
         return getString(r, "status");
     }
 
+    private long duration(Map r) {
+        return getLong(r, "duration");
+    }
+
     private String errorMessage(Map r) {
         return getString(r, "error_message");
     }
@@ -163,6 +167,11 @@ public class JSONParser implements FeatureParser {
     private int getInt(Map map, String key) {
         Object n = map.get(key);
         return n == null ? -1 : ((Number) n).intValue();
+    }
+
+    private long getLong(Map map, String key) {
+        Object n = map.get(key);
+        return n == null ? -1 : ((Number) n).longValue();
     }
 
     private List getList(Map map, String key) {

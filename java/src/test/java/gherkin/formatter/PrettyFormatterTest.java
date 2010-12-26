@@ -20,7 +20,7 @@ public class PrettyFormatterTest {
         Thread.sleep(1000);
         f.match(new Match(Arrays.asList(new Argument(7, "6")), "somewhere.brainfuck"));
         Thread.sleep(1000);
-        f.result(new Result("failed", "Something\nbad\nhappened"));
+        f.result(new Result("failed", 55, "Something\nbad\nhappened"));
     }
 
 }

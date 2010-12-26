@@ -35,7 +35,7 @@ public class I18n {
         }
     };
 
-    private static String codeKeywordFor(String keyword) {
+    public static String codeKeywordFor(String keyword) {
         return keyword.replaceAll("[\\s',!]", "");
     }
 
