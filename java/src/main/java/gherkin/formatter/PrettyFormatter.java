@@ -8,9 +8,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static gherkin.util.FixJava.join;
@@ -28,9 +26,6 @@ public class PrettyFormatter implements Reporter {
     private final boolean monochrome;
     private final boolean executing;
 
-    private int maxStepLength = -1;
-    private int[] stepLengths;
-    private int stepIndex;
     private String uri;
     private Mapper tagNameMapper = new Mapper() {
         public String map(Object tag) {
@@ -38,7 +33,6 @@ public class PrettyFormatter implements Reporter {
         }
     };
     private Formats formats;
-    private Step step;
     private Match match;
     private int[][] cellLengths;
     private int[] maxLengths;
@@ -46,6 +40,10 @@ public class PrettyFormatter implements Reporter {
     private List<Row> rows;
     private Integer rowHeight = null;
     private boolean rowsAbove = false;
+
+    private List<Step> steps = new ArrayList<Step>();
+    private List<Integer> indentations = new ArrayList<Integer>();
+    private DescribedStatement statement;
 
     public PrettyFormatter(Writer out, boolean monochrome, boolean executing) {
         this.out = new PrintWriter(out);
@@ -79,38 +77,68 @@ public class PrettyFormatter implements Reporter {
     }
 
     public void background(Background background) {
-        out.println();
-        printComments(background.getComments(), "  ");
-        printDescribedStatement(background);
+        replay();
+        statement = background;
     }
 
     public void scenario(Scenario scenario) {
-        printTagStatement(scenario);
+        replay();
+        statement = scenario;
     }
 
     public void scenarioOutline(ScenarioOutline scenarioOutline) {
-        printTagStatement(scenarioOutline);
+        replay();
+        statement = scenarioOutline;
     }
 
-    private void printTagStatement(TagStatement statement) {
+    private void replay() {
+        printStatement();
+        printSteps();
+    }
+
+    private void printSteps() {
+        while(!steps.isEmpty()) {
+            printStep("skipped", Collections.<Argument>emptyList(), null, true);
+        }
+    }
+
+    private void printStatement() {
+        if (statement == null) {
+            return;
+        }
+        calculateLocationIndentations();
         out.println();
         printComments(statement.getComments(), "  ");
-        printTags(statement.getTags(), "  ");
-        printDescribedStatement(statement);
-    }
-
-    private void printDescribedStatement(DescribedStatement statement) {
+        if (statement instanceof TagStatement) {
+            printTags(((TagStatement) statement).getTags(), "  ");
+        }
         out.print("  ");
         out.print(statement.getKeyword());
         out.print(": ");
         out.print(statement.getName());
-        printIndentedLocation(statement.getKeyword(), statement.getName(), statement.getLine());
-        out.println();
+        String location = executing ? uri + ":" + statement.getLine() : null;
+        out.println(indentedLocation(location, true));
         printDescription(statement.getDescription(), "    ", true);
         out.flush();
+        statement = null;
+    }
+
+    private String indentedLocation(String location, boolean proceed) {
+        StringBuffer sb = new StringBuffer();
+        int indentation = proceed ? indentations.remove(0) : indentations.get(0);
+        if(location == null) {
+            return "";
+        }
+        for (int i = 0; i < indentation; i++) {
+            sb.append(' ');
+        }
+        sb.append(' ');
+        sb.append(getFormat("comment").text("# " + location));
+        return sb.toString();
     }
 
     public void examples(Examples examples) {
+        replay();
         out.println();
         printComments(examples.getComments(), "    ");
         printTags(examples.getTags(), "    ");
@@ -124,18 +152,14 @@ public class PrettyFormatter implements Reporter {
     }
 
     public void step(Step step) {
-        this.step = step;
-        stepIndex++;
-        if (!executing) {
-            match(Match.NONE);
-            result(Result.SKIPPED);
-        }
+        steps.add(step);
     }
 
     public void match(Match match) {
         this.match = match;
+        printStatement();
         if (!monochrome) {
-            printStep("executing", match.getArguments(), match.getLocation());
+            printStep("executing", match.getArguments(), match.getLocation(), false);
         }
     }
 
@@ -143,14 +167,14 @@ public class PrettyFormatter implements Reporter {
         if (!monochrome) {
             out.print(formats.up(1));
         }
-        printStep(result.getStatus(), match.getArguments(), match.getLocation());
-
+        printStep(result.getStatus(), match.getArguments(), match.getLocation(), true);
         if (result.getErrorMessage() != null) {
             printError(result);
         }
     }
 
-    private void printStep(String status, List<Argument> arguments, String location)  {
+    private void printStep(String status, List<Argument> arguments, String location, boolean proceed) {
+        Step step = proceed ? steps.remove(0) : steps.get(0);
         Format textFormat = getFormat(status);
         Format argFormat = getArgFormat(status);
 
@@ -158,7 +182,7 @@ public class PrettyFormatter implements Reporter {
         out.print("    ");
         out.print(textFormat.text(step.getKeyword()));
         stepPrinter.writeStep(out, textFormat, argFormat, step.getName(), arguments);
-        printIndentedStepLocation(location);
+        out.print(indentedLocation(location, proceed));
 
         out.println();
         if (step.getRows() != null) {
@@ -238,7 +262,7 @@ public class PrettyFormatter implements Reporter {
             for (Result result : cellResult.getResults()) {
                 if (result.getErrorMessage() != null && !seenResults.contains(result)) {
                     printError(result);
-                    rowHeight += result.getErrorMessage().split("\n").length;                    
+                    rowHeight += result.getErrorMessage().split("\n").length;
                     seenResults.add(result);
                 }
             }
@@ -271,18 +295,26 @@ public class PrettyFormatter implements Reporter {
     }
 
     public void eof() {
+        replay();
         out.flush();
     }
 
-    public void steps(List<Step> steps) {
-        stepLengths = new int[steps.size()];
+    private void calculateLocationIndentations() {
+        int[] lineWidths = new int[steps.size() + 1];
         int i = 0;
-        for (Step step : steps) {
-            int stepLength = step.getKeyword().length() + step.getName().length();
-            stepLengths[i++] = stepLength;
-            maxStepLength = Math.max(maxStepLength, stepLength);
+
+        List<BasicStatement> statements = new ArrayList<BasicStatement>();
+        statements.add(statement);
+        statements.addAll(steps);
+        int maxLineWidth = 0;
+        for (BasicStatement statement : statements) {
+            int stepWidth = statement.getKeyword().length() + statement.getName().length();
+            lineWidths[i++] = stepWidth;
+            maxLineWidth = Math.max(maxLineWidth, stepWidth);
         }
-        stepIndex = -1;
+        for (int lineWidth : lineWidths) {
+            indentations.add(maxLineWidth - lineWidth);
+        }
     }
 
     public void embedding(String mimeType, byte[] data) {
@@ -307,26 +339,6 @@ public class PrettyFormatter implements Reporter {
         out.print(indent);
         out.println(join(map(tags, tagNameMapper), " "));
         out.flush();
-    }
-
-    private void printIndentedLocation(String keyword, String name, long line) {
-        if (maxStepLength == -1) return;
-        int l = keyword.length() + name.length();
-        maxStepLength = Math.max(maxStepLength, l);
-        int indent = maxStepLength - l;
-
-        padSpace(indent);
-        out.append(" ");
-        out.print(getFormat("comment").text("# " + uri + ":" + line));
-    }
-
-    private void printIndentedStepLocation(String location) {
-        if (location == null || "".equals(location)) return;
-        int indent = maxStepLength - stepLengths[stepIndex];
-
-        padSpace(indent);
-        out.append(" ");
-        out.print(getFormat("comment").text("# " + location));
     }
 
     private void printDescription(String description, String indentation, boolean newline) {

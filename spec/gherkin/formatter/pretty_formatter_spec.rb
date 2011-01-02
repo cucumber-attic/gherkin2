@@ -38,24 +38,15 @@ module Gherkin
         @f.uri("features/foo.feature")
         @f.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1))
 
-        step1 = Model::Step.new([], "Given ", "some stuff", 5)
-        match1 = Model::Match.new([], "features/step_definitions/bar.rb:56")
-        result1 = Model::Result.new('passed', 22, nil)
-
-        step2 = Model::Step.new([], "When ", "foo", 6)
-        match2 = Model::Match.new([], "features/step_definitions/bar.rb:96")
-        result2 = Model::Result.new('passed', 33, nil)
-
-        @f.steps([step1, step2])
         @f.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4))
+        @f.step(Model::Step.new([], "Given ", "some stuff", 5))
+        @f.step(Model::Step.new([], "When ", "foo", 6))
 
-        @f.step(step1)
-        @f.match(match1)
-        @f.result(result1)
+        @f.match(Model::Match.new([], "features/step_definitions/bar.rb:56"))
+        @f.result(Model::Result.new('passed', 22, nil))
 
-        @f.step(step2)
-        @f.match(match2)
-        @f.result(result2)
+        @f.match(Model::Match.new([], "features/step_definitions/bar.rb:96"))
+        @f.result(Model::Result.new('passed', 33, nil))
 
         assert_io(%{Feature: Hello
   World
@@ -75,7 +66,6 @@ module Gherkin
         match = Model::Match.new([], "features/step_definitions/bar.rb:56")
         result = Model::Result.new('passed', 0, nil)
 
-        @f.steps([step])
         @f.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4))
         @f.step(step)
         @f.match(match)
@@ -91,16 +81,15 @@ module Gherkin
       end
 
       it "should highlight arguments for regular steps" do
-        step = Model::Step.new([], "Given ", "I have 999 cukes in my belly", 3)
-        match = Model::Match.new([Gherkin::Formatter::Argument.new(7, '999')], nil)
-        result = Model::Result.new('passed', 6, nil)
-
-        @f.steps([step])
-        @f.step(step)
-        @f.match(match)
-        @f.result(result)
+        @f.uri("foo.feature")
+        @f.scenario(Model::Scenario.new([], [], "Scenario", "Lots of cukes", "", 3))
+        @f.step(Model::Step.new([], "Given ", "I have 999 cukes in my belly", 3))
+        @f.match(Model::Match.new([Gherkin::Formatter::Argument.new(7, '999')], nil))
+        @f.result(Model::Result.new('passed', 6, nil))
 
         assert_io(
+          "\n" +
+          "  Scenario: Lots of cukes              \e[90m# foo.feature:3\e[0m\n" +
           "    #{executing}Given #{reset}#{executing}I have #{reset}#{executing_arg}999#{reset}#{executing} cukes in my belly#{reset}\n" +
           "#{up(1)}    #{passed}Given #{reset}#{passed}I have #{reset}#{passed_arg}999#{reset}#{passed} cukes in my belly#{reset}\n"
         )

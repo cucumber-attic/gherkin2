@@ -5,7 +5,6 @@ import gherkin.formatter.model.*;
 import java.util.List;
 
 public interface Reporter extends Formatter {
-    void steps(List<Step> steps);
     void result(Result result);
     void match(Match match);
     void embedding(String mimeType, byte[] data);
