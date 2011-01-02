@@ -433,28 +433,15 @@
 "ro":
   name: Romanian
   native: română
-  background: Conditii
-  feature: Functionalitate
+  background: Context
+  feature: Functionalitate|Funcționalitate|Funcţionalitate
   scenario: Scenariu
-  scenario_outline: Scenariul de sablon
-  examples: Exemplele
-  given: "*|Daca"
-  when: "*|Cand"
+  scenario_outline: Structura scenariu|Structură scenariu
+  examples: Exemple
+  given: "*|Date fiind|Dat fiind|Dati fiind|Dați fiind|Daţi fiind"
+  when: "*|Cand|Când"
   then: "*|Atunci"
-  and: "*|Si"
-  but: "*|Dar"
-"ro-RO":
-  name: Romanian (diacritical)
-  native: română (diacritical)
-  background: Condiţii
-  feature: Funcționalitate
-  scenario: Scenariu
-  scenario_outline: Scenariul de şablon
-  examples: Exemplele
-  given: "*|Dacă"
-  when: "*|Când"
-  then: "*|Atunci"
-  and: "*|Și"
+  and: "*|Si|Și|Şi"
   but: "*|Dar"
 "ru":
   name: Russian
