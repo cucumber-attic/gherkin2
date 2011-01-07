@@ -235,3 +235,17 @@ Feature: Gherkin Feature lexer
             | cucumbers |
       """
     Then there should be no parse errors
+
+  Scenario: Comments between tags Scenario titles
+    Given the following text is parsed:
+      """
+      Feature: Test
+
+        @tag
+        # Comment about tagged scenario
+        Scenario: Tag still works
+          Given some neat conditions
+          When I do stuff
+          Then I should see some cool results
+      """
+    Then there should be no parse errors
