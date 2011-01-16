@@ -26,6 +26,45 @@ module Gherkin
       }})
     end
 
+    it "should parse an executed feature with scenario outline" do
+      check_json(%{{
+        "keyword": "Feature", 
+        "elements" : [
+          {
+            "type": "scenario_outline",
+            "steps": [
+              {
+                "name": "I have <n> cukes in my <what>"
+              }
+            ],
+            "examples": [
+              {
+                "rows": [
+                  {
+                    "cells": ["n", "what"]
+                  },
+                  {
+                    "cells": ["10", "belly"],
+                    "steps": [
+                      {
+                        "match": {
+                          "columns": [0,1]
+                        }
+                      }
+                    ],
+                    "result": {
+                      "status": "passed",
+                      "duration": -1
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }})
+    end
+
     it "should parse feature with tags and one scenario" do
       check_json(%{{
         "tags": [

@@ -44,6 +44,9 @@ public class PrettyFormatter implements Reporter {
     private List<Step> steps = new ArrayList<Step>();
     private List<Integer> indentations = new ArrayList<Integer>();
     private DescribedStatement statement;
+    private int exampleResultCount;
+    private List<CellResult> exampleRowResult;
+    private boolean inExamples;
 
     public PrettyFormatter(Writer out, boolean monochrome, boolean executing) {
         this.out = new PrintWriter(out);
@@ -77,7 +80,6 @@ public class PrettyFormatter implements Reporter {
     }
 
     public void background(Background background) {
-        replay();
         statement = background;
     }
 
@@ -97,7 +99,7 @@ public class PrettyFormatter implements Reporter {
     }
 
     private void printSteps() {
-        while(!steps.isEmpty()) {
+        while (!steps.isEmpty()) {
             printStep("skipped", Collections.<Argument>emptyList(), null, true);
         }
     }
@@ -126,7 +128,7 @@ public class PrettyFormatter implements Reporter {
     private String indentedLocation(String location, boolean proceed) {
         StringBuffer sb = new StringBuffer();
         int indentation = proceed ? indentations.remove(0) : indentations.get(0);
-        if(location == null) {
+        if (location == null) {
             return "";
         }
         for (int i = 0; i < indentation; i++) {
@@ -139,6 +141,7 @@ public class PrettyFormatter implements Reporter {
 
     public void examples(Examples examples) {
         replay();
+        inExamples = true;
         out.println();
         printComments(examples.getComments(), "    ");
         printTags(examples.getTags(), "    ");
@@ -149,6 +152,9 @@ public class PrettyFormatter implements Reporter {
         out.println();
         printDescription(examples.getDescription(), "      ", true);
         table(examples.getRows());
+
+        rowIndex = 0;
+        printExampleRow(examples.getRows().get(0).createResults("skipped_arg"));
     }
 
     public void step(Step step) {
@@ -156,20 +162,33 @@ public class PrettyFormatter implements Reporter {
     }
 
     public void match(Match match) {
-        this.match = match;
-        printStatement();
-        if (!monochrome) {
-            printStep("executing", match.getArguments(), match.getLocation(), false);
+        if(inExamples) {
+            if(exampleResultCount % steps.size() == 0) {
+                rowIndex++;
+                exampleRowResult = rows.get(rowIndex).createResults("executing");
+                printExampleRow(exampleRowResult);
+            }
+        } else {
+            this.match = match;
+            printStatement();
+            if (!monochrome) {
+                printStep("executing", match.getArguments(), match.getLocation(), false);
+            }
         }
     }
 
     public void result(Result result) {
         if (!monochrome) {
-            out.print(formats.up(1));
+            out.print(formats.up(1)); // TODO: keep track of height
         }
-        printStep(result.getStatus(), match.getArguments(), match.getLocation(), true);
-        if (result.getErrorMessage() != null) {
-            printError(result);
+        if(inExamples) {
+            printExampleRow(exampleRowResult);
+            exampleResultCount++;
+        } else {
+            printStep(result.getStatus(), match.getArguments(), match.getLocation(), true);
+            if (result.getErrorMessage() != null) {
+                printError(result);
+            }
         }
     }
 
@@ -206,8 +225,7 @@ public class PrettyFormatter implements Reporter {
         prepareTable(rows);
         if (!executing) {
             for (Row row : rows) {
-                row(row.createResults("skipped"));
-                nextRow();
+                printExampleRow(this.rows.get(0).createResults("executing"));
             }
         }
     }
@@ -219,15 +237,15 @@ public class PrettyFormatter implements Reporter {
         maxLengths = new int[columnCount];
         for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
             for (int colIndex = 0; colIndex < columnCount; colIndex++) {
-                int length = escapeCell(rows.get(rowIndex).getCells().get(colIndex)).length();
+                Row row = rows.get(rowIndex);
+                int length = escapeCell(row.getCells().get(colIndex)).length();
                 cellLengths[rowIndex][colIndex] = length;
                 maxLengths[colIndex] = Math.max(maxLengths[colIndex], length);
             }
         }
-        rowIndex = 0;
     }
 
-    public void row(List<CellResult> cellResults) {
+    private void printExampleRow(List<CellResult> cellResults) {
         Row row = rows.get(rowIndex);
         if (rowsAbove) {
             out.print(formats.up(rowHeight));
@@ -244,7 +262,8 @@ public class PrettyFormatter implements Reporter {
         out.write("      | ");
         for (int colIndex = 0; colIndex < maxLengths.length; colIndex++) {
             String cellText = escapeCell(row.getCells().get(colIndex));
-            String status = cellResults.get(colIndex).getStatus();
+            CellResult cellResult = cellResults.get(colIndex);
+            String status = cellResult.getStatus();
             Format format = formats.get(status);
             out.write(format.text(cellText));
             int padding = maxLengths[colIndex] - cellLengths[rowIndex][colIndex];
@@ -273,11 +292,6 @@ public class PrettyFormatter implements Reporter {
     private void printError(Result result) {
         Format failed = formats.get("failed");
         out.println(indent(failed.text(result.getErrorMessage()), "      "));
-    }
-
-    public void nextRow() {
-        rowIndex++;
-        rowsAbove = false;
     }
 
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {

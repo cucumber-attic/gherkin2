@@ -3,19 +3,22 @@ package gherkin.formatter.model;
 import gherkin.formatter.Argument;
 import gherkin.formatter.Formatter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Step extends BasicStatement {
     private Object multiline_arg;
+    private final List<Integer> matched_columns;
 
     public Step(List<Comment> comments, String keyword, String name, int line) {
+        this(comments, keyword, name, line, Collections.<Integer>emptyList());
+    }
+
+    private Step(List<Comment> comments, String keyword, String name, int line, List<Integer> matchedColumns) {
         super(comments, keyword, name, line);
+        matched_columns = matchedColumns;
     }
 
     @Override
@@ -77,5 +80,31 @@ public class Step extends BasicStatement {
 
     public PyString getPyString() {
         return multiline_arg instanceof PyString ? (PyString) multiline_arg : null;
+    }
+
+    public String toString() {
+        return getKeyword() + getName();
+    }
+
+    public Step createExampleStep(Row headerRow, Row example) {
+        List<Integer> matchedColumns = new ArrayList<Integer>();
+        String name = getName();
+
+        List<String> headerCells = headerRow.getCells();
+        for (int i = 0; i < headerCells.size(); i++) {
+            String headerCell = headerCells.get(i);
+            String value = example.getCells().get(i);
+            String token = "<" + headerCell + ">";
+            if (name.contains(token)) {
+                name = name.replace(token, value);
+                matchedColumns.add(i);
+            }
+        }
+
+        return new Step(getComments(), getKeyword(), name, getLine(), matchedColumns);
+    }
+
+    public List<Integer> getMatchedColumns() {
+        return matched_columns;
     }
 }

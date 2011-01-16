@@ -65,18 +65,6 @@ public class JSONFormatter implements Reporter {
         getEmbeddings().add(embedding);
     }
 
-    public void table(List<Row> rows) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void row(List<CellResult> cellFormats) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void nextRow() {
-        throw new UnsupportedOperationException();
-    }
-
     public void eof() {
         try {
             out.write(JSONValue.toJSONString(featureHash));
