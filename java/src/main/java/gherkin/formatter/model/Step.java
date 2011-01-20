@@ -13,7 +13,7 @@ public class Step extends BasicStatement {
     private final List<Integer> matched_columns;
 
     public Step(List<Comment> comments, String keyword, String name, int line) {
-        this(comments, keyword, name, line, Collections.<Integer>emptyList());
+        this(comments, keyword, name, line, null);
     }
 
     private Step(List<Comment> comments, String keyword, String name, int line, List<Integer> matchedColumns) {
@@ -63,7 +63,7 @@ public class Step extends BasicStatement {
     }
 
     public Match getOutlineMatch(String location) {
-        return new Match(getOutlineArgs(), location);
+        return new Match(getOutlineArgs(), location, null);
     }
 
     public void setMultilineArg(Object multilineArg) {

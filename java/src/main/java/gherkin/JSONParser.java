@@ -66,7 +66,7 @@ public class JSONParser implements FeatureParser {
 
         if(o.containsKey("match")) {
             Map m = (Map) o.get("match");
-            new Match(arguments(m), location(m)).replay(reporter);
+            new Match(arguments(m), location(m), null).replay(reporter);
         }
 
         if(o.containsKey("result")) {

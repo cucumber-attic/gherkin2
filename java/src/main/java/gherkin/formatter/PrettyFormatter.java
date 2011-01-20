@@ -46,7 +46,7 @@ public class PrettyFormatter implements Reporter {
     private DescribedStatement statement;
     private int exampleResultCount;
     private List<CellResult> exampleRowResult;
-    private boolean inExamples;
+    private Integer stepCount;
 
     public PrettyFormatter(Writer out, boolean monochrome, boolean executing) {
         this.out = new PrintWriter(out);
@@ -141,7 +141,6 @@ public class PrettyFormatter implements Reporter {
 
     public void examples(Examples examples) {
         replay();
-        inExamples = true;
         out.println();
         printComments(examples.getComments(), "    ");
         printTags(examples.getTags(), "    ");
@@ -158,22 +157,25 @@ public class PrettyFormatter implements Reporter {
     }
 
     public void step(Step step) {
+        if(steps.isEmpty()) {
+            stepCount = null;
+        }
         steps.add(step);
     }
 
     public void match(Match match) {
-        if(inExamples) {
-            if(exampleResultCount % steps.size() == 0) {
-                rowIndex++;
-                exampleRowResult = rows.get(rowIndex).createResults("executing");
-                printExampleRow(exampleRowResult);
-            }
-        } else {
-            this.match = match;
+        this.match = match;
+        if(match.getMatchedColumns() == null) {
             printStatement();
             if (!monochrome) {
-                printStep("executing", match.getArguments(), match.getLocation(), false);
             }
+        } else {
+            // Examples
+            if(exampleResultCount % stepCount == 0) {
+                rowIndex++;
+                exampleRowResult = rows.get(rowIndex).createResults("executing");
+            }
+            printExampleRow(exampleRowResult);
         }
     }
 
@@ -181,18 +183,24 @@ public class PrettyFormatter implements Reporter {
         if (!monochrome) {
             out.print(formats.up(1)); // TODO: keep track of height
         }
-        if(inExamples) {
-            printExampleRow(exampleRowResult);
-            exampleResultCount++;
-        } else {
+        if(match.getMatchedColumns() == null) {
             printStep(result.getStatus(), match.getArguments(), match.getLocation(), true);
             if (result.getErrorMessage() != null) {
                 printError(result);
             }
+        } else {
+            for (Integer matchedColumn : match.getMatchedColumns()) {
+                exampleRowResult.get(matchedColumn).addResult(result);
+            }
+            printExampleRow(exampleRowResult);
+            exampleResultCount++;
         }
     }
 
     private void printStep(String status, List<Argument> arguments, String location, boolean proceed) {
+        if(stepCount == null) {
+            stepCount = steps.size();
+        }
         Step step = proceed ? steps.remove(0) : steps.get(0);
         Format textFormat = getFormat(status);
         Format argFormat = getArgFormat(status);
