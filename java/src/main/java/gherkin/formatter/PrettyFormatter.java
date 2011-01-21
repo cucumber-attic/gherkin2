@@ -39,14 +39,14 @@ public class PrettyFormatter implements Reporter {
     private int rowIndex;
     private List<Row> rows;
     private Integer rowHeight = null;
-    private boolean rowsAbove = false;
 
     private List<Step> steps = new ArrayList<Step>();
     private List<Integer> indentations = new ArrayList<Integer>();
     private DescribedStatement statement;
     private int exampleResultCount;
-    private List<CellResult> exampleRowResult;
+    private List<CellResult> cellResults;
     private Integer stepCount;
+    private boolean inOutline;
 
     public PrettyFormatter(Writer out, boolean monochrome, boolean executing) {
         this.out = new PrintWriter(out);
@@ -81,16 +81,19 @@ public class PrettyFormatter implements Reporter {
 
     public void background(Background background) {
         statement = background;
+        inOutline = false;
     }
 
     public void scenario(Scenario scenario) {
         replay();
         statement = scenario;
+        inOutline = false;
     }
 
     public void scenarioOutline(ScenarioOutline scenarioOutline) {
         replay();
         statement = scenarioOutline;
+        inOutline = true;
     }
 
     private void replay() {
@@ -100,7 +103,7 @@ public class PrettyFormatter implements Reporter {
 
     private void printSteps() {
         while (!steps.isEmpty()) {
-            printStep("skipped", Collections.<Argument>emptyList(), null, true);
+            printStep("skipped", null, null, true);
         }
     }
 
@@ -157,7 +160,7 @@ public class PrettyFormatter implements Reporter {
     }
 
     public void step(Step step) {
-        if(steps.isEmpty()) {
+        if (steps.isEmpty()) {
             stepCount = null;
         }
         steps.add(step);
@@ -165,43 +168,62 @@ public class PrettyFormatter implements Reporter {
 
     public void match(Match match) {
         this.match = match;
-        if(match.getMatchedColumns() == null) {
+        if (match.getMatchedColumns() == null) {
             printStatement();
             if (!monochrome) {
             }
         } else {
             // Examples
-            if(exampleResultCount % stepCount == 0) {
+            if (isNewRow()) {
                 rowIndex++;
-                exampleRowResult = rows.get(rowIndex).createResults("executing");
+                cellResults = rows.get(rowIndex).createResults("executing");
+                rowHeight = null;
             }
-            printExampleRow(exampleRowResult);
+            printExampleRow(cellResults);
         }
     }
 
+    private boolean isNewRow() {
+        return exampleResultCount % stepCount == 0;
+    }
+
     public void result(Result result) {
+        if (match.getMatchedColumns() == null) {
+            printStep(result);
+        } else {
+            printExampleRow(result);
+        }
+    }
+
+    private void printExampleRow(Result result) {
+        for (Integer matchedColumn : match.getMatchedColumns()) {
+            cellResults.get(matchedColumn).addResult(result);
+        }
+        printExampleRow(cellResults);
+        printExampleErrors(cellResults, result);
+        exampleResultCount++;
+    }
+
+    private void printStep(Result result) {
         if (!monochrome) {
             out.print(formats.up(1)); // TODO: keep track of height
         }
-        if(match.getMatchedColumns() == null) {
-            printStep(result.getStatus(), match.getArguments(), match.getLocation(), true);
-            if (result.getErrorMessage() != null) {
-                printError(result);
-            }
-        } else {
-            for (Integer matchedColumn : match.getMatchedColumns()) {
-                exampleRowResult.get(matchedColumn).addResult(result);
-            }
-            printExampleRow(exampleRowResult);
-            exampleResultCount++;
+        printStep(result.getStatus(), match.getArguments(), match.getLocation(), true);
+        if (result.getErrorMessage() != null) {
+            printError(result);
         }
     }
 
     private void printStep(String status, List<Argument> arguments, String location, boolean proceed) {
-        if(stepCount == null) {
+        if (stepCount == null) {
             stepCount = steps.size();
         }
         Step step = proceed ? steps.remove(0) : steps.get(0);
+
+        if (arguments == null) {
+            arguments = (inOutline) ? step.getOutlineArgs() : Collections.<Argument>emptyList();
+        }
+
         Format textFormat = getFormat(status);
         Format argFormat = getArgFormat(status);
 
@@ -255,12 +277,10 @@ public class PrettyFormatter implements Reporter {
 
     private void printExampleRow(List<CellResult> cellResults) {
         Row row = rows.get(rowIndex);
-        if (rowsAbove) {
+        if (!isNewRow() || rowHeight != null) {
             out.print(formats.up(rowHeight));
-        } else {
-            rowsAbove = true;
         }
-        rowHeight = 1;
+        rowHeight = 0;
 
         for (Comment comment : row.getComments()) {
             out.write("      ");
@@ -284,17 +304,25 @@ public class PrettyFormatter implements Reporter {
         }
         out.println();
         rowHeight++;
+    }
+
+    private void printExampleErrors(List<CellResult> cellResults, Result result) {
         Set<Result> seenResults = new HashSet<Result>();
         for (CellResult cellResult : cellResults) {
-            for (Result result : cellResult.getResults()) {
-                if (result.getErrorMessage() != null && !seenResults.contains(result)) {
-                    printError(result);
-                    rowHeight += result.getErrorMessage().split("\n").length;
-                    seenResults.add(result);
-                }
+            for (Result r : cellResult.getResults()) {
+                printResultError(seenResults, r);
             }
         }
+        printResultError(seenResults, result);
         out.flush();
+    }
+
+    private void printResultError(Set<Result> seenResults, Result result) {
+        if (result.getErrorMessage() != null && !seenResults.contains(result)) {
+            printError(result);
+            rowHeight += result.getErrorMessage().split("\n").length;
+            seenResults.add(result);
+        }
     }
 
     private void printError(Result result) {
