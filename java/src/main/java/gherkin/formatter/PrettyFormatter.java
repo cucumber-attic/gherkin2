@@ -114,9 +114,7 @@ public class PrettyFormatter implements Reporter {
         calculateLocationIndentations();
         out.println();
         printComments(statement.getComments(), "  ");
-        if (statement instanceof TagStatement) {
-            printTags(((TagStatement) statement).getTags(), "  ");
-        }
+        printTags(statement.getTags(), "  ");
         out.print("  ");
         out.print(statement.getKeyword());
         out.print(": ");

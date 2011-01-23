@@ -8,7 +8,7 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Step extends BasicStatement {
+public class Step extends BasicStatement implements RowContainer {
     private Object multiline_arg;
     private final List<Integer> matched_columns;
 
@@ -106,5 +106,12 @@ public class Step extends BasicStatement {
 
     public List<Integer> getMatchedColumns() {
         return matched_columns;
+    }
+
+    public void addRow(Row row) {
+        if(multiline_arg == null) {
+            multiline_arg = new ArrayList<Row>();
+        }
+        getRows().add(row);
     }
 }

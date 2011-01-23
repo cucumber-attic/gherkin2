@@ -11,7 +11,6 @@ public class Match extends Mappable {
     private final List<Argument> arguments;
     private final String location;
     private final List<Integer> matchedColumns;
-    public static final Match NONE = new Match(Collections.<Argument>emptyList(), null, null);
 
     public Match(List<Argument> arguments, String location, List<Integer> matchedColumns) {
         this.arguments = arguments;
@@ -19,6 +18,10 @@ public class Match extends Mappable {
         this.matchedColumns = matchedColumns;
     }
 
+    public Match(List<Argument> arguments, String location) {
+        this(arguments, location, Collections.<Integer>emptyList());
+    }
+    
     public List<Argument> getArguments() {
         return arguments;
     }

@@ -4,7 +4,7 @@ import gherkin.formatter.Formatter;
 
 import java.util.List;
 
-public class Scenario extends TagStatement {
+public class Scenario extends FeatureElement {
     private final String type = "scenario";
 
     public Scenario(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, int line) {
