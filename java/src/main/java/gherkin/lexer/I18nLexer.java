@@ -1,6 +1,7 @@
 package gherkin.lexer;
 
 import gherkin.I18n;
+import gherkin.Listener;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,10 +13,6 @@ public class I18nLexer implements Lexer {
     private I18n i18n;
 
     public I18nLexer(Listener listener) {
-        this(listener, false);
-    }
-
-    public I18nLexer(Listener listener, boolean forceRubyDummy) {
         this.listener = listener;
     }
 

@@ -1,6 +1,6 @@
 package gherkin.formatter;
 
-import gherkin.formatter.model.*;
+import gherkin.model.*;
 import net.iharder.Base64;
 import org.json.simple.JSONValue;
 
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JSONFormatter implements Reporter {
+public class JSONFormatter implements Formatter, Reporter {
     private final Writer out;
     private Map<Object, Object> featureHash;
 

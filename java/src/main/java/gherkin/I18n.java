@@ -1,10 +1,9 @@
 package gherkin;
 
-import gherkin.formatter.PrettyFormatter;
-import gherkin.formatter.model.Comment;
-import gherkin.formatter.model.Row;
+import gherkin.formatter.PrettyPrinterOld;
+import gherkin.model.Comment;
+import gherkin.model.Row;
 import gherkin.lexer.Lexer;
-import gherkin.lexer.Listener;
 import gherkin.util.Mapper;
 
 import java.io.StringWriter;
@@ -116,7 +115,7 @@ public class I18n {
 
     public String getKeywordTable() {
         StringWriter writer = new StringWriter();
-        PrettyFormatter pf = new PrettyFormatter(writer, true, false);
+        PrettyPrinterOld pf = new PrettyPrinterOld(writer, true);
         List<Row> table = new ArrayList<Row>();
         for (String key : KEYWORD_KEYS) {
             List<String> cells = Arrays.asList(key, join(map(keywords(key), QUOTE_MAPPER), ", "));

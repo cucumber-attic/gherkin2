@@ -1,8 +1,9 @@
 package gherkin;
 
 import gherkin.formatter.Argument;
+import gherkin.formatter.Formatter;
 import gherkin.formatter.Reporter;
-import gherkin.formatter.model.*;
+import gherkin.model.*;
 import net.iharder.Base64;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -14,29 +15,32 @@ import java.util.List;
 import java.util.Map;
 
 public class JSONParser implements FeatureParser {
+    private final Formatter formatter;
     private final Reporter reporter;
 
-    public JSONParser(Reporter reporter) {
+    public JSONParser(Formatter formatter, Reporter reporter) {
+        this.formatter = formatter;
         this.reporter = reporter;
     }
 
-    public void parse(String src, String uri, int offset) {
-        reporter.uri(uri);
+    public Feature parse(String src, String uri, int offset) {
+        formatter.uri(uri);
         JSONObject o = (JSONObject) JSONValue.parse(src);
-        new Feature(comments(o), tags(o), keyword(o), name(o), description(o), line(o)).replay(reporter);
+        new Feature(comments(o), tags(o), keyword(o), name(o), description(o), line(o)).replay(formatter);
         for (Object e : getList(o, "elements")) {
             JSONObject featureElement = (JSONObject) e;
-            featureElement(featureElement).replay(reporter);
+            featureElement(featureElement).replay(formatter);
             for (Object s : getList(featureElement, "steps")) {
                 JSONObject step = (JSONObject) s;
                 step(step);
             }
             for (Object s : getList(featureElement, "examples")) {
                 JSONObject eo = (JSONObject) s;
-                new Examples(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), rows(getList(eo, "rows"))).replay(reporter);
+                new Examples(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), rows(getList(eo, "rows"))).replay(formatter);
             }
         }
-        reporter.eof();
+        formatter.eof();
+        return null;
     }
 
     private BasicStatement featureElement(JSONObject o) {
@@ -62,7 +66,7 @@ public class JSONParser implements FeatureParser {
                 step.setMultilineArg(new PyString(getString(ma, "value"), getInt(ma, "line")));
             }
         }
-        step.replay(reporter);
+        step.replay(formatter);
 
         if(o.containsKey("match")) {
             Map m = (Map) o.get("match");

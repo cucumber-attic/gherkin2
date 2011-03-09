@@ -1,10 +1,8 @@
 package gherkin.formatter;
 
-import gherkin.formatter.model.*;
+import gherkin.model.*;
 
-import java.util.List;
-
-public interface Reporter extends Formatter {
+public interface Reporter{
     void match(Match match);
     void embedding(String mimeType, byte[] data);
     void result(Result result);

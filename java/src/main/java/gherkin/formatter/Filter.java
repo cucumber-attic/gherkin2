@@ -1,8 +1,8 @@
 package gherkin.formatter;
 
-import gherkin.formatter.model.Range;
-import gherkin.formatter.model.Row;
-import gherkin.formatter.model.Tag;
+import gherkin.model.Range;
+import gherkin.model.Row;
+import gherkin.model.Tag;
 
 import java.util.List;
 

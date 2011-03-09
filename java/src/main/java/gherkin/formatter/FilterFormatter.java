@@ -1,6 +1,6 @@
 package gherkin.formatter;
 
-import gherkin.formatter.model.*;
+import gherkin.model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

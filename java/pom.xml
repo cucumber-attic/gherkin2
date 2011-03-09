@@ -44,7 +44,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.1</version>
+            <version>4.8.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -79,17 +79,6 @@
                         <encoding>UTF-8</encoding>
                         <source>1.5</source>
                         <target>1.5</target>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <configuration>
-                        <archive>
-                            <manifest>
-                                <mainClass>gherkin.Main</mainClass>
-                            </manifest>
-                        </archive>
                     </configuration>
                 </plugin>
             </plugins>
