@@ -1,6 +1,7 @@
 == (In Git)
 
 === Changes
+* Fixing C90 errors on Ubuntu Natty (#92 Colin Dean)
 * Romanian (ro) language update, extracted from a real-world project. (Iulian Dogariu)
 
 == 2.3.3 (2010-12-26)
