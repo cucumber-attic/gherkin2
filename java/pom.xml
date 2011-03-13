@@ -6,7 +6,7 @@
 
     <groupId>gherkin</groupId>
     <artifactId>gherkin</artifactId>
-    <version>2.3.2</version>
+    <version>2.3.4</version>
 
     <packaging>jar</packaging>
     <name>Gherkin</name>
@@ -20,7 +20,7 @@
         <repository>
             <id>cukes</id>
             <name>Cucumber Maven Repo</name>
-            <url>scp://cukes.info/home/6664/users/.home/domains/cukes.info/html/maven</url>
+            <url>scp://cukes.info/var/www/cucumber_site/maven</url>
         </repository>
     </distributionManagement>
 

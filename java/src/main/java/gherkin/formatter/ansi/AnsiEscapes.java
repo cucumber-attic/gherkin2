@@ -1,7 +1,5 @@
 package gherkin.formatter.ansi;
 
-import java.io.IOException;
-
 public class AnsiEscapes {
     private static final char ESC = 27;
     private static final char BRACKET = '[';
@@ -33,18 +31,14 @@ public class AnsiEscapes {
         this.value = value;
     }
 
-    public void appendTo(Appendable a) throws IOException {
-        a.append(ESC).append(BRACKET).append(value.toString());
+    public void appendTo(StringBuilder a) {
+        a.append(ESC).append(BRACKET).append(value);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        try {
-            appendTo(sb);
-            return sb.toString();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        appendTo(sb);
+        return sb.toString();
     }
 }

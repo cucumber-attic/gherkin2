@@ -45,13 +45,17 @@ Gem::Specification.new do |s|
     s.files += Dir['lib/gherkin/rb_lexer/*.rb']
     s.files += Dir['ext/**/*.c']
     s.extensions = Dir['ext/**/extconf.rb']
-    s.add_development_dependency('rake-compiler', '~> 0.7.1')
+    s.add_development_dependency('rake-compiler', '~> 0.7.5')
   end
 
   s.add_dependency('json', '~> 1.4.6')
 
   s.add_development_dependency('rake', '~> 0.8.7')
-  s.add_development_dependency('awesome_print', '~> 0.2.1')
-  s.add_development_dependency('rspec', '~> 2.3.0')
+  s.add_development_dependency('bundler', '~> 1.0.10')
+  s.add_development_dependency('rspec', '~> 2.5.0')
+  s.add_development_dependency('awesome_print', '~> 0.3.2')
   s.add_development_dependency('cucumber', '~> 0.10.0')
+  # Only needed by Cucumber. Remove when Cucumber no longer needs those.
+  s.add_development_dependency('term-ansicolor', '~> 1.0.5')
+  s.add_development_dependency('builder', '~> 3.0.0')
 end

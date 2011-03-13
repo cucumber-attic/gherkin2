@@ -1,7 +1,15 @@
-== In Git
+== 2.3.4 (2011-03-10)
+
+=== Changes
+* Fixing C90 errors on Ubuntu Natty (#92 Colin Dean)
+* Romanian (ro) language update, extracted from a real-world project. (Iulian Dogariu)
+
+== 2.3.3 (2010-12-26)
 
 === Changes
 * No more dependencies on external ANSI escape libraries (Ruby:term-ansicolor, Java:Jansi). DIY is better! (Aslak Hellesøy)
+* Added duration (in millseconds) to Result. (Aslak Hellesøy)
+* Additional Polish aliases (Mike Połtyn)
 
 == 2.3.2 (2010-12-05)
 

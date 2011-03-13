@@ -90,9 +90,6 @@ public class JSONFormatter implements Reporter {
         throw new UnsupportedOperationException();
     }
 
-    public void steps(List<Step> steps) {
-    }
-
     private List<Object> getFeatureElements() {
         List<Object> featureElements = (List) featureHash.get("elements");
         if (featureElements == null) {

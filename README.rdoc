@@ -23,7 +23,7 @@ the C code.
 
 === Common dependencies
 
-These are the minimal tools you need to install, even if you are building non-Ruby packages.
+These are the minimal tools you need to install:
 
 * Ragel (brew install ragel or apt-get install ragel)
 * Ruby (any version should do).
@@ -80,6 +80,15 @@ Now you can build the .NET dll with:
 
 === MinGW Rubies (for Windows gems)
 
+In order to build Windows binaries (so we can release Windows gems from OS X/Linux) we need to set up rake-compiler.
+
+http://github.com/luislavena/rake-compiler/
+
+Now, let's install MinGW...
+
+I didn't want to install macports (I'm on homebrew) and I couldn't figure out how to build MinGW myself. I got prebuilt binaries (version 4.3.0):
+http://crossgcc.rts-software.org/doku.php - just add the bin folder to your PATH
+
 You must install MinGW rubies to build gems fow Windows.
 First you need to download and install MinGW:
 
@@ -122,14 +131,6 @@ Make sure you have openssl installed first.
 * Commit changes.
 * rake gems:prepare && ./build_native_gems.sh && rake release:ALL
 * Announce on Cucumber list, IRC and Twitter.
-
-== Configuring Rake-Compiler for cross compilation
-In order to build Windows binaries (so we can release Windows gems from OS X/Linux) we need to set up rake-compiler.
-
-http://github.com/luislavena/rake-compiler/
-
-I didn't want to install macports (I'm on homebrew) and I couldn't figure out how to build MinGW myself. I got prebuilt binaries (version 4.3.0):
-http://crossgcc.rts-software.org/doku.php - just add the bin folder to your PATH
 
 == Note on Patches/Pull Requests
  

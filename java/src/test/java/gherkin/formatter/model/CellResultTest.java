@@ -28,15 +28,15 @@ public class CellResultTest {
     }
 
     private Result passed() {
-        return new Result("passed", null);
+        return new Result("passed", 1, null);
     }
 
     private Result skipped() {
-        return new Result("skipped", null);
+        return new Result("skipped", 0, null);
     }
 
     private Result failed() {
-        return new Result("failed", "error");
+        return new Result("failed", 2, "error");
     }
 
 }

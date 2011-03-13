@@ -90,7 +90,8 @@ module Gherkin
                 },
                 "result": {
                   "status": "failed",
-                  "error_message": "You suck"
+                  "error_message": "You suck",
+                  "duration": -1
                 },
                 "embeddings": [
                   {

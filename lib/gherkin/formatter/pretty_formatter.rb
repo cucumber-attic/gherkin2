@@ -19,6 +19,9 @@ module Gherkin
         @step_printer = StepPrinter.new
         @monochrome = monochrome
         @executing = executing
+        @background = nil
+        @tag_statement = nil
+        @steps = []
       end
 
       def uri(uri)
@@ -32,26 +35,47 @@ module Gherkin
         print_description(feature.description, '  ', false)
       end
 
-      def background(statement)
-        @io.puts
-        print_comments(statement.comments, '  ')
-        @io.puts "  #{statement.keyword}: #{statement.name}#{indented_element_uri!(statement.keyword, statement.name, statement.line)}"
-        print_description(statement.description, '    ')
+      def background(background)
+        replay
+        @statement = background
       end
 
-      def scenario(statement)
-        @io.puts
-        print_comments(statement.comments, '  ')
-        print_tags(statement.tags, '  ')
-        @io.puts "  #{statement.keyword}: #{statement.name}#{indented_element_uri!(statement.keyword, statement.name, statement.line)}"
-        print_description(statement.description, '    ')
+      def scenario(scenario)
+        replay
+        @statement = scenario
       end
 
       def scenario_outline(scenario_outline)
-        scenario(scenario_outline)
+        replay
+        @statement = scenario_outline
+      end
+      
+      def replay
+        print_statement
+        print_steps
+      end
+      
+      def print_statement
+        return if @statement.nil?
+        calculate_location_indentations
+        @io.puts
+        print_comments(@statement.comments, '  ')
+        print_tags(@statement.tags, '  ') if @statement.respond_to?(:tags) # Background doesn't
+        @io.write "  #{@statement.keyword}: #{@statement.name}"
+        location = @executing ? "#{@uri}:#{@statement.line}" : nil
+        @io.puts indented_location(location, true)
+        print_description(@statement.description, '    ')
+        @statement = nil
+      end
+
+      def print_steps
+        while(@steps.any?)
+          print_step('skipped', [], nil, true)
+        end
       end
 
       def examples(examples)
+        replay
         @io.puts
         print_comments(examples.comments, '    ')
         print_tags(examples.tags, '    ')
@@ -61,42 +85,36 @@ module Gherkin
       end
 
       def step(step)
-        @step = step
-        @step_index += 1 if @step_index
-        # TODO: It feels a little funny to have this logic here in the formatter.
-        # We may have to duplicate it across formatters. So maybe we should move
-        # this out to the callers instead.
-        #
-        # Maybe it's a Filter!! ExecuteFilter and PrettyFilter
-        match(Model::Match.new([], nil)) unless @executing
+        @steps << step
       end
 
       def match(match)
         @match = match
-        print_step('executing', @match.arguments, @match.location)
+        print_statement
+        print_step('executing', @match.arguments, @match.location, false)
       end
 
       def result(result)
         @io.write(up(1))
-        print_step(result.status, @match.arguments, @match.location)
+        print_step(result.status, @match.arguments, @match.location, true)
       end
 
-      def print_step(status, arguments, location)
+      def print_step(status, arguments, location, proceed)
+        step = proceed ? @steps.shift : @steps[0]
+        
         text_format = format(status)
         arg_format = arg_format(status)
         
-        print_comments(@step.comments, '    ')
+        print_comments(step.comments, '    ')
         @io.write('    ')
-        @io.write(text_format.text(@step.keyword))
-        @step_printer.write_step(@io, text_format, arg_format, @step.name, arguments)
-        print_indented_step_location(location) if location
-
-        @io.puts
-        case @step.multiline_arg
+        @io.write(text_format.text(step.keyword))
+        @step_printer.write_step(@io, text_format, arg_format, step.name, arguments)
+        @io.puts(indented_location(location, proceed))
+        case step.multiline_arg
         when Model::PyString
-          py_string(@step.multiline_arg)
+          py_string(step.multiline_arg)
         when Array
-          table(@step.multiline_arg)
+          table(step.multiline_arg)
         end
       end
 
@@ -136,14 +154,8 @@ module Gherkin
       end
 
       def eof
+        replay
         # NO-OP
-      end
-
-      # This method can be invoked before a #scenario, to ensure location arguments are aligned
-      def steps(steps)
-        @step_lengths = steps.map {|step| (step.keyword+step.name).unpack("U*").length}
-        @max_step_length = @step_lengths.max
-        @step_index = -1
       end
 
       def table(rows)
@@ -216,18 +228,15 @@ module Gherkin
         end
       end
 
-      def indented_element_uri!(keyword, name, line)
-        return '' if @max_step_length.nil?
-        l = (keyword+name).unpack("U*").length
-        @max_step_length = [@max_step_length, l].max
-        indent = @max_step_length - l
-        ' ' * indent + ' ' + comments + "# #{@uri}:#{line}" + reset
+      def indented_location(location, proceed)
+        indentation = proceed ? @indentations.shift : @indentations[0]
+        location ? (' ' * indentation + ' ' + comments + "# #{location}" + reset) : ''
       end
 
-      def print_indented_step_location(location)
-        indent = @max_step_length - @step_lengths[@step_index]
-        return if location.nil?
-        @io.write(' ' * indent + ' ' + comments + "# #{location}" + reset)
+      def calculate_location_indentations
+        line_widths = ([@statement] + @steps).map {|step| (step.keyword+step.name).unpack("U*").length}
+        max_line_width = line_widths.max
+        @indentations = line_widths.map{|w| max_line_width - w}
       end
     end
   end

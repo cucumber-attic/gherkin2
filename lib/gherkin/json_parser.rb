@@ -72,7 +72,7 @@ module Gherkin
 
     def result(o)
       if(r = o['result'])
-        Formatter::Model::Result.new(status(r), error_message(r)).replay(@formatter)
+        Formatter::Model::Result.new(status(r), duration(r), error_message(r)).replay(@formatter)
       end
     end
 
@@ -124,6 +124,10 @@ module Gherkin
 
     def status(r)
       r['status']
+    end
+
+    def duration(r)
+      r['duration']
     end
 
     def error_message(r)
