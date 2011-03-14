@@ -110,8 +110,16 @@
 %% access this.;
 %% variable data data;
 
-var Lexer = function(listener) {
-  this.listener = listener
+var Lexer = function(listeners) {
+  var events = ['feature', 'background', 'scenario', 'scenario_outline', 'examples', 'step', 'py_string', 'row', 'end'];
+  for(e in events) {
+    var event = events[e];
+    var listener = listeners[event];
+    if(!listener) {
+      throw "No listener for " + event;
+    }
+    this.on(event, listener);
+  }
   %% write init;
 };
 
