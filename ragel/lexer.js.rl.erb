@@ -8,15 +8,20 @@
   }
 
   action start_pystring {
-    console.log('TODO: start_pystring');
+    this.current_line = this.line_number;
+    this.start_col = p - this.last_newline;
   }
   
   action begin_pystring_content {
-    console.log('TODO: begin_pystring_content');
+    this.content_start = p;
   }
 
   action store_pystring_content {
-    console.log('TODO: store_pystring_content');
+    var con = this.unindent(
+      this.start_col, 
+      data.slice(this.content_start, this.next_keyword_start-1).toString('utf-8').replace(/(\r?\n)?([\t ])*\Z/, '') // TODO .replace(/\"\"\"/mg, '"""')
+    );
+    this.emit('py_string', con, this.current_line); 
   }
 
   action store_feature_content {
@@ -40,7 +45,8 @@
   }
 
   action store_step_content {
-    console.log('TODO: store_step_content');
+    var con = data.slice(this.content_start, p).toString('utf-8').trim();
+    this.emit('step', this.keyword, con, this.current_line);
   }
 
   action store_comment_content {
@@ -73,19 +79,22 @@
   }
 
   action start_row {
-    console.log('TODO: start_row');
+    p = p - 1;
+    current_row = [];
+    this.current_line = this.line_number;
   }
 
   action begin_cell_content {
-    console.log('TODO: begin_cell_content');
+    this.content_start = p;
   }
 
   action store_cell_content {
-    console.log('TODO: store_cell_content');
+    var con = data.slice(this.content_start, p).toString('utf-8').trim();
+    current_row.push(con.replace(/\\\|/, "|").replace(/\\n/, "\n").replace(/\\\\/, "\\"));
   }
 
   action store_row {
-    console.log('TODO: store_row');
+    this.emit('row', current_row, this.current_line);
   }
 
   action end_feature {
@@ -114,14 +123,14 @@ Lexer.prototype.scan = function(data) {
   %% write exec;
 };
 
-Lexer.prototype.store_keyword_content = function(event, data, p, eof) {
-  function unindent(startcol, text) {
-    startcol = startcol || 0;
-    return text.replace(new RegExp('^[\t ]{0,' + startcol + '}', 'gm'), ''); 
-  }
+Lexer.prototype.unindent = function(startcol, text) {
+  startcol = startcol || 0;
+  return text.replace(new RegExp('^[\t ]{0,' + startcol + '}', 'gm'), ''); 
+};
 
+Lexer.prototype.store_keyword_content = function(event, data, p, eof) {
   var end_point = (!this.next_keyword_start || (p == eof)) ? p : this.next_keyword_start;
-  var content = unindent(this.start_col + 2, data.slice(this.content_start, end_point).toString('utf-8')).trimRight();
+  var content = this.unindent(this.start_col + 2, data.slice(this.content_start, end_point).toString('utf-8')).trimRight();
   var content_lines = content.split("\n")
   var name = content_lines.shift() || "";
   name = name.trim();
@@ -139,4 +148,26 @@ var lexer = new Lexer(null);
 lexer.on('feature', function(keyword, name, description, line) {
   console.log(keyword + ': ' + name);
 });
+lexer.on('background', function(keyword, name, description, line) {
+  console.log('  ' + keyword + ': ' + name);
+});
+lexer.on('scenario', function(keyword, name, description, line) {
+  console.log('  ' + keyword + ': ' + name);
+});
+lexer.on('scenario_outline', function(keyword, name, description, line) {
+  console.log('  ' + keyword + ': ' + name);
+});
+lexer.on('examples', function(keyword, name, description, line) {
+  console.log('    ' + keyword + ': ' + name);
+});
+lexer.on('step', function(keyword, name, line) {
+  console.log('    ' + keyword + name);
+});
+lexer.on('py_string', function(string, line) {
+  console.log('      """\n' + string + '\n      """');
+});
+lexer.on('row', function(row, line) {
+  console.log('      | ' + row.join(' | ') + ' |');
+});
+
 lexer.scan(fs.readFileSync(process.ARGV[2]));
