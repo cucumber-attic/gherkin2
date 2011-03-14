@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
 
   s.files -= Dir['ikvm/**/*']
   s.files -= Dir['java/**/*']
+  s.files -= Dir['js/**/*']
   s.files -= Dir['ext/**/*']
   s.files -= Dir['lib/gherkin.jar']
   s.files -= Dir['lib/**/*.dll']

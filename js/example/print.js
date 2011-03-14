@@ -1,5 +1,5 @@
 var fs = require('fs');
-var Lexer = require('./js/gherkin.en').Lexer;
+var Lexer = require('../lib/gherkin/lexer/i18n/en').Lexer;
 
 var lexer = new Lexer({
   feature: function(keyword, name, description, line) {

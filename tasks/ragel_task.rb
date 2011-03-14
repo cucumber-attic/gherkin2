@@ -30,7 +30,7 @@ class RagelTask
       'c'    => "ext/gherkin_lexer_#{@i18n.underscored_iso_code}/gherkin_lexer_#{@i18n.underscored_iso_code}.c",
       'java' => "java/src/main/java/gherkin/lexer/i18n/#{@i18n.underscored_iso_code.upcase}.java",
       'rb'   => "lib/gherkin/rb_lexer/#{@i18n.underscored_iso_code}.rb",
-      'js'   => "js/gherkin.#{@i18n.underscored_iso_code}.js"
+      'js'   => "js/lib/gherkin/lexer/i18n/#{@i18n.underscored_iso_code}.js"
     }[@lang]
   end
 
