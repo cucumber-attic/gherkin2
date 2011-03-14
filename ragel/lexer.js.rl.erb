@@ -1,3 +1,5 @@
+;(function() {
+
 %%{
   machine lexer;
 
@@ -141,33 +143,6 @@ Lexer.prototype.store_keyword_content = function(event, data, p, eof) {
   return nks ? nks - 1 : p;
 };
 
-// TODO - get rid of this. We only keep this around to make it easier to test the lexer.
-var fs = require('fs')
-var lexer = new Lexer(null);
+exports.Lexer = Lexer;
 
-lexer.on('feature', function(keyword, name, description, line) {
-  console.log(keyword + ': ' + name);
-});
-lexer.on('background', function(keyword, name, description, line) {
-  console.log('  ' + keyword + ': ' + name);
-});
-lexer.on('scenario', function(keyword, name, description, line) {
-  console.log('  ' + keyword + ': ' + name);
-});
-lexer.on('scenario_outline', function(keyword, name, description, line) {
-  console.log('  ' + keyword + ': ' + name);
-});
-lexer.on('examples', function(keyword, name, description, line) {
-  console.log('    ' + keyword + ': ' + name);
-});
-lexer.on('step', function(keyword, name, line) {
-  console.log('    ' + keyword + name);
-});
-lexer.on('py_string', function(string, line) {
-  console.log('      """\n' + string + '\n      """');
-});
-lexer.on('row', function(row, line) {
-  console.log('      | ' + row.join(' | ') + ' |');
-});
-
-lexer.scan(fs.readFileSync(process.ARGV[2]));
+})();
