@@ -1,0 +1,25 @@
+{ "name" : "gherkin"
+, "description" : "A fast Gherkin lexer/parser based on the Ragel State Machine Compiler."
+, "keywords" : [ "testing", "bdd", "cucumber", "gherkin", "tests" ]
+, "version" : "2.3.4"
+, "homepage" : "http://github.com/aslakhellesoy/gherkin"
+, "author" : "Aslak Hellesøy <aslak.hellesoy@gmail.com>"
+, "contributors" :
+  [ "Aslak Hellesøy <aslak.hellesoy@gmail.com>" ]
+, "repository" :
+  { "type" : "git"
+  , "url" : "git://github.com/aslakhellesoy/gherkin.git"
+  }
+, "bugs" :
+  { "mail" : "cukes@googlegroups.com"
+  , "web" : "http://github.com/aslakhellesoy/gherkin/issues"
+  }
+, "directories" : { "lib" : "./lib" }
+, "main" : "gherkin"
+, "engines" : { "node" : "0.4 || 0.5" }
+, "licenses" :
+  [ { "type" : "MIT"
+    , "url" : "http://github.com/isaacs/npm/raw/master/LICENSE"
+    }
+  ]
+}
