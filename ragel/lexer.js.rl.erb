@@ -21,7 +21,7 @@
   action store_pystring_content {
     var con = this.unindent(
       this.start_col, 
-      data.slice(this.content_start, this.next_keyword_start-1).toString('utf-8').replace(/(\r?\n)?([\t ])*\Z/, '') // TODO .replace(/\"\"\"/mg, '"""')
+      this.bytesToString(data.slice(this.content_start, this.next_keyword_start-1)).replace(/(\r?\n)?([\t ])*\Z/, '') // TODO .replace(/\"\"\"/mg, '"""')
     );
     this.emit('py_string', con, this.current_line); 
   }
@@ -47,7 +47,7 @@
   }
 
   action store_step_content {
-    var con = data.slice(this.content_start, p).toString('utf-8').trim();
+    var con = this.bytesToString(data.slice(this.content_start, p)).trim();
     this.emit('step', this.keyword, con, this.current_line);
   }
 
@@ -72,7 +72,7 @@
   }
 
   action end_keyword {
-    this.keyword = data.slice(this.keyword_start, p).toString('utf-8').replace(/:$/, '');
+    this.keyword = this.bytesToString(data.slice(this.keyword_start, p)).replace(/:$/, '');
     this.keyword_start = null;
   }
 
@@ -91,7 +91,7 @@
   }
 
   action store_cell_content {
-    var con = data.slice(this.content_start, p).toString('utf-8').trim();
+    var con = this.bytesToString(data.slice(this.content_start, p)).trim();
     current_row.push(con.replace(/\\\|/, "|").replace(/\\n/, "\n").replace(/\\\\/, "\\"));
   }
 
@@ -119,16 +119,26 @@ var Lexer = function(listeners) {
     
     this.on = function(event, cb) {
       this._listeners[event] = cb;
-    }
+    };
+    
+    this.emit = function() {
+      var event = arguments[0];
+      var args = [];
+      for(var i = 1; i < arguments.length; i++) {
+        args.push(arguments[i]);
+      }
+      var cb = this._listeners[event];
+      cb.apply(listeners, args);
+    };
   }
   
   var events = ['feature', 'background', 'scenario', 'scenario_outline', 'examples', 'step', 'py_string', 'row', 'end'];
   for(e in events) {
     var event = events[e];
     var listener = listeners[event];
-    if(!listener) {
-      throw "No listener for " + event;
-    }
+//    if(!listener) {
+//      throw "No listener for " + event;
+//    }
     this.on(event, listener);
   }
 
@@ -147,6 +157,19 @@ Lexer.prototype.scan = function(data) {
   %% write exec;
 };
 
+Lexer.prototype.bytesToString = function(bytes) {
+  if(typeof bytes.write == 'function') {
+    // Node.js
+    return bytes.toString('utf-8');
+  } else {
+    var result = "";
+    for(var b in bytes) {
+      result += String.fromCharCode(bytes[b]);
+    }
+    return result;
+  }
+}
+
 Lexer.prototype.unindent = function(startcol, text) {
   startcol = startcol || 0;
   return text.replace(new RegExp('^[\t ]{0,' + startcol + '}', 'gm'), ''); 
@@ -154,7 +177,7 @@ Lexer.prototype.unindent = function(startcol, text) {
 
 Lexer.prototype.store_keyword_content = function(event, data, p, eof) {
   var end_point = (!this.next_keyword_start || (p == eof)) ? p : this.next_keyword_start;
-  var content = this.unindent(this.start_col + 2, data.slice(this.content_start, end_point).toString('utf-8')).trimRight();
+  var content = this.unindent(this.start_col + 2, this.bytesToString(data.slice(this.content_start, end_point))).trimRight();
   var content_lines = content.split("\n")
   var name = content_lines.shift() || "";
   name = name.trim();
