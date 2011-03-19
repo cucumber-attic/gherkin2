@@ -111,6 +111,17 @@
 %% variable data data;
 
 var Lexer = function(listeners) {
+  // check that we have an 'on' method (for registering event listeners - Node has that)
+  // If not, make a trivial implementation that can register one listener. -Enough for testing.
+  
+  if(!this.on) {
+    this._listeners = {};
+    
+    this.on = function(event, cb) {
+      this._listeners[event] = cb;
+    }
+  }
+  
   var events = ['feature', 'background', 'scenario', 'scenario_outline', 'examples', 'step', 'py_string', 'row', 'end'];
   for(e in events) {
     var event = events[e];
@@ -120,10 +131,13 @@ var Lexer = function(listeners) {
     }
     this.on(event, listener);
   }
+
   %% write init;
 };
 
-require('sys').inherits(Lexer, require('events').EventEmitter);
+if(typeof require == 'function') {
+  require('sys').inherits(Lexer, require('events').EventEmitter);
+}
 
 Lexer.prototype.scan = function(data) {
   var p = 0;

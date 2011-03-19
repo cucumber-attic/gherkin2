@@ -52,8 +52,9 @@ Gem::Specification.new do |s|
   s.add_dependency('json', '~> 1.4')
 
   s.add_development_dependency('rake', '~> 0.8.7')
-  s.add_development_dependency('bundler', '~> 1.0.10')
-  s.add_development_dependency('rspec', '~> 2.5.0')
+  s.add_development_dependency('bundler', '~> 1.0')
+  s.add_development_dependency('rspec', '~> 2.5')
+  s.add_development_dependency('therubyracer', '~> 0.8')
   s.add_development_dependency('awesome_print', '~> 0.3.2')
   s.add_development_dependency('cucumber', '~> 0.10.0')
   # Only needed by Cucumber. Remove when Cucumber no longer needs those.
