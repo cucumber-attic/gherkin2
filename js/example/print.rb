@@ -1,8 +1,27 @@
 require 'v8'
 
-cxt = V8::Context.new
-cxt['exports'] = {}
-cxt.load(File.dirname(__FILE__) + '/../lib/gherkin/lexer/i18n/en.js')
+module Gherkin
+  class JSLexer
+    def initialize(listener, lang='en')
+      @cxt = V8::Context.new
+      @cxt['exports'] = {}
+
+      # Mimic Node.js / Firebug console.log
+      @cxt['console'] = STDOUT
+      def STDOUT.log(*a)
+        puts(*a)
+      end
+
+      @cxt.load(File.dirname(__FILE__) + "/../lib/gherkin/lexer/i18n/#{lang}.js")
+
+      @lexer = @cxt['exports']['Lexer'].new(listener)
+    end
+
+    def scan(gherkin)
+      @lexer['scan'].call(gherkin)
+    end
+  end
+end
 
 class Listener
   ['feature', 'background', 'scenario', 'scenario_outline', 'examples', 'step', 'py_string', 'row', 'end'].each do |m|
@@ -12,5 +31,4 @@ class Listener
   end
 end
 
-lexer = cxt['exports']['Lexer'].new(Listener.new)
-lexer['scan'].call("Feature:\n Hello")
+Gherkin::JSLexer.new(Listener.new).scan("Feature:\n Hello\nScenario: DUDE\n")
