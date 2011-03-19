@@ -31,4 +31,4 @@ class Listener
   end
 end
 
-Gherkin::JSLexer.new(Listener.new).scan("Feature:\n Hello\nScenario: DUDE\n")
+Gherkin::JSLexer.new(Listener.new).scan(IO.read(ARGV[0]))
