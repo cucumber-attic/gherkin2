@@ -1,44 +1,85 @@
 <!doctype html>
 <html>
   <head>
+    <meta charset="UTF-8"> 
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+    <title>Editor</title> 
+    <style type="text/css" media="screen"> 
+      body {
+        overflow: hidden;
+      }
+    
+      #editor {
+        margin: 0;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 400px;
+        height: 300px;
+      }
+    </style>
     <script src="../lib/gherkin/lexer/i18n/en.js"></script>
+    <script src="ace/build/src/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="ace/build/src/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/gherkin" id="feature">
       Feature: Hello World
         Scenario: Look Ma
           Given I am in a browser
     </script>
     <script>
-      var feature = document.getElementById('feature').innerText;
-      var lexer = new Lexer({
-        feature: function(keyword, name, description, line) {
-          console.log(keyword + ': ' + name);
-        },
-        background: function(keyword, name, description, line) {
-          console.log('  ' + keyword + ': ' + name);
-        },
-        scenario: function(keyword, name, description, line) {
-          console.log('  ' + keyword + ': ' + name);
-        },
-        scenario_outline: function(keyword, name, description, line) {
-          console.log('  ' + keyword + ': ' + name);
-        },
-        examples: function(keyword, name, description, line) {
-          console.log('  ' + keyword + ': ' + name);
-        },
-        step: function(keyword, name, line) {
-          console.log('    ' + keyword + name);
-        },
-        py_string: function(string, line) {
-          console.log('      """\n' + string + '\n      """');
-        },
-        row: function(row, line) {
-          console.log('      | ' + row.join(' | ') + ' |');
-        },
-        end: function() {
-          console.log('=====');
+      window.onload = function() {
+        var lexer = new Lexer({
+          feature: function(keyword, name, description, line) {
+            console.log(keyword + ': ' + name);
+          },
+          background: function(keyword, name, description, line) {
+            console.log('  ' + keyword + ': ' + name);
+          },
+          scenario: function(keyword, name, description, line) {
+            console.log('  ' + keyword + ': ' + name);
+          },
+          scenario_outline: function(keyword, name, description, line) {
+            console.log('  ' + keyword + ': ' + name);
+          },
+          examples: function(keyword, name, description, line) {
+            console.log('  ' + keyword + ': ' + name);
+          },
+          step: function(keyword, name, line) {
+            console.log('    ' + keyword + name);
+          },
+          py_string: function(string, line) {
+            console.log('      """\n' + string + '\n      """');
+          },
+          row: function(row, line) {
+            console.log('      | ' + row.join(' | ') + ' |');
+          },
+          end: function() {
+            console.log('=====');
+          }
+        });
+        
+        if(typeof ace != 'undefined') {
+          var editor = ace.edit("editor");
+          editor.setTheme("ace/theme/twilight");
+
+          editor.getSession().on('change', function(e) {
+            var source = editor.getSession().getValue();
+            lexer.scan(source);
+          });
+        } else {
+          document.getElementById('editor').innerHTML = "You have to run <code>git submodule update --init</code> in order to see the editor."
         }
-      });
-      lexer.scan(feature);
+      };
     </script>
   </head>
+  <body>
+    <p style="float:right;">
+      Check out what's going on in your firebug console when you edit the feature...
+    </p>
+    <div id="editor">Feature: Hello World
+  Scenario: Look Ma
+    Given I am in a browser
+</div>
+  </body>
 </html>
