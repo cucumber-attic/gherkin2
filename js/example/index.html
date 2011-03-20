@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="../lib/gherkin/lexer/i18n/en.js"></script>
+    <script type="text/gherkin" id="feature">
+      Feature: Hello World
+        Scenario: Look Ma
+          Given I am in a browser
+    </script>
+    <script>
+      var feature = document.getElementById('feature').innerText;
+      var lexer = new Lexer({
+        feature: function(keyword, name, description, line) {
+          console.log(keyword + ': ' + name);
+        },
+        background: function(keyword, name, description, line) {
+          console.log('  ' + keyword + ': ' + name);
+        },
+        scenario: function(keyword, name, description, line) {
+          console.log('  ' + keyword + ': ' + name);
+        },
+        scenario_outline: function(keyword, name, description, line) {
+          console.log('  ' + keyword + ': ' + name);
+        },
+        examples: function(keyword, name, description, line) {
+          console.log('  ' + keyword + ': ' + name);
+        },
+        step: function(keyword, name, line) {
+          console.log('    ' + keyword + name);
+        },
+        py_string: function(string, line) {
+          console.log('      """\n' + string + '\n      """');
+        },
+        row: function(row, line) {
+          console.log('      | ' + row.join(' | ') + ' |');
+        },
+        end: function() {
+          console.log('=====');
+        }
+      });
+      lexer.scan(feature);
+    </script>
+  </head>
+</html>

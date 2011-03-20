@@ -52,11 +52,15 @@
   }
 
   action store_comment_content {
-    console.log('TODO: store_comment_content');
+//    var con = this.bytesToString(data.slice(this.content_start, p)).trim();
+//    this.emit('comment', con, this.line_number);
+//    this.keyword_start = null;
   }
 
   action store_tag_content {
-    console.log('TODO: store_tag_content');
+//    var con = this.bytesToString(data.slice(this.content_start, p)).trim();
+//    this.emit('tag', con, this.line_number);
+//    this.keyword_start = null;
   }
 
   action inc_line_number {
@@ -128,6 +132,9 @@ var Lexer = function(listeners) {
         args.push(arguments[i]);
       }
       var cb = this._listeners[event];
+      if(!cb) {
+        throw "No such listener: [" + event + "]. Known: " + JSON.stringify(this._listeners);
+      }
       cb.apply(listeners, args);
     };
   }
@@ -150,6 +157,9 @@ if(typeof require == 'function') {
 }
 
 Lexer.prototype.scan = function(data) {
+  if(typeof data == 'string') {
+    data = this.stringToBytes(data);
+  }
   var p = 0;
   var pe = data.length;
   var eof = 0;
@@ -170,6 +180,14 @@ Lexer.prototype.bytesToString = function(bytes) {
   }
 }
 
+Lexer.prototype.stringToBytes = function(string) {
+  var bytes = [];
+  for(var i = 0; i < string.length; i++) {
+    bytes[i] = string.charCodeAt(i);
+  }
+  return bytes;
+}
+
 Lexer.prototype.unindent = function(startcol, text) {
   startcol = startcol || 0;
   return text.replace(new RegExp('^[\t ]{0,' + startcol + '}', 'gm'), ''); 
@@ -188,6 +206,11 @@ Lexer.prototype.store_keyword_content = function(event, data, p, eof) {
   return nks ? nks - 1 : p;
 };
 
-exports.Lexer = Lexer;
+if(typeof exports != 'undefined') {
+  exports.Lexer = Lexer;
+}
+if(typeof window != 'undefined') {
+  window.Lexer = Lexer;
+}
 
 })();
