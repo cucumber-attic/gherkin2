@@ -31,11 +31,11 @@ public class I18nLexer implements Lexer {
     }
 
     private Lexer createDelegate(String source) {
-        i18n = i18nLanguage(source);
+        i18n = i18nLanguageForSource(source);
         return i18n.lexer(listener);
     }
 
-    private I18n i18nLanguage(String source) {
+    private I18n i18nLanguageForSource(String source) {
         String key = "en";
         for (String line : source.split("\\n")) {
             if (!COMMENT_OR_EMPTY_LINE_PATTERN.matcher(line).find()) {
