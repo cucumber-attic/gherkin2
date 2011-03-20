@@ -1,7 +1,7 @@
 $:.unshift(File.dirname(__FILE__) + '/../../spec')
 require 'gherkin/js_lexer'
 
-class Listener
+class SimplePrettyPrinterListener
   def feature(keyword, name, description, line)
     puts(keyword + ': ' + name)
   end
@@ -31,4 +31,4 @@ class Listener
   end
 end
 
-Gherkin::JsLexer.new(Listener.new).scan(IO.read(ARGV[0]).unpack("c*"))
+Gherkin::JsLexer.new(SimplePrettyPrinterListener.new).scan(IO.read(ARGV[0]).unpack("c*"))
