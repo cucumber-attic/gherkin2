@@ -1,27 +1,5 @@
-require 'v8'
-
-module Gherkin
-  class JSLexer
-    def initialize(listener, lang='en')
-      @cxt = V8::Context.new
-      @cxt['exports'] = {}
-
-      # Mimic Node.js / Firebug console.log
-      @cxt['console'] = STDOUT
-      def STDOUT.log(*a)
-        p a
-      end
-
-      @cxt.load(File.dirname(__FILE__) + "/../lib/gherkin/lexer/i18n/#{lang}.js")
-
-      @lexer = @cxt['exports']['Lexer'].new(listener)
-    end
-
-    def scan(gherkin)
-      @lexer['scan'].methodcall(@lexer, gherkin)
-    end
-  end
-end
+$:.unshift(File.dirname(__FILE__) + '/../../spec')
+require 'gherkin/js_lexer'
 
 class Listener
   def feature(keyword, name, description, line)
@@ -52,4 +30,5 @@ class Listener
     puts('=====')
   end
 end
-Gherkin::JSLexer.new(Listener.new).scan(IO.read(ARGV[0]).unpack("c*") )
+
+Gherkin::JsLexer.new(Listener.new).scan(IO.read(ARGV[0]).unpack("c*"))
