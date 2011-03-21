@@ -32,7 +32,7 @@ module Gherkin
 
       def lang(source)
         key = 'en'
-        source.split(/\n/).each do |line|
+        source.each_line do |line|
           break unless COMMENT_OR_EMPTY_LINE_PATTERN =~ line
           if LANGUAGE_PATTERN =~ line
             key = $1
