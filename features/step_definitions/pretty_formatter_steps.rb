@@ -59,6 +59,7 @@ When /^I send each prettified original through the "([^"]*)" machinery$/ do |mac
   @error = false
   @feature_paths.each do |feature_path|
     begin
+      next if feature_path =~ /iso-8859-1\.feature/
       original = pretty_machinery(IO.read(feature_path), feature_path)
       via_machinery = self.__send__("#{machinery}_machinery", original, feature_path)
       via_machinery.should == original
