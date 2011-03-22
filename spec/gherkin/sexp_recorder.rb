@@ -39,7 +39,10 @@ module Gherkin
     end
 
     def sexpify(o)
-      if (defined?(JRUBY_VERSION) && Java.java.util.Collection === o) || Array === o
+      array = (defined?(JRUBY_VERSION) && Java.java.util.Collection === o) || 
+              (defined?(V8) && V8::Array === o) ||
+              Array === o
+      if array
         o.map{|e| sexpify(e)}
       elsif(Formatter::Model::Row === o)
         {
