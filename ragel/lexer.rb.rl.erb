@@ -150,7 +150,7 @@ module Gherkin
       
       def current_line_content(data, p)
         rest = data[@last_newline..-1]
-        utf8_pack(rest[0..rest.index(10)||-1]).strip
+        utf8_pack(rest[0..rest.index(10)||-1]).strip # 10 is \n
       end
 
       if (RUBY_VERSION =~ /^1\.9/)

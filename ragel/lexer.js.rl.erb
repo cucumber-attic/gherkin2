@@ -158,7 +158,7 @@ Lexer.prototype.bytesToString = function(bytes) {
     }
     return result;
   }
-}
+};
 
 Lexer.prototype.stringToBytes = function(string) {
   var bytes = [];
@@ -166,7 +166,7 @@ Lexer.prototype.stringToBytes = function(string) {
     bytes[i] = string.charCodeAt(i);
   }
   return bytes;
-}
+};
 
 Lexer.prototype.unindent = function(startcol, text) {
   startcol = startcol || 0;
@@ -184,6 +184,12 @@ Lexer.prototype.store_keyword_content = function(event, data, p, eof) {
   var nks = this.next_keyword_start;
   this.next_keyword_start = null;
   return nks ? nks - 1 : p;
+};
+
+Lexer.prototype.current_line_content = function(data, p) {
+  var rest = data.slice(this.last_newline, -1);
+  var end = rest.indexOf(10) || -1;
+  return this.bytesToString(rest.slice(0, end)).trim();
 };
 
 if(typeof exports != 'undefined') {
