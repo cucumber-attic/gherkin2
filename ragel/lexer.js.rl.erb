@@ -104,6 +104,7 @@
   }
 
   action end_feature {
+    console.log("HELLO");
   }
 
   include lexer_common "lexer_common.<%= @i18n.underscored_iso_code %>.rl"; 
@@ -131,6 +132,7 @@ Lexer.prototype.scan = function(data) {
   if(typeof data == 'string') {
     data = this.stringToBytes(data);
   }
+  // TODO: Add "\n%_FEATURE_END_%" - or \0 (https://github.com/aslakhellesoy/gherkin/issues#issue/88)
   var p = 0;
   var pe = data.length;
   var eof = 0;
