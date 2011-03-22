@@ -21,7 +21,7 @@
   action store_pystring_content {
     var con = this.unindent(
       this.start_col, 
-      this.bytesToString(data.slice(this.content_start, this.next_keyword_start-1)).replace(/(\r?\n)?([\t ])*\Z/, '') // TODO .replace(/\"\"\"/mg, '"""')
+      this.bytesToString(data.slice(this.content_start, this.next_keyword_start-1)).replace(/(\r?\n)?([\t ])*$/, '') // TODO .replace(/\"\"\"/mg, '"""')
     );
     this.listener.py_string(con, this.current_line); 
   }
