@@ -10,7 +10,7 @@ module Gherkin
         @listener = Gherkin::SexpRecorder.new
         @lexer = Gherkin::JsLexer.new(@listener, 'en')
       end
-
+    
       it_should_behave_like "a Gherkin lexer"
       it_should_behave_like "a Gherkin lexer lexing tags"
       it_should_behave_like "a Gherkin lexer lexing py_strings"

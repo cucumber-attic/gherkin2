@@ -37,7 +37,7 @@ class SimplePrettyPrinterListener
   def row(row, line)
     puts('      | ' + row.join(' | ') + ' |')
   end
-  def end
+  def eof
     puts('=====')
   end
 end

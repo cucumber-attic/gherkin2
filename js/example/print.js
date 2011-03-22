@@ -32,7 +32,7 @@ var lexer = new Lexer({
   row: function(row, line) {
     console.log('      | ' + row.join(' | ') + ' |');
   },
-  end: function() {
+  eof: function() {
     console.log('=====');
   }
 });
