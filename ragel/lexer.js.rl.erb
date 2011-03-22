@@ -23,7 +23,7 @@
       this.start_col, 
       this.bytesToString(data.slice(this.content_start, this.next_keyword_start-1)).replace(/(\r?\n)?([\t ])*\Z/, '') // TODO .replace(/\"\"\"/mg, '"""')
     );
-    this.emit('py_string', con, this.current_line); 
+    this.listener.py_string(con, this.current_line); 
   }
 
   action store_feature_content {
@@ -48,18 +48,18 @@
 
   action store_step_content {
     var con = this.bytesToString(data.slice(this.content_start, p)).trim();
-    this.emit('step', this.keyword, con, this.current_line);
+    this.listener.step(this.keyword, con, this.current_line);
   }
 
   action store_comment_content {
 //    var con = this.bytesToString(data.slice(this.content_start, p)).trim();
-//    this.emit('comment', con, this.line_number);
+//    this.listener.comment(con, this.line_number);
 //    this.keyword_start = null;
   }
 
   action store_tag_content {
 //    var con = this.bytesToString(data.slice(this.content_start, p)).trim();
-//    this.emit('tag', con, this.line_number);
+//    this.listener.tag(con, this.line_number);
 //    this.keyword_start = null;
   }
 
@@ -100,7 +100,7 @@
   }
 
   action store_row {
-    this.emit('row', current_row, this.current_line);
+    this.listener.row(current_row, this.current_line);
   }
 
   action end_feature {
@@ -114,47 +114,19 @@
 %% access this.;
 %% variable data data;
 
-var Lexer = function(listeners) {
-  // check that we have an 'on' method (for registering event listeners - Node has that)
-  // If not, make a trivial implementation that can register one listener. -Enough for testing.
-  
-  if(!this.on) {
-    this._listeners = {};
-    
-    this.on = function(event, cb) {
-      this._listeners[event] = cb;
-    };
-    
-    this.emit = function() {
-      var event = arguments[0];
-      var args = [];
-      for(var i = 1; i < arguments.length; i++) {
-        args.push(arguments[i]);
-      }
-      var cb = this._listeners[event];
-      if(!cb) {
-        throw "No such listener: [" + event + "]. Known: " + JSON.stringify(this._listeners);
-      }
-      cb.apply(listeners, args);
-    };
-  }
-  
+var Lexer = function(listener) {
+  // Check that listener has the required functions
   var events = ['feature', 'background', 'scenario', 'scenario_outline', 'examples', 'step', 'py_string', 'row', 'end'];
   for(e in events) {
     var event = events[e];
-    var listener = listeners[event];
-//    if(!listener) {
-//      throw "No listener for " + event;
-//    }
-    this.on(event, listener);
+    if(typeof listener[event] != 'function') {
+      "Error. No " + event + " function exists on " + JSON.stringify(listener);
+    }
   }
+  this.listener = listener;  
 
   %% write init;
 };
-
-if(typeof require == 'function') {
-  require('sys').inherits(Lexer, require('events').EventEmitter);
-}
 
 Lexer.prototype.scan = function(data) {
   if(typeof data == 'string') {
@@ -200,7 +172,7 @@ Lexer.prototype.store_keyword_content = function(event, data, p, eof) {
   var name = content_lines.shift() || "";
   name = name.trim();
   var description = content_lines.join("\n");
-  this.emit(event, this.keyword, name, description, this.current_line);
+  this.listener[event](this.keyword, name, description, this.current_line);
   var nks = this.next_keyword_start;
   this.next_keyword_start = null;
   return nks ? nks - 1 : p;
