@@ -104,7 +104,13 @@
   }
 
   action end_feature {
-    console.log("HELLO");
+    if(this.cs < lexer_first_final) {
+      var content = this.current_line_content(data, p);
+      throw "Lexing error on line " + this.line_number + ": '" + content + "'. See http://wiki.github.com/aslakhellesoy/gherkin/lexingerror for more information.";
+    } else {
+      this.listener.eof();
+    }
+    
   }
 
   include lexer_common "lexer_common.<%= @i18n.underscored_iso_code %>.rl"; 
@@ -124,22 +130,20 @@ var Lexer = function(listener) {
     }
   }
   this.listener = listener;  
-
-  %% write init;
 };
 
 Lexer.prototype.scan = function(data) {
   if(typeof data == 'string') {
-    data = this.stringToBytes(data);
+    // TODO: Do this for non-string too (Buffer in Node.js)
+    data = this.stringToBytes(data + "\n%_FEATURE_END_%");
   }
-  // TODO: Add "\n%_FEATURE_END_%" - or \0 (https://github.com/aslakhellesoy/gherkin/issues#issue/88)
+  var eof = pe = data.length;
   var p = 0;
-  var pe = data.length;
-  var eof = 0;
 
   this.line_number = 1;
   this.last_newline = 0;
 
+  %% write init;
   %% write exec;
 };
 
