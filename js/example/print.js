@@ -2,6 +2,12 @@ var fs = require('fs');
 var Lexer = require('../lib/gherkin/lexer/i18n/en').Lexer;
 
 var lexer = new Lexer({
+  comment: function(value, line) {
+    console.log(value);
+  },
+  tag: function(value, line) {
+    console.log(value);
+  },
   feature: function(keyword, name, description, line) {
     console.log(keyword + ': ' + name);
   },

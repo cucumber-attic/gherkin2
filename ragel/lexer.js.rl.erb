@@ -52,15 +52,15 @@
   }
 
   action store_comment_content {
-//    var con = this.bytesToString(data.slice(this.content_start, p)).trim();
-//    this.listener.comment(con, this.line_number);
-//    this.keyword_start = null;
+    var con = this.bytesToString(data.slice(this.content_start, p)).trim();
+    this.listener.comment(con, this.line_number);
+    this.keyword_start = null;
   }
 
   action store_tag_content {
-//    var con = this.bytesToString(data.slice(this.content_start, p)).trim();
-//    this.listener.tag(con, this.line_number);
-//    this.keyword_start = null;
+    var con = this.bytesToString(data.slice(this.content_start, p)).trim();
+    this.listener.tag(con, this.line_number);
+    this.keyword_start = null;
   }
 
   action inc_line_number {

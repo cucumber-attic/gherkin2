@@ -5,6 +5,9 @@ class SimplePrettyPrinterListener
   def comment(value, line)
     puts(value)
   end
+  def tag(value, line)
+    puts(value)
+  end
   def feature(keyword, name, description, line)
     puts(keyword + ': ' + name)
     puts('  ' + description) if description.to_s != ""
