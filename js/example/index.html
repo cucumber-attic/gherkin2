@@ -7,6 +7,7 @@
     <style type="text/css" media="screen"> 
       body {
         overflow: hidden;
+        font-size: 3em;
       }
     
       #editor {
@@ -15,13 +16,17 @@
         bottom: 0;
         left: 0;
         right: 0;
-        width: 400px;
-        height: 300px;
+        height: 900px;
+      }
+      
+      .syntax_error {
+        background-color: #AA0000;
       }
     </style>
     <script src="../lib/gherkin/lexer/i18n/en.js"></script>
     <script src="ace/build/src/ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="ace/build/src/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
+    <script src="jquery-1.5.1.min.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/gherkin" id="feature">
       Feature: Hello World
         Scenario: Look Ma
@@ -31,40 +36,28 @@
       window.onload = function() {
         var lexer = new Lexer({
           comment: function(value, line) {
-            console.log(value);
           },
           tag: function(value, line) {
-            console.log(value);
           },
           feature: function(keyword, name, description, line) {
-            console.log(keyword + ': ' + name);
           },
           feature: function(keyword, name, description, line) {
-            console.log(keyword + ': ' + name);
           },
           background: function(keyword, name, description, line) {
-            console.log('  ' + keyword + ': ' + name);
           },
           scenario: function(keyword, name, description, line) {
-            console.log('  ' + keyword + ': ' + name);
           },
           scenario_outline: function(keyword, name, description, line) {
-            console.log('  ' + keyword + ': ' + name);
           },
           examples: function(keyword, name, description, line) {
-            console.log('  ' + keyword + ': ' + name);
           },
           step: function(keyword, name, line) {
-            console.log('    ' + keyword + name);
           },
           py_string: function(string, line) {
-            console.log('      """\n' + string + '\n      """');
           },
           row: function(row, line) {
-            console.log('      | ' + row.join(' | ') + ' |');
           },
           eof: function() {
-            console.log('=====');
           }
         });
         
@@ -74,10 +67,12 @@
 
           editor.getSession().on('change', function(e) {
             var source = editor.getSession().getValue();
+            jQuery('#editor .ace_text-layer .ace_line').toggleClass('syntax_error', false);
             try {
               lexer.scan(source);
             } catch(exception) {
-              console.log("ERROR", exception);
+              var line = exception.match(/Lexing error on line (\d+):/)[1];
+              jQuery('#editor .ace_text-layer .ace_line:nth-child(' + line + ')').toggleClass('syntax_error');
             }
           });
         } else {
@@ -87,12 +82,23 @@
     </script>
   </head>
   <body>
-    <p style="float:right;">
-      Check out what's going on in your firebug console when you edit the feature...
-    </p>
     <div id="editor">Feature: Hello World
   Scenario: Look Ma
     Given I am in a browser
+    When I make a syntax error
+    Then stuff should be red
+
+  Scenario: Look Pa
+    Given I am in a browser
+    When I make a syntax error
+      | a   | table |
+      | yes | nice |
+    Then stuff should be red
+      """
+      Several lines
+      is handy
+      sometimes
+      """
 </div>
   </body>
 </html>
