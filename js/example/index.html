@@ -30,6 +30,15 @@
     <script>
       window.onload = function() {
         var lexer = new Lexer({
+          comment: function(value, line) {
+            console.log(value);
+          },
+          tag: function(value, line) {
+            console.log(value);
+          },
+          feature: function(keyword, name, description, line) {
+            console.log(keyword + ': ' + name);
+          },
           feature: function(keyword, name, description, line) {
             console.log(keyword + ': ' + name);
           },
@@ -54,7 +63,7 @@
           row: function(row, line) {
             console.log('      | ' + row.join(' | ') + ' |');
           },
-          end: function() {
+          eof: function() {
             console.log('=====');
           }
         });
@@ -65,7 +74,11 @@
 
           editor.getSession().on('change', function(e) {
             var source = editor.getSession().getValue();
-            lexer.scan(source);
+            try {
+              lexer.scan(source);
+            } catch(exception) {
+              console.log("ERROR", exception);
+            }
           });
         } else {
           document.getElementById('editor').innerHTML = "You have to run <code>git submodule update --init</code> in order to see the editor."
