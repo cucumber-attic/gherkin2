@@ -14,6 +14,10 @@ class RagelTask
     file target => [lang_ragel, common_ragel] do
       mkdir_p(File.dirname(target)) unless File.directory?(File.dirname(target))
       sh "ragel #{flags} #{lang_ragel} -o #{target}"
+      if(@lang == 'js')
+        # Ragel chokes if we put the escaped triple quotes in .rl, so we'll do the replace with sed after the fact. Lots of backslashes!!
+        sh %{sed -i '' 's/ESCAPED_TRIPLE_QUOTE/\\\\\\\\\\\\"\\\\\\\\\\\\"\\\\\\\\\\\\"/' #{target}}
+      end
     end
 
     file lang_ragel => lang_erb do
