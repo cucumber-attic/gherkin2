@@ -48,7 +48,7 @@ Gem::Specification.new do |s|
     s.add_development_dependency('rake-compiler', '~> 0.7.5')
   end
 
-  s.add_dependency('json', '>= 1.4.6')
+  s.add_dependency('json', '>= 1.5.1')
 
   s.add_development_dependency('cucumber', '>= 0.10.0')
   s.add_development_dependency('rake', '>= 0.8.7')
