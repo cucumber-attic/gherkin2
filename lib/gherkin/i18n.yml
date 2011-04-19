@@ -446,11 +446,11 @@
 "ru":
   name: Russian
   native: русский
-  feature: Функционал|Фича
-  background: Предыстория
+  feature: Функция|Функционал|Свойство
+  background: Предыстория|Контекст
   scenario: Сценарий
   scenario_outline: Структура сценария
-  examples: Значения
+  examples: Примеры
   given: "*|Допустим|Дано|Пусть"
   when: "*|Если|Когда"
   then: "*|То|Тогда"
