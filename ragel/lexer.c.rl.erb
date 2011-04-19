@@ -195,45 +195,43 @@ static VALUE rb_eGherkinLexingError;
   action end_feature {
     int line;
     if (cs < lexer_first_final) {
-      if (raise_lexer_error != NULL) {
-        size_t count = 0;
-    	VALUE newstr_val;
-        char *newstr;
-        int newstr_count = 0;        
-        size_t len;
-        const char *buff;
-        if (lexer->last_newline != 0) {
-          len = LEN(last_newline, eof);
-          buff = PTR_TO(last_newline);
-        } else {
-          len = strlen(data);
-          buff = data;
-        }
-
-        // Allocate as a ruby string so that it gets cleaned up by GC
-        newstr_val = rb_str_new(buff, len);
-        newstr = RSTRING_PTR(newstr_val);
-
-
-        for (count = 0; count < len; count++) {
-          if(buff[count] == 10) {
-            newstr[newstr_count] = '\0'; // terminate new string at first newline found
-            break;
-          } else {
-            if (buff[count] == '%') {
-              newstr[newstr_count++] = buff[count];
-              newstr[newstr_count] = buff[count];
-            } else {
-              newstr[newstr_count] = buff[count];
-            }
-          }
-          newstr_count++;
-        }
-
-	line = lexer->line_number;
-        lexer_init(lexer); // Re-initialize so we can scan again with the same lexer
-        raise_lexer_error(newstr, line);
+      size_t count = 0;
+      VALUE newstr_val;
+      char *newstr;
+      int newstr_count = 0;        
+      size_t len;
+      const char *buff;
+      if (lexer->last_newline != 0) {
+        len = LEN(last_newline, eof);
+        buff = PTR_TO(last_newline);
+      } else {
+        len = strlen(data);
+        buff = data;
       }
+
+      // Allocate as a ruby string so that it gets cleaned up by GC
+      newstr_val = rb_str_new(buff, len);
+      newstr = RSTRING_PTR(newstr_val);
+
+
+      for (count = 0; count < len; count++) {
+        if(buff[count] == 10) {
+          newstr[newstr_count] = '\0'; // terminate new string at first newline found
+          break;
+        } else {
+          if (buff[count] == '%') {
+            newstr[newstr_count++] = buff[count];
+            newstr[newstr_count] = buff[count];
+          } else {
+            newstr[newstr_count] = buff[count];
+          }
+        }
+        newstr_count++;
+      }
+
+      line = lexer->line_number;
+      lexer_init(lexer); // Re-initialize so we can scan again with the same lexer
+      raise_lexer_error(newstr, line);
     } else {
       rb_funcall(listener, rb_intern("eof"), 0);
     }
