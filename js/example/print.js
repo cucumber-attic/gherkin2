@@ -1,5 +1,5 @@
 var fs = require('fs');
-var Lexer = require('../lib/gherkin/lexer/i18n/en').Lexer;
+var Lexer = require('../lib/gherkin').Lexer('en');
 
 var lexer = new Lexer({
   comment: function(value, line) {

@@ -4,8 +4,7 @@
 , "version" : "2.3.4"
 , "homepage" : "http://github.com/aslakhellesoy/gherkin"
 , "author" : "Aslak Hellesøy <aslak.hellesoy@gmail.com>"
-, "contributors" :
-  [ "Aslak Hellesøy <aslak.hellesoy@gmail.com>" ]
+, "contributors" : [ "Aslak Hellesøy <aslak.hellesoy@gmail.com>" ]
 , "repository" :
   { "type" : "git"
   , "url" : "git://github.com/aslakhellesoy/gherkin.git"
@@ -15,7 +14,7 @@
   , "web" : "http://github.com/aslakhellesoy/gherkin/issues"
   }
 , "directories" : { "lib" : "./lib" }
-, "main" : "gherkin"
+, "main" : "./lib/gherkin"
 , "engines" : { "node" : "0.4 || 0.5" }
 , "licenses" :
   [ { "type" : "MIT"

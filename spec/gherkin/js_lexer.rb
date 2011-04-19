@@ -12,7 +12,7 @@ module Gherkin
         p a
       end
 
-      @cxt.load(File.dirname(__FILE__) + "/../../js/lib/gherkin/lexer/i18n/#{lang}.js")
+      @cxt.load(File.dirname(__FILE__) + "/../../js/lib/gherkin/lexer/#{lang}.js")
 
       @lexer = @cxt['exports']['Lexer'].new(listener)
     end
