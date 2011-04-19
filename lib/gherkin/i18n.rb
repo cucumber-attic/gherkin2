@@ -118,6 +118,11 @@ module Gherkin
       RbLexer[underscored_iso_code].new(listener)
     end
 
+    def js(listener)
+      require 'gherkin/js_lexer'
+      JsLexer[underscored_iso_code].new(listener)
+    end
+
     def underscored_iso_code
       @iso_code.gsub(/[\s-]/, '_').downcase
     end

@@ -42,4 +42,4 @@ class SimplePrettyPrinterListener
   end
 end
 
-Gherkin::JsLexer.new(SimplePrettyPrinterListener.new).scan(IO.read(ARGV[0]))
+Gherkin::JsLexer['en'].new(SimplePrettyPrinterListener.new).scan(IO.read(ARGV[0]))
