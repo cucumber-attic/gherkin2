@@ -65,6 +65,7 @@ namespace :ikvm do
   desc 'Copy the IKVM .dll files over to the pkg dir'
   task :copy_ikvm_dlls do
     Dir['/usr/local/ikvm/bin/{IKVM.OpenJDK.Core,IKVM.OpenJDK.Text,IKVM.OpenJDK.Security,IKVM.Runtime}.dll'].each do |dll|
+      mkdir_p 'release' unless File.directory?('release')
       cp dll, 'release'
       cp dll, 'lib'
     end
