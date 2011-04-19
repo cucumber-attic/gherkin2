@@ -5,6 +5,7 @@
 
 === Bugfixes
 * Fix compilation error on Arch Linux (#98,#99 Ben Hamill)
+* Corrected Russian translation (#97 Vagif Abilov)
 
 == 2.3.5 (2011-03-20)
 
