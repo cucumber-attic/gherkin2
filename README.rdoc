@@ -155,6 +155,7 @@ Make sure you have openssl installed first.
 
 == Release process
 
+* Make sure GHERKIN_JS is defined (see Javascript section above)
 * Bump version in the VERSION file and:
 ** java/pom.xml
 ** ikvm/Gherkin/Gherkin.csproj

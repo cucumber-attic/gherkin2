@@ -1,3 +1,11 @@
+== 2.3.6 (2011-04-19)
+
+=== New Features
+* Javascript implementation (#38 Aslak Hellesøy)
+
+=== Bugfixes
+* Fix compilation error on Arch Linux (#98,#99 Ben Hamill)
+
 == 2.3.5 (2011-03-20)
 
 === Changes
