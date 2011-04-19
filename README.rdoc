@@ -158,7 +158,7 @@ Make sure you have openssl installed first.
 * Make sure GHERKIN_JS is defined (see Javascript section above)
 * Bump version in the VERSION file and:
 ** java/pom.xml
-** ikvm/Gherkin/Gherkin.csproj
+** ikvm/Gherkin/Gherkin.csproj (2 places)
 ** js/package.json
 * Commit changes.
 * rake gems:prepare && ./build_native_gems.sh && rake release:ALL
