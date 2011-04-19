@@ -22,6 +22,9 @@ file 'lib/gherkin.jar' => Dir['java/src/main/java/**/*.java'] do
   sh("mvn -f java/pom.xml package")
 end
 
+desc "Build Javascript lexers"
+task :js
+
 rl_langs = ENV['RL_LANGS'] ? ENV['RL_LANGS'].split(',') : []
 langs = Gherkin::I18n.all.select { |lang| rl_langs.empty? || rl_langs.include?(lang.iso_code) }
 
@@ -89,12 +92,14 @@ EOF
     Rake::Task["compile:gherkin_lexer_#{i18n.underscored_iso_code}"].prerequisites.unshift(extconf)
     Rake::Task["compile:gherkin_lexer_#{i18n.underscored_iso_code}"].prerequisites.unshift(c.target)
     Rake::Task["compile:gherkin_lexer_#{i18n.underscored_iso_code}"].prerequisites.unshift(rb.target)
-    Rake::Task["compile:gherkin_lexer_#{i18n.underscored_iso_code}"].prerequisites.unshift(js.target)
+    Rake::Task["compile:gherkin_lexer_#{i18n.underscored_iso_code}"].prerequisites.unshift(js.target) if ENV['GHERKIN_JS']
 
     Rake::Task["compile"].prerequisites.unshift(extconf)
     Rake::Task["compile"].prerequisites.unshift(c.target)
     Rake::Task["compile"].prerequisites.unshift(rb.target)
-    Rake::Task["compile"].prerequisites.unshift(js.target)
+    Rake::Task["compile"].prerequisites.unshift(js.target) if ENV['GHERKIN_JS']
+    
+    Rake::Task["js"].prerequisites.unshift(js.target) if ENV['GHERKIN_JS']
   end
   rescue LoadError
     unless defined?($c_warned)

@@ -56,7 +56,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('bundler', '>= 1.0.10')
   s.add_development_dependency('rspec', '>= 2.5.0')
   s.add_development_dependency('awesome_print', '>= 0.3')
-  s.add_development_dependency('therubyracer', '>= 0.8.2.pre2')
+  s.add_development_dependency('therubyracer', '>= 0.8.2.pre2') if ENV['GHERKIN_JS']
 
   # Only needed by Cucumber. Remove when Cucumber no longer needs those.
   s.add_development_dependency('term-ansicolor', '>= 1.0.5')
