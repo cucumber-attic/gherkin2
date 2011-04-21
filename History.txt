@@ -1,3 +1,7 @@
+== (In Git)
+
+* Added connect support for gherkin.js (Aslak Hellesøy)
+
 == 2.3.6 (2011-04-19)
 
 === New Features
