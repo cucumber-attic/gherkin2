@@ -46,7 +46,7 @@ Gem::Specification.new do |s|
     s.files += Dir['lib/gherkin/rb_lexer/*.rb']
     s.files += Dir['ext/**/*.c']
     s.extensions = Dir['ext/**/extconf.rb']
-    s.add_development_dependency('rake-compiler', '~> 0.7.5')
+    s.add_development_dependency('rake-compiler', '>= 0.7.8')
   end
 
   s.add_dependency('json', '>= 1.4.6')

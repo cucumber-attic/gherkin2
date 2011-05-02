@@ -43,9 +43,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\release\IKVM.OpenJDK.Text.dll</HintPath>
     </Reference>
-    <Reference Include="gherkin-2.3.6, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="gherkin-2.3.7, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\release\gherkin-2.3.6.dll</HintPath>
+      <HintPath>..\..\release\gherkin-2.3.7.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
