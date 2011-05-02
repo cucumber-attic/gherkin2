@@ -15,13 +15,6 @@ module Gherkin
           o
         end
       end
-    elsif defined?(V8)
-      case(o)
-      when V8::Array
-        o.map{|e| rubify(e)}
-      else
-        o
-      end
     else
       def rubify(o)
         o
