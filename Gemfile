@@ -1,7 +1,7 @@
 source "http://rubygems.org"
 gemspec
 
-unless ENV['TM_RUBY']
+if !ENV['TM_RUBY'] && File.directory?('../cucumber')
   @dependencies.reject!{|dep| dep.name == 'cucumber'}
   gem 'cucumber', :path => '../cucumber'
 end

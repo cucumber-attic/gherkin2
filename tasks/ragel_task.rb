@@ -14,6 +14,10 @@ class RagelTask
     file target => [lang_ragel, common_ragel] do
       mkdir_p(File.dirname(target)) unless File.directory?(File.dirname(target))
       sh "ragel #{flags} #{lang_ragel} -o #{target}"
+      if(@lang == 'js')
+        # Ragel chokes if we put the escaped triple quotes in .rl, so we'll do the replace with sed after the fact. Lots of backslashes!!
+        sh %{sed -i '' 's/ESCAPED_TRIPLE_QUOTE/\\\\\\\\\\\\"\\\\\\\\\\\\"\\\\\\\\\\\\"/' #{target}}
+      end
     end
 
     file lang_ragel => lang_erb do
@@ -29,7 +33,8 @@ class RagelTask
     {
       'c'    => "ext/gherkin_lexer_#{@i18n.underscored_iso_code}/gherkin_lexer_#{@i18n.underscored_iso_code}.c",
       'java' => "java/src/main/java/gherkin/lexer/i18n/#{@i18n.underscored_iso_code.upcase}.java",
-      'rb'   => "lib/gherkin/rb_lexer/#{@i18n.underscored_iso_code}.rb"
+      'rb'   => "lib/gherkin/rb_lexer/#{@i18n.underscored_iso_code}.rb",
+      'js'   => "js/lib/gherkin/lexer/#{@i18n.underscored_iso_code}.js"
     }[@lang]
   end
 
@@ -53,7 +58,8 @@ class RagelTask
     {
       'c'      => '-C',
       'java'   => '-J',
-      'rb'     => '-R'
+      'rb'     => '-R',
+      'js'     => '-E'
     }[@lang]
   end
 

@@ -9,9 +9,9 @@ Supported platforms:
 
 * Ruby 1.8.6-1.9.2 (MRI, JRuby, REE, Rubinius)
 * Pure Java
+* Javascript (Tested with V8/node.js/Chrome, but might work on other Javascript engines)
 * .NET
 * IronRuby (experimental)
-* Javascript (coming soon)
 
 == Installing the toolchain
 
@@ -66,6 +66,36 @@ You must install JRuby to build the pure Java jar or the JRuby gem:
 Now you can build the jar with:
 
   rake clean jar
+
+=== Javascript
+
+In order to build and test Gherkin for Javascript you must install:
+
+* Node.js (0.4.6 or higher)
+* NPM (0.3.18 or higher)
+* Ragel with Javascript support: http://github.com/dominicmarks/ragel-js
+* Define the GHERKIN_JS environment variable in your shell (any value will do)
+
+Now you can build the Javascript with:
+
+  rake js
+  cd js
+  npm install
+
+And you can try it out with node.js:
+
+  node js/example/print.js spec/gherkin/fixtures/1.feature
+
+You can also try out Gherkin running in the browser (likely to move to a separate project):
+
+  # Pull in the Ace (http://ace.ajax.org/) editor:
+  git submodule update --init
+  # Open a sample Gherkin-powered editor in Chrome
+  open js/example/index.html
+
+If you're hacking and just want to rebuild the English parser:
+
+  rake js/lib/gherkin/lexer/en.js
 
 === .NET and IronRuby
 
@@ -125,9 +155,11 @@ Make sure you have openssl installed first.
 
 == Release process
 
+* Make sure GHERKIN_JS is defined (see Javascript section above)
 * Bump version in the VERSION file and:
 ** java/pom.xml
-** ikvm/Gherkin/Gherkin.csproj
+** ikvm/Gherkin/Gherkin.csproj (2 places)
+** js/package.json
 * Commit changes.
 * rake gems:prepare && ./build_native_gems.sh && rake release:ALL
 * Announce on Cucumber list, IRC and Twitter.

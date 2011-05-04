@@ -27,34 +27,23 @@ module Gherkin
         }
  
         action store_feature_content {
-          
-          store_keyword_content(:feature, data, p, eof) { |con| unindent(@start_col + 2, con).rstrip }
-          p = @next_keyword_start - 1 if @next_keyword_start          
-          @next_keyword_start = nil
+          p = store_keyword_content(:feature, data, p, eof)
         }
  
         action store_background_content {
-          store_keyword_content(:background, data, p, eof) { |con| unindent(@start_col + 2, con).rstrip }
-          p = @next_keyword_start - 1 if @next_keyword_start                    
-          @next_keyword_start = nil
+          p = store_keyword_content(:background, data, p, eof)
         }
 
         action store_scenario_content {
-          store_keyword_content(:scenario, data, p, eof) { |con| unindent(@start_col + 2, con).rstrip }
-          p = @next_keyword_start - 1 if @next_keyword_start                    
-          @next_keyword_start = nil
+          p = store_keyword_content(:scenario, data, p, eof)
         }
 
         action store_scenario_outline_content {
-          store_keyword_content(:scenario_outline, data, p, eof) { |con| unindent(@start_col + 2, con).rstrip }
-          p = @next_keyword_start - 1 if @next_keyword_start                    
-          @next_keyword_start = nil
+          p = store_keyword_content(:scenario_outline, data, p, eof)
         }
 
         action store_examples_content {
-          store_keyword_content(:examples, data, p, eof) { |con| unindent(@start_col + 2, con).rstrip }
-          p = @next_keyword_start - 1 if @next_keyword_start                    
-          @next_keyword_start = nil
+          p = store_keyword_content(:examples, data, p, eof)
         }
 
         action store_step_content {
@@ -148,17 +137,20 @@ module Gherkin
 
       def store_keyword_content(event, data, p, eof)
         end_point = (!@next_keyword_start or (p == eof)) ? p : @next_keyword_start
-        content = yield utf8_pack(data[@content_start...end_point])
+        content = unindent(@start_col + 2, utf8_pack(data[@content_start...end_point])).rstrip
         content_lines = content.split("\n")
         name = content_lines.shift || ""
         name.strip!
         description = content_lines.join("\n")
         @listener.__send__(event, @keyword, name, description, @current_line)
+        @next_keyword_start ? @next_keyword_start - 1 : p
+      ensure
+        @next_keyword_start = nil
       end
       
       def current_line_content(data, p)
         rest = data[@last_newline..-1]
-        utf8_pack(rest[0..rest.index(10)||-1]).strip
+        utf8_pack(rest[0..rest.index(10)||-1]).strip # 10 is \n
       end
 
       if (RUBY_VERSION =~ /^1\.9/)

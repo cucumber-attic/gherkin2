@@ -545,16 +545,6 @@ f'real
             [:eof]
           ]
         end
-
-        it "should cope with the retarded BOM that many Windows editors insert at the beginning of a file" do
-          scan_file("with_bom.feature")
-          @listener.to_sexp.should == [
-            [:feature, "Feature", "Feature Text", "", 1],
-            [:scenario, "Scenario", "Reading a Scenario", "", 2],
-            [:step, "Given ", "there is a step", 3],
-            [:eof]
-          ]
-        end
       end
 
       describe "errors" do

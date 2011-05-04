@@ -8,10 +8,12 @@ require 'stringio'
 require 'gherkin/sexp_recorder'
 require 'gherkin/output_stream_string_io'
 require 'gherkin/java_libs'
+require 'gherkin/shared/bom_group'
 require 'gherkin/shared/lexer_group'
 require 'gherkin/shared/tags_group'
 require 'gherkin/shared/py_string_group'
 require 'gherkin/shared/row_group'
+$:.unshift(File.dirname(__FILE__))
 
 module GherkinSpecHelper
   def scan_file(file)

@@ -1,6 +1,26 @@
 == (In Git)
 
+* Removed incorrect (and unneeded) case statement that could blow up if V8 is installed. (Aslak Hellesøy, Niklas H)
+* Added connect support for gherkin.js (Aslak Hellesøy)
+
+== 2.3.6 (2011-04-19)
+
+=== New Features
+* Javascript implementation (#38 Aslak Hellesøy)
+
+=== Bugfixes
+* Fix compilation error on Arch Linux (#98,#99 Ben Hamill)
+* Corrected Russian translation (#97 Vagif Abilov)
+
+== 2.3.5 (2011-03-20)
+
 === Changes
+* Relaxed gem dependencies to use >=. (Rob Slifka, Aslak Hellesøy)
+
+== 2.3.4 (2011-03-10)
+
+=== Changes
+* Fixing C90 errors on Ubuntu Natty (#92 Colin Dean)
 * Romanian (ro) language update, extracted from a real-world project. (Iulian Dogariu)
 
 == 2.3.3 (2010-12-26)
