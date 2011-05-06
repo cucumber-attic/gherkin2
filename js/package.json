@@ -18,7 +18,7 @@
 , "engines" : { "node" : "0.4 || 0.5" }
 , "licenses" :
   [ { "type" : "MIT"
-    , "url" : "http://github.com/isaacs/npm/raw/master/LICENSE"
+    , "url" : "http://github.com/aslakhellesoy/gherkin/raw/master/LICENSE"
     }
   ]
 }
