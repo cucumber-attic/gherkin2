@@ -998,7 +998,7 @@ case 21:
 
     if(this.cs < lexer_first_final) {
       var content = this.current_line_content(data, p);
-      throw "Lexing error on line " + this.line_number + ": '" + content + "'. See http://wiki.github.com/aslakhellesoy/gherkin/lexingerror for more information.";
+      throw "Lexing error on line " + this.line_number + ": '" + content + "'. See http://wiki.github.com/cucumber/gherkin/lexingerror for more information.";
     } else {
       this.listener.eof();
     }
@@ -1037,7 +1037,7 @@ case 21:
 
     if(this.cs < lexer_first_final) {
       var content = this.current_line_content(data, p);
-      throw "Lexing error on line " + this.line_number + ": '" + content + "'. See http://wiki.github.com/aslakhellesoy/gherkin/lexingerror for more information.";
+      throw "Lexing error on line " + this.line_number + ": '" + content + "'. See http://wiki.github.com/cucumber/gherkin/lexingerror for more information.";
     } else {
       this.listener.eof();
     }
