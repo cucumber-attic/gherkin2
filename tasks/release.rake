@@ -14,8 +14,7 @@ namespace :release do
   desc 'Push dll to Github'
   task :push_dll => :ikvm do
     Dir.chdir('release') do
-      # No known way to do scripted uploads. github/upload or aslakhellesoy's fork of github-gem no longer work
-      puts "Manually upload gherkin-#{Gherkin::VERSION}.dll to http://github.com/aslakhellesoy/gherkin/downloads"
+      puts "Manually upload gherkin-#{Gherkin::VERSION}.dll to http://github.com/cucumber/gherkin/downloads"
       puts "Then press enter"
       STDIN.gets
     end

@@ -13,7 +13,7 @@
     <description>Pure Java Gherkin</description>
 
     <scm>
-        <connection>scm:git:git://github.com/aslakhellesoy/cuke4duke.git</connection>
+        <connection>scm:git:git://github.com/cucumber/cuke4duke.git</connection>
     </scm>
 
     <distributionManagement>
