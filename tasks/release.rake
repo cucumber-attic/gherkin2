@@ -1,6 +1,6 @@
 namespace :release do
   desc 'Upload all packages and tag git'
-  task :ALL => ['gems:sanity', :push_dll, :push_jar, :push_native_gems, :push_npm_package, :release]
+  task :ALL => ['gems:sanity', :ikvm, :push_jar, :push_native_gems, :push_npm_package, :release, :post_release]
 
   desc 'Push all gems to rubygems.org (gemcutter)'
   task :push_native_gems do
@@ -11,13 +11,8 @@ namespace :release do
     end
   end
 
-  desc 'Push dll to Github'
-  task :push_dll => :ikvm do
-    Dir.chdir('release') do
-      puts "Manually upload gherkin-#{Gherkin::VERSION}.dll to http://github.com/cucumber/gherkin/downloads"
-      puts "Then press enter"
-      STDIN.gets
-    end
+  task :post_release => :ikvm do
+    puts "\n\n****** Manually upload gherkin-#{Gherkin::VERSION}.dll to http://github.com/cucumber/gherkin/downloads ******\n\n"
   end
 
   desc 'Push jar to cukes.info Maven repo'

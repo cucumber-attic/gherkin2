@@ -97,6 +97,8 @@ If you're hacking and just want to rebuild the English parser:
 
   rake js/lib/gherkin/lexer/en.js
 
+TODO: Make all specs pass with js lexer - replace 'c(listener)' with 'js(listener)' in i18n.rb
+
 === .NET and IronRuby
 
 You must install Mono and IKVM to build the pure .NET dll and the IronRuby gem:
@@ -156,7 +158,8 @@ Make sure you have openssl installed first.
 == Release process
 
 * Make sure GHERKIN_JS is defined (see Javascript section above)
-* Bump version in the VERSION file and:
+* Bump version in:
+** gherkin.gemspec
 ** java/pom.xml
 ** ikvm/Gherkin/Gherkin.csproj (2 places)
 ** js/package.json

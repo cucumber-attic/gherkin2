@@ -1,4 +1,9 @@
-== (In Git)
+== 2.3.8 (2011-05-16)
+
+=== Insignificant changes
+* Improve build system so we don't need to add generated js lexers to git.
+
+== 2.3.7 (2011-05-01)
 
 * Removed incorrect (and unneeded) case statement that could blow up if V8 is installed. (Aslak Hellesøy, Niklas H)
 * Added connect support for gherkin.js (Aslak Hellesøy)

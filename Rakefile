@@ -10,7 +10,6 @@ ENV['RUBYOPT'] = nil # Necessary to prevent Bundler from *&^%$#ing up rake-compi
 require 'rake/clean'
 
 $:.unshift(File.dirname(__FILE__) + '/lib')
-require 'gherkin/version'
 
 Dir['tasks/**/*.rake'].each { |rake| load File.expand_path(rake) }
 

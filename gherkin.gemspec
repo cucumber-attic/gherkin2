@@ -1,14 +1,11 @@
 # -*- encoding: utf-8 -*-
-gherkin_dir = Dir.pwd =~ /gherkin\/tmp/ ? File.expand_path("../../../..", Dir.pwd) : File.expand_path("..", __FILE__)
-$LOAD_PATH.unshift File.join(gherkin_dir, 'lib')
-require "gherkin/version"
 
 Gem::Specification.new do |s|
   s.name        = "gherkin"
-  s.version     = Gherkin::VERSION
+  s.version     = "2.3.8"
   s.authors     = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
   s.description = "A fast Gherkin lexer/parser for based on the Ragel State Machine Compiler."
-  s.summary     = "gherkin-#{Gherkin::VERSION}"
+  s.summary     = "#{s.name}-#{s.version}"
   s.email       = "cukes@googlegroups.com"
   s.homepage    = "http://github.com/cucumber/gherkin"
 
