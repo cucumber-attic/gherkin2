@@ -1,4 +1,5 @@
 # encoding: utf-8
+GHERKIN_VERSION = Gem::Specification.load(File.dirname(__FILE__) + '/gherkin.gemspec').version.version
 require 'rubygems'
 require 'bundler'
 unless ENV['RUBY_CC_VERSION']

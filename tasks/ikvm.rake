@@ -52,14 +52,14 @@ namespace :ikvm do
 
   desc 'Make a .NET .exe'
   task :exe => ['lib/gherkin.jar', :dependent_dlls] do
-    ikvmc("-target:exe lib/gherkin.jar -out:release/gherkin-#{Gherkin::VERSION}.exe #{references}")
+    ikvmc("-target:exe lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.exe #{references}")
   end
 
   desc 'Make a .NET .dll'
   task :dll => ['lib/gherkin.jar', :dependent_dlls] do
     mkdir_p 'release' unless File.directory?('release')
-    ikvmc("-target:library lib/gherkin.jar -out:release/gherkin-#{Gherkin::VERSION}.dll  #{references}")
-    cp "release/gherkin-#{Gherkin::VERSION}.dll", 'lib/gherkin.dll'
+    ikvmc("-target:library lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.dll  #{references}")
+    cp "release/gherkin-#{GHERKIN_VERSION}.dll", 'lib/gherkin.dll'
   end
 
   desc 'Copy the IKVM .dll files over to the pkg dir'
@@ -74,7 +74,7 @@ end
 
 task :ikvm => ['ikvm:copy_ikvm_dlls', 'ikvm:exe', 'ikvm:dll'] do
   puts "************** Pretty printing some features with .NET. **************"
-  mono "release/gherkin-#{Gherkin::VERSION}.exe features"
+  mono "release/gherkin-#{GHERKIN_VERSION}.exe features"
   puts "************** DONE Pretty printing some features with .NET. All OK. **************"
 end
 

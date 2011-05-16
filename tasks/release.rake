@@ -12,7 +12,7 @@ namespace :release do
   end
 
   task :post_release => :ikvm do
-    puts "\n\n****** Manually upload gherkin-#{Gherkin::VERSION}.dll to http://github.com/cucumber/gherkin/downloads ******\n\n"
+    puts "\n\n****** Manually upload gherkin-#{GHERKIN_VERSION}.dll to http://github.com/cucumber/gherkin/downloads ******\n\n"
   end
 
   desc 'Push jar to cukes.info Maven repo'

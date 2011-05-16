@@ -20,7 +20,7 @@ namespace :gems do
   task :ironruby => [:jruby, 'ikvm:dll', 'ikvm:copy_ikvm_dlls']
 
   task :sanity do
-    raise "The jruby gem looks too small" if File.stat("release/gherkin-#{Gherkin::VERSION}-java.gem").size < 1000000
+    raise "The jruby gem looks too small" if File.stat("release/gherkin-#{GHERKIN_VERSION}-java.gem").size < 1000000
   end
 
   desc "Prepare binaries for all gems"
