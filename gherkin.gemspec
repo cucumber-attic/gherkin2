@@ -48,8 +48,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency('json', '>= 1.4.6')
 
-  s.add_development_dependency('cucumber', '>= 0.10.2')
-  s.add_development_dependency('rake', '>= 0.8.7')
+  s.add_development_dependency('cucumber', '>= 0.10.3')
+  s.add_development_dependency('rake', '= 0.8.7')
   s.add_development_dependency('bundler', '>= 1.0.13')
   s.add_development_dependency('rspec', '>= 2.5.0')
   s.add_development_dependency('awesome_print', '>= 0.3')

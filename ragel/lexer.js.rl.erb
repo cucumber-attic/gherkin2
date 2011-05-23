@@ -198,11 +198,13 @@ Lexer.prototype.current_line_content = function(data, p) {
   return this.bytesToString(rest.slice(0, end)).trim();
 };
 
-if(typeof exports != 'undefined') {
+// Node.js export
+if(typeof exports !== 'undefined') {
   exports.Lexer = Lexer;
 }
-if(typeof window != 'undefined') {
-  window.Lexer = Lexer;
+// Require.js export
+if (typeof define !== 'undefined' && define.amd) {
+  define('gherkin/lexer/<%= @i18n.underscored_iso_code %>', [], function() {return Lexer});
 }
 
 })();

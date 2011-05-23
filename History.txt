@@ -1,3 +1,8 @@
+== 2.3.9 (2011-05-23)
+
+=== New features
+* Javascript lexers support http://requirejs.org/ modules as well as node.js (Aslak Hellesøy).
+
 == 2.3.8 (2011-05-16)
 
 === Insignificant changes
