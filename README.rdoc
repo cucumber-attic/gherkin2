@@ -165,6 +165,7 @@ Make sure you have openssl installed first.
 ** js/package.json
 * Commit changes.
 * rake gems:prepare && ./build_native_gems.sh && rake release:ALL
+** The specs intermittently fail with a segfault from therubyracer. Running specs can be disabled with SKIP_JS_SPECS=true
 * Announce on Cucumber list, IRC and Twitter.
 
 == Note on Patches/Pull Requests
