@@ -10,6 +10,13 @@ ENV['RUBYOPT'] = nil # Necessary to prevent Bundler from *&^%$#ing up rake-compi
 
 require 'rake/clean'
 
+begin
+  # Support Rake >= 0.9.0
+  require 'rake/dsl_definition'
+  include Rake::DSL
+rescue LoadError
+end
+
 $:.unshift(File.dirname(__FILE__) + '/lib')
 
 Dir['tasks/**/*.rake'].each { |rake| load File.expand_path(rake) }

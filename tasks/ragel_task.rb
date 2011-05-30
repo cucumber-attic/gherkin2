@@ -2,6 +2,13 @@ require 'yaml'
 require 'erb'
 
 class RagelTask
+  begin
+    # Support Rake >= 0.9.0
+    require 'rake/dsl_definition'
+    include Rake::DSL
+  rescue LoadError
+  end
+
   RL_OUTPUT_DIR = File.dirname(__FILE__) + "/../ragel/i18n"
 
   def initialize(lang, i18n)
