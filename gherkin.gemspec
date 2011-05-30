@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = "gherkin"
-  s.version     = "2.3.9"
+  s.version     = "2.3.10"
   s.authors     = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
   s.description = "A fast Gherkin lexer/parser for based on the Ragel State Machine Compiler."
   s.summary     = "#{s.name}-#{s.version}"
@@ -50,12 +50,12 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency('cucumber', '>= 0.10.3')
   s.add_development_dependency('rake', '= 0.8.7')
-  s.add_development_dependency('bundler', '>= 1.0.13')
-  s.add_development_dependency('rspec', '>= 2.5.0')
-  s.add_development_dependency('awesome_print', '>= 0.3')
-  s.add_development_dependency('therubyracer', '>= 0.9.0.beta3') if ENV['GHERKIN_JS'] && !defined?(JRUBY_VERSION)
+  s.add_development_dependency('bundler', '>= 1.0.14')
+  s.add_development_dependency('rspec', '>= 2.6.0')
+  s.add_development_dependency('awesome_print', '>= 0.4.0')
+  s.add_development_dependency('therubyracer', '>= 0.9.0.beta4') if ENV['GHERKIN_JS'] && !defined?(JRUBY_VERSION)
 
   # Only needed by Cucumber. Remove when Cucumber no longer needs those.
   s.add_development_dependency('term-ansicolor', '>= 1.0.5')
-  s.add_development_dependency('builder', '>= 3.0.0')
+  s.add_development_dependency('builder', '>= 2.1.2')
 end
