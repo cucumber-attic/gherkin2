@@ -4,7 +4,7 @@
 * Don't use -Werror in production code ([#106](https://github.com/cucumber/gherkin/pull/106) Hans de Graaff)
 
 ### New Features
-* YARD based API (Aslak Hellesøy)
+* YARD based API docs at http://cukes.info/gherkin/api/ruby/latest/ (Aslak Hellesøy)
 
 ### Changed Features
 * py_string/PyString changed to doc_string/DocString, ref https://github.com/cucumber/cucumber/issues/74 (Aslak Hellesøy)
