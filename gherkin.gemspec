@@ -52,10 +52,13 @@ Gem::Specification.new do |s|
   s.add_development_dependency('bundler', '>= 1.0.14')
   s.add_development_dependency('rspec', '>= 2.6.0')
   s.add_development_dependency('awesome_print', '>= 0.4.0')
-  s.add_development_dependency('therubyracer', '>= 0.9.0.beta4') if ENV['GHERKIN_JS'] && !defined?(JRUBY_VERSION)
-  # For Documentation:
-  s.add_development_dependency('yard', '= 0.7.1')
-  s.add_development_dependency('rdiscount', '= 1.6.8')
+  
+  if !ENV['RUBY_CC_VERSION'] && !defined?(JRUBY_VERSION)
+    s.add_development_dependency('therubyracer', '>= 0.9.0.beta7') if ENV['GHERKIN_JS']
+    # For Documentation:
+    s.add_development_dependency('yard', '= 0.7.1')
+    s.add_development_dependency('rdiscount', '= 1.6.8')
+  end
 
   # Only needed by Cucumber. Remove when Cucumber no longer needs those.
   s.add_development_dependency('term-ansicolor', '>= 1.0.5')
