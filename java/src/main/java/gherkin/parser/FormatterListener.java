@@ -14,7 +14,7 @@ public class FormatterListener implements Listener {
     private Step step;
     private List<Row> table;
     private Examples examples;
-    private DocString pyString;
+    private DocString docString;
 
     public FormatterListener(Formatter formatter) {
         this.formatter = formatter;
@@ -63,8 +63,8 @@ public class FormatterListener implements Listener {
         table.add(new Row(grabComments(), cells, line));
     }
 
-    public void pyString(String string, int line) {
-        this.pyString = new DocString(string, line);
+    public void docString(String string, int line) {
+        this.docString = new DocString(string, line);
     }
 
     public void eof() {
@@ -102,17 +102,17 @@ public class FormatterListener implements Listener {
     }
 
     private DocString grabDocString() {
-        DocString pyString = this.pyString;
-        this.pyString = null;
-        return pyString;
+        DocString docString = this.docString;
+        this.docString = null;
+        return docString;
     }
 
     private void replayStepsOrExamples() {
         if (step != null) {
-            DocString pyString;
+            DocString docString;
             List<Row> rows;
-            if ((pyString = grabDocString()) != null) {
-                step.setMultilineArg(pyString);
+            if ((docString = grabDocString()) != null) {
+                step.setMultilineArg(docString);
             } else if ((rows = grabRows()) != null) {
                 step.setMultilineArg(rows);
             }

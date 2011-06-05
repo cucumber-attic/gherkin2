@@ -21,7 +21,7 @@ public interface Listener {
 
     void row(List<String> cells, int line);
 
-    void pyString(String string, int line);
+    void docString(String string, int line);
 
     void eof();
 }

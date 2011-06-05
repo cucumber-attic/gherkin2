@@ -32,7 +32,7 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
 
     action store_pystring_content {
       String con = unindent(startCol, substring(data, contentStart, nextKeywordStart-1).replaceFirst("(\\r?\\n)?([\\t ])*\\Z", "").replaceAll("\\\\\"\\\\\"\\\\\"", "\"\"\""));
-      listener.pyString(con, currentLine);
+      listener.docString(con, currentLine);
     }
 
     action store_feature_content {

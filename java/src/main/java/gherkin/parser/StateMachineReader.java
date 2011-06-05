@@ -47,7 +47,7 @@ public class StateMachineReader implements Listener {
     public void step(String keyword, String name, int line) {
     }
 
-    public void pyString(String string, int line) {
+    public void docString(String string, int line) {
     }
 
     public void eof() {
