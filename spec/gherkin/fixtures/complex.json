@@ -129,7 +129,7 @@
         { "name" : "All work and no play", 
           "keyword": "Given ",
           "multiline_arg": {
-            "type": "py_string",
+            "type": "doc_string",
             "value": "Makes Homer something something\nAnd something else",
             "line": 777
           }

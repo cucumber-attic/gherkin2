@@ -13,7 +13,7 @@ module Gherkin
     
       it_should_behave_like "a Gherkin lexer"
       it_should_behave_like "a Gherkin lexer lexing tags"
-      it_should_behave_like "a Gherkin lexer lexing py_strings"
+      it_should_behave_like "a Gherkin lexer lexing doc_strings"
       it_should_behave_like "a Gherkin lexer lexing rows"
       # TODO - make this pass!
       # it_should_behave_like "parsing windows files"

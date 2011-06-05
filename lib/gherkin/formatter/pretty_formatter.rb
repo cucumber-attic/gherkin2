@@ -111,8 +111,8 @@ module Gherkin
         @step_printer.write_step(@io, text_format, arg_format, step.name, arguments)
         @io.puts(indented_location(location, proceed))
         case step.multiline_arg
-        when Model::PyString
-          py_string(step.multiline_arg)
+        when Model::DocString
+          doc_string(step.multiline_arg)
         when Array
           table(step.multiline_arg)
         end
@@ -180,8 +180,8 @@ module Gherkin
 
     private
 
-      def py_string(py_string)
-        @io.puts "      \"\"\"\n" + escape_triple_quotes(indent(py_string.value, '      ')) + "\n      \"\"\""
+      def doc_string(doc_string)
+        @io.puts "      \"\"\"\n" + escape_triple_quotes(indent(doc_string.value, '      ')) + "\n      \"\"\""
       end
 
       def exception(exception)

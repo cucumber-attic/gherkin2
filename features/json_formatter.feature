@@ -180,7 +180,7 @@ Feature: JSON formatter
                 "name": "so",
                 "line": 26,
                 "multiline_arg": {
-                  "type": "py_string",
+                  "type": "doc_string",
                   "value": "innocent",
                   "line": 27
                 }

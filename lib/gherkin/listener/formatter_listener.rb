@@ -57,8 +57,8 @@ module Gherkin
         @table << Formatter::Model::Row.new(grab_comments!, cells, line)
       end
 
-      def py_string(string, line)
-        @py_string = Formatter::Model::PyString.new(string, line)
+      def doc_string(string, line)
+        @doc_string = Formatter::Model::DocString.new(string, line)
       end
 
       def eof
@@ -90,15 +90,15 @@ module Gherkin
         table
       end
 
-      def grab_py_string!
-        py_string = @py_string
-        @py_string = nil
-        py_string
+      def grab_doc_string!
+        doc_string = @doc_string
+        @doc_string = nil
+        doc_string
       end
 
       def replay_step_or_examples
         if(@step_statement)
-          @step_statement.multiline_arg = grab_py_string! || grab_rows!
+          @step_statement.multiline_arg = grab_doc_string! || grab_rows!
           @formatter.step(@step_statement)
           @step_statement = nil
         end

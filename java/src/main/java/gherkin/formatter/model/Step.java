@@ -26,8 +26,8 @@ public class Step extends BasicStatement {
             multilineArg.put("type", "table");
             multilineArg.put("value", map.get("multiline_arg"));
             map.put("multiline_arg", multilineArg);
-        } else if (getPyString() != null) {
-            ((Map<Object, Object>) map.get("multiline_arg")).put("type", "py_string");
+        } else if (getDocString() != null) {
+            ((Map<Object, Object>) map.get("multiline_arg")).put("type", "doc_string");
         }
         return map;
     }
@@ -37,8 +37,8 @@ public class Step extends BasicStatement {
         Range range = super.getLineRange();
         if (getRows() != null) {
             range = new Range(range.getFirst(), getRows().get(getRows().size() - 1).getLine());
-        } else if (getPyString() != null) {
-            range = new Range(range.getFirst(), getPyString().getLineRange().getLast());
+        } else if (getDocString() != null) {
+            range = new Range(range.getFirst(), getDocString().getLineRange().getLast());
         }
         return range;
     }
@@ -75,7 +75,7 @@ public class Step extends BasicStatement {
         return multiline_arg instanceof List ? (List<Row>) multiline_arg : null;
     }
 
-    public PyString getPyString() {
-        return multiline_arg instanceof PyString ? (PyString) multiline_arg : null;
+    public DocString getDocString() {
+        return multiline_arg instanceof DocString ? (DocString) multiline_arg : null;
     }
 }

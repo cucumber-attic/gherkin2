@@ -1,4 +1,4 @@
- |                  | feature | background | scenario | scenario_outline | examples | step         | row            | py_string    | eof | comment    | tag        |
+ |                  | feature | background | scenario | scenario_outline | examples | step         | row            | doc_string    | eof | comment    | tag        |
  | root             | feature | E          | E        | E                | E        | E            | E              | E            | eof | push(meta) | push(meta) |
  | feature          | E       | background | scenario | scenario_outline | E        | E            | E              | E            | eof | push(meta) | push(meta) |
  | step             | E       | E          | scenario | scenario_outline | E        | step         | step           | step         | eof | push(meta) | push(meta) |

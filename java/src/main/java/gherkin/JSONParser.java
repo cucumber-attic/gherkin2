@@ -59,7 +59,7 @@ public class JSONParser implements FeatureParser {
             if (ma.get("type").equals("table")) {
                 step.setMultilineArg(rows(getList(ma, "value")));
             } else {
-                step.setMultilineArg(new PyString(getString(ma, "value"), getInt(ma, "line")));
+                step.setMultilineArg(new DocString(getString(ma, "value"), getInt(ma, "line")));
             }
         }
         step.replay(reporter);

@@ -119,7 +119,7 @@ module Gherkin
           case multiline_arg
           when Array
             range = range.first..multiline_arg[-1].line
-          when Model::PyString
+          when Model::DocString
             range = range.first..multiline_arg.line_range.last
           end
           range
@@ -144,8 +144,8 @@ module Gherkin
               'type' => 'table',
               'value' => hash['multiline_arg']
             }
-          elsif PyString === @multiline_arg
-            hash['multiline_arg']['type'] = 'py_string'
+          elsif DocString === @multiline_arg
+            hash['multiline_arg']['type'] = 'doc_string'
           end
           hash
         end
@@ -179,7 +179,7 @@ module Gherkin
         end
       end
 
-      class PyString < Hashable
+      class DocString < Hashable
         native_impl('gherkin')
 
         attr_reader :value, :line

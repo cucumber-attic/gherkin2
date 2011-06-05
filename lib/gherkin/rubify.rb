@@ -8,9 +8,9 @@ module Gherkin
         case(o)
         when Java.java.util.Collection, Array
           o.map{|e| rubify(e)}
-        when Java.gherkin.formatter.model.PyString
+        when Java.gherkin.formatter.model.DocString
           require 'gherkin/formatter/model'
-          Formatter::Model::PyString.new(o.value, o.line)
+          Formatter::Model::DocString.new(o.value, o.line)
         else
           o
         end

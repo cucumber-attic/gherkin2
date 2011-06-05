@@ -2,7 +2,7 @@ package gherkin.formatter.model;
 
 import gherkin.formatter.Mappable;
 
-public class PyString extends Mappable {
+public class DocString extends Mappable {
     private final String value;
     private final int line;
 
@@ -14,7 +14,7 @@ public class PyString extends Mappable {
         return line;
     }
 
-    public PyString(String value, int line) {
+    public DocString(String value, int line) {
         this.value = value;
         this.line = line;
     }

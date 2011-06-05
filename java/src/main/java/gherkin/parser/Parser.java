@@ -72,7 +72,7 @@ public class Parser implements Listener {
     }
 
     public void pyString(String string, int line) {
-        if (event("py_string", line)) {
+        if (event("doc_string", line)) {
             listener.pyString(string, line);
         }
     }

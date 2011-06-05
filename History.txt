@@ -1,3 +1,8 @@
+== 2.4.0 (2011-06-05)
+
+=== Changed Features
+* py_string/PyString changed to doc_string/DocString, ref https://github.com/cucumber/cucumber/issues/74 (Aslak Hellesøy)
+
 == 2.3.10 (2011-05-30)
 
 === Bugfixes

@@ -187,8 +187,8 @@ public class PrettyFormatter implements Reporter {
         out.println();
         if (step.getRows() != null) {
             table(step.getRows());
-        } else if (step.getPyString() != null) {
-            pyString(step.getPyString());
+        } else if (step.getDocString() != null) {
+            pyString(step.getDocString());
         }
 
         out.flush();
@@ -288,7 +288,7 @@ public class PrettyFormatter implements Reporter {
         return cell.replaceAll("\\\\(?!\\|)", "\\\\\\\\").replaceAll("\\n", "\\\\n").replaceAll("\\|", "\\\\|");
     }
 
-    public void pyString(PyString pyString) {
+    public void pyString(DocString pyString) {
         out.println("      \"\"\"");
         out.print(escapeTripleQuotes(indent(pyString.getValue(), "      ")));
         out.println("\n      \"\"\"");

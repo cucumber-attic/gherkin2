@@ -328,7 +328,7 @@ store_pystring_content(VALUE listener,
   unescape_escaped_quotes = rb_reg_regcomp(rb_str_new2("\\\\\"\\\\\"\\\\\""));
   rb_funcall(con, rb_intern("sub!"), 2, re2, rb_str_new2(""));
   rb_funcall(con, rb_intern("gsub!"), 2, unescape_escaped_quotes, rb_str_new2("\"\"\""));
-  rb_funcall(listener, rb_intern("py_string"), 2, con, INT2FIX(current_line));
+  rb_funcall(listener, rb_intern("doc_string"), 2, con, INT2FIX(current_line));
 }
 
 static void 

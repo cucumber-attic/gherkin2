@@ -282,11 +282,11 @@ f'real
           ]
         end
         
-        it "should parse steps with inline py_string" do
+        it "should parse steps with inline doc_string" do
           scan("Given I have a string\n\"\"\"\nhello\nworld\n\"\"\"")
           @listener.to_sexp.should == [
             [:step, "Given ", "I have a string", 1],
-            [:py_string, "hello\nworld", 2],
+            [:doc_string, "hello\nworld", 2],
             [:eof]
           ]
         end
@@ -497,7 +497,7 @@ f'real
             [:step, "Then ", "I am happy", 37],
             [:scenario, "Scenario", "Hammerzeit", "", 39],
             [:step, "Given ", "All work and no play", 40],
-            [:py_string, "Makes Homer something something\nAnd something else", 41 ],
+            [:doc_string, "Makes Homer something something\nAnd something else", 41 ],
             [:step, "Then ", "crazy", 45],
             [:eof]
           ]
@@ -540,7 +540,7 @@ f'real
             [:step, "Then ", "I am happy", 37],
             [:scenario, "Scenario", "Hammerzeit", "", 39],
             [:step, "Given ", "All work and no play", 40],
-            [:py_string, "Makes Homer something something\r\nAnd something else", 41],
+            [:doc_string, "Makes Homer something something\r\nAnd something else", 41],
             [:step, "Then ", "crazy", 45],
             [:eof]
           ]

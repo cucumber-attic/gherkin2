@@ -23,7 +23,7 @@ module Gherkin
 
         action store_pystring_content {
           con = unindent(@start_col, utf8_pack(data[@content_start...@next_keyword_start-1]).sub(/(\r?\n)?([\t ])*\Z/, '').gsub(/\\"\\"\\"/, '"""'))
-          @listener.py_string(con, @current_line) 
+          @listener.doc_string(con, @current_line) 
         }
  
         action store_feature_content {

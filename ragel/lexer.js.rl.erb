@@ -23,7 +23,7 @@
       this.start_col, 
       this.bytesToString(data.slice(this.content_start, this.next_keyword_start-1)).replace(/(\r?\n)?([\t ])*$/, '').replace(/ESCAPED_TRIPLE_QUOTE/mg, '"""')
     );
-    this.listener.py_string(con, this.current_line); 
+    this.listener.doc_string(con, this.current_line); 
   }
 
   action store_feature_content {
@@ -122,7 +122,7 @@
 
 var Lexer = function(listener) {
   // Check that listener has the required functions
-  var events = ['comment', 'tag', 'feature', 'background', 'scenario', 'scenario_outline', 'examples', 'step', 'py_string', 'row', 'eof'];
+  var events = ['comment', 'tag', 'feature', 'background', 'scenario', 'scenario_outline', 'examples', 'step', 'doc_string', 'row', 'eof'];
   for(e in events) {
     var event = events[e];
     if(typeof listener[event] != 'function') {

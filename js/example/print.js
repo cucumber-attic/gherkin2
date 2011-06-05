@@ -26,7 +26,7 @@ var lexer = new Lexer({
   step: function(keyword, name, line) {
     console.log('    ' + keyword + name);
   },
-  py_string: function(string, line) {
+  doc_string: function(string, line) {
     console.log('      """\n' + string + '\n      """');
   },
   row: function(row, line) {
