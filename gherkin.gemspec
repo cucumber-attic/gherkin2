@@ -15,7 +15,6 @@ Gem::Specification.new do |s|
   s.files            = `git ls-files`.split("\n")
   s.test_files       = `git ls-files -- {spec,features}/*`.split("\n")
   s.executables      = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-  s.extra_rdoc_files = ["LICENSE", "README.rdoc", "History.txt"]
   s.rdoc_options     = ["--charset=UTF-8"]
   s.require_path     = "lib"
 
@@ -54,6 +53,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rspec', '>= 2.6.0')
   s.add_development_dependency('awesome_print', '>= 0.4.0')
   s.add_development_dependency('therubyracer', '>= 0.9.0.beta4') if ENV['GHERKIN_JS'] && !defined?(JRUBY_VERSION)
+  # For Documentation:
+  s.add_development_dependency('yard', '= 0.7.1')
+  s.add_development_dependency('rdiscount', '= 1.6.8')
 
   # Only needed by Cucumber. Remove when Cucumber no longer needs those.
   s.add_development_dependency('term-ansicolor', '>= 1.0.5')

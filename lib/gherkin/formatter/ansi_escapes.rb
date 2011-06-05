@@ -3,7 +3,7 @@ module Gherkin
     # Defines aliases for ANSI coloured output. Default colours can be overridden by defining
     # a <tt>GHERKIN_COLORS</tt> variable in your shell, very much like how you can
     # tweak the familiar POSIX command <tt>ls</tt> with
-    # <a href="http://mipsisrisc.com/rambling/2008/06/27/lscolorsls_colors-now-with-linux-support/">$LSCOLORS/$LS_COLORS</a>
+    # $LSCOLORS: http://linux-sxs.org/housekeeping/lscolors.html
     #
     # The colours that you can change are:
     #

@@ -12,7 +12,8 @@ CLEAN.include [
   'ext/**/*.c',
   'java/src/main/java/gherkin/lexer/i18n/*.java',
   'java/src/main/resources/gherkin/*.properties',
-  'js/lib/gherkin/lexer/*.js'
+  'js/lib/gherkin/lexer/*.js',
+  'doc'
 ]
 
 desc "Compile the Java extensions"
