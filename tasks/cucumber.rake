@@ -1,4 +1,4 @@
-unless ENV['RUBY_CC_VERSION']
+unless ENV['RUBY_CC_VERSION'] || defined?(JRUBY_VERSION)
 require 'cucumber/rake/task'
 
 Cucumber::Rake::Task.new(:cucumber) do |t|

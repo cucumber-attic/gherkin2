@@ -8,7 +8,7 @@ namespace :gems do
     sh "rvm 1.8.6-p399@cucumber rake cross compile RUBY_CC_VERSION=1.8.6"
     sh "rvm 1.9.1-p243@cucumber rake cross compile RUBY_CC_VERSION=1.9.1"
     # This will copy the .so files to the proper place
-    sh "rake cross compile RUBY_CC_VERSION=1.8.6:1.9.1"
+    sh "rake -t cross compile RUBY_CC_VERSION=1.8.6:1.9.1"
   end
 
   desc 'Prepare JRuby binares'
