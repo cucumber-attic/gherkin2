@@ -1,5 +1,8 @@
 ## [2.4.0](https://github.com/cucumber/gherkin/compare/v2.3.10...v2.4.0)
 
+### Bugfixes
+* Don't use -Werror in production code ([#106](https://github.com/cucumber/gherkin/pull/106) Hans de Graaff)
+
 ### New Features
 * YARD based API (Aslak Hellesøy)
 
