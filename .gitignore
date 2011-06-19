@@ -8,7 +8,6 @@ ext
 tmp
 release
 .bundle
-Gemfile.lock
 npm-debug.log
 doc/
 .yardoc

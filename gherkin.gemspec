@@ -2,15 +2,12 @@
 
 Gem::Specification.new do |s|
   s.name        = "gherkin"
-  s.version     = "2.4.0"
+  s.version     = "2.4.1"
   s.authors     = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
   s.description = "A fast Gherkin lexer/parser for based on the Ragel State Machine Compiler."
   s.summary     = "#{s.name}-#{s.version}"
   s.email       = "cukes@googlegroups.com"
   s.homepage    = "http://github.com/cucumber/gherkin"
-
-  s.rubygems_version   = "1.3.7"
-  s.default_executable = "gherkin"
 
   s.files            = `git ls-files`.split("\n")
   s.test_files       = `git ls-files -- {spec,features}/*`.split("\n")
@@ -47,17 +44,17 @@ Gem::Specification.new do |s|
 
   s.add_dependency('json', '>= 1.4.6')
 
-  s.add_development_dependency('cucumber', '>= 0.10.3')
-  s.add_development_dependency('rake', '= 0.8.7')
-  s.add_development_dependency('bundler', '>= 1.0.14')
+  s.add_development_dependency('cucumber', '>= 0.10.7')
+  s.add_development_dependency('rake', '>= 0.9.2')
+  s.add_development_dependency('bundler', '>= 1.0.15')
   s.add_development_dependency('rspec', '>= 2.6.0')
   s.add_development_dependency('awesome_print', '>= 0.4.0')
 
   unless ENV['RUBY_CC_VERSION'] || defined?(JRUBY_VERSION)
-    s.add_development_dependency('therubyracer', '>= 0.9.0.beta7') if ENV['GHERKIN_JS']
+    s.add_development_dependency('therubyracer', '>= 0.9.1') if ENV['GHERKIN_JS']
     # For Documentation:
-    s.add_development_dependency('yard', '= 0.7.1')
-    s.add_development_dependency('rdiscount', '= 1.6.8')
+    s.add_development_dependency('yard', '>= 0.7.2')
+    s.add_development_dependency('rdiscount', '>= 1.6.8')
   end
 
   # Only needed by Cucumber. Remove when Cucumber no longer needs those.

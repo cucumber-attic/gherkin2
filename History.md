@@ -1,3 +1,8 @@
+## [2.4.1](https://github.com/cucumber/gherkin/compare/v2.4.0...v2.4.1)
+
+### New Features
+* None - just updated build system to the latest Cucumber (Aslak Hellesøy)
+
 ## [2.4.0](https://github.com/cucumber/gherkin/compare/v2.3.10...v2.4.0)
 
 ### Bugfixes
