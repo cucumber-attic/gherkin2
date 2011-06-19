@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gherkin (2.4.0)
+    gherkin (2.4.1)
       json (>= 1.4.6)
 
 GEM
@@ -17,6 +17,7 @@ GEM
       term-ansicolor (>= 1.0.5)
     diff-lcs (1.1.2)
     json (1.5.2)
+    json (1.5.2-java)
     libv8 (3.3.10.2)
     rake (0.9.2)
     rake-compiler (0.7.9)
@@ -36,6 +37,7 @@ GEM
     yard (0.7.2)
 
 PLATFORMS
+  java
   ruby
 
 DEPENDENCIES
