@@ -52,10 +52,12 @@ public class FilterFormatter implements Formatter {
         }
     }
 
+    @Override
     public void uri(String uri) {
         formatter.uri(uri);
     }
 
+    @Override
     public void feature(Feature feature) {
         featureTags = feature.getTags();
         featureName = feature.getName();
@@ -63,6 +65,7 @@ public class FilterFormatter implements Formatter {
         featureEvents.add(feature);
     }
 
+    @Override
     public void background(Background background) {
         featureElementName = background.getName();
         featureElementRange = background.getLineRange();
@@ -70,6 +73,7 @@ public class FilterFormatter implements Formatter {
         backgroundEvents.add(background);
     }
 
+    @Override
     public void scenario(Scenario scenario) {
         replay();
         featureElementTags = scenario.getTags();
@@ -79,6 +83,7 @@ public class FilterFormatter implements Formatter {
         featureElementEvents.add(scenario);
     }
 
+    @Override
     public void scenarioOutline(ScenarioOutline scenarioOutline) {
         replay();
         featureElementTags = scenarioOutline.getTags();
@@ -88,6 +93,7 @@ public class FilterFormatter implements Formatter {
         featureElementEvents.add(scenarioOutline);
     }
 
+    @Override
     public void examples(Examples examples) {
         replay();
         examplesTags = examples.getTags();
@@ -103,6 +109,7 @@ public class FilterFormatter implements Formatter {
 
     }
 
+    @Override
     public void step(Step step) {
         if (!featureElementEvents.isEmpty()) {
             featureElementEvents.add(step);
@@ -115,11 +122,13 @@ public class FilterFormatter implements Formatter {
     public void table(List<Row> table) {
     }
 
+    @Override
     public void eof() {
         replay();
         formatter.eof();
     }
 
+    @Override
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
         throw new UnsupportedOperationException();
     }

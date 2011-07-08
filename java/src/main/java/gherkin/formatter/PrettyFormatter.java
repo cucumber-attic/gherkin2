@@ -20,7 +20,7 @@ import static gherkin.util.FixJava.map;
  * which means it can be used to print execution results - highlighting arguments,
  * printing source information and exception information.
  */
-public class PrettyFormatter implements Reporter {
+public class PrettyFormatter implements Reporter, Formatter {
     private final StepPrinter stepPrinter = new StepPrinter();
     private final PrintWriter out;
     private final boolean monochrome;

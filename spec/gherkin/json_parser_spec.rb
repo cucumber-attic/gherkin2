@@ -10,7 +10,7 @@ module Gherkin
     def check_json(json)
       io = StringIO.new
       f = Formatter::JSONFormatter.new(io)
-      p = JSONParser.new(f)
+      p = JSONParser.new(f, f)
       p.parse(json, 'unknown.json', 0)
       expected = JSON.parse(json)
       actual   = JSON.parse(io.string)

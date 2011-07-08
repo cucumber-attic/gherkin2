@@ -1,3 +1,8 @@
+## [2.4.2](https://github.com/cucumber/gherkin/compare/v2.4.1...v2.4.2)
+
+### Changed Features
+* Formatter and Reporter are now two distinct interfaces. JSONParser takes one of each in ctor. (Aslak Hellesøy)
+
 ## [2.4.1](https://github.com/cucumber/gherkin/compare/v2.4.0...v2.4.1)
 
 ### New Features

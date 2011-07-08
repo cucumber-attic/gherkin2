@@ -8,7 +8,7 @@ Given /^a PrettyFormatter$/ do
 end
 
 Given /^a JSON lexer$/ do
-  @json_parser = Gherkin::JSONParser.new(@formatter)
+  @json_parser = Gherkin::JSONParser.new(@formatter, @formatter)
 end
 
 Given /^the following JSON is parsed:$/ do |text|

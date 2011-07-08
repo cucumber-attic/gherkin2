@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JSONFormatter implements Reporter {
+public class JSONFormatter implements Reporter, Formatter {
     private final Writer out;
     private Map<Object, Object> featureHash;
 
@@ -22,41 +22,51 @@ public class JSONFormatter implements Reporter {
         this(new OutputStreamWriter(out, "UTF-8"));
     }
 
+    @Override
     public void uri(String uri) {
     }
 
+    @Override
     public void feature(Feature feature) {
         featureHash = feature.toMap();
     }
 
+    @Override
     public void background(Background background) {
         getFeatureElements().add(background.toMap());
     }
 
+    @Override
     public void scenario(Scenario scenario) {
         getFeatureElements().add(scenario.toMap());
     }
 
+    @Override
     public void scenarioOutline(ScenarioOutline scenarioOutline) {
         getFeatureElements().add(scenarioOutline.toMap());
     }
 
+    @Override
     public void examples(Examples examples) {
         getAllExamples().add(examples.toMap());
     }
 
+    @Override
     public void step(Step step) {
         getSteps().add(step.toMap());
     }
 
+    @Override
     public void match(Match match) {
         getLastStep().put("match", match.toMap());
     }
 
+    @Override
     public void result(Result result) {
         getLastStep().put("result", result.toMap());
     }
 
+    @Override
     public void embedding(final String mimeType, final byte[] data) {
         final Map<String,String> embedding = new HashMap<String,String>(){{
             put("mime_type", mimeType);
@@ -65,18 +75,7 @@ public class JSONFormatter implements Reporter {
         getEmbeddings().add(embedding);
     }
 
-    public void table(List<Row> rows) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void row(List<CellResult> cellFormats) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void nextRow() {
-        throw new UnsupportedOperationException();
-    }
-
+    @Override
     public void eof() {
         try {
             out.write(JSONValue.toJSONString(featureHash));
@@ -86,6 +85,7 @@ public class JSONFormatter implements Reporter {
         }
     }
 
+    @Override
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
         throw new UnsupportedOperationException();
     }

@@ -78,4 +78,8 @@ public class Step extends BasicStatement {
     public DocString getDocString() {
         return multiline_arg instanceof DocString ? (DocString) multiline_arg : null;
     }
+
+    public StackTraceElement getStackTraceElement(String path) {
+        return new StackTraceElement("✽", getKeyword() + getName(), path, getLine());
+    }
 }

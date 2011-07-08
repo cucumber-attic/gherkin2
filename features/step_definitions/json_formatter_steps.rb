@@ -18,7 +18,7 @@ end
 
 Then /^the outputted JSON should be:$/ do |expected_json|
   require 'json'
-  announce JSON.pretty_generate(JSON.parse(@io.string))
+  puts JSON.pretty_generate(JSON.parse(@io.string))
   expected = JSON.parse(expected_json).ai
   actual   = JSON.parse(@io.string).ai
   actual.should == expected

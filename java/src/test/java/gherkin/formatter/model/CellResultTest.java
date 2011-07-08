@@ -28,11 +28,11 @@ public class CellResultTest {
     }
 
     private Result passed() {
-        return new Result("passed", 1, null);
+        return new Result("passed", 1, (String)null);
     }
 
     private Result skipped() {
-        return new Result("skipped", 0, null);
+        return new Result("skipped", 0, (String)null);
     }
 
     private Result failed() {

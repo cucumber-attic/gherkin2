@@ -10,8 +10,8 @@ module Gherkin
 
     include Base64
 
-    def initialize(formatter)
-      @formatter = formatter
+    def initialize(reporter, formatter)
+      @reporter, @formatter = reporter, formatter
     end
 
     # Parse a gherkin object +o+, which can either be a JSON String,
@@ -66,19 +66,19 @@ module Gherkin
 
     def match(o)
       if(m = o['match'])
-        Formatter::Model::Match.new(arguments(m), location(m)).replay(@formatter)
+        Formatter::Model::Match.new(arguments(m), location(m)).replay(@reporter)
       end
     end
 
     def result(o)
       if(r = o['result'])
-        Formatter::Model::Result.new(status(r), duration(r), error_message(r)).replay(@formatter)
+        Formatter::Model::Result.new(status(r), duration(r), error_message(r)).replay(@reporter)
       end
     end
 
     def embeddings(o)
       (o['embeddings'] || []).each do |embedding|
-        @formatter.embedding(embedding['mime_type'], Base64::decode64(embedding['data']))
+        @reporter.embedding(embedding['mime_type'], Base64::decode64(embedding['data']))
       end
     end
 

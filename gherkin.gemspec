@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = "gherkin"
-  s.version     = "2.4.1"
+  s.version     = "2.4.2"
   s.authors     = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
   s.description = "A fast Gherkin lexer/parser for based on the Ragel State Machine Compiler."
   s.summary     = "#{s.name}-#{s.version}"
@@ -44,14 +44,14 @@ Gem::Specification.new do |s|
 
   s.add_dependency('json', '>= 1.4.6')
 
-  s.add_development_dependency('cucumber', '>= 0.10.7')
+  s.add_development_dependency('cucumber', '>= 1.0.0')
   s.add_development_dependency('rake', '>= 0.9.2')
   s.add_development_dependency('bundler', '>= 1.0.15')
   s.add_development_dependency('rspec', '>= 2.6.0')
   s.add_development_dependency('awesome_print', '>= 0.4.0')
 
   unless ENV['RUBY_CC_VERSION'] || defined?(JRUBY_VERSION)
-    s.add_development_dependency('therubyracer', '>= 0.9.1') if ENV['GHERKIN_JS']
+    s.add_development_dependency('therubyracer', '>= 0.9.2') if ENV['GHERKIN_JS']
     # For Documentation:
     s.add_development_dependency('yard', '>= 0.7.2')
     s.add_development_dependency('rdiscount', '>= 1.6.8')
