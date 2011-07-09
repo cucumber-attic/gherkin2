@@ -1,3 +1,8 @@
+## [2.4.3](https://github.com/cucumber/gherkin/compare/v2.4.2...v2.4.3)
+
+### Changed Features
+* Added a small hack to the java Result class to work around [Cucumber bug #97](https://github.com/cucumber/cucumber/issues/97) (Aslak Hellesøy)
+
 ## [2.4.2](https://github.com/cucumber/gherkin/compare/v2.4.1...v2.4.2)
 
 ### Changed Features

@@ -27,9 +27,6 @@ module Gherkin
         @gherkin_object = feature.to_hash
       end
 
-      def steps(steps)
-      end
-
       def background(background)
         feature_elements << background.to_hash
       end
