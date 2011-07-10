@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.platform = ENV['GEM_PLATFORM'] if ENV['GEM_PLATFORM'] 
   case s.platform.to_s
   when /java/
-    s.files += ['lib/gherkin.jar']
+    s.files += Dir['lib/*.jar']
   when /mswin|mingw32/
     s.files += Dir['lib/*/*.so']
   when /dotnet/

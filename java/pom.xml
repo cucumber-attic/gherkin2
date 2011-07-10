@@ -116,6 +116,10 @@
                             <tasks>
                                 <copy file="${project.build.directory}/${project.build.finalName}.jar"
                                       tofile="${basedir}/../lib/gherkin.jar"/>
+                                <copy file="${settings.localRepository}/com/googlecode/json-simple/json-simple/1.1/json-simple-1.1.jar"
+                                      todir="${basedir}/../lib"/>
+                                <copy file="${settings.localRepository}/net/iharder/base64/2.3.8/base64-2.3.8.jar"
+                                      todir="${basedir}/../lib"/>
                             </tasks>
                         </configuration>
                         <goals>

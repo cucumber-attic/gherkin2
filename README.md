@@ -161,6 +161,7 @@ Make sure you have openssl installed first.
   * java/pom.xml
   * ikvm/Gherkin/Gherkin.csproj (2 places)
   * js/package.json
+* Run bundle update, so Gemfile.lock gets updated with the changes.
 * Commit changes, otherwise you will get an error at the end when a tag is made.
 * bundle exec rake gems:prepare && ./build_native_gems.sh && bundle exec rake release:ALL
   * The specs intermittently fail with a segfault from therubyracer. Running specs can be disabled with SKIP_JS_SPECS=true

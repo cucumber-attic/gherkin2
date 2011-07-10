@@ -1,3 +1,9 @@
+## [2.4.4](https://github.com/cucumber/gherkin/compare/v2.4.3...v2.4.4)
+
+### Bugfixes
+* JRuby fixes. Symbols and streams are now properly converted before passing from ruby to java. (Aslak Hellesøy)
+* json-simple and base64 jar files (used by some of the java classes) are now embedded in the jruby gem (Aslak Hellesøy)
+
 ## [2.4.3](https://github.com/cucumber/gherkin/compare/v2.4.2...v2.4.3)
 
 ### Changed Features

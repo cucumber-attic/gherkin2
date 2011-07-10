@@ -1,4 +1,21 @@
 class Class
+  class IOWriter < Java.java.io.Writer
+    def initialize(io)
+      @io = io
+    end
+    
+    def write(cbuf, off, len)
+      @io.write(cbuf.unpack("U*")[off..len].pack("U*"))
+    end
+
+    def flush
+      @io.flush
+    end
+
+    def close
+      @io.close
+    end
+  end
 
   def implements(java_class_name)
     # no-op
@@ -19,6 +36,10 @@ class Class
           case(arg)
           when Regexp
             java.util.regex.Pattern.compile(arg.source)
+          when Symbol
+            arg.to_s
+          when IO
+            IOWriter.new(arg)
           else
             arg
           end
