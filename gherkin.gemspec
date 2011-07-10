@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = "gherkin"
-  s.version     = "2.4.3"
+  s.version     = "2.4.4"
   s.authors     = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
   s.description = "A fast Gherkin lexer/parser for based on the Ragel State Machine Compiler."
   s.summary     = "#{s.name}-#{s.version}"
