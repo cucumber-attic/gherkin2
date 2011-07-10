@@ -99,7 +99,7 @@ module Gherkin
 
         attr_accessor :rows
 
-        def initialize(comments, tags, keyword, name, description, line, rows=nil)
+        def initialize(comments, tags, keyword, name, description, line, rows)
           super(comments, tags, keyword, name, description, line)
           @rows = rows
         end
