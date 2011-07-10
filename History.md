@@ -1,3 +1,7 @@
+## [2.4.5](https://github.com/cucumber/gherkin/compare/v2.4.4...v2.4.5)
+
+No changes, releasing again since the 2.4.4 release failed halfway through.
+
 ## [2.4.4](https://github.com/cucumber/gherkin/compare/v2.4.3...v2.4.4)
 
 ### Bugfixes
