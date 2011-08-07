@@ -300,6 +300,19 @@
   then: "*|Maka"
   and: "*|Dan"
   but: "*|Tapi"
+"is":
+  name: Icelandic
+  native: Íslenska
+  feature: Eiginleiki
+  background: Bakgrunnur
+  scenario: Atburðarás
+  scenario_outline: Lýsing Atburðarásar|Lýsing Dæma 
+  examples: Dæmi|Atburðarásir
+  given: "*|Ef"
+  when: "*|Þegar"
+  then: "*|Þá"
+  and: "*|Og"
+  but: "*|En"
 "it":
   name: Italian
   native: italiano
