@@ -1,0 +1,7 @@
+This patch contains all the Debian-specific changes mixed together. To review
+them separately, please inspect the VCS history at
+http://anonscm.debian.org/gitweb/?p=pkg-ruby-extras/ruby-gherkin.git;a=summary
+
+In special, the branch called "for-upstream" contains commits that are supposed
+to be sent to the original developers. Commits that are not in that branch are
+probably Debian-specific and you do not need to care about those.
