@@ -1,5 +1,4 @@
 #encoding: utf-8
-require 'ap'
 require 'spec_helper'
 require 'gherkin/json_parser'
 require 'gherkin/formatter/json_formatter'
