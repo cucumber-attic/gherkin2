@@ -58,6 +58,6 @@ Gem::Specification.new do |s|
   end
 
   # Only needed by Cucumber. Remove when Cucumber no longer needs those.
-  s.add_development_dependency('term-ansicolor', '>= 1.0.5')
+  s.add_development_dependency('term-ansicolor', '>= 1.0.6')
   s.add_development_dependency('builder', '>= 2.1.2')
 end
