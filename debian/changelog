@@ -1,5 +1,5 @@
 ruby-gherkin (2.4.5-1) UNRELEASED; urgency=low
 
-  * Initial release (Closes: #nnnn)
+  * Initial release (Closes: #636788)
 
  -- Antonio Terceiro <terceiro@debian.org>  Fri, 05 Aug 2011 14:53:33 -0700

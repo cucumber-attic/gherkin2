@@ -6,8 +6,8 @@ Uploaders: Antonio Terceiro <terceiro@debian.org>
 DM-Upload-Allowed: yes
 Build-Depends: debhelper (>= 7.0.50~), gem2deb (>= 0.2.6~)
 Standards-Version: 3.9.2
-#Vcs-Git: git://git.debian.org/pkg-ruby-extras/ruby-gherkin.git
-#Vcs-Browser: http://git.debian.org/?p=pkg-ruby-extras/ruby-gherkin.git;a=summary
+Vcs-Git: git://git.debian.org/pkg-ruby-extras/ruby-gherkin.git
+Vcs-Browser: http://git.debian.org/?p=pkg-ruby-extras/ruby-gherkin.git;a=summary
 Homepage: http://github.com/cucumber/gherkin
 XS-Ruby-Versions: all
 
@@ -15,6 +15,7 @@ Package: ruby-gherkin
 Architecture: any
 XB-Ruby-Versions: ${ruby:Versions}
 Depends: ${shlibs:Depends}, ${misc:Depends}, ruby | ruby-interpreter
-# rake-compiler (>= 0.7.8, development), json (>= 1.4.6), cucumber (>= 1.0.0, development), rake (>= 0.9.2, development), bundler (>= 1.0.15, development), rspec (>= 2.6.0, development), awesome_print (>= 0.4.0, development), therubyracer (>= 0.9.2, development), yard (>= 0.7.2, development), rdiscount (>= 1.6.8, development), term-ansicolor (>= 1.0.5, development), builder (>= 2.1.2, development)
-Description: gherkin-2.4.5
- A fast Gherkin lexer/parser for based on the Ragel State Machine Compiler.
+Description: lexer and parser for the Gherkin language in Ruby
+ Gherkin is a language for writing software acceptance tests in an
+ executable scripting language that looks like structured natural
+ language. It was created in the context of the cucumber project.
