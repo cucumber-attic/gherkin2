@@ -1,6 +1,7 @@
 ## [2.4.6](https://github.com/cucumber/gherkin/compare/v2.4.5...v2.4.6)
 
 ### Bugfixes
+* Added Icelandic translation (Ægir Örn Símonarson)
 * JavaScript: String prototype has no "trimRight" function. Fixes failure in Opera. (Julien Biezemans)
 
 ## [2.4.5](https://github.com/cucumber/gherkin/compare/v2.4.4...v2.4.5)
