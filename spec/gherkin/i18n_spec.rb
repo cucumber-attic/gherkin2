@@ -101,6 +101,7 @@ module Gherkin
       | hr        | Croatian            | hrvatski          |
       | hu        | Hungarian           | magyar            |
       | id        | Indonesian          | Bahasa Indonesia  |
+      | is        | Icelandic           | Íslenska          |
       | it        | Italian             | italiano          |
       | ja        | Japanese            | 日本語               |
       | ko        | Korean              | 한국어               |

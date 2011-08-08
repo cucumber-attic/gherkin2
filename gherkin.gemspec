@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = "gherkin"
-  s.version     = "2.4.5"
+  s.version     = "2.4.6"
   s.authors     = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
   s.description = "A fast Gherkin lexer/parser for based on the Ragel State Machine Compiler."
   s.summary     = "#{s.name}-#{s.version}"
@@ -44,7 +44,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency('json', '>= 1.4.6')
 
-  s.add_development_dependency('cucumber', '>= 1.0.0')
+  s.add_development_dependency('cucumber', '>= 1.0.2')
   s.add_development_dependency('rake', '>= 0.9.2')
   s.add_development_dependency('bundler', '>= 1.0.15')
   s.add_development_dependency('rspec', '>= 2.6.0')
@@ -58,6 +58,6 @@ Gem::Specification.new do |s|
   end
 
   # Only needed by Cucumber. Remove when Cucumber no longer needs those.
-  s.add_development_dependency('term-ansicolor', '>= 1.0.5')
+  s.add_development_dependency('term-ansicolor', '>= 1.0.6')
   s.add_development_dependency('builder', '>= 2.1.2')
 end

@@ -13,7 +13,7 @@ namespace :gems do
 
   desc 'Prepare JRuby binares'
   task :jruby => [:jar] do
-    sh "rvm jruby@cucumber exec rspec spec"
+    sh "rvm jruby exec rspec spec"
   end
 
   desc 'Prepare IronRuby binaries'

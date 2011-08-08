@@ -1,156 +1,155 @@
---- !ruby/object:Gem::Specification 
+--- !ruby/object:Gem::Specification
 name: gherkin
-version: !ruby/object:Gem::Version 
+version: !ruby/object:Gem::Version
+  version: 2.4.6
   prerelease: 
-  version: 2.4.5
 platform: ruby
-authors: 
+authors:
 - Mike Sassak
 - Gregory Hnatiuk
-- "Aslak Helles\xC3\xB8y"
+- Aslak Hellesøy
 autorequire: 
 bindir: bin
 cert_chain: []
-
-date: 2011-07-10 00:00:00 Z
-dependencies: 
-- !ruby/object:Gem::Dependency 
+date: 2011-08-07 00:00:00.000000000 +01:00
+default_executable: 
+dependencies:
+- !ruby/object:Gem::Dependency
   name: rake-compiler
-  prerelease: false
-  requirement: &id001 !ruby/object:Gem::Requirement 
+  requirement: &2164519400 !ruby/object:Gem::Requirement
     none: false
-    requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
+    requirements:
+    - - ! '>='
+      - !ruby/object:Gem::Version
         version: 0.7.8
   type: :development
-  version_requirements: *id001
-- !ruby/object:Gem::Dependency 
-  name: json
   prerelease: false
-  requirement: &id002 !ruby/object:Gem::Requirement 
+  version_requirements: *2164519400
+- !ruby/object:Gem::Dependency
+  name: json
+  requirement: &2164518920 !ruby/object:Gem::Requirement
     none: false
-    requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
+    requirements:
+    - - ! '>='
+      - !ruby/object:Gem::Version
         version: 1.4.6
   type: :runtime
-  version_requirements: *id002
-- !ruby/object:Gem::Dependency 
+  prerelease: false
+  version_requirements: *2164518920
+- !ruby/object:Gem::Dependency
   name: cucumber
-  prerelease: false
-  requirement: &id003 !ruby/object:Gem::Requirement 
+  requirement: &2164518460 !ruby/object:Gem::Requirement
     none: false
-    requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
-        version: 1.0.0
+    requirements:
+    - - ! '>='
+      - !ruby/object:Gem::Version
+        version: 1.0.2
   type: :development
-  version_requirements: *id003
-- !ruby/object:Gem::Dependency 
-  name: rake
   prerelease: false
-  requirement: &id004 !ruby/object:Gem::Requirement 
+  version_requirements: *2164518460
+- !ruby/object:Gem::Dependency
+  name: rake
+  requirement: &2164518000 !ruby/object:Gem::Requirement
     none: false
-    requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
+    requirements:
+    - - ! '>='
+      - !ruby/object:Gem::Version
         version: 0.9.2
   type: :development
-  version_requirements: *id004
-- !ruby/object:Gem::Dependency 
-  name: bundler
   prerelease: false
-  requirement: &id005 !ruby/object:Gem::Requirement 
+  version_requirements: *2164518000
+- !ruby/object:Gem::Dependency
+  name: bundler
+  requirement: &2164517540 !ruby/object:Gem::Requirement
     none: false
-    requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
+    requirements:
+    - - ! '>='
+      - !ruby/object:Gem::Version
         version: 1.0.15
   type: :development
-  version_requirements: *id005
-- !ruby/object:Gem::Dependency 
-  name: rspec
   prerelease: false
-  requirement: &id006 !ruby/object:Gem::Requirement 
+  version_requirements: *2164517540
+- !ruby/object:Gem::Dependency
+  name: rspec
+  requirement: &2164517080 !ruby/object:Gem::Requirement
     none: false
-    requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
+    requirements:
+    - - ! '>='
+      - !ruby/object:Gem::Version
         version: 2.6.0
   type: :development
-  version_requirements: *id006
-- !ruby/object:Gem::Dependency 
-  name: awesome_print
   prerelease: false
-  requirement: &id007 !ruby/object:Gem::Requirement 
+  version_requirements: *2164517080
+- !ruby/object:Gem::Dependency
+  name: awesome_print
+  requirement: &2164516620 !ruby/object:Gem::Requirement
     none: false
-    requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
+    requirements:
+    - - ! '>='
+      - !ruby/object:Gem::Version
         version: 0.4.0
   type: :development
-  version_requirements: *id007
-- !ruby/object:Gem::Dependency 
-  name: therubyracer
   prerelease: false
-  requirement: &id008 !ruby/object:Gem::Requirement 
+  version_requirements: *2164516620
+- !ruby/object:Gem::Dependency
+  name: therubyracer
+  requirement: &2164516080 !ruby/object:Gem::Requirement
     none: false
-    requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
+    requirements:
+    - - ! '>='
+      - !ruby/object:Gem::Version
         version: 0.9.2
   type: :development
-  version_requirements: *id008
-- !ruby/object:Gem::Dependency 
-  name: yard
   prerelease: false
-  requirement: &id009 !ruby/object:Gem::Requirement 
+  version_requirements: *2164516080
+- !ruby/object:Gem::Dependency
+  name: yard
+  requirement: &2164515620 !ruby/object:Gem::Requirement
     none: false
-    requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
+    requirements:
+    - - ! '>='
+      - !ruby/object:Gem::Version
         version: 0.7.2
   type: :development
-  version_requirements: *id009
-- !ruby/object:Gem::Dependency 
-  name: rdiscount
   prerelease: false
-  requirement: &id010 !ruby/object:Gem::Requirement 
+  version_requirements: *2164515620
+- !ruby/object:Gem::Dependency
+  name: rdiscount
+  requirement: &2164515160 !ruby/object:Gem::Requirement
     none: false
-    requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
+    requirements:
+    - - ! '>='
+      - !ruby/object:Gem::Version
         version: 1.6.8
   type: :development
-  version_requirements: *id010
-- !ruby/object:Gem::Dependency 
+  prerelease: false
+  version_requirements: *2164515160
+- !ruby/object:Gem::Dependency
   name: term-ansicolor
-  prerelease: false
-  requirement: &id011 !ruby/object:Gem::Requirement 
+  requirement: &2152871800 !ruby/object:Gem::Requirement
     none: false
-    requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
-        version: 1.0.5
+    requirements:
+    - - ! '>='
+      - !ruby/object:Gem::Version
+        version: 1.0.6
   type: :development
-  version_requirements: *id011
-- !ruby/object:Gem::Dependency 
-  name: builder
   prerelease: false
-  requirement: &id012 !ruby/object:Gem::Requirement 
+  version_requirements: *2152871800
+- !ruby/object:Gem::Dependency
+  name: builder
+  requirement: &2152871340 !ruby/object:Gem::Requirement
     none: false
-    requirements: 
-    - - ">="
-      - !ruby/object:Gem::Version 
+    requirements:
+    - - ! '>='
+      - !ruby/object:Gem::Version
         version: 2.1.2
   type: :development
-  version_requirements: *id012
+  prerelease: false
+  version_requirements: *2152871340
 description: A fast Gherkin lexer/parser for based on the Ragel State Machine Compiler.
 email: cukes@googlegroups.com
 executables: []
-
-extensions: 
+extensions:
 - ext/gherkin_lexer_ar/extconf.rb
 - ext/gherkin_lexer_bg/extconf.rb
 - ext/gherkin_lexer_ca/extconf.rb
@@ -173,6 +172,7 @@ extensions:
 - ext/gherkin_lexer_hr/extconf.rb
 - ext/gherkin_lexer_hu/extconf.rb
 - ext/gherkin_lexer_id/extconf.rb
+- ext/gherkin_lexer_is/extconf.rb
 - ext/gherkin_lexer_it/extconf.rb
 - ext/gherkin_lexer_ja/extconf.rb
 - ext/gherkin_lexer_ko/extconf.rb
@@ -196,8 +196,7 @@ extensions:
 - ext/gherkin_lexer_zh_cn/extconf.rb
 - ext/gherkin_lexer_zh_tw/extconf.rb
 extra_rdoc_files: []
-
-files: 
+files:
 - .gitattributes
 - .gitignore
 - .gitmodules
@@ -362,6 +361,7 @@ files:
 - lib/gherkin/rb_lexer/hr.rb
 - lib/gherkin/rb_lexer/hu.rb
 - lib/gherkin/rb_lexer/id.rb
+- lib/gherkin/rb_lexer/is.rb
 - lib/gherkin/rb_lexer/it.rb
 - lib/gherkin/rb_lexer/ja.rb
 - lib/gherkin/rb_lexer/ko.rb
@@ -406,6 +406,7 @@ files:
 - ext/gherkin_lexer_hr/gherkin_lexer_hr.c
 - ext/gherkin_lexer_hu/gherkin_lexer_hu.c
 - ext/gherkin_lexer_id/gherkin_lexer_id.c
+- ext/gherkin_lexer_is/gherkin_lexer_is.c
 - ext/gherkin_lexer_it/gherkin_lexer_it.c
 - ext/gherkin_lexer_ja/gherkin_lexer_ja.c
 - ext/gherkin_lexer_ko/gherkin_lexer_ko.c
@@ -450,6 +451,7 @@ files:
 - ext/gherkin_lexer_hr/extconf.rb
 - ext/gherkin_lexer_hu/extconf.rb
 - ext/gherkin_lexer_id/extconf.rb
+- ext/gherkin_lexer_is/extconf.rb
 - ext/gherkin_lexer_it/extconf.rb
 - ext/gherkin_lexer_ja/extconf.rb
 - ext/gherkin_lexer_ko/extconf.rb
@@ -472,34 +474,33 @@ files:
 - ext/gherkin_lexer_vi/extconf.rb
 - ext/gherkin_lexer_zh_cn/extconf.rb
 - ext/gherkin_lexer_zh_tw/extconf.rb
+has_rdoc: true
 homepage: http://github.com/cucumber/gherkin
 licenses: []
-
 post_install_message: 
-rdoc_options: 
+rdoc_options:
 - --charset=UTF-8
-require_paths: 
+require_paths:
 - lib
-required_ruby_version: !ruby/object:Gem::Requirement 
+required_ruby_version: !ruby/object:Gem::Requirement
   none: false
-  requirements: 
-  - - ">="
-    - !ruby/object:Gem::Version 
-      version: "0"
-required_rubygems_version: !ruby/object:Gem::Requirement 
+  requirements:
+  - - ! '>='
+    - !ruby/object:Gem::Version
+      version: '0'
+required_rubygems_version: !ruby/object:Gem::Requirement
   none: false
-  requirements: 
-  - - ">="
-    - !ruby/object:Gem::Version 
-      version: "0"
+  requirements:
+  - - ! '>='
+    - !ruby/object:Gem::Version
+      version: '0'
 requirements: []
-
 rubyforge_project: 
-rubygems_version: 1.8.5
+rubygems_version: 1.6.2
 signing_key: 
 specification_version: 3
-summary: gherkin-2.4.5
-test_files: 
+summary: gherkin-2.4.6
+test_files:
 - features/escaped_pipes.feature
 - features/feature_parser.feature
 - features/json_formatter.feature
