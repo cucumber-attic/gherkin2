@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Debian Ruby Extras Maintainers <pkg-ruby-extras-maintainers@lists.alioth.debian.org>
 Uploaders: Antonio Terceiro <terceiro@debian.org>
 DM-Upload-Allowed: yes
-Build-Depends: debhelper (>= 7.0.50~), gem2deb (>= 0.2.6~)
+Build-Depends: debhelper (>= 7.0.50~), gem2deb (>= 0.2.6~), ruby-rspec
 Standards-Version: 3.9.2
 Vcs-Git: git://git.debian.org/pkg-ruby-extras/ruby-gherkin.git
 Vcs-Browser: http://git.debian.org/?p=pkg-ruby-extras/ruby-gherkin.git;a=summary
