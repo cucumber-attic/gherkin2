@@ -181,7 +181,7 @@ Lexer.prototype.unindent = function(startcol, text) {
 
 Lexer.prototype.store_keyword_content = function(event, data, p, eof) {
   var end_point = (!this.next_keyword_start || (p == eof)) ? p : this.next_keyword_start;
-  var content = this.unindent(this.start_col + 2, this.bytesToString(data.slice(this.content_start, end_point))).trimRight();
+  var content = this.unindent(this.start_col + 2, this.bytesToString(data.slice(this.content_start, end_point))).replace(/\s+$/,"");
   var content_lines = content.split("\n")
   var name = content_lines.shift() || "";
   name = name.trim();
