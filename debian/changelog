@@ -1,4 +1,4 @@
-ruby-gherkin (2.4.6-1) UNRELEASED; urgency=low
+ruby-gherkin (2.4.6-1) unstable; urgency=low
 
   * Initial release (Closes: #636788)
 
