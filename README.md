@@ -139,17 +139,19 @@ Make sure you have openssl installed first.
     rvm gemset create cucumber
     rvm use @cucumber
     gem install bundler
+    unset GHERKIN_JS
     bundle install
     rake-compiler cross-ruby VERSION=1.8.6-p287
 
     # 1.9.1
     # Later 1.9.1 patch levels or 1.9.2 don't compile on mingw.
     # The compiled binaries should still work on 1.9.2
-    rvm install 1.9.1-p243
-    rvm use 1.9.1-p243
+    rvm install 1.9.1-p378
+    rvm use 1.9.1-p378
     rvm gemset create cucumber
     rvm use @cucumber
     gem install bundler
+    unset GHERKIN_JS
     bundle install
     rake-compiler cross-ruby VERSION=1.9.1-p243
 

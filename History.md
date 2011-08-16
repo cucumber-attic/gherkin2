@@ -1,3 +1,9 @@
+## [2.4.6](https://github.com/cucumber/gherkin/compare/v2.4.6...v2.4.7)
+
+### New Features
+
+* Added I18n.getLocale() to Java impl. (Aslak Hellesøy)
+
 ## [2.4.6](https://github.com/cucumber/gherkin/compare/v2.4.5...v2.4.6)
 
 ### Bugfixes

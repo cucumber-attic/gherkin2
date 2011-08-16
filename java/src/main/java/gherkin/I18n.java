@@ -67,6 +67,10 @@ public class I18n {
     public String getIsoCode() {
         return isoCode;
     }
+    
+    public Locale getLocale() {
+        return locale;
+    }
 
     public String getUnderscoredIsoCode() {
         return getIsoCode().replaceAll("[\\s-]", "_").toLowerCase();

@@ -6,7 +6,7 @@
 
     <groupId>gherkin</groupId>
     <artifactId>gherkin</artifactId>
-    <version>2.4.6</version>
+    <version>2.4.7</version>
 
     <packaging>jar</packaging>
     <name>Gherkin</name>
@@ -77,8 +77,8 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <configuration>
                         <encoding>UTF-8</encoding>
-                        <source>1.5</source>
-                        <target>1.5</target>
+                        <source>1.6</source>
+                        <target>1.6</target>
                     </configuration>
                 </plugin>
                 <plugin>
