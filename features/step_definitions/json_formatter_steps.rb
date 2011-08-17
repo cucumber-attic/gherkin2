@@ -1,4 +1,3 @@
-require 'ap' # awesome_print gem
 require 'stringio'
 require 'gherkin/formatter/json_formatter'
 require 'gherkin/listener/formatter_listener'
@@ -19,8 +18,8 @@ end
 Then /^the outputted JSON should be:$/ do |expected_json|
   require 'json'
   puts JSON.pretty_generate(JSON.parse(@io.string))
-  expected = JSON.parse(expected_json).ai
-  actual   = JSON.parse(@io.string).ai
+  expected = JSON.parse(expected_json)
+  actual   = JSON.parse(@io.string)
   actual.should == expected
 end
 
