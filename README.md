@@ -28,7 +28,7 @@ These are the minimal tools you need to install:
 * A clone of the cucumber git repo to a "cucumber" sibling folder of your gherkin folder. (Only needed to run cucumber tests)
 * RVM (you may not need this if you are only building for a single platform)
 
-With this minimal toolchain installed, install Ruby gems needed by the build:
+With this minimal tool chain installed, install Ruby gems needed by the build:
 
     gem install bundler
     bundle install
@@ -65,7 +65,7 @@ Now you can build the jar with:
 
     rake clean jar
 
-### Javascript
+### JavaScript
 
 In order to build and test Gherkin for Javascript you must install:
 
@@ -110,50 +110,38 @@ Now you can build the .NET dll with:
 
 ### MinGW Rubies (for Windows gems)
 
-In order to build Windows binaries (so we can release Windows gems from OS X/Linux) we need to set up rake-compiler.
-
-http://github.com/luislavena/rake-compiler/
-
-Now, let's install MinGW...
-
-I didn't want to install macports (I'm on homebrew) and I couldn't figure out how to build MinGW myself. I got prebuilt binaries (version 4.3.0):
-http://crossgcc.rts-software.org/doku.php - just add the bin folder to your PATH
-
-You must install MinGW rubies to build gems fow Windows.
-First you need to download and install MinGW:
-
-OS X users can get it from http://crossgcc.rts-software.org/doku.php
-Once you have installed it, add this to your .bashrc:
+In order to build Windows binaries (so we can release Windows gems from OS X/Linux) we first need to install MinGW. 
+On OS X, download prebuilt binaries (version 4.3.0) from http://crossgcc.rts-software.org/doku.php. 
+Unpack it under /usr/local and add it to your PATH, typically in your `~/.bashrc`:
 
     export PATH=$PATH:/usr/local/i386-mingw32-4.3.0/bin
 
-Now, let's install some rubies.
+Now we need to set up [rake-compiler](http://github.com/luislavena/rake-compiler/)
+We'll start by installing some rubies.
+
 Make sure you have openssl installed first.
 
     brew install openssl
 
-    # 1.8.6
-    # Don't worry about inconsistent patchlevels here. It works.
-    rvm install 1.8.6-p399
-    rvm use 1.8.6-p399
+    # 1.8.7
+    rvm install 1.8.7-p352
+    rvm use 1.8.7-p352
     rvm gemset create cucumber
-    rvm use @cucumber
+    rvm gemset use cucumber
     gem install bundler
     unset GHERKIN_JS
     bundle install
-    rake-compiler cross-ruby VERSION=1.8.6-p287
+    rake-compiler cross-ruby VERSION=1.8.7-p352
 
-    # 1.9.1
-    # Later 1.9.1 patch levels or 1.9.2 don't compile on mingw.
-    # The compiled binaries should still work on 1.9.2
-    rvm install 1.9.1-p378
-    rvm use 1.9.1-p378
+    # 1.9.2
+    rvm install 1.9.2-p290
+    rvm use 1.9.2-p290
     rvm gemset create cucumber
-    rvm use @cucumber
+    rvm gemset use cucumber
     gem install bundler
     unset GHERKIN_JS
     bundle install
-    rake-compiler cross-ruby VERSION=1.9.1-p243
+    rake-compiler cross-ruby VERSION=1.9.2-p290
 
 ## Release process
 
