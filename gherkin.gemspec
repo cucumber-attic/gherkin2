@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = "gherkin"
-  s.version     = "2.4.8"
+  s.version     = "2.4.9"
   s.authors     = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
   s.description = "A fast Gherkin lexer/parser for based on the Ragel State Machine Compiler."
   s.summary     = "#{s.name}-#{s.version}"
@@ -39,7 +39,7 @@ Gem::Specification.new do |s|
     s.files += Dir['lib/gherkin/rb_lexer/*.rb']
     s.files += Dir['ext/**/*.c']
     s.extensions = Dir['ext/**/extconf.rb']
-    s.add_development_dependency('rake-compiler', '= 0.7.9')
+    s.add_development_dependency('rake-compiler', '0.7.9')
   end
 
   s.add_dependency('json', '>= 1.4.6')

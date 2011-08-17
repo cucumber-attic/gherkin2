@@ -1,3 +1,9 @@
+## [2.4.9](https://github.com/cucumber/gherkin/compare/v2.4.8...v2.4.9)
+
+### Bugfixes
+
+* Changed rake-compiler version from '= 1.7.9' to '1.7.9' to work around install problems caused by https://github.com/rubygems/rubygems/pull/121 (Aslak Hellesøy)
+
 ## [2.4.8](https://github.com/cucumber/gherkin/compare/v2.4.7...v2.4.8)
 
 ### Bugfixes
