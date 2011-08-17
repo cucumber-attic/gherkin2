@@ -48,7 +48,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rake', '>= 0.9.2')
   s.add_development_dependency('bundler', '>= 1.0.18')
   s.add_development_dependency('rspec', '>= 2.6.0')
-  s.add_development_dependency('awesome_print', '>= 0.4.0')
 
   unless ENV['RUBY_CC_VERSION'] || defined?(JRUBY_VERSION)
     s.add_development_dependency('therubyracer', '>= 0.9.3') if ENV['GHERKIN_JS']

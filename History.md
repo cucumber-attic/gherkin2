@@ -1,5 +1,9 @@
 ## [2.4.6](https://github.com/cucumber/gherkin/compare/v2.4.6...v2.4.7)
 
+### Bugfixes
+
+* Remove awesome_print (which was used for debuging). (Antonio Terceiro)
+
 ### New Features
 
 * Added I18n.getLocale() to Java impl. (Aslak Hellesøy)
