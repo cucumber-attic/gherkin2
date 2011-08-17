@@ -1,4 +1,11 @@
-## [2.4.6](https://github.com/cucumber/gherkin/compare/v2.4.6...v2.4.7)
+## [2.4.8](https://github.com/cucumber/gherkin/compare/v2.4.7...v2.4.8)
+
+### Bugfixes
+
+* Remove another awesome_print which was left over from 2.4.7. (Aslak Hellesøy)
+* Make specs/features pass when LANG=C (or LC_CTYPE=C). (#118 Antonio Terceiro, Aslak Hellesøy)
+
+## [2.4.7](https://github.com/cucumber/gherkin/compare/v2.4.6...v2.4.7)
 
 ### Bugfixes
 
