@@ -6,12 +6,54 @@ A fast lexer and parser for the Gherkin language based on Ragel. Gherkin is two 
 Supported platforms:
 
 * Ruby 1.8.6-1.9.2 (MRI, JRuby, REE, Rubinius)
-* Pure Java
-* Javascript (Tested with V8/node.js/Chrome, but might work on other Javascript engines)
-* .NET
-* IronRuby (experimental)
+* Pure Java (jar file)
+* JavaScript (NPM package. Tested with V8/node.js/Chrome, but might work on other JavaScript engines)
+* .NET (dll file)
 
-## Installing the toolchain
+## Installation
+
+### Ruby/JRuby
+
+    gem install gherkin
+
+#### Troubleshooting
+
+On JRuby you may get an error saying:
+
+    ERROR:  While executing gem ... (ArgumentError)
+    undefined class/module YAML::Syck::DefaultKey
+
+You can get around this problem by upgrading rubygems:
+
+    jruby -S gem install rubygems-update
+    gem update --system
+
+Another problem you might encounter is:
+
+    ERROR: While executing gem ... (ArgumentError)
+    invalid byte sequence in US-ASCII
+
+If this happens, try defining your shell's encoding:
+
+    # Linux
+    export LANG=en_US.UTF-8
+
+    # OS X
+    export LC_CTYPE=en_US.UTF-8
+
+### Node.js
+
+    npm install gherkin
+
+### Java
+
+Get the jar from the http://cukes.info/maven/ Maven repo
+
+### .NET
+
+Get the dll from https://github.com/cucumber/gherkin/downloads
+
+## Hacking: Installing the toolchain
 
 Due to the cross-platform nature of this library, you have to install a lot of tools to build gherkin yourself.
 In order to make it easier for occasional contributors to get the development environment up and running, you don't
@@ -171,4 +213,4 @@ Make sure you have openssl installed first.
 
 ## Copyright
 
-Copyright (c) 2009-2010 Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy. See LICENSE for details.
+Copyright (c) 2009-2011 Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy. See LICENSE for details.
