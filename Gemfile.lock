@@ -7,7 +7,6 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    awesome_print (0.4.0)
     builder (3.0.0)
     cucumber (1.0.2)
       builder (>= 2.1.2)
@@ -41,7 +40,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  awesome_print (>= 0.4.0)
   builder (>= 2.1.2)
   bundler (>= 1.0.18)
   cucumber (>= 1.0.2)
