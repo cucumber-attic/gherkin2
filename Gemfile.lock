@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gherkin (2.4.9)
+    gherkin (2.4.10)
       json (>= 1.4.6)
 
 GEM
@@ -45,7 +45,7 @@ DEPENDENCIES
   cucumber (>= 1.0.2)
   gherkin!
   rake (>= 0.9.2)
-  rake-compiler (= 0.7.9)
+  rake-compiler (~> 0.7.9)
   rdiscount (>= 1.6.8)
   rspec (>= 2.6.0)
   term-ansicolor (>= 1.0.6)

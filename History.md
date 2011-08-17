@@ -1,3 +1,9 @@
+## [2.4.10](https://github.com/cucumber/gherkin/compare/v2.4.9...v2.4.10)
+
+### Bugfixes
+
+* Changed rake-compiler version from '1.7.9' to '~> 1.7.9' since the fix in 2.4.9 seemed to have no effect. (Aslak Hellesøy)
+
 ## [2.4.9](https://github.com/cucumber/gherkin/compare/v2.4.8...v2.4.9)
 
 ### Bugfixes
