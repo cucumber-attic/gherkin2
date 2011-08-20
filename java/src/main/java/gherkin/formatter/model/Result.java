@@ -3,6 +3,10 @@ package gherkin.formatter.model;
 import gherkin.formatter.Mappable;
 import gherkin.formatter.Reporter;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+
 public class Result extends Mappable {
     private final String status;
     private final Long duration;
@@ -52,7 +56,16 @@ public class Result extends Mappable {
     }
 
     public String getErrorMessage() {
-        return error_message;
+        if(error_message != null) {
+            return error_message;
+        } else if(error != null) {
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(stringWriter);
+            error.printStackTrace(printWriter);
+            return stringWriter.getBuffer().toString();
+        } else {
+            return null;
+        }
     }
 
     public void replay(Reporter reporter) {

@@ -3,11 +3,6 @@ package gherkin.formatter;
 import gherkin.formatter.model.*;
 import gherkin.util.Mapper;
 
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.nio.charset.Charset;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -22,7 +17,7 @@ import static gherkin.util.FixJava.map;
  */
 public class PrettyFormatter implements Reporter, Formatter {
     private final StepPrinter stepPrinter = new StepPrinter();
-    private final PrintWriter out;
+    private final NiceAppendable out;
     private final boolean monochrome;
     private final boolean executing;
 
@@ -45,15 +40,11 @@ public class PrettyFormatter implements Reporter, Formatter {
     private List<Integer> indentations = new ArrayList<Integer>();
     private DescribedStatement statement;
 
-    public PrettyFormatter(Writer out, boolean monochrome, boolean executing) {
-        this.out = new PrintWriter(out);
+    public PrettyFormatter(Appendable out, boolean monochrome, boolean executing) {
+        this.out = new NiceAppendable(out);
         this.monochrome = monochrome;
         this.executing = executing;
         setFormats(monochrome);
-    }
-
-    public PrettyFormatter(OutputStream out, boolean monochrome, boolean executing) {
-        this(new OutputStreamWriter(out, Charset.forName("UTF-8")), monochrome, executing);
     }
 
     private void setFormats(boolean monochrome) {
@@ -73,7 +64,6 @@ public class PrettyFormatter implements Reporter, Formatter {
         printTags(feature.getTags(), "");
         out.println(feature.getKeyword() + ": " + feature.getName());
         printDescription(feature.getDescription(), "  ", false);
-        out.flush();
     }
 
     public void background(Background background) {
@@ -112,14 +102,13 @@ public class PrettyFormatter implements Reporter, Formatter {
         if (statement instanceof TagStatement) {
             printTags(((TagStatement) statement).getTags(), "  ");
         }
-        out.print("  ");
-        out.print(statement.getKeyword());
-        out.print(": ");
-        out.print(statement.getName());
+        out.append("  ");
+        out.append(statement.getKeyword());
+        out.append(": ");
+        out.append(statement.getName());
         String location = executing ? uri + ":" + statement.getLine() : null;
         out.println(indentedLocation(location, true));
         printDescription(statement.getDescription(), "    ", true);
-        out.flush();
         statement = null;
     }
 
@@ -142,10 +131,10 @@ public class PrettyFormatter implements Reporter, Formatter {
         out.println();
         printComments(examples.getComments(), "    ");
         printTags(examples.getTags(), "    ");
-        out.print("    ");
-        out.print(examples.getKeyword());
-        out.print(": ");
-        out.print(examples.getName());
+        out.append("    ");
+        out.append(examples.getKeyword());
+        out.append(": ");
+        out.append(examples.getName());
         out.println();
         printDescription(examples.getDescription(), "      ", true);
         table(examples.getRows());
@@ -165,7 +154,7 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     public void result(Result result) {
         if (!monochrome) {
-            out.print(formats.up(1));
+            out.append(formats.up(1));
         }
         printStep(result.getStatus(), match.getArguments(), match.getLocation(), true);
         if (result.getErrorMessage() != null) {
@@ -179,10 +168,10 @@ public class PrettyFormatter implements Reporter, Formatter {
         Format argFormat = getArgFormat(status);
 
         printComments(step.getComments(), "    ");
-        out.print("    ");
-        out.print(textFormat.text(step.getKeyword()));
+        out.append("    ");
+        out.append(textFormat.text(step.getKeyword()));
         stepPrinter.writeStep(out, textFormat, argFormat, step.getName(), arguments);
-        out.print(indentedLocation(location, proceed));
+        out.append(indentedLocation(location, proceed));
 
         out.println();
         if (step.getRows() != null) {
@@ -190,8 +179,6 @@ public class PrettyFormatter implements Reporter, Formatter {
         } else if (step.getDocString() != null) {
             docString(step.getDocString());
         }
-
-        out.flush();
     }
 
     private Format getFormat(String key) {
@@ -230,29 +217,29 @@ public class PrettyFormatter implements Reporter, Formatter {
     public void row(List<CellResult> cellResults) {
         Row row = rows.get(rowIndex);
         if (rowsAbove) {
-            out.print(formats.up(rowHeight));
+            out.append(formats.up(rowHeight));
         } else {
             rowsAbove = true;
         }
         rowHeight = 1;
 
         for (Comment comment : row.getComments()) {
-            out.write("      ");
+            out.append("      ");
             out.println(comment.getValue());
             rowHeight++;
         }
-        out.write("      | ");
+        out.append("      | ");
         for (int colIndex = 0; colIndex < maxLengths.length; colIndex++) {
             String cellText = escapeCell(row.getCells().get(colIndex));
             String status = cellResults.get(colIndex).getStatus();
             Format format = formats.get(status);
-            out.write(format.text(cellText));
+            out.append(format.text(cellText));
             int padding = maxLengths[colIndex] - cellLengths[rowIndex][colIndex];
             padSpace(padding);
             if (colIndex < maxLengths.length - 1) {
-                out.write(" | ");
+                out.append(" | ");
             } else {
-                out.write(" |");
+                out.append(" |");
             }
         }
         out.println();
@@ -267,7 +254,6 @@ public class PrettyFormatter implements Reporter, Formatter {
                 }
             }
         }
-        out.flush();
     }
 
     private void printError(Result result) {
@@ -290,13 +276,12 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     public void docString(DocString docString) {
         out.println("      \"\"\"");
-        out.print(escapeTripleQuotes(indent(docString.getValue(), "      ")));
+        out.append(escapeTripleQuotes(indent(docString.getValue(), "      ")));
         out.println("\n      \"\"\"");
     }
 
     public void eof() {
         replay();
-        out.flush();
     }
 
     private void calculateLocationIndentations() {
@@ -322,23 +307,21 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     private void padSpace(int indent) {
         for (int i = 0; i < indent; i++) {
-            out.write(" ");
+            out.append(" ");
         }
     }
 
     private void printComments(List<Comment> comments, String indent) {
         for (Comment comment : comments) {
-            out.print(indent);
+            out.append(indent);
             out.println(comment.getValue());
         }
-        out.flush();
     }
 
     private void printTags(List<Tag> tags, String indent) {
         if (tags.isEmpty()) return;
-        out.print(indent);
+        out.append(indent);
         out.println(join(map(tags, tagNameMapper), " "));
-        out.flush();
     }
 
     private void printDescription(String description, String indentation, boolean newline) {

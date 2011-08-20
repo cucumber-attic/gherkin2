@@ -1,3 +1,18 @@
+## [2.4.12](https://github.com/cucumber/gherkin/compare/v2.4.11...v2.4.12)
+
+### Bugfixes
+
+* [Java] Fixed Maven warnings. (Aslak Hellesøy)
+
+### New Features
+
+* [Java] Fixed bug in Result.getErrorMessage() when it was created with a Throwable. (Aslak Hellesøy)
+* [Java] PrettyFormatter and JSONFormatter take Appendable instead of OutputStream/Writer. (Aslak Hellesøy)
+
+### Changed Features
+
+* [Java] PrettyFormatter and JSONFormatter no longer flush. Make sure you pass an OutputStream/Writer that autoflushes. (Aslak Hellesøy)
+
 ## [2.4.11](https://github.com/cucumber/gherkin/compare/v2.4.10...v2.4.11)
 
 ### Bugfixes

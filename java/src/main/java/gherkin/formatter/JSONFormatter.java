@@ -4,22 +4,17 @@ import gherkin.formatter.model.*;
 import net.iharder.Base64;
 import org.json.simple.JSONValue;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class JSONFormatter implements Reporter, Formatter {
-    private final Writer out;
+    private final NiceAppendable out;
     private Map<Object, Object> featureHash;
 
-    public JSONFormatter(Writer out) {
-        this.out = out;
-    }
-
-    public JSONFormatter(OutputStream out) throws UnsupportedEncodingException {
-        this(new OutputStreamWriter(out, "UTF-8"));
+    public JSONFormatter(Appendable out) {
+        this.out = new NiceAppendable(out);
     }
 
     @Override
@@ -77,12 +72,7 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void eof() {
-        try {
-            out.write(JSONValue.toJSONString(featureHash));
-            out.flush();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to write JSON to " + out, e);
-        }
+        out.append(JSONValue.toJSONString(featureHash));
     }
 
     @Override

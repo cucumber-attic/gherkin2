@@ -6,7 +6,7 @@
 
     <groupId>gherkin</groupId>
     <artifactId>gherkin</artifactId>
-    <version>2.4.11</version>
+    <version>2.4.12</version>
 
     <packaging>jar</packaging>
     <name>Gherkin</name>
@@ -84,6 +84,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.3.1</version>
                     <configuration>
                         <archive>
                             <manifest>
@@ -98,6 +99,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
                 <executions>
                     <execution>
                         <id>bind-sources</id>
@@ -108,7 +110,9 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.6</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
