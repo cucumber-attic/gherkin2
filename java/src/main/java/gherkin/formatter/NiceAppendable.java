@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  * A nice appendable that doesn't throw checked exceptions
  */
-class NiceAppendable {
+public class NiceAppendable {
     private static final CharSequence NL = System.getProperty("line.separator");
     private final Appendable out;
 

@@ -1,3 +1,10 @@
+## [2.4.14](https://github.com/cucumber/gherkin/compare/v2.4.13...v2.4.14)
+
+### New Features
+
+* [Java] Publish source jars to Maven repo (Aslak Hellesøy)
+* [Java] Made NiceAppendable public - it's handy for Cucumber-JVM too (Aslak Hellesøy)
+
 ## [2.4.13](https://github.com/cucumber/gherkin/compare/v2.4.12...v2.4.13)
 
 No changes, but previous release failed while pushing gems (rubygems.org bug?)

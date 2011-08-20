@@ -18,7 +18,7 @@ namespace :release do
   desc 'Push jar to cukes.info Maven repo'
   task :push_jar do
     Dir.chdir('java') do
-      sh("mvn -Dmaven.wagon.provider.http=httpclient deploy")
+      sh("mvn -Dmaven.wagon.provider.http=httpclient source:jar deploy")
     end
   end
 
