@@ -1,3 +1,7 @@
+## [2.4.13](https://github.com/cucumber/gherkin/compare/v2.4.12...v2.4.13)
+
+No changes, but previous release failed while pushing gems (rubygems.org bug?)
+
 ## [2.4.12](https://github.com/cucumber/gherkin/compare/v2.4.11...v2.4.12)
 
 ### Bugfixes
