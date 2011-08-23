@@ -6,11 +6,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Row extends Mappable implements CommentHolder {
+    public enum DiffType {
+        NONE, DELETE, INSERT
+    }
+
     private final List<Comment> comments;
     private final List<String> cells;
     private final int line;
+    private volatile DiffType diffType;
 
     public Row(List<Comment> comments, List<String> cells, int line) {
+        this(comments, cells, line, DiffType.NONE);
+    }
+
+    public Row(List<Comment> comments, List<String> cells, int line, DiffType diffType) {
+        this.diffType = diffType;
         if (comments == null) {
             throw new NullPointerException("comments");
         }
@@ -32,6 +42,10 @@ public class Row extends Mappable implements CommentHolder {
 
     public int getLine() {
         return line;
+    }
+    
+    public DiffType getDiffType() {
+        return diffType;
     }
 
     public List<CellResult> createResults(String status) {

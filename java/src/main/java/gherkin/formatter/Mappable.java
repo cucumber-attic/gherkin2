@@ -43,7 +43,7 @@ public class Mappable {
         Class c = getClass();
         while (c != null) {
             for (Field field : c.getDeclaredFields()) {
-                if ((field.getModifiers() & Modifier.STATIC) == 0) {
+                if (!Modifier.isStatic(field.getModifiers()) && !Modifier.isVolatile(field.getModifiers())) {
                     fields.add(field);
                 }
             }

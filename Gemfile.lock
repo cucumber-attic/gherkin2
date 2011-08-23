@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gherkin (2.4.14)
+    gherkin (2.4.15)
       json (>= 1.4.6)
 
 GEM
@@ -31,7 +31,7 @@ GEM
       diff-lcs (~> 1.1.2)
     rspec-mocks (2.6.0)
     term-ansicolor (1.0.6)
-    therubyracer (0.9.3)
+    therubyracer (0.9.4)
       libv8 (~> 3.3.10)
     yard (0.7.2)
 
@@ -49,5 +49,5 @@ DEPENDENCIES
   rdiscount (>= 1.6.8)
   rspec (>= 2.6.0)
   term-ansicolor (>= 1.0.6)
-  therubyracer (>= 0.9.3)
+  therubyracer (>= 0.9.4)
   yard (>= 0.7.2)

@@ -124,7 +124,7 @@ public class I18n {
         List<Row> table = new ArrayList<Row>();
         for (String key : KEYWORD_KEYS) {
             List<String> cells = Arrays.asList(key, join(map(keywords(key), QUOTE_MAPPER), ", "));
-            table.add(new Row(Collections.<Comment>emptyList(), cells, -1));
+            table.add(new Row(Collections.<Comment>emptyList(), cells, -1, Row.DiffType.NONE));
         }
         for (String key : STEP_KEYWORD_KEYS) {
             List<String> codeKeywordList = new ArrayList<String>(keywords.get(key));
@@ -132,7 +132,7 @@ public class I18n {
             String codeKeywords = join(map(map(codeKeywordList, CODE_KEYWORD_MAPPER), QUOTE_MAPPER), ", ");
 
             List<String> cells = Arrays.asList(key + " (code)", codeKeywords);
-            table.add(new Row(Collections.<Comment>emptyList(), cells, -1));
+            table.add(new Row(Collections.<Comment>emptyList(), cells, -1, Row.DiffType.NONE));
         }
         pf.table(table);
         return writer.getBuffer().toString();

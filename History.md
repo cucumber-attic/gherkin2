@@ -1,3 +1,9 @@
+## [2.4.15](https://github.com/cucumber/gherkin/compare/v2.4.14...v2.4.15)
+
+### New Features
+
+* [Java] Pretty formatter knows how to print deleted (-) or inserted (+) table rows. (Aslak Hellesøy)
+
 ## [2.4.14](https://github.com/cucumber/gherkin/compare/v2.4.13...v2.4.14)
 
 ### New Features

@@ -113,7 +113,7 @@ public class PrettyFormatter implements Reporter, Formatter {
     }
 
     private String indentedLocation(String location, boolean proceed) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int indentation = proceed ? indentations.remove(0) : indentations.get(0);
         if(location == null) {
             return "";
@@ -228,10 +228,31 @@ public class PrettyFormatter implements Reporter, Formatter {
             out.println(comment.getValue());
             rowHeight++;
         }
-        out.append("      | ");
+        switch(row.getDiffType()) {
+            case NONE:
+                out.append("      | ");
+                break;
+            case DELETE:
+                out.append("    ").append(formats.get("skipped").text("-")).append(" | ");
+                break;
+            case INSERT:
+                out.append("    ").append(formats.get("comment").text("+")).append(" | ");
+                break;
+        }
         for (int colIndex = 0; colIndex < maxLengths.length; colIndex++) {
             String cellText = escapeCell(row.getCells().get(colIndex));
-            String status = cellResults.get(colIndex).getStatus();
+            String status = null;
+            switch(row.getDiffType()) {
+                case NONE:
+                    status = cellResults.get(colIndex).getStatus();
+                    break;
+                case DELETE:
+                    status = "skipped";
+                    break;
+                case INSERT:
+                    status = "comment";
+                    break;
+            }
             Format format = formats.get(status);
             out.append(format.text(cellText));
             int padding = maxLengths[colIndex] - cellLengths[rowIndex][colIndex];

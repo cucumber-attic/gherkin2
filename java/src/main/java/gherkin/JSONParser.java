@@ -93,7 +93,7 @@ public class JSONParser implements FeatureParser {
         List<Row> rows = new ArrayList<Row>(o.size());
         for (Object e : o) {
             Map row = (Map) e;
-            rows.add(new Row(comments(row), getList(row, "cells"), getInt(row, "line")));
+            rows.add(new Row(comments(row), getList(row, "cells"), getInt(row, "line"), Row.DiffType.NONE));
         }
         return rows;
     }

@@ -60,7 +60,7 @@ public class FormatterListener implements Listener {
         if (table == null) {
             table = new ArrayList<Row>();
         }
-        table.add(new Row(grabComments(), cells, line));
+        table.add(new Row(grabComments(), cells, line, Row.DiffType.NONE));
     }
 
     public void docString(String string, int line) {
