@@ -1,3 +1,9 @@
+## [2.4.16](https://github.com/cucumber/gherkin/compare/v2.4.15...v2.4.16)
+
+### New Features
+
+* [Java] TagExpression.eval() takes a Collection instead of List. That lets us pass a Set. (Aslak Hellesøy)
+
 ## [2.4.15](https://github.com/cucumber/gherkin/compare/v2.4.14...v2.4.15)
 
 ### New Features

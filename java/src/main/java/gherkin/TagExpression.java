@@ -1,9 +1,6 @@
 package gherkin;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TagExpression {
     private final Map<String, Integer> limits = new HashMap<String, Integer>();
@@ -15,7 +12,7 @@ public class TagExpression {
         }
     }
 
-    public boolean eval(List<String> tags) {
+    public boolean eval(Collection<String> tags) {
         return and.isEmpty() || and.eval(tags);
     }
 
@@ -54,7 +51,7 @@ public class TagExpression {
     }
 
     private interface Expression {
-        boolean eval(List<String> tags);
+        boolean eval(Collection<String> tags);
     }
 
     private class Not implements Expression {
@@ -64,7 +61,7 @@ public class TagExpression {
             this.expression = expression;
         }
 
-        public boolean eval(List<String> tags) {
+        public boolean eval(Collection<String> tags) {
             return !expression.eval(tags);
         }
     }
@@ -76,7 +73,7 @@ public class TagExpression {
             expressions.add(expression);
         }
 
-        public boolean eval(List<String> tags) {
+        public boolean eval(Collection<String> tags) {
             boolean result = true;
             for (Expression expression : expressions) {
                 result = expression.eval(tags);
@@ -97,7 +94,7 @@ public class TagExpression {
             expressions.add(expression);
         }
 
-        public boolean eval(List<String> tags) {
+        public boolean eval(Collection<String> tags) {
             boolean result = false;
             for (Expression expression : expressions) {
                 result = expression.eval(tags);
@@ -117,7 +114,7 @@ public class TagExpression {
             this.tagName = tagName;
         }
 
-        public boolean eval(List<String> tags) {
+        public boolean eval(Collection<String> tags) {
             for (String tag : tags) {
                 if (tagName.equals(tag)) {
                     return true;
