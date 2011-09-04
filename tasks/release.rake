@@ -45,6 +45,6 @@ namespace :release do
 
   task :symlink_docs do
     sh("ssh cukes.info 'cd /var/www/gherkin/api/ruby && mkdir #{GHERKIN_VERSION} && tar xzf api-#{GHERKIN_VERSION}.tgz -C #{GHERKIN_VERSION} && rm -f latest && ln -s #{GHERKIN_VERSION} latest'")
-    sh("ssh cukes.info 'cd /var/www/gherkin/api/ruby && rm -f latest && ln -s #{GHERKIN_VERSION} latest'")
+    sh("ssh cukes.info 'cd /var/www/gherkin/api/java && rm -f latest && ln -s #{GHERKIN_VERSION} latest'")
   end
 end

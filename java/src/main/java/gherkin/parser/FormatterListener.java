@@ -72,10 +72,6 @@ public class FormatterListener implements Listener {
         formatter.eof();
     }
 
-    public void syntaxError(String state, String event, List<String> legalEvents, int line) {
-        throw new UnsupportedOperationException();
-    }
-
     /**
      * Not part of the API. Used for testing only.
      */

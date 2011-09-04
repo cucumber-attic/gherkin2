@@ -1,3 +1,3 @@
 Given /^they have arrived$/ do |table|
-  announce table.raw
+  puts table.raw
 end
