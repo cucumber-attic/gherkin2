@@ -1,3 +1,10 @@
+## [2.4.17](https://github.com/cucumber/gherkin/compare/v2.4.16...v2.4.17)
+
+### New Features
+
+* Jar file is now deployed to Maven central, making installation a little easier (Aslak Hellesøy)
+* Both Ruby and Java API docs are on cukes.info. See README for details. (Aslak Hellesøy)
+
 ## [2.4.16](https://github.com/cucumber/gherkin/compare/v2.4.15...v2.4.16)
 
 ### New Features

@@ -47,11 +47,24 @@ If this happens, try defining your shell's encoding:
 
 ### Java
 
-Get the jar from the http://cukes.info/maven/ Maven repo
+The jar file is in the central Maven repo.
+
+    <dependency>
+        <groupId>info.cukes</groupId>
+        <artifactId>gherkin</artifactId>
+        <version>2.4.17</version>
+    </dependency>
+
+You can get it manually from [ibiblio](http://mirrors.ibiblio.org/pub/mirrors/maven2/info/cukes/gherkin) or by searching at [maven central](http://search.maven.org/)
 
 ### .NET
 
 Get the dll from https://github.com/cucumber/gherkin/downloads
+
+## API Docs
+
+* [Ruby](http://cukes.info/gherkin/api/ruby/latest/)
+* [Java](http://cukes.info/gherkin/api/java/latest/apidocs/index.html)
 
 ## Hacking: Installing the toolchain
 
@@ -99,7 +112,7 @@ You must install JRuby to build the pure Java jar or the JRuby gem:
     rvm install jruby
     rvm use jruby
     rvm gemset create cucumber
-    rvm use @cucumber
+    rvm gemset use cucumber
     gem install bundler
     bundle install
 
@@ -189,6 +202,7 @@ Make sure you have openssl installed first.
 
 * Make sure GHERKIN_JS is defined (see Javascript section above)
 * Bump version in:
+  * This file (Installation/Java section)
   * gherkin.gemspec
   * java/pom.xml
   * ikvm/Gherkin/Gherkin.csproj (2 places)
