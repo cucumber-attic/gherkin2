@@ -23,17 +23,17 @@ Feature: some feature
     """
     Then bar
 EOS
-        @listener.should_receive(:doc_string).with("  Hello\nGoodbye", 4)
+        @listener.should_receive(:doc_string).with('', "  Hello\nGoodbye", 4)
         scan(str)
       end
 
       it "should parse a simple doc_string" do
-        @listener.should_receive(:doc_string).with("I am a doc_string", 1)
+        @listener.should_receive(:doc_string).with('', "I am a doc_string", 1)
         scan ps("I am a doc_string")
       end
 
       it "should parse an empty doc_string" do
-        @listener.should_receive(:doc_string).with("", 4)
+        @listener.should_receive(:doc_string).with('', '', 4)
         scan("Feature: Hi\nScenario: Hi\nGiven a step\n\"\"\"\n\"\"\"")
       end
 
@@ -45,25 +45,25 @@ doc_string = <<EOS
 
 """
 EOS
-        @listener.should_receive(:doc_string).with("\n\n", 1)
+        @listener.should_receive(:doc_string).with('', "\n\n", 1)
         scan(doc_string)
       end
       
       it "should parse content separated by two newlines" do
         scan ps("A\n\nB")
         @listener.to_sexp.should == [
-          [:doc_string, "A\n\nB", 1],
+          [:doc_string, '', "A\n\nB", 1],
           [:eof]
         ]
       end
       
       it "should parse a multiline string" do
-        @listener.should_receive(:doc_string).with("A\nB\nC\nD", 1)
+        @listener.should_receive(:doc_string).with('', "A\nB\nC\nD", 1)
         scan ps("A\nB\nC\nD")
       end
             
       it "should ignore unescaped quotes inside the string delimeters" do
-        @listener.should_receive(:doc_string).with("What does \"this\" mean?", 1)
+        @listener.should_receive(:doc_string).with('', "What does \"this\" mean?", 1)
         scan ps('What does "this" mean?')
       end
       
@@ -74,12 +74,12 @@ str = <<EOS
  Line two
     """
 EOS
-        @listener.should_receive(:doc_string).with("  Line one\nLine two", 1)
+        @listener.should_receive(:doc_string).with('', "  Line one\nLine two", 1)
         scan(str)
       end
             
       it "should preserve tabs within the content" do
-        @listener.should_receive(:doc_string).with("I have\tsome tabs\nInside\t\tthe content", 1)
+        @listener.should_receive(:doc_string).with('', "I have\tsome tabs\nInside\t\tthe content", 1)
         scan ps("I have\tsome tabs\nInside\t\tthe content")
       end
   
@@ -98,7 +98,7 @@ Feature: Sample
 
 EOS
         
-        @listener.should_receive(:doc_string).with(doc_string, 1)
+        @listener.should_receive(:doc_string).with('', doc_string, 1)
         scan ps(doc_string)
       end
  
@@ -108,7 +108,7 @@ str = <<EOS
       Line one
     """           
 EOS
-        @listener.should_receive(:doc_string).with("  Line one", 1)
+        @listener.should_receive(:doc_string).with('', "  Line one", 1)
         scan(str)
       end
 
@@ -120,12 +120,12 @@ str = <<EOS
 
      """
 EOS
-        @listener.should_receive(:doc_string).with("DocString text\n\n",1)
+        @listener.should_receive(:doc_string).with('', "DocString text\n\n", 1)
         scan(str)
       end        
 
       it "should preserve CRLFs within doc_strings" do
-        @listener.should_receive(:doc_string).with("Line one\r\nLine two\r\n", 1)
+        @listener.should_receive(:doc_string).with('', "Line one\r\nLine two\r\n", 1)
         scan("\"\"\"\r\nLine one\r\nLine two\r\n\r\n\"\"\"")
       end
 
@@ -135,7 +135,7 @@ str = <<EOS
     \\"\\"\\"
     """
 EOS
-        @listener.should_receive(:doc_string).with('"""', 1)
+        @listener.should_receive(:doc_string).with('', '"""', 1)
         scan(str)
       end
 
@@ -145,7 +145,17 @@ str = <<EOS
     \\" \\"\\"
     """
 EOS
-        @listener.should_receive(:doc_string).with('\" \"\"', 1)
+        @listener.should_receive(:doc_string).with('', '\" \"\"', 1)
+        scan(str)
+      end
+      
+      it "should lex doc_string content_types" do
+str = <<EOS
+    """gherkin type
+    Feature: Doc String Types
+    """
+EOS
+        @listener.should_receive(:doc_string).with('gherkin type', 'Feature: Doc String Types', 1)
         scan(str)
       end
     end

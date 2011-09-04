@@ -40,11 +40,11 @@
   RowBody = space* Cell** PIPE :>> (space* EOL+ space*) %store_row;
   Row = StartRow :>> RowBody <: EndRow?;
   
-  StartDocString = '"""' >start_pystring space* :>> EOL; 
-  EndDocString = (space* '"""') >next_keyword_start; 
-  DocString = space* StartDocString %begin_pystring_content (^EOL | EOL)* :>> EndDocString %store_pystring_content space* EOL+;
+  StartDocString = '"""' >start_docstring ^EOL* >start_docstring_content_type %end_docstring_content_type :>> EOL;
+  EndDocString = (space* '"""') >next_keyword_start;
+  DocString = space* StartDocString %begin_docstring_content (^EOL | EOL)* :>> EndDocString %store_docstring_content space* EOL+;
   
-  Tokens = BOM? (space | EOL)* (Tags | Comment | FeatureHeading | BackgroundHeading | ScenarioHeading | ScenarioOutlineHeading | ExamplesHeading | Step | Row | DocString)* (space | EOL)* EOF;
+  Tokens = BOM? (space | EOL)* (Tags | Comment | FeatureHeading | BackgroundHeading | ScenarioHeading | ScenarioOutlineHeading | ExamplesHeading | Step | Row | DocString )* (space | EOL)* EOF;
 
   main := Tokens %end_feature @!end_feature;
 }%%

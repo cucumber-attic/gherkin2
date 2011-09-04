@@ -146,6 +146,7 @@ module Gherkin
             }
           elsif DocString === @multiline_arg
             hash['multiline_arg']['type'] = 'doc_string'
+            hash['multiline_arg']['content_type'] = @multiline_arg.content_type
           end
           hash
         end
@@ -182,10 +183,10 @@ module Gherkin
       class DocString < Hashable
         native_impl('gherkin')
 
-        attr_reader :value, :line
+        attr_reader :content_type, :value, :line
         
-        def initialize(value, line)
-          @value, @line = value, line
+        def initialize(content_type, value, line)
+          @content_type, @value, @line = content_type, value, line
         end
 
         def line_range

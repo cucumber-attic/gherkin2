@@ -57,7 +57,7 @@ module Gherkin
         if(ma['type'] == 'table')
           step.multiline_arg = rows(ma['value'])
         else
-          step.multiline_arg = Formatter::Model::DocString.new(ma['value'], ma['line'])
+          step.multiline_arg = Formatter::Model::DocString.new(ma['content_type'].to_s, ma['value'], ma['line'])
         end
       end
 

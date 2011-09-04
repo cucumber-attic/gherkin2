@@ -45,6 +45,8 @@ typedef struct lexer_state {
   size_t next_keyword_start;
   size_t content_start;
   size_t content_end;
+  size_t docstring_content_type_start;
+  size_t docstring_content_type_end;
   size_t query_start;
   size_t last_newline;
   size_t final_newline;
@@ -84,23 +86,33 @@ static VALUE rb_eGherkinLexingError;
     lexer->start_col = lexer->content_start - lexer->last_newline - (lexer->keyword_end - lexer->keyword_start) + 2;
   }
   
-  action begin_pystring_content {
+  action begin_docstring_content {
     MARK(content_start, p);
   }
 
-  action start_pystring {
+  action start_docstring {
     lexer->current_line = lexer->line_number;
     lexer->start_col = p - data - lexer->last_newline;
   }
  
-  action store_pystring_content {
+  action store_docstring_content {
     int len = LEN(content_start, PTR_TO(final_newline));
+    int type_len = LEN(docstring_content_type_start, PTR_TO(docstring_content_type_end));
 
     if (len < 0) len = 0;
+    if (type_len < 0) len = 0;
 
-    store_pystring_content(listener, lexer->start_col, PTR_TO(content_start), len, lexer->current_line);
+    store_docstring_content(listener, lexer->start_col, PTR_TO(docstring_content_type_start), type_len, PTR_TO(content_start), len, lexer->current_line);
   } 
  
+  action start_docstring_content_type { 
+    MARK(docstring_content_type_start, p);
+  }
+
+  action end_docstring_content_type { 
+    MARK(docstring_content_type_end, p);
+  }
+
   action store_feature_content {
     STORE_KW_END_CON(feature);
   }
@@ -311,26 +323,27 @@ store_attr(VALUE listener, const char * attr_type,
   VALUE val = ENCODED_STR_NEW(at, length);
   rb_funcall(listener, rb_intern(attr_type), 2, val, INT2FIX(line));
 }
-
 static void 
-store_pystring_content(VALUE listener, 
+store_docstring_content(VALUE listener, 
           int start_col, 
+          const char *type_at, size_t type_length,
           const char *at, size_t length, 
           int current_line)
 {
   VALUE re2;
   VALUE unescape_escaped_quotes;
   VALUE con = ENCODED_STR_NEW(at, length);
+  VALUE con_type = ENCODED_STR_NEW(type_at, type_length);
 
   unindent(con, start_col);
 
   re2 = rb_reg_regcomp(rb_str_new2("\r\\Z"));
   unescape_escaped_quotes = rb_reg_regcomp(rb_str_new2("\\\\\"\\\\\"\\\\\""));
   rb_funcall(con, rb_intern("sub!"), 2, re2, rb_str_new2(""));
+  rb_funcall(con_type, rb_intern("sub!"), 2, re2, rb_str_new2(""));
   rb_funcall(con, rb_intern("gsub!"), 2, unescape_escaped_quotes, rb_str_new2("\"\"\""));
-  rb_funcall(listener, rb_intern("doc_string"), 2, con, INT2FIX(current_line));
+  rb_funcall(listener, rb_intern("doc_string"), 3, con_type, con, INT2FIX(current_line));
 }
-
 static void 
 raise_lexer_error(const char * at, int line)
 { 
@@ -341,6 +354,8 @@ static void lexer_init(lexer_state *lexer) {
   lexer->content_start = 0;
   lexer->content_end = 0;
   lexer->content_len = 0;
+  lexer->docstring_content_type_start = 0;
+  lexer->docstring_content_type_end = 0;
   lexer->mark = 0;
   lexer->keyword_start = 0;
   lexer->keyword_end = 0;

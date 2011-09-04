@@ -181,7 +181,7 @@ module Gherkin
     private
 
       def doc_string(doc_string)
-        @io.puts "      \"\"\"\n" + escape_triple_quotes(indent(doc_string.value, '      ')) + "\n      \"\"\""
+        @io.puts "      \"\"\"" + doc_string.content_type + "\n" + escape_triple_quotes(indent(doc_string.value, '      ')) + "\n      \"\"\""
       end
 
       def exception(exception)

@@ -130,6 +130,7 @@
           "keyword": "Given ",
           "multiline_arg": {
             "type": "doc_string",
+            "content_type": "text",
             "value": "Makes Homer something something\nAnd something else",
             "line": 777
           }

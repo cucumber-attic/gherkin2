@@ -12,20 +12,27 @@ module Gherkin
           @start_col = p - @last_newline - "#{@keyword}:".length
         }
 
-        action start_pystring {
+        action start_docstring {
           @current_line = @line_number
           @start_col = p - @last_newline
         }
         
-        action begin_pystring_content {
+        action begin_docstring_content {
           @content_start = p
         }
 
-        action store_pystring_content {
-          con = unindent(@start_col, utf8_pack(data[@content_start...@next_keyword_start-1]).sub(/(\r?\n)?([\t ])*\Z/, '').gsub(/\\"\\"\\"/, '"""'))
-          @listener.doc_string(con, @current_line) 
+        action start_docstring_content_type {
+          @docstring_content_type_start = p
         }
- 
+        action end_docstring_content_type {
+          @docstring_content_type_end = p
+        }
+
+        action store_docstring_content {
+          con = unindent(@start_col, utf8_pack(data[@content_start...@next_keyword_start-1]).sub(/(\r?\n)?([\t ])*\Z/, '').gsub(/\\"\\"\\"/, '"""'))
+          con_type = utf8_pack(data[@docstring_content_type_start...@docstring_content_type_end]).strip
+          @listener.doc_string(con_type, con, @current_line) 
+        }
         action store_feature_content {
           p = store_keyword_content(:feature, data, p, eof)
         }

@@ -57,8 +57,8 @@ module Gherkin
         @table << Formatter::Model::Row.new(grab_comments!, cells, line)
       end
 
-      def doc_string(string, line)
-        @doc_string = Formatter::Model::DocString.new(string, line)
+      def doc_string(string, content_type, line)
+        @doc_string = Formatter::Model::DocString.new(string, content_type, line)
       end
 
       def eof

@@ -53,7 +53,7 @@ Feature: JSON formatter
           When I was
             |asleep|
           And so
-            \"\"\"
+            \"\"\"plaintext
             innocent
             \"\"\"
 
@@ -181,6 +181,7 @@ Feature: JSON formatter
                 "line": 26,
                 "multiline_arg": {
                   "type": "doc_string",
+                  "content_type": "plaintext",
                   "value": "innocent",
                   "line": 27
                 }
