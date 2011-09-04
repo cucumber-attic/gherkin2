@@ -340,7 +340,7 @@ store_docstring_content(VALUE listener,
   re2 = rb_reg_regcomp(rb_str_new2("\r\\Z"));
   unescape_escaped_quotes = rb_reg_regcomp(rb_str_new2("\\\\\"\\\\\"\\\\\""));
   rb_funcall(con, rb_intern("sub!"), 2, re2, rb_str_new2(""));
-  rb_funcall(con_type, rb_intern("sub!"), 2, re2, rb_str_new2(""));
+  rb_funcall(con_type, rb_intern("strip!"), 0);
   rb_funcall(con, rb_intern("gsub!"), 2, unescape_escaped_quotes, rb_str_new2("\"\"\""));
   rb_funcall(listener, rb_intern("doc_string"), 3, con_type, con, INT2FIX(current_line));
 }
