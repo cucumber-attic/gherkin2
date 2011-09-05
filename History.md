@@ -1,3 +1,9 @@
+## [2.4.18](https://github.com/cucumber/gherkin/compare/v2.4.17...v2.4.18)
+
+### New Features
+
+* Fenced Code Blocks for DocStrings ([#123](https://github.com/cucumber/gherkin/issues/123) Gregory Hnatiuk, Aslak Hellesøy)
+
 ## [2.4.17](https://github.com/cucumber/gherkin/compare/v2.4.16...v2.4.17)
 
 ### New Features

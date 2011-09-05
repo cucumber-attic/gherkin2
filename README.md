@@ -52,7 +52,7 @@ The jar file is in the central Maven repo.
     <dependency>
         <groupId>info.cukes</groupId>
         <artifactId>gherkin</artifactId>
-        <version>2.4.17</version>
+        <version>2.4.18</version>
     </dependency>
 
 You can get it manually from [ibiblio](http://mirrors.ibiblio.org/pub/mirrors/maven2/info/cukes/gherkin) or by searching at [maven central](http://search.maven.org/)
