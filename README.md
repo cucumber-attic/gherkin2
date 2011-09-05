@@ -55,7 +55,7 @@ The jar file is in the central Maven repo.
         <version>2.4.18</version>
     </dependency>
 
-You can get it manually from [ibiblio](http://mirrors.ibiblio.org/pub/mirrors/maven2/info/cukes/gherkin) or by searching at [maven central](http://search.maven.org/)
+You can get it manually from [Maven Central](http://search.maven.org/#browse%7C-2073395818)
 
 ### .NET
 
