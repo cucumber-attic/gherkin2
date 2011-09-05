@@ -3,8 +3,13 @@ package gherkin.formatter.model;
 import gherkin.formatter.Mappable;
 
 public class DocString extends Mappable {
+    private final String content_type;
     private final String value;
     private final int line;
+
+    public String getContentType() {
+        return content_type;
+    }
 
     public String getValue() {
         return value;
@@ -14,7 +19,8 @@ public class DocString extends Mappable {
         return line;
     }
 
-    public DocString(String value, int line) {
+    public DocString(String contentType, String value, int line) {
+        this.content_type = contentType;
         this.value = value;
         this.line = line;
     }

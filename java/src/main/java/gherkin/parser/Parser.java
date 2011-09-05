@@ -72,9 +72,9 @@ public class Parser implements Listener {
         }
     }
 
-    public void docString(String string, int line) {
+    public void docString(String contentType, String content, int line) {
         if (event("doc_string", line)) {
-            listener.docString(string, line);
+            listener.docString(contentType, content, line);
         }
     }
 

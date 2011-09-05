@@ -63,8 +63,8 @@ public class FormatterListener implements Listener {
         table.add(new Row(grabComments(), cells, line, Row.DiffType.NONE));
     }
 
-    public void docString(String string, int line) {
-        this.docString = new DocString(string, line);
+    public void docString(String contentType, String content, int line) {
+        this.docString = new DocString(contentType, content, line);
     }
 
     public void eof() {

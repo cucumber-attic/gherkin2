@@ -21,18 +21,27 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
       }
     }
 
-    action start_pystring {
+    action start_docstring {
       currentLine = lineNumber;
       startCol = p - lastNewline;
     }
     
-    action begin_pystring_content {
+    action begin_docstring_content {
       contentStart = p;
     }
 
-    action store_pystring_content {
+    action start_docstring_content_type {
+      docstringContentTypeStart = p;
+    }
+
+    action end_docstring_content_type {
+      docstringContentTypeEnd = p;
+    }
+
+    action store_docstring_content {
       String con = unindent(startCol, substring(data, contentStart, nextKeywordStart-1).replaceFirst("(\\r?\\n)?([\\t ])*\\Z", "").replaceAll("\\\\\"\\\\\"\\\\\"", "\"\"\""));
-      listener.docString(con, currentLine);
+      String conType = substring(data, docstringContentTypeStart, docstringContentTypeEnd).trim();
+      listener.docString(conType, con, currentLine);
     }
 
     action store_feature_content {
@@ -164,6 +173,8 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
 
     int contentStart = -1;
     int currentLine = -1;
+    int docstringContentTypeStart = -1;
+    int docstringContentTypeEnd = -1;
     int startCol = -1;
     int nextKeywordStart = -1;
     int keywordStart = -1;

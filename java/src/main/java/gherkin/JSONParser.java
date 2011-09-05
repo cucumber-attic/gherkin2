@@ -62,7 +62,7 @@ public class JSONParser implements FeatureParser {
             if (ma.get("type").equals("table")) {
                 step.setMultilineArg(rows(getList(ma, "value")));
             } else {
-                step.setMultilineArg(new DocString(getString(ma, "value"), getInt(ma, "line")));
+                step.setMultilineArg(new DocString(getString(ma, "content_type"), getString(ma, "value"), getInt(ma, "line")));
             }
         }
         step.replay(formatter);

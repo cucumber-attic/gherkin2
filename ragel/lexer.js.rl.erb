@@ -9,21 +9,30 @@
     this.start_col = p - this.last_newline - (this.keyword+':').length;
   }
 
-  action start_pystring {
+  action start_docstring {
     this.current_line = this.line_number;
     this.start_col = p - this.last_newline;
   }
   
-  action begin_pystring_content {
+  action begin_docstring_content {
     this.content_start = p;
   }
 
-  action store_pystring_content {
+  action start_docstring_content_type {
+    this.docstring_content_type_start = p;
+  }
+
+  action end_docstring_content_type {
+    this.docstring_content_type_end = p;
+  }
+
+  action store_docstring_content {
     var con = this.unindent(
       this.start_col, 
       this.bytesToString(data.slice(this.content_start, this.next_keyword_start-1)).replace(/(\r?\n)?([\t ])*$/, '').replace(/ESCAPED_TRIPLE_QUOTE/mg, '"""')
     );
-    this.listener.doc_string(con, this.current_line); 
+    var con_type = this.bytesToString(data.slice(this.docstring_content_type_start, this.docstring_content_type_end)).trim();
+    this.listener.doc_string(con_type, con, this.current_line); 
   }
 
   action store_feature_content {
