@@ -1,3 +1,8 @@
+## [2.4.21](https://github.com/cucumber/gherkin/compare/v2.4.20...v2.4.21)
+
+### Bugfixes
+* Revert json dependency back to >= 1.4.6 since many apps still use old json. (Aslak Hellesøy)
+
 ## [2.4.20](https://github.com/cucumber/gherkin/compare/v2.4.18...v2.4.20)
 
 (The 2.4.19 release got messed up).
