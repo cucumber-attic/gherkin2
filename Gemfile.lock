@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     gherkin (2.4.19)
-      json (>= 1.4.6)
+      json (>= 1.6.0)
 
 GEM
   remote: http://rubygems.org/

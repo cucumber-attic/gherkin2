@@ -42,7 +42,12 @@ Gem::Specification.new do |s|
     s.add_development_dependency('rake-compiler', '>= 0.7.9')
   end
 
-  s.add_dependency('json', '>= 1.4.6')
+  # Hack because json is released as two different versions for MRI and JRuby :-/
+  if defined?(JRUBY_VERSION)
+    s.add_dependency('json', '>= 1.6.0.1')
+  else
+    s.add_dependency('json', '>= 1.6.0')
+  end
 
   s.add_development_dependency('cucumber', '>= 1.0.6')
   s.add_development_dependency('rake', '>= 0.9.2')
