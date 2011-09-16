@@ -13,7 +13,15 @@ namespace :gems do
 
   desc 'Prepare JRuby binares'
   task :jruby => [:jar] do
-    sh "rvm jruby@cucumber exec rspec spec"
+    begin
+      # Need to move the Gemfile.lock out of the way because the latest json gems
+      # don't exist in identical versions: https://github.com/flori/json/pull/95
+      # native gem is 1.6.0 and java gem is 1.6.0.1
+      mv "Gemfile.lock", "Gemfile.lock.hack"
+      sh "rvm jruby@cucumber exec rspec spec"
+    ensure
+      mv "Gemfile.lock.hack", "Gemfile.lock"
+    end
   end
 
   desc 'Prepare IronRuby binaries'
