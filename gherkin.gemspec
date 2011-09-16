@@ -41,6 +41,7 @@ Gem::Specification.new do |s|
     s.extensions = Dir['ext/**/extconf.rb']
     s.add_development_dependency('rake-compiler', '>= 0.7.9')
   end
+  s.files -= Dir['**/.gitignore']
 
   # Hack because json is released as two different versions for MRI and JRuby :-/
   if defined?(JRUBY_VERSION)
