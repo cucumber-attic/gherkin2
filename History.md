@@ -1,3 +1,9 @@
+## [2.4.19](https://github.com/cucumber/gherkin/compare/v2.4.18...v2.4.19)
+
+### Bugfixes
+
+* Filtering on Examples with 0 or 1 row now works ([from mailing list](http://groups.google.com/group/cukes/browse_thread/thread/3e55777ee29c445c) Aslak Hellesøy)
+
 ## [2.4.18](https://github.com/cucumber/gherkin/compare/v2.4.17...v2.4.18)
 
 ### New Features

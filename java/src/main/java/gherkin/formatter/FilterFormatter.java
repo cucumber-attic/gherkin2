@@ -99,7 +99,17 @@ public class FilterFormatter implements Formatter {
         examplesTags = examples.getTags();
         examplesName = examples.getName();
 
-        Range tableBodyRange = new Range(examples.getRows().get(1).getLine(), examples.getRows().get(examples.getRows().size() - 1).getLine());
+        Range tableBodyRange;
+        switch(examples.getRows().size()) {
+            case 0:
+                tableBodyRange = new Range(examples.getLineRange().getLast(), examples.getLineRange().getLast());
+                break;
+            case 1:
+                tableBodyRange = new Range(examples.getRows().get(0).getLine(), examples.getRows().get(0).getLine());
+                break;
+            default:
+                tableBodyRange = new Range(examples.getRows().get(1).getLine(), examples.getRows().get(examples.getRows().size() - 1).getLine());
+        }
         examplesRange = new Range(examples.getLineRange().getFirst(), tableBodyRange.getLast());
         if (filter.eval(Collections.<Tag>emptyList(), Collections.<String>emptyList(), Collections.singletonList(tableBodyRange))) {
             examples.setRows(filter.filterTableBodyRows(examples.getRows()));

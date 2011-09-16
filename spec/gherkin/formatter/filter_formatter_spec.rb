@@ -60,6 +60,16 @@ module Gherkin
           self.file = 'scenario_outline_with_tags.feature'
           verify_filter(['~@wip'], 1..2, 12..14)
         end
+
+        it "should not replay examples from ignored scenario outline" do
+          self.file = 'scenario_outline_with_tags.feature'
+          verify_filter(['~@wip'], 1..2, 12..14)
+        end
+
+        it "should not choke on examples with only header" do
+          self.file = 'examples_with_only_header.feature'
+          verify_filter(['@failing'], 1..7, 12..15)
+        end
       end
 
       context "names" do
@@ -88,6 +98,11 @@ module Gherkin
           self.file = 'hantu_pisang.feature'
           verify_filter([/The background/], 1..5)
         end
+
+        it "should not choke on examples with only header" do
+          self.file = 'examples_with_only_header.feature'
+          verify_filter([/B/], 1..7, 12..15)
+        end
       end
 
       context "lines" do
@@ -111,6 +126,12 @@ module Gherkin
 
           it "should filter on second examples line" do
             verify_filter([57], 1..14, 46..49, 56..61)
+          end
+
+          it "should not choke on examples with only header" do
+            self.file = 'examples_with_only_header.feature'
+            verify_filter([13], 1..7, 12..15)
+            verify_filter([14], 1..7, 12..15)
           end
         end
 

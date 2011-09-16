@@ -61,7 +61,12 @@ module Gherkin
         @examples_tags = examples.tags
         @examples_name = examples.name
 
-        table_body_range = examples.rows[1].line..examples.rows[-1].line
+        table_body_range = case(examples.rows.length)
+          when 0 then examples.line_range.last..examples.line_range.last
+          when 1 then examples.rows[0].line..examples.rows[0].line
+          else examples.rows[1].line..examples.rows[-1].line
+        end
+
         @examples_range = examples.line_range.first..table_body_range.last
         if(@filter.eval([], [], [table_body_range]))
           examples.rows = @filter.filter_table_body_rows(examples.rows)
