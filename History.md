@@ -3,6 +3,7 @@
 ### Bugfixes
 
 * Filtering on Examples with 0 or 1 row now works ([from mailing list](http://groups.google.com/group/cukes/browse_thread/thread/3e55777ee29c445c) Aslak Hellesøy)
+* Exclude .gitignore files from packaged gem ([#125](https://github.com/cucumber/gherkin/pull/125) John Hume)
 
 ## [2.4.18](https://github.com/cucumber/gherkin/compare/v2.4.17...v2.4.18)
 
