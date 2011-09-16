@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gherkin (2.4.19)
+    gherkin (2.4.20)
       json (>= 1.6.0)
 
 GEM
