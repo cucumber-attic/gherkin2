@@ -42,6 +42,8 @@ Gem::Specification.new do |s|
     s.add_development_dependency('rake-compiler', '>= 0.7.9')
   end
 
+  s.files -= Dir['**/.gitignore']
+
   s.add_dependency('json', '>= 1.4.6')
 
   s.add_development_dependency('cucumber', '>= 1.0.2')
