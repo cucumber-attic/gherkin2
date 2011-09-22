@@ -67,6 +67,7 @@ Previously it would be represented in JSON as:
 
 ### Bugfixes
 * Java JSONFormatter produces invalid JSON ([#128](https://github.com/cucumber/gherkin/issues/128) Aslak Hellesøy)
+* Missing matches and results in JSONFormatter output ([#129](https://github.com/cucumber/gherkin/issues/129) Aslak Hellesøy)
 
 ## [2.4.21](https://github.com/cucumber/gherkin/compare/v2.4.20...v2.4.21)
 

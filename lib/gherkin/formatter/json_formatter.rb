@@ -29,14 +29,17 @@ module Gherkin
 
       def background(background)
         feature_elements << background.to_hash
+        @step_index = 0
       end
 
       def scenario(scenario)
         feature_elements << scenario.to_hash
+        @step_index = 0
       end
 
       def scenario_outline(scenario_outline)
         feature_elements << scenario_outline.to_hash
+        @step_index = 0
       end
 
       def examples(examples)
@@ -48,11 +51,16 @@ module Gherkin
       end
 
       def match(match)
-        last_step['match'] = match.to_hash
+        current_steps[@step_index]['match'] = match.to_hash
       end
 
       def result(result)
-        last_step['result'] = result.to_hash
+        current_steps[@step_index]['result'] = result.to_hash
+        @step_index += 1
+      end
+
+      def last_step
+        current_steps[-1]
       end
 
       def embedding(mime_type, data)
@@ -79,10 +87,6 @@ module Gherkin
 
       def current_steps
         feature_element['steps'] ||= []
-      end
-
-      def last_step
-        current_steps[-1]
       end
 
       def embeddings

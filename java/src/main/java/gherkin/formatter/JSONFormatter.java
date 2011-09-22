@@ -12,6 +12,7 @@ import java.util.Map;
 public class JSONFormatter implements Reporter, Formatter {
     private final NiceAppendable out;
     private Map<Object, Object> featureHash;
+    private int stepIndex = 0;
 
     public JSONFormatter(Appendable out) {
         this.out = new NiceAppendable(out);
@@ -29,16 +30,19 @@ public class JSONFormatter implements Reporter, Formatter {
     @Override
     public void background(Background background) {
         getFeatureElements().add(background.toMap());
+        stepIndex = 0;
     }
 
     @Override
     public void scenario(Scenario scenario) {
         getFeatureElements().add(scenario.toMap());
+        stepIndex = 0;
     }
 
     @Override
     public void scenarioOutline(ScenarioOutline scenarioOutline) {
         getFeatureElements().add(scenarioOutline.toMap());
+        stepIndex = 0;
     }
 
     @Override
@@ -53,12 +57,13 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void match(Match match) {
-        getLastStep().put("match", match.toMap());
+        getStepAt(stepIndex).put("match", match.toMap());
     }
 
     @Override
     public void result(Result result) {
-        getLastStep().put("result", result.toMap());
+        getStepAt(stepIndex).put("result", result.toMap());
+        stepIndex++;
     }
 
     @Override
@@ -112,7 +117,11 @@ public class JSONFormatter implements Reporter, Formatter {
     }
 
     private Map<Object, Object> getLastStep() {
-        return (Map) getSteps().get(getSteps().size() - 1);
+        return getStepAt(getSteps().size() - 1);
+    }
+
+    private Map<Object, Object> getStepAt(int index) {
+        return (Map) getSteps().get(index);
     }
 
     private List getEmbeddings() {
