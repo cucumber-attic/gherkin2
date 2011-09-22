@@ -28,7 +28,7 @@ public class AnsiFormats implements Formats {
     public static class ColorFormat implements Format {
         private final AnsiEscapes[] escapes;
 
-        public ColorFormat(AnsiEscapes...escapes) {
+        public ColorFormat(AnsiEscapes... escapes) {
             this.escapes = escapes;
         }
 
@@ -45,7 +45,7 @@ public class AnsiFormats implements Formats {
 
     public Format get(String key) {
         Format format = formats.get(key);
-        if(format == null) throw new NullPointerException("No format for key " + key);
+        if (format == null) throw new NullPointerException("No format for key " + key);
         return format;
     }
 

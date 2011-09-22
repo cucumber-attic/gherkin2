@@ -87,7 +87,7 @@ public class PrettyFormatter implements Reporter, Formatter {
     }
 
     private void printSteps() {
-        while(!steps.isEmpty()) {
+        while (!steps.isEmpty()) {
             printStep("skipped", Collections.<Argument>emptyList(), null, true);
         }
     }
@@ -115,7 +115,7 @@ public class PrettyFormatter implements Reporter, Formatter {
     private String indentedLocation(String location, boolean proceed) {
         StringBuilder sb = new StringBuilder();
         int indentation = proceed ? indentations.remove(0) : indentations.get(0);
-        if(location == null) {
+        if (location == null) {
             return "";
         }
         for (int i = 0; i < indentation; i++) {
@@ -228,7 +228,7 @@ public class PrettyFormatter implements Reporter, Formatter {
             out.println(comment.getValue());
             rowHeight++;
         }
-        switch(row.getDiffType()) {
+        switch (row.getDiffType()) {
             case NONE:
                 out.append("      | ");
                 break;
@@ -242,7 +242,7 @@ public class PrettyFormatter implements Reporter, Formatter {
         for (int colIndex = 0; colIndex < maxLengths.length; colIndex++) {
             String cellText = escapeCell(row.getCells().get(colIndex));
             String status = null;
-            switch(row.getDiffType()) {
+            switch (row.getDiffType()) {
                 case NONE:
                     status = cellResults.get(colIndex).getStatus();
                     break;

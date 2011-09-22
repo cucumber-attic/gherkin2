@@ -1,8 +1,7 @@
 package gherkin.formatter;
 
-import gherkin.formatter.model.*;
-
-import java.util.List;
+import gherkin.formatter.model.Match;
+import gherkin.formatter.model.Result;
 
 /**
  * Interface for reporting results. This is a different interface from Formatter,
@@ -11,6 +10,8 @@ import java.util.List;
  */
 public interface Reporter {
     void result(Result result);
+
     void match(Match match);
+
     void embedding(String mimeType, byte[] data);
 }

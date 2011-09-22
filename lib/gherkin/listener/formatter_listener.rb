@@ -98,7 +98,11 @@ module Gherkin
 
       def replay_step_or_examples
         if(@step_statement)
-          @step_statement.multiline_arg = grab_doc_string! || grab_rows!
+          if(doc_string = grab_doc_string!)
+            @step_statement.doc_string = doc_string
+          elsif(rows = grab_rows!)
+            @step_statement.rows = rows
+          end
           @formatter.step(@step_statement)
           @step_statement = nil
         end

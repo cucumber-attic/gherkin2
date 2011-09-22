@@ -29,14 +29,9 @@
       "steps": [
         { "name": "A step with a table",
           "keyword": "Given ",
-          "multiline_arg": {
-            "type": "table",
-            "value" : [
-              {"cells":
-                [ "a","row","for","a","step" ]
-              }
-            ]
-          }
+          "rows" : [
+            {"cells": [ "a","row","for","a","step" ]}
+          ]
         }
       ],
       "examples": [
@@ -79,41 +74,35 @@
       "steps" : [
         { "name" : "a third step with a table",
           "keyword": "Given ",
-          "multiline_arg": {
-            "type": "table",
-            "value": [
-              {
-                "cells" : [ "a","b" ],
-                "line" : 987
-              },
-              { "cells" :
-                [ "c","d" ]
-              },
-              { "cells" :
-                [ "e", "f" ]
-              }
-            ]
-          }
+          "rows": [
+            {
+              "cells" : [ "a","b" ],
+              "line" : 987
+            },
+            { "cells" :
+              [ "c","d" ]
+            },
+            { "cells" :
+              [ "e", "f" ]
+            }
+          ]
         },
         { "name" : "I am still testing things",
           "keyword": "Given ",
-          "multiline_arg": {
-            "type": "table",
-            "value": [
-              { "cells" :
-                [ "g","h" ]
-              },
-              { "cells" :
-                [ "e","r" ]
-              },
-              { "cells" :
-                [ "k", "i" ]
-              },
-              { "cells" :
-                [ "n", "" ]
-              }
-            ]
-          }
+          "rows": [
+            { "cells" :
+              [ "g","h" ]
+            },
+            { "cells" :
+              [ "e","r" ]
+            },
+            { "cells" :
+              [ "k", "i" ]
+            },
+            { "cells" :
+              [ "n", "" ]
+            }
+          ]
         },
         { "name" : "I am done testing these tables",
           "keyword": "Given " },
@@ -128,8 +117,7 @@
       "steps" : [
         { "name" : "All work and no play", 
           "keyword": "Given ",
-          "multiline_arg": {
-            "type": "doc_string",
+          "doc_string": {
             "content_type": "text",
             "value": "Makes Homer something something\nAnd something else",
             "line": 777

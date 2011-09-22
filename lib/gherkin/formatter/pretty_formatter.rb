@@ -110,12 +110,9 @@ module Gherkin
         @io.write(text_format.text(step.keyword))
         @step_printer.write_step(@io, text_format, arg_format, step.name, arguments)
         @io.puts(indented_location(location, proceed))
-        case step.multiline_arg
-        when Model::DocString
-          doc_string(step.multiline_arg)
-        when Array
-          table(step.multiline_arg)
-        end
+        
+        doc_string(step.doc_string) if step.doc_string
+        table(step.rows) if step.rows
       end
 
       class MonochromeFormat

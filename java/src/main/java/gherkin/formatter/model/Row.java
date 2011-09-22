@@ -13,7 +13,7 @@ public class Row extends Mappable implements CommentHolder {
     private final List<Comment> comments;
     private final List<String> cells;
     private final int line;
-    private volatile DiffType diffType;
+    private final DiffType diffType;
 
     public Row(List<Comment> comments, List<String> cells, int line) {
         this(comments, cells, line, DiffType.NONE);
@@ -43,7 +43,7 @@ public class Row extends Mappable implements CommentHolder {
     public int getLine() {
         return line;
     }
-    
+
     public DiffType getDiffType() {
         return diffType;
     }

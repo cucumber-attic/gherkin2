@@ -53,12 +53,11 @@ module Gherkin
     def step(o)
       step = Formatter::Model::Step.new(comments(o), keyword(o), name(o), line(o))
 
-      if(ma = o['multiline_arg'])
-        if(ma['type'] == 'table')
-          step.multiline_arg = rows(ma['value'])
-        else
-          step.multiline_arg = Formatter::Model::DocString.new(ma['content_type'].to_s, ma['value'], ma['line'])
-        end
+      if(o['rows'])
+        step.rows = rows(o['rows'])
+      elsif(o['doc_string'])
+        ds = o['doc_string']
+        step.doc_string = Formatter::Model::DocString.new(ds['content_type'].to_s, ds['value'], ds['line'])
       end
 
       step

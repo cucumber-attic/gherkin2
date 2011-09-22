@@ -71,154 +71,208 @@ Feature: JSON formatter
     Then the outputted JSON should be:
       """
       {
-        "tags": [{"name": "@one", "line":1}],
-        "keyword": "Feature",
-        "name": "OH HAI",
         "description": "",
-        "line": 2,
-        "elements":[
+        "elements": [
           {
-            "type": "scenario",
-            "keyword": "Scenario",
-            "name": "Fujin",
             "description": "",
+            "keyword": "Scenario",
             "line": 4,
+            "name": "Fujin",
             "steps": [
               {
                 "keyword": "Given ",
-                "name": "wind",
-                "line": 5
+                "line": 5,
+                "name": "wind"
               },
               {
                 "keyword": "Then ",
-                "name": "spirit",
-                "line": 6
-              }
-            ]
-          },
-          {
-            "type": "scenario",
-            "tags": [{"name": "@two", "line":8}],
-            "keyword": "Scenario",
-            "name": "_why",
-            "description": "",
-            "line": 9,
-            "steps": [
-              {
-                "keyword": "Given ",
-                "name": "chunky",
-                "line": 10
-              },
-              {
-                "keyword": "Then ",
-                "name": "bacon",
-                "line": 11
-              }
-            ]
-          },
-          {
-            "type": "scenario_outline",
-            "tags": [{"name": "@three", "line":13}, {"name": "@four", "line":13}],
-            "keyword": "Scenario Outline",
-            "name": "Life",
-            "description": "",
-            "line": 14,
-            "steps": [
-              {
-                "keyword": "Given ",
-                "name": "some <boredom>",
-                "line": 15
+                "line": 6,
+                "name": "spirit"
               }
             ],
+            "type": "scenario"
+          },
+          {
+            "description": "",
+            "keyword": "Scenario",
+            "line": 9,
+            "name": "_why",
+            "steps": [
+              {
+                "keyword": "Given ",
+                "line": 10,
+                "name": "chunky"
+              },
+              {
+                "keyword": "Then ",
+                "line": 11,
+                "name": "bacon"
+              }
+            ],
+            "tags": [
+              {
+                "line": 8,
+                "name": "@two"
+              }
+            ],
+            "type": "scenario"
+          },
+          {
+            "description": "",
             "examples": [
               {
-                "tags": [{"name": "@five", "line":17}],
-                "keyword": "Examples",
-                "name": "Real life",
                 "description": "",
+                "keyword": "Examples",
                 "line": 18,
+                "name": "Real life",
                 "rows": [
                   {
-                    "cells": ["boredom"],
+                    "cells": [
+                      "boredom"
+                    ],
                     "line": 19
                   },
                   {
-                    "cells": ["airport"],
+                    "cells": [
+                      "airport"
+                    ],
                     "line": 20
                   },
                   {
-                    "cells": ["meeting"],
+                    "cells": [
+                      "meeting"
+                    ],
                     "line": 21
+                  }
+                ],
+                "tags": [
+                  {
+                    "line": 17,
+                    "name": "@five"
                   }
                 ]
               }
-            ]
+            ],
+            "keyword": "Scenario Outline",
+            "line": 14,
+            "name": "Life",
+            "steps": [
+              {
+                "keyword": "Given ",
+                "line": 15,
+                "name": "some <boredom>"
+              }
+            ],
+            "tags": [
+              {
+                "line": 13,
+                "name": "@three"
+              },
+              {
+                "line": 13,
+                "name": "@four"
+              }
+            ],
+            "type": "scenario_outline"
           },
           {
-            "type": "scenario",
-            "keyword": "Scenario",
-            "name": "who stole my mojo?",
             "description": "",
+            "keyword": "Scenario",
             "line": 23,
+            "name": "who stole my mojo?",
             "steps": [
               {
                 "keyword": "When ",
-                "name": "I was",
                 "line": 24,
-                "multiline_arg": {
-                  "type": "table",
-                  "value": [
-                    {
-                      "line": 25,
-                      "cells": ["asleep"]
-                    }
-                  ]
-                }
+                "name": "I was",
+                "rows": [
+                  {
+                    "cells": [
+                      "asleep"
+                    ],
+                    "line": 25
+                  }
+                ]
               },
               {
-                "keyword": "And ",
-                "name": "so",
-                "line": 26,
-                "multiline_arg": {
-                  "type": "doc_string",
+                "doc_string": {
                   "content_type": "plaintext",
-                  "value": "innocent",
-                  "line": 27
-                }
+                  "line": 27,
+                  "value": "innocent"
+                },
+                "keyword": "And ",
+                "line": 26,
+                "name": "so"
               }
-            ]
+            ],
+            "type": "scenario"
           },
           {
-            "type": "scenario_outline",
-            "comments": [{"value": "# The", "line":31}],
-            "keyword": "Scenario Outline",
-            "name": "with",
+            "comments": [
+              {
+                "line": 31,
+                "value": "# The"
+              }
+            ],
             "description": "",
+            "examples": [
+              {
+                "comments": [
+                  {
+                    "line": 36,
+                    "value": "# comments"
+                  },
+                  {
+                    "line": 37,
+                    "value": "# everywhere"
+                  }
+                ],
+                "description": "",
+                "keyword": "Examples",
+                "line": 38,
+                "name": "An example",
+                "rows": [
+                  {
+                    "cells": [
+                      "partout"
+                    ],
+                    "comments": [
+                      {
+                        "line": 39,
+                        "value": "# I mean"
+                      }
+                    ],
+                    "line": 40
+                  }
+                ]
+              }
+            ],
+            "keyword": "Scenario Outline",
             "line": 32,
+            "name": "with",
             "steps": [
               {
-                "comments": [{"value": "# all", "line":33}],
+                "comments": [
+                  {
+                    "line": 33,
+                    "value": "# all"
+                  }
+                ],
                 "keyword": "Then ",
                 "line": 34,
                 "name": "nice"
               }
             ],
-            "examples": [
-              {
-                "comments": [{"value": "# comments", "line": 36}, {"value": "# everywhere", "line": 37}],
-                "keyword": "Examples",
-                "name": "An example",
-                "description": "",
-                "line": 38,
-                "rows": [
-                  {
-                    "comments": [{"value": "# I mean", "line": 39}],
-                    "line": 40,
-                    "cells": ["partout"]
-                  }
-                ]
-              }
-            ]
+            "type": "scenario_outline"
+          }
+        ],
+        "keyword": "Feature",
+        "line": 2,
+        "name": "OH HAI",
+        "tags": [
+          {
+            "line": 1,
+            "name": "@one"
           }
         ]
       }

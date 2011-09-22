@@ -57,27 +57,26 @@ public class JSONParser implements FeatureParser {
 
     private void step(JSONObject o) {
         Step step = new Step(comments(o), keyword(o), name(o), line(o));
-        if (o.containsKey("multiline_arg")) {
-            Map ma = (Map) o.get("multiline_arg");
-            if (ma.get("type").equals("table")) {
-                step.setMultilineArg(rows(getList(ma, "value")));
-            } else {
-                step.setMultilineArg(new DocString(getString(ma, "content_type"), getString(ma, "value"), getInt(ma, "line")));
-            }
+        if (o.containsKey("rows")) {
+            step.setRows(rows(getList(o, "rows")));
+        }
+        if (o.containsKey("doc_string")) {
+            Map ds = (Map) o.get("doc_string");
+            step.setDocString(new DocString(getString(ds, "content_type"), getString(ds, "value"), getInt(ds, "line")));
         }
         step.replay(formatter);
 
-        if(o.containsKey("match")) {
+        if (o.containsKey("match")) {
             Map m = (Map) o.get("match");
             new Match(arguments(m), location(m)).replay(reporter);
         }
 
-        if(o.containsKey("result")) {
+        if (o.containsKey("result")) {
             Map r = (Map) o.get("result");
             new Result(status(r), duration(r), errorMessage(r)).replay(reporter);
         }
 
-        if(o.containsKey("embeddings")) {
+        if (o.containsKey("embeddings")) {
             List<Map> es = (List<Map>) o.get("embeddings");
             for (Map e : es) {
                 try {

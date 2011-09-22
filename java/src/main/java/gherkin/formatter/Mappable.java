@@ -2,6 +2,8 @@ package gherkin.formatter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.*;
 
 public class Mappable {
@@ -9,14 +11,10 @@ public class Mappable {
 
     public Map<Object, Object> toMap() {
         Map<Object, Object> map = new HashMap<Object, Object>();
-        for (Field field : getFields()) {
+        List<Field> mappableFields = getMappableFields();
+        for (Field field : mappableFields) {
             Object value;
-            try {
-                field.setAccessible(true);
-                value = field.get(this);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
+            value = getValue(field);
             if (value != null && Mappable.class.isAssignableFrom(value.getClass())) {
                 value = ((Mappable) value).toMap();
             }
@@ -31,19 +29,28 @@ public class Mappable {
                 }
                 value = mappedValue;
             }
-            if (value != null && !Collections.emptyList().equals(value) && !NO_LINE.equals(value)) {
+            if (value != null && !Collections.EMPTY_LIST.equals(value) && !NO_LINE.equals(value)) {
                 map.put(field.getName(), value);
             }
         }
         return map;
     }
 
-    private List<Field> getFields() {
+    private Object getValue(Field field) {
+        try {
+            field.setAccessible(true);
+            return field.get(this);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Field> getMappableFields() {
         List<Field> fields = new ArrayList<Field>();
         Class c = getClass();
         while (c != null) {
             for (Field field : c.getDeclaredFields()) {
-                if (!Modifier.isStatic(field.getModifiers()) && !Modifier.isVolatile(field.getModifiers())) {
+                if (isMappable(field)) {
                     fields.add(field);
                 }
             }
@@ -52,4 +59,26 @@ public class Mappable {
         return fields;
     }
 
+    private boolean isMappable(Field field) {
+        boolean instanceField = !Modifier.isStatic(field.getModifiers());
+        boolean mappableType = isMappableType(field.getType(), field.getGenericType());
+        return instanceField && mappableType;
+    }
+
+    private boolean isMappableType(Class type, Type genericType) {
+        return String.class.equals(type) ||
+                type.isPrimitive() ||
+                Number.class.isAssignableFrom(type) ||
+                Mappable.class.isAssignableFrom(type) ||
+                genericType != null && Collection.class.isAssignableFrom(type) && isMappableCollection(genericType);
+    }
+
+    private boolean isMappableCollection(Type genericType) {
+        if (genericType instanceof ParameterizedType) {
+            Type[] parameters = ((ParameterizedType) genericType).getActualTypeArguments();
+            return parameters[0] instanceof Class && isMappableType((Class) parameters[0], null);
+        } else {
+            return false;
+        }
+    }
 }

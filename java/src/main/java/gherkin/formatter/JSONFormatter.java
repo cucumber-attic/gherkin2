@@ -63,7 +63,7 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void embedding(final String mimeType, final byte[] data) {
-        final Map<String,String> embedding = new HashMap<String,String>(){{
+        final Map<String, String> embedding = new HashMap<String, String>() {{
             put("mime_type", mimeType);
             put("data", Base64.encodeBytes(data));
         }};
@@ -89,7 +89,7 @@ public class JSONFormatter implements Reporter, Formatter {
         return featureElements;
     }
 
-    private Map<Object,List<Object>> getFeatureElement() {
+    private Map<Object, List<Object>> getFeatureElement() {
         return (Map) getFeatureElements().get(getFeatureElements().size() - 1);
     }
 
@@ -111,13 +111,13 @@ public class JSONFormatter implements Reporter, Formatter {
         return steps;
     }
 
-    private Map<Object,Object> getLastStep() {
+    private Map<Object, Object> getLastStep() {
         return (Map) getSteps().get(getSteps().size() - 1);
     }
 
     private List getEmbeddings() {
         List<Object> embeddings = (List<Object>) getLastStep().get("embeddings");
-        if(embeddings == null) {
+        if (embeddings == null) {
             embeddings = new ArrayList<Object>();
             getLastStep().put("embeddings", embeddings);
         }

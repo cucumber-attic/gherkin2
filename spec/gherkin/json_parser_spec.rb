@@ -43,14 +43,11 @@ module Gherkin
             "steps": [
               {
                 "name": "Hello",
-                "multiline_arg": {
-                  "type": "table",
-                  "value": [
-                    {
-                      "cells": ["foo", "bar"]
-                    }
-                  ]
-                }
+                "rows": [
+                  {
+                    "cells": ["foo", "bar"]
+                  }
+                ]
               }
             ]
           }

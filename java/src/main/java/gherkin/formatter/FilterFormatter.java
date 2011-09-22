@@ -100,7 +100,7 @@ public class FilterFormatter implements Formatter {
         examplesName = examples.getName();
 
         Range tableBodyRange;
-        switch(examples.getRows().size()) {
+        switch (examples.getRows().size()) {
             case 0:
                 tableBodyRange = new Range(examples.getLineRange().getLast(), examples.getLineRange().getLast());
                 break;

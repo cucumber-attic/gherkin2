@@ -112,15 +112,15 @@ module Gherkin
       class Step < BasicStatement
         native_impl('gherkin')
 
-        attr_accessor :multiline_arg
+        attr_accessor :rows
+        attr_accessor :doc_string
 
         def line_range
           range = super
-          case multiline_arg
-          when Array
-            range = range.first..multiline_arg[-1].line
-          when Model::DocString
-            range = range.first..multiline_arg.line_range.last
+          if(rows)
+            range = range.first..rows[-1].line
+          elsif(doc_string)
+            range = range.first..doc_string.line_range.last
           end
           range
         end
@@ -135,20 +135,6 @@ module Gherkin
             offset = name.index(val, offset)
             Argument.new(offset, val)
           end
-        end
-
-        def to_hash
-          hash = super
-          if Array === @multiline_arg
-            hash['multiline_arg'] = {
-              'type' => 'table',
-              'value' => hash['multiline_arg']
-            }
-          elsif DocString === @multiline_arg
-            hash['multiline_arg']['type'] = 'doc_string'
-            hash['multiline_arg']['content_type'] = @multiline_arg.content_type
-          end
-          hash
         end
       end
 

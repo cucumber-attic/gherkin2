@@ -33,7 +33,7 @@ public class Parser implements Listener {
     }
 
     public Parser(Formatter formatter, boolean throwOnError, String machineName, boolean forceRubyDummy) {
-        if(formatter == null) throw new NullPointerException("formatter");
+        if (formatter == null) throw new NullPointerException("formatter");
         this.formatter = formatter;
         this.listener = new FormatterListener(formatter);
         this.throwOnError = throwOnError;

@@ -108,9 +108,9 @@ public class FormatterListener implements Listener {
             DocString docString;
             List<Row> rows;
             if ((docString = grabDocString()) != null) {
-                step.setMultilineArg(docString);
+                step.setDocString(docString);
             } else if ((rows = grabRows()) != null) {
-                step.setMultilineArg(rows);
+                step.setRows(rows);
             }
             step.replay(formatter);
             step = null;

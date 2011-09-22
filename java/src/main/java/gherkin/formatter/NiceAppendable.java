@@ -44,7 +44,7 @@ public class NiceAppendable {
         return append(NL);
     }
 
-    public NiceAppendable  println(CharSequence csq) {
+    public NiceAppendable println(CharSequence csq) {
         return append(csq).println();
     }
 }

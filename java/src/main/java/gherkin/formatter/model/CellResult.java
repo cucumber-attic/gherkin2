@@ -19,10 +19,10 @@ public class CellResult extends Mappable {
 
     private void updateStatus(String status) {
         int index = SEVERITY.indexOf(status);
-        if(index == -1) {
+        if (index == -1) {
             throw new IllegalStateException("Illegal state: " + status + ". Legal: " + SEVERITY);
         }
-        if(index > statusIndex) {
+        if (index > statusIndex) {
             this.status = status;
             this.statusIndex = index;
         }

@@ -144,24 +144,20 @@ Feature: JSON lexer
                 "keyword": "When ",
                 "name": "I was",
                 "line": 24,
-                "multiline_arg": {
-                  "type": "table",
-                  "value": [
-                    {
-                      "comments": [],
-                      "line": 25,
-                      "cells": ["asleep"]
-                    }
-                  ]
-                }
+                "rows": [
+                  {
+                    "comments": [],
+                    "line": 25,
+                    "cells": ["asleep"]
+                  }
+                ]
               },
               {
                 "comments": [],
                 "keyword": "And ",
                 "name": "so",
                 "line": 26,
-                "multiline_arg": {
-                  "type": "doc_string",
+                "doc_string": {
                   "value": "innocent",
                   "line": 27
                 }

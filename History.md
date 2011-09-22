@@ -1,3 +1,73 @@
+## [2.5.0](https://github.com/cucumber/gherkin/compare/v2.4.21...v2.5.0)
+
+### Changed Features
+
+The JSON representation of features has changed. The difference lies in how Doc Strings and Data Tables are represented. Consider the following steps:
+
+    Given a Data Table:
+      | Hipster | Ipsum |
+      | Freegan | Vinyl |
+    Given a Doc String:
+      """
+      Hipster
+      Ipsum
+      """
+
+This is now represented in JSON as:
+
+    "steps": [
+      {
+        "keyword": "Given ",
+        "name": "a Data Table"
+        "line": 5,
+        "rows": [
+          { "cells": ["Hipster", "Ipsum"], "line": 6 },
+          { "cells": ["Freegan", "Vinyl"], "line": 7 }
+        ]
+      },
+      {
+        "keyword": "Given ",
+        "name": "a Doc String"
+        "line": 8,
+        "doc_string": {
+          "value": "Hipster\nIpsum"
+          "line": 9,
+          "content_type": "plaintext",
+        }
+      }
+    ]
+
+Previously it would be represented in JSON as:
+
+    "steps": [
+      {
+        "keyword": "Given ",
+        "name": "a Data Table"
+        "line": 5,
+        "multiline_arg": {
+          "type": "table"
+          "value": [
+            { "cells": ["Hipster", "Ipsum"], "line": 6 },
+            { "cells": ["Freegan", "Vinyl"], "line": 7 }
+          ]
+        }
+      },
+      {
+        "keyword": "Given ",
+        "name": "a Doc String"
+        "line": 8,
+        "multiline_arg": {
+          "type": "doc_string"
+          "value": "Hipster\nIpsum"
+          "line": 9,
+          "content_type": "plaintext",
+        }
+      }
+    ]
+
+### Bugfixes
+* Java JSONFormatter produces invalid JSON ([#128](https://github.com/cucumber/gherkin/issues/128) Aslak Hellesøy)
+
 ## [2.4.21](https://github.com/cucumber/gherkin/compare/v2.4.20...v2.4.21)
 
 ### Bugfixes

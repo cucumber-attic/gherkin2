@@ -5,7 +5,6 @@ import gherkin.formatter.Reporter;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.Writer;
 
 public class Result extends Mappable {
     private final String status;
@@ -18,10 +17,11 @@ public class Result extends Mappable {
 
     /**
      * Used at runtime
+     *
      * @param status
      * @param duration
      * @param error
-     * @param dummy only used to distinguish the constructor when used from JRuby (and null for error).
+     * @param dummy    only used to distinguish the constructor when used from JRuby (and null for error).
      */
     public Result(String status, Long duration, Throwable error, Object dummy) {
         this.status = status;
@@ -32,6 +32,7 @@ public class Result extends Mappable {
 
     /**
      * Used when parsing JSON. TODO: constructing an Exception instance when parsing JSON might be better.
+     *
      * @param status
      * @param duration
      * @param errorMessage
@@ -56,9 +57,9 @@ public class Result extends Mappable {
     }
 
     public String getErrorMessage() {
-        if(error_message != null) {
+        if (error_message != null) {
             return error_message;
-        } else if(error != null) {
+        } else if (error != null) {
             StringWriter stringWriter = new StringWriter();
             PrintWriter printWriter = new PrintWriter(stringWriter);
             error.printStackTrace(printWriter);

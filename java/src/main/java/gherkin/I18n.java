@@ -67,7 +67,7 @@ public class I18n {
     public String getIsoCode() {
         return isoCode;
     }
-    
+
     public Locale getLocale() {
         return locale;
     }
