@@ -1,0 +1,600 @@
+#include <assert.h>
+
+#include "Python.h"
+#include "structmember.h"
+
+#if defined(_WIN32)
+#include <stddef.h>
+#endif
+
+typedef struct lexer_state {
+  PyObject_HEAD
+
+  PyObject *listener;
+
+  size_t content_len;
+  size_t line_number;
+  size_t current_line;
+  size_t start_col;
+  size_t mark;
+  size_t keyword_start;
+  size_t keyword_end;
+  size_t next_keyword_start;
+  size_t content_start;
+  size_t content_end;
+  size_t docstring_content_type_start;
+  size_t docstring_content_type_end;
+  size_t query_start;
+  size_t last_newline;
+  size_t final_newline;
+} lexer_state;
+
+static PyObject *GherkinLexingError = NULL;
+
+#define LEN(AT, P) (P - data - lexer->AT)
+#define MARK(M, P) (lexer->M = (P) - data)
+#define PTR_TO(P) (data + lexer->P)
+
+#define STORE_KW_END_CON(EVENT) \
+  store_multiline_kw_con(listener, # EVENT, \
+    PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end - 1)), \
+    PTR_TO(content_start), LEN(content_start, PTR_TO(content_end)), \
+    lexer->current_line, lexer->start_col); \
+    if (lexer->content_end != 0) { \
+      p = PTR_TO(content_end - 1); \
+    } \
+    lexer->content_end = 0
+
+#define STORE_ATTR(ATTR) \
+    store_attr(listener, # ATTR, \
+      PTR_TO(content_start), LEN(content_start, p), \
+      lexer->line_number)
+
+%%{
+  machine lexer;
+
+  action begin_content {
+		MARK(content_start, p);
+    lexer->current_line = lexer->line_number;
+    lexer->start_col = lexer->content_start - lexer->last_newline - (lexer->keyword_end - lexer->keyword_start) + 2;
+  }
+
+  action begin_docstring_content {
+    MARK(content_start, p);
+  }
+
+  action start_docstring {
+    lexer->current_line = lexer->line_number;
+    lexer->start_col = p - data - lexer->last_newline;
+  }
+
+  action store_docstring_content {
+    size_t len = LEN(content_start, PTR_TO(final_newline));
+    size_t type_len = LEN(docstring_content_type_start, PTR_TO(docstring_content_type_end));
+
+    if (len < 0) len = 0;
+    if (type_len < 0) len = 0;
+
+    store_docstring_content(listener, lexer->start_col, PTR_TO(docstring_content_type_start), type_len, PTR_TO(content_start), len, lexer->current_line);
+  }
+
+  action start_docstring_content_type {
+    MARK(docstring_content_type_start, p);
+  }
+
+  action end_docstring_content_type {
+    MARK(docstring_content_type_end, p);
+  }
+
+  action store_feature_content {
+    STORE_KW_END_CON(feature);
+  }
+
+  action store_background_content {
+    STORE_KW_END_CON(background);
+  }
+
+  action store_scenario_content {
+    STORE_KW_END_CON(scenario);
+  }
+
+  action store_scenario_outline_content {
+    STORE_KW_END_CON(scenario_outline);
+  }
+
+  action store_examples_content {
+    STORE_KW_END_CON(examples);
+  }
+
+  action store_step_content {
+    store_kw_con(listener, "step",
+      PTR_TO(keyword_start), LEN(keyword_start, PTR_TO(keyword_end)),
+      PTR_TO(content_start), LEN(content_start, p),
+      lexer->current_line);
+  }
+
+  action store_comment_content {
+    STORE_ATTR(comment);
+    lexer->mark = 0;
+  }
+
+  action store_tag_content {
+    STORE_ATTR(tag);
+    lexer->mark = 0;
+  }
+
+  action inc_line_number {
+    lexer->line_number += 1;
+    MARK(final_newline, p);
+  }
+
+  action last_newline {
+    MARK(last_newline, p + 1);
+  }
+
+  action start_keyword {
+    if (lexer->mark == 0) {
+      MARK(mark, p);
+    }
+  }
+
+  action end_keyword {
+    MARK(keyword_end, p);
+    MARK(keyword_start, PTR_TO(mark));
+    MARK(content_start, p + 1);
+    lexer->mark = 0;
+  }
+
+  action next_keyword_start {
+    MARK(content_end, p);
+  }
+
+  action start_row {
+    p = p - 1;
+    lexer->current_line = lexer->line_number;
+    current_row = PyList_New(0);
+  }
+
+  action begin_cell_content {
+		MARK(content_start, p);
+  }
+
+  action store_cell_content {
+    PyObject *tmpcon = PyUnicode_FromStringAndSize(PTR_TO(content_start),
+                                                   LEN(content_start, p));
+
+    PyObject *con = PyObject_CallMethod(tmpcon, "strip", NULL);
+    Py_DECREF(tmpcon);
+    tmpcon = con;
+
+    con = PyObject_CallMethod(tmpcon, "replace", "ss", "\\|", "|");
+    Py_DECREF(tmpcon);
+    tmpcon = con;
+
+    con = PyObject_CallMethod(tmpcon, "replace", "ss", "\\n", "\n");
+    Py_DECREF(tmpcon);
+    tmpcon = con;
+
+    con = PyObject_CallMethod(tmpcon, "replace", "ss", "\\\\", "\\");
+    Py_DECREF(tmpcon);
+
+    PyList_Append(current_row, con);
+    Py_DECREF(con);
+  }
+
+  action store_row {
+    PyObject_CallMethod(listener, "row", "Oi", current_row,
+                        lexer->current_line);
+  }
+
+  action end_feature {
+    size_t line;
+    if (cs < lexer_first_final) {
+      size_t count = 0;
+      PyObject *newstr_val;
+      char *newstr;
+      int newstr_count = 0;
+      size_t len;
+      const char *buff;
+      if (lexer->last_newline != 0) {
+        len = LEN(last_newline, eof);
+        buff = PTR_TO(last_newline);
+      } else {
+        len = strlen(data);
+        buff = data;
+      }
+
+      newstr_val = PyString_FromStringAndSize(buff, len);
+      newstr = PyString_AsString(newstr_val);
+
+
+      for (count = 0; count < len; count++) {
+        if(buff[count] == 10) {
+          newstr[newstr_count] = '\0'; // terminate new string at first newline found
+          break;
+        } else {
+          if (buff[count] == '%') {
+            newstr[newstr_count++] = buff[count];
+            newstr[newstr_count] = buff[count];
+          } else {
+            newstr[newstr_count] = buff[count];
+          }
+        }
+        newstr_count++;
+      }
+
+      line = lexer->line_number;
+      lexer_init(lexer); // Re-initialize so we can scan again with the same lexer
+      raise_lexer_error(newstr, line);
+    } else {
+      PyObject_CallMethod(listener, "eof", NULL);
+    }
+  }
+
+  include lexer_common "lexer_common.en.rl";
+
+}%%
+
+/** Data **/
+%% write data;
+
+static void
+unindent(PyObject **con, size_t start_col)
+{
+  PyObject *lines, *iterator, *item, *newlines;
+  PyObject *strline, *newstr, *newline;
+  char *str;
+  Py_ssize_t i, len;
+
+  lines = PyUnicode_Splitlines(*con, 0);
+  newlines = PyList_New(0);
+  iterator = PyObject_GetIter(lines);
+
+  if (iterator == NULL) {
+    *con = NULL;
+  }
+
+  while ((item = PyIter_Next(iterator)) != NULL) {
+    strline = PyUnicode_AsUTF8String(item);
+    str = PyString_AsString(strline);
+    len = PyString_Size(strline);
+
+    for (i = 0; i < start_col && i < len; i++) {
+      if (str[i] != ' ' && str[i] != '\t') {
+        break;
+      }
+    }
+
+    newstr = PySequence_GetSlice(strline, i, len);
+    newline = PyUnicode_FromObject(newstr);
+    PyList_Append(newlines, newline);
+
+    Py_DECREF(strline);
+    Py_DECREF(newstr);
+    Py_DECREF(item);
+  }
+
+  newline = PyUnicode_FromString("\n");
+  *con = PyUnicode_Join(newline, newlines);
+
+  Py_DECREF(newline);
+  Py_DECREF(newlines);
+  Py_DECREF(iterator);
+  Py_DECREF(lines);
+}
+
+static void
+store_kw_con(PyObject *listener, char *event_name, const char *keyword_at,
+             size_t keyword_length, const char *at, size_t length,
+             size_t current_line)
+{
+  PyObject *tmpcon, *con, *kw;
+
+  kw = PyUnicode_FromStringAndSize(keyword_at, keyword_length);
+  tmpcon = PyUnicode_FromStringAndSize(at, length);
+  con = PyObject_CallMethod(tmpcon, "strip", NULL);
+
+  PyObject_CallMethod(listener, event_name, "OOi", kw, con, current_line);
+
+  Py_DECREF(tmpcon);
+  Py_DECREF(kw);
+  Py_DECREF(con);
+}
+
+static void
+store_multiline_kw_con(PyObject *listener, char *event_name,
+                       const char *keyword_at, size_t keyword_length,
+                       const char *at, size_t length, size_t current_line,
+                       size_t start_col)
+{
+  PyObject *split, *newline, *tmp, *iterator, *item, *stripped;
+  PyObject *con, *kw, *name, *desc;
+
+  kw = PyUnicode_FromStringAndSize(keyword_at, keyword_length);
+  con = PyUnicode_FromStringAndSize(at, length);
+
+  unindent(&con, start_col);
+  if (con == NULL) {
+    return;
+  }
+
+  split = PyUnicode_Splitlines(con, 0);
+  name = PyObject_CallMethod(split, "pop", "i", 0);
+  newline = PyUnicode_FromString("\n");
+
+  desc = PyUnicode_FromString("");
+  iterator = PyObject_GetIter(split);
+  if (iterator == NULL) {
+    return;
+  }
+
+  item = PyIter_Next(iterator);
+  while (item != NULL) {
+    stripped = PyObject_CallMethod(item, "strip", NULL);
+    Py_DECREF(item);
+
+    tmp = PyUnicode_Concat(desc, stripped);
+    Py_DECREF(desc);
+    Py_DECREF(stripped);
+    desc = tmp;
+
+    item = PyIter_Next(iterator);
+    if (item != NULL) {
+      tmp = PyUnicode_Concat(desc, newline);
+      Py_DECREF(desc);
+      desc = tmp;
+    }
+  }
+
+  if (!PyObject_IsTrue(name)) {
+    Py_DECREF(name);
+    name = PyUnicode_FromString("");
+  } else {
+    tmp = PyObject_CallMethod(name, "strip", NULL);
+    Py_DECREF(name);
+    name = tmp;
+  }
+
+  if (!PyObject_IsTrue(desc)) {
+    Py_DECREF(desc);
+    desc = PyUnicode_FromString("");
+  } else {
+    tmp = PyObject_CallMethod(desc, "rstrip", NULL);
+    Py_DECREF(desc);
+    desc = tmp;
+  }
+
+  PyObject_CallMethod(listener, event_name, "OOOi", kw, name, desc,
+                      current_line);
+
+  Py_DECREF(newline);
+  Py_DECREF(name);
+  Py_DECREF(desc);
+  Py_DECREF(kw);
+  Py_DECREF(split);
+  Py_DECREF(iterator);
+}
+
+static void
+store_attr(PyObject *listener, char* attr_type, const char* at, size_t length,
+           size_t line)
+{
+  PyObject *val = PyUnicode_FromStringAndSize(at, length);
+  PyObject_CallMethod(listener, attr_type, "Oi", val, line);
+  Py_DECREF(val);
+}
+
+static void
+store_docstring_content(PyObject *listener, size_t start_col,
+                        const char *type_at, size_t type_length,
+                        const char *at, size_t length, size_t current_line)
+{
+  PyObject *tmp, *cr;
+  PyObject *con = PyUnicode_FromStringAndSize(at, length);
+  PyObject *con_type = PyUnicode_FromStringAndSize(type_at, type_length);
+
+  unindent(&con, start_col);
+
+  cr = PyUnicode_FromString("\r");
+  if (PyUnicode_Tailmatch(con, cr, 0, -1, 1)) {
+    tmp = PySequence_GetSlice(con, 0, -1);
+    Py_DECREF(con);
+    con = tmp;
+  }
+  Py_DECREF(cr);
+
+  tmp = PyObject_CallMethod(con_type, "strip", NULL);
+  Py_DECREF(con_type);
+  con_type = tmp;
+
+  tmp = PyObject_CallMethod(con, "replace", "ss", "\\\"\\\"\\\"", "\"\"\"");
+  Py_DECREF(con);
+  con = tmp;
+
+  PyObject_CallMethod(listener, "doc_string", "OOi", con_type, con,
+                      current_line);
+
+  Py_DECREF(con_type);
+  Py_DECREF(con);
+}
+
+static void
+raise_lexer_error(const char *at, size_t line)
+{
+  PyErr_Format(GherkinLexingError, "Lexing error on line %ld: '%s'. See http://wiki.github.com/cucumber/gherkin/lexingerror for more information.", line, at);
+}
+
+static void
+lexer_init(lexer_state *lexer)
+{
+  lexer->content_start = 0;
+  lexer->content_end = 0;
+  lexer->content_len = 0;
+  lexer->docstring_content_type_start = 0;
+  lexer->docstring_content_type_end = 0;
+  lexer->mark = 0;
+  lexer->keyword_start = 0;
+  lexer->keyword_end = 0;
+  lexer->next_keyword_start = 0;
+  lexer->line_number = 1;
+  lexer->last_newline = 0;
+  lexer->final_newline = 0;
+  lexer->start_col = 0;
+}
+
+static PyObject *
+Lexer_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+  lexer_state *self;
+
+  self = (lexer_state *)type->tp_alloc(type, 0);
+  if (self != NULL) {
+    lexer_init(self);
+    self->listener = Py_None;
+  }
+
+  return (PyObject *)self;
+}
+
+static int
+Lexer_init(lexer_state *self, PyObject *args, PyObject *kwds)
+{
+  PyObject *listener = NULL;
+
+  static char *kwlist[] = {"listener", NULL};
+
+  if (!PyArg_ParseTupleAndKeywords(args, kwds, "O", kwlist, &listener)) {
+    return -1;
+  }
+
+  Py_INCREF(listener);
+  self->listener = listener;
+
+  lexer_init(self);
+
+  return 0;
+}
+
+static void
+Lexer_dealloc(lexer_state *self)
+{
+
+  Py_XDECREF(self->listener);
+  self->ob_type->tp_free((PyObject *)self);
+}
+
+static PyObject *
+Lexer_scan(PyObject *self, PyObject *args, PyObject *kwds)
+{
+  PyObject *input, *input_copy, *feature_end, *listener, *current_row;
+  const char *p, *pe, *eof;
+  char *data;
+  size_t len;
+  int cs;
+
+  static char *kwlist[] = {"input", NULL};
+
+  if (!PyArg_ParseTupleAndKeywords(args, kwds, "O", kwlist, &input)) {
+    return NULL;
+  }
+
+  lexer_state *lexer;
+  lexer = (lexer_state *)self;
+  listener = lexer->listener;
+
+  input_copy = PyObject_Str(input);
+  feature_end = PyString_FromString("\n%_FEATURE_END_%");
+  PyString_ConcatAndDel(&input_copy, feature_end);
+
+  data = PyString_AsString(input_copy);
+  len = PyString_Size(input_copy);
+
+  if (len == 0) {
+    Py_DECREF(input_copy);
+    Py_DECREF(feature_end);
+
+    PyErr_SetString(GherkinLexingError, "No content to lex.");
+
+    return NULL;
+  }
+
+  p = data;
+  pe = data + len;
+  eof = pe;
+  current_row = Py_None;
+  cs = 0;
+
+  assert(*pe == '\0' && "pointer does not end on NULL");
+
+  %% write init;
+  %% write exec;
+
+  assert(p <= pe && "data overflow after parsing execute");
+  assert(lexer->content_start <= len && "content starts after data end");
+  assert(lexer->mark < len && "mark is after data end");
+
+  // Reset lexer by re-initializing the whole thing
+  lexer_init(lexer);
+
+  Py_DECREF(input_copy);
+  Py_DECREF(feature_end);
+
+  if (cs == lexer_error) {
+    PyErr_SetString(GherkinLexingError, "Invalid format, lexing fails.");
+    return NULL;
+  } else {
+    return Py_True;
+  }
+}
+
+static PyMemberDef Lexer_members[] = {
+  { "listener", T_OBJECT_EX, offsetof(lexer_state, listener), 0, "listener" },
+  { NULL },
+};
+
+static PyMethodDef Lexer_methods[] = {
+  { "scan", (PyCFunction)Lexer_scan, METH_VARARGS|METH_KEYWORDS,
+    "Scan the input" },
+  { NULL },
+};
+
+static PyTypeObject lexerType = {
+  PyObject_HEAD_INIT(NULL)
+  .tp_name = "lexer_<%= @i18n.underscored_iso_code %>.Lexer",
+  .tp_basicsize = sizeof(lexer_state),
+  .tp_dealloc = (destructor)Lexer_dealloc,
+  .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+  .tp_doc = "Lexer for <%= @i18n.underscored_iso_code %>",
+  .tp_methods = Lexer_methods,
+  .tp_members = Lexer_members,
+  .tp_init = (initproc)Lexer_init,
+  .tp_new = Lexer_new,
+};
+
+static PyMethodDef module_methods[] = {
+  { NULL }
+};
+
+PyMODINIT_FUNC
+initlexer_<%= @i18n.underscored_iso_code %>(void)
+{
+  PyObject *module, *exceptions;
+
+  lexerType.tp_new = PyType_GenericNew;
+  if (PyType_Ready(&lexerType) < 0) {
+    return;
+  }
+
+  module = Py_InitModule3("lexer_<%= @i18n.underscored_iso_code %>",
+                          module_methods,
+                          "Lexer for <%= @i18n.underscored_iso_code %>");
+  Py_INCREF(&lexerType);
+  PyModule_AddObject(module, "Lexer", (PyObject *)&lexerType);
+
+  exceptions = PyImport_ImportModule("lexer.exceptions");
+  if (exceptions == NULL) {
+    return;
+  }
+  GherkinLexingError = PyObject_GetAttrString(exceptions, "LexingError");
+}
+

@@ -11,3 +11,6 @@ release
 npm-debug.log
 doc/
 .yardoc
+python/build
+python/src
+*.pyc

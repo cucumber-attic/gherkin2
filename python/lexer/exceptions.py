@@ -1,0 +1,2 @@
+class LexingError(Exception):
+    pass
