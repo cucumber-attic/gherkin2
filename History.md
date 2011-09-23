@@ -1,3 +1,8 @@
+## [2.5.1](https://github.com/cucumber/gherkin/compare/v2.5.0...v2.5.1)
+
+### New Features
+* [Java] Omit transient fields in toMap so we have more control over what goes into JSON. (Aslak Hellesøy)
+
 ## [2.5.0](https://github.com/cucumber/gherkin/compare/v2.4.21...v2.5.0)
 
 ### Changed Features

@@ -60,9 +60,10 @@ public class Mappable {
     }
 
     private boolean isMappable(Field field) {
+        boolean transientField = Modifier.isTransient(field.getModifiers());
         boolean instanceField = !Modifier.isStatic(field.getModifiers());
         boolean mappableType = isMappableType(field.getType(), field.getGenericType());
-        return instanceField && mappableType;
+        return !transientField && instanceField && mappableType;
     }
 
     private boolean isMappableType(Class type, Type genericType) {
