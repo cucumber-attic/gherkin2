@@ -1,7 +1,7 @@
 import os
 import os.path
 
-from distutils.core import setup, Extension
+from setuptools import setup, Extension
 
 extensions = []
 for lexer_src in os.listdir('src'):
