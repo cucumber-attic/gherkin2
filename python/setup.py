@@ -6,6 +6,7 @@ from distutils.core import setup, Extension
 extensions = []
 for lexer_src in os.listdir('src'):
     name = lexer_src.split('.', 1)[0]
+    name = 'gherkin.lexer.ext.' + name
     lexer = Extension(name, sources=[os.path.join('src', lexer_src)])
     extensions.append(lexer)
 
