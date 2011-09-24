@@ -13,4 +13,5 @@ doc/
 .yardoc
 python/build
 python/src
+python/gherkin/i18n.yml
 *.pyc

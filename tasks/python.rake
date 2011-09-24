@@ -9,7 +9,9 @@ rl_langs = ENV['RL_LANGS'] ? ENV['RL_LANGS'].split(',') : []
 langs = Gherkin::I18n.all.select { |lang| rl_langs.empty? || rl_langs.include?(lang.iso_code) }
 
 desc "Generate Python lexers"
-task :python
+task :python do
+  cp "lib/gherkin/i18n.yml", "python/gherkin/i18n.yml"
+end
 
 langs.each do |i18n|
   pyc = RagelTask.new('pyc', i18n)
