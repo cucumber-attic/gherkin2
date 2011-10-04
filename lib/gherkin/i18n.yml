@@ -321,7 +321,7 @@
   scenario: Scenario
   scenario_outline: Schema dello scenario
   examples: Esempi
-  given: "*|Dato"
+  given: "*|Dato|Data|Dati|Date"
   when: "*|Quando"
   then: "*|Allora"
   and: "*|E"
