@@ -204,7 +204,7 @@
   scenario: Escenario
   scenario_outline: Esquema del escenario
   examples: Ejemplos
-  given: "*|Dado"
+  given: "*|Dado|Dada|Dados|Dadas"
   when: "*|Cuando"
   then: "*|Entonces"
   and: "*|Y"
