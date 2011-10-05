@@ -243,7 +243,7 @@
   scenario: Scénario
   scenario_outline: Plan du scénario|Plan du Scénario
   examples: Exemples
-  given: "*|Soit|Etant donné"
+  given: "*|Soit|Etant donné|Etant donnée|Etant donnés|Etant données|Étant donné|Étant donnée|Étant donnés|Étant données"
   when: "*|Quand|Lorsque|Lorsqu'<"
   then: "*|Alors"
   and: "*|Et"
@@ -306,7 +306,7 @@
   feature: Eiginleiki
   background: Bakgrunnur
   scenario: Atburðarás
-  scenario_outline: Lýsing Atburðarásar|Lýsing Dæma 
+  scenario_outline: Lýsing Atburðarásar|Lýsing Dæma
   examples: Dæmi|Atburðarásir
   given: "*|Ef"
   when: "*|Þegar"
