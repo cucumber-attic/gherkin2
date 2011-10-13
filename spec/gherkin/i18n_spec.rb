@@ -26,6 +26,21 @@ module Gherkin
         ]
       end
 
+      it "should recognize keywords that are a little ambiguous" do
+        lexer = Gherkin::Lexer::I18nLexer.new(@listener, false)
+        scan_file(lexer, "i18n_fr2.feature")
+        @listener.to_sexp.should == [
+          [:comment, "#language:fr", 1],
+          [:feature, "Fonctionnalité", "i18n", "", 2],
+          [:scenario, "Scénario", "Le French", "", 4],
+          [:step, "Etant donné ", "qqch", 5],
+          [:step, "Etant donnée ", "qqch", 6],
+          [:step, "Etant donnés ", "qqch", 7],
+          [:step, "Etant données ", "qqch", 8],
+          [:eof]
+        ]
+      end
+
       it "should parse languages without a space after keywords" do
         lexer = Gherkin::Lexer::I18nLexer.new(@listener, false)
         scan_file(lexer, "i18n_zh-CN.feature")
@@ -130,21 +145,21 @@ module Gherkin
 
         it "should print keywords for a given language" do
           ("\n" + Gherkin::I18n.get('fr').keyword_table).should == %{
-      | feature          | "Fonctionnalité"                       |
-      | background       | "Contexte"                             |
-      | scenario         | "Scénario"                             |
-      | scenario_outline | "Plan du scénario", "Plan du Scénario" |
-      | examples         | "Exemples"                             |
-      | given            | "* ", "Soit ", "Etant donné "          |
-      | when             | "* ", "Quand ", "Lorsque ", "Lorsqu'"  |
-      | then             | "* ", "Alors "                         |
-      | and              | "* ", "Et "                            |
-      | but              | "* ", "Mais "                          |
-      | given (code)     | "Soit", "Etantdonné"                   |
-      | when (code)      | "Quand", "Lorsque", "Lorsqu"           |
-      | then (code)      | "Alors"                                |
-      | and (code)       | "Et"                                   |
-      | but (code)       | "Mais"                                 |
+      | feature          | "Fonctionnalité"                                                                                                                                      |
+      | background       | "Contexte"                                                                                                                                            |
+      | scenario         | "Scénario"                                                                                                                                            |
+      | scenario_outline | "Plan du scénario", "Plan du Scénario"                                                                                                                |
+      | examples         | "Exemples"                                                                                                                                            |
+      | given            | "* ", "Soit ", "Etant donné ", "Etant donnée ", "Etant donnés ", "Etant données ", "Étant donné ", "Étant donnée ", "Étant donnés ", "Étant données " |
+      | when             | "* ", "Quand ", "Lorsque ", "Lorsqu'"                                                                                                                 |
+      | then             | "* ", "Alors "                                                                                                                                        |
+      | and              | "* ", "Et "                                                                                                                                           |
+      | but              | "* ", "Mais "                                                                                                                                         |
+      | given (code)     | "Soit", "Etantdonné", "Etantdonnée", "Etantdonnés", "Etantdonnées", "Étantdonné", "Étantdonnée", "Étantdonnés", "Étantdonnées"                        |
+      | when (code)      | "Quand", "Lorsque", "Lorsqu"                                                                                                                          |
+      | then (code)      | "Alors"                                                                                                                                               |
+      | and (code)       | "Et"                                                                                                                                                  |
+      | but (code)       | "Mais"                                                                                                                                                |
 }
         end
       end

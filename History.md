@@ -1,3 +1,12 @@
+## [2.5.2](https://github.com/cucumber/gherkin/compare/v2.5.1...v2.5.2)
+
+### New Features
+
+* Added synonyms for Portuguese. (Rodrigo Dumont)
+* Added synonyms for Italian. (Alessandro Mencarini)
+* Added synonyms for Spanish. (Nahuel Garbezza)
+* Added synonyms for French. (Julein Biezemans)
+
 ## [2.5.1](https://github.com/cucumber/gherkin/compare/v2.5.0...v2.5.1)
 
 ### New Features

@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/cucumber/gherkin.png)](http://travis-ci.org/cucumber/gherkin)
+
 A fast lexer and parser for the Gherkin language based on Ragel. Gherkin is two things:
 
 * The language that has evolved out of the Cucumber project.
@@ -52,7 +54,7 @@ The jar file is in the central Maven repo.
     <dependency>
         <groupId>info.cukes</groupId>
         <artifactId>gherkin</artifactId>
-        <version>2.5.1</version>
+        <version>2.5.2</version>
     </dependency>
 
 You can get it manually from [Maven Central](http://search.maven.org/#browse%7C-2073395818)
@@ -207,9 +209,9 @@ Make sure you have openssl installed first.
   * java/pom.xml
   * ikvm/Gherkin/Gherkin.csproj (2 places)
   * js/package.json
-* Run bundle update, so Gemfile.lock gets updated with the changes.
+* Run `bundle update`, so Gemfile.lock gets updated with the changes.
 * Commit changes, otherwise you will get an error at the end when a tag is made.
-* bundle exec rake gems:prepare && ./build_native_gems.sh && bundle exec rake release:ALL
+* Run `bundle exec rake gems:prepare && ./build_native_gems.sh && bundle exec rake release:ALL`
   * The specs intermittently fail with a segfault from therubyracer. Running specs can be disabled with SKIP_JS_SPECS=true
 * Announce on Cucumber list, IRC and Twitter.
 
