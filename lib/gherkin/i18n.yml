@@ -438,7 +438,7 @@
   scenario: Cenário|Cenario
   scenario_outline: Esquema do Cenário|Esquema do Cenario
   examples: Exemplos
-  given: "*|Dado"
+  given: "*|Dado|Dada|Dados|Dadas"
   when: "*|Quando"
   then: "*|Então|Entao"
   and: "*|E"
