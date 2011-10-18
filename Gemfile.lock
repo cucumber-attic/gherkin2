@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gherkin (2.5.2)
+    gherkin (2.5.3)
       json (>= 1.4.6)
 
 GEM
@@ -21,18 +21,18 @@ GEM
     rake-compiler (0.7.9)
       rake
     rdiscount (1.6.8)
-    rspec (2.6.0)
-      rspec-core (~> 2.6.0)
-      rspec-expectations (~> 2.6.0)
-      rspec-mocks (~> 2.6.0)
-    rspec-core (2.6.4)
-    rspec-expectations (2.6.0)
+    rspec (2.7.0)
+      rspec-core (~> 2.7.0)
+      rspec-expectations (~> 2.7.0)
+      rspec-mocks (~> 2.7.0)
+    rspec-core (2.7.0)
+    rspec-expectations (2.7.0)
       diff-lcs (~> 1.1.2)
-    rspec-mocks (2.6.0)
+    rspec-mocks (2.7.0)
     term-ansicolor (1.0.7)
     therubyracer (0.9.8)
       libv8 (~> 3.3.10)
-    yard (0.7.2)
+    yard (0.7.3)
 
 PLATFORMS
   ruby

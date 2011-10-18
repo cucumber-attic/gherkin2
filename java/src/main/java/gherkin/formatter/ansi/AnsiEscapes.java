@@ -1,5 +1,7 @@
 package gherkin.formatter.ansi;
 
+import gherkin.formatter.NiceAppendable;
+
 public class AnsiEscapes {
     private static final char ESC = 27;
     private static final char BRACKET = '[';
@@ -29,6 +31,10 @@ public class AnsiEscapes {
 
     private AnsiEscapes(String value) {
         this.value = value;
+    }
+
+    public void appendTo(NiceAppendable a) {
+        a.append(ESC).append(BRACKET).append(value);
     }
 
     public void appendTo(StringBuilder a) {
