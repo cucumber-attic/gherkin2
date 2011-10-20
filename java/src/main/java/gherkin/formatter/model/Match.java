@@ -10,7 +10,7 @@ import java.util.List;
 public class Match extends Mappable {
     private final List<Argument> arguments;
     private final String location;
-    public static final Match NONE = new Match(Collections.<Argument>emptyList(), null);
+    public static final Match UNDEFINED = new Match(Collections.<Argument>emptyList(), null);
 
     public Match(List<Argument> arguments, String location) {
         this.arguments = arguments;

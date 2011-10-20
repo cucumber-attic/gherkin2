@@ -12,6 +12,7 @@ public class Result extends Mappable {
     private final String error_message;
     private final Throwable error;
     public static final Result SKIPPED = new Result("skipped", null, null);
+    public static final Result UNDEFINED = new Result("undefined", null, null);
     public static final String PASSED = "passed";
     public static final String FAILED = "failed";
 

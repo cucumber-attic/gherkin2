@@ -1,3 +1,8 @@
+## [2.5.4](https://github.com/cucumber/gherkin/compare/v2.5.3...v2.5.4)
+
+### New Features
+* [Java] Rename/add constants in Match and Result. (Aslak Hellesøy)
+
 ## [2.5.3](https://github.com/cucumber/gherkin/compare/v2.5.2...v2.5.3)
 
 ### New Features
