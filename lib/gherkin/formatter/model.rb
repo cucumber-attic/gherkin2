@@ -116,7 +116,7 @@ module Gherkin
         
           def row(comments, cells, line)
             @rows ||= []
-            @rows << Row.new(comments, cells, line)
+            @rows << ExamplesTableRow.new(comments, cells, line)
           end
         
           def replay(formatter)
@@ -166,7 +166,7 @@ module Gherkin
         
           def row(comments, cells, line)
             @rows ||= []
-            @rows << Row.new(comments, cells, line)
+            @rows << DataTableRow.new(comments, cells, line)
           end
           
           def doc_string(string, content_type, line)
@@ -223,13 +223,19 @@ module Gherkin
       end
 
       class Row < Hashable
-        native_impl('gherkin')
-
         attr_reader :comments, :cells, :line
 
         def initialize(comments, cells, line)
           @comments, @cells, @line = comments, cells, line
         end
+      end
+
+      class DataTableRow < Row
+        native_impl('gherkin')
+      end
+
+      class ExamplesTableRow < Row
+        native_impl('gherkin')
       end
 
       class Match < Hashable
