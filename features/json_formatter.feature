@@ -73,7 +73,8 @@ Feature: JSON formatter
       {
         "description": "",
         "elements": [
-          {
+        {
+            "id": "oh-hai/fujin",
             "description": "",
             "keyword": "Scenario",
             "line": 4,
@@ -93,6 +94,7 @@ Feature: JSON formatter
             "type": "scenario"
           },
           {
+            "id": "oh-hai/-why",
             "description": "",
             "keyword": "Scenario",
             "line": 9,
@@ -127,18 +129,21 @@ Feature: JSON formatter
                 "name": "Real life",
                 "rows": [
                   {
+                    "id": "oh-hai/real-life;life;1",
                     "cells": [
                       "boredom"
                     ],
                     "line": 19
                   },
                   {
+                    "id": "oh-hai/real-life;life;2",
                     "cells": [
                       "airport"
                     ],
                     "line": 20
                   },
                   {
+                    "id": "oh-hai/real-life;life;3",
                     "cells": [
                       "meeting"
                     ],
@@ -176,6 +181,7 @@ Feature: JSON formatter
             "type": "scenario_outline"
           },
           {
+            "id": "oh-hai/who-stole-my-mojo-",
             "description": "",
             "keyword": "Scenario",
             "line": 23,
@@ -232,7 +238,8 @@ Feature: JSON formatter
                 "line": 38,
                 "name": "An example",
                 "rows": [
-                  {
+                {
+                    "id: "oh-hai/with;an-example;1"
                     "cells": [
                       "partout"
                     ],
@@ -313,6 +320,7 @@ Feature: JSON formatter
             ]
           },
           {
+            "id": "kjapp/"
             "type": "scenario",
             "comments": [{"value": "# Writing JSON by hand sucks", "line": 6}],
             "keyword": "Scenario",
@@ -383,6 +391,7 @@ Feature: JSON formatter
             "type": "background"
           },
           {
+            "id": "foo/name"
             "description": "  test  \n  test",
             "keyword": "Scenario",
             "line": 11,
@@ -399,12 +408,14 @@ Feature: JSON formatter
                 "name": "name",
                 "rows": [
                   {
+                    "id": "foo/name;name;1"
                     "cells": [
                       "foo"
                     ],
                     "line": 24
                   },
                   {
+                    "id": "foo/name;name;2"
                     "cells": [
                       "table"
                     ],
