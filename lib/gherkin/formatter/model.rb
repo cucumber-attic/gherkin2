@@ -97,7 +97,7 @@ module Gherkin
       class Examples < TagStatement
         native_impl('gherkin')
 
-        attr_accessor :rows
+        attr_accessor :rows # needs to remain mutable for filters
 
         def initialize(comments, tags, keyword, name, description, line, rows)
           super(comments, tags, keyword, name, description, line)
@@ -107,13 +107,33 @@ module Gherkin
         def replay(formatter)
           formatter.examples(self)
         end
+        
+        class Builder
+          def initialize(*args)
+            @args = *args
+            @rows = nil
+          end
+        
+          def row(comments, cells, line)
+            @rows ||= []
+            @rows << Row.new(comments, cells, line)
+          end
+        
+          def replay(formatter)
+            Examples.new(*(@args << @rows)).replay(formatter)
+          end
+        end
       end
 
       class Step < BasicStatement
         native_impl('gherkin')
 
-        attr_accessor :rows
-        attr_accessor :doc_string
+        attr_reader :rows, :doc_string
+        
+        def initialize(comments, keyword, name, line, rows=nil, doc_string=nil)
+          super(comments, keyword, name, line)
+          @rows, @doc_string = rows, doc_string
+        end
 
         def line_range
           range = super
@@ -134,6 +154,27 @@ module Gherkin
           name.scan(/<[^<]*>/).map do |val|
             offset = name.index(val, offset)
             Argument.new(offset, val)
+          end
+        end
+        
+        class Builder
+          def initialize(*args)
+            @args = *args
+            @rows = nil
+            @doc_string = nil
+          end
+        
+          def row(comments, cells, line)
+            @rows ||= []
+            @rows << Row.new(comments, cells, line)
+          end
+          
+          def doc_string(string, content_type, line)
+            @doc_string = Formatter::Model::DocString.new(string, content_type, line)
+          end
+        
+          def replay(formatter)
+            Step.new(*(@args << @rows << @doc_string)).replay(formatter)
           end
         end
       end

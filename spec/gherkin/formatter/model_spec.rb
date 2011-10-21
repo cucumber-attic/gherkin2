@@ -14,12 +14,12 @@ module Gherkin
 
       describe Step do
         it "should provide arguments for outline tokens" do
-          step = Step.new([], 'Given ', "I have <number> cukes in <whose> belly", 10)
+          step = Step.new([], 'Given ', "I have <number> cukes in <whose> belly", 10, nil, nil)
           step.outline_args.map{|arg| [arg.offset, arg.val]}.should == [[7, "<number>"], [25, "<whose>"]]
         end
 
         it "should provide no arguments when there are no outline tokens" do
-          step = Step.new([], 'Given ', "I have 33 cukes in my belly", 10)
+          step = Step.new([], 'Given ', "I have 33 cukes in my belly", 10, nil, nil)
           step.outline_args.to_a.should == []
         end
       end

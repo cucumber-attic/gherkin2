@@ -51,26 +51,25 @@ module Gherkin
       def examples(keyword, name, description, line)
         replay_step_or_examples
         @stash.tag_statement do |comments, tags|
-          @current_statement = Formatter::Model::Examples.new(comments, tags, keyword, name, description, line, [])
+          @current_builder = Formatter::Model::Examples::Builder.new(comments, tags, keyword, name, description, line)
         end
       end
 
       def step(keyword, name, line)
         replay_step_or_examples
         @stash.basic_statement do |comments|
-          @current_statement = Formatter::Model::Step.new(comments, keyword, name, line)
+          @current_builder = Formatter::Model::Step::Builder.new(comments, keyword, name, line)
         end
       end
 
       def row(cells, line)
         @stash.basic_statement do |comments|
-          @current_statement.rows ||= []
-          @current_statement.rows << Formatter::Model::Row.new(comments, cells, line)
+          @current_builder.row(comments, cells, line)
         end
       end
 
       def doc_string(string, content_type, line)
-        @doc_string = Formatter::Model::DocString.new(string, content_type, line)
+        @current_builder.doc_string(string, content_type, line)
       end
 
       def eof
@@ -113,22 +112,11 @@ module Gherkin
           @tags << tag
         end
       end
-      
-      def grab_doc_string!
-        doc_string = @doc_string
-        @doc_string = nil
-        doc_string
-      end
 
       def replay_step_or_examples
-        return unless @current_statement
-        
-        if @current_statement.respond_to?(:doc_string=)
-          @current_statement.doc_string = grab_doc_string!
-        end
-        
-        replay(@current_statement)
-        @current_statement = nil
+        return unless @current_builder
+        replay(@current_builder)
+        @current_builder = nil
       end
     end
   end
