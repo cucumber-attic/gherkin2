@@ -51,16 +51,18 @@ module Gherkin
     end
 
     def step(o)
-      step = Formatter::Model::Step.new(comments(o), keyword(o), name(o), line(o))
+      builder = Formatter::Model::Step::Builder.new(comments(o), keyword(o), name(o), line(o))
 
-      if(o['rows'])
-        step.rows = rows(o['rows'])
-      elsif(o['doc_string'])
-        ds = o['doc_string']
-        step.doc_string = Formatter::Model::DocString.new(ds['content_type'].to_s, ds['value'], ds['line'])
+      (o['rows'] || []).each do |row|
+        builder.row comments(row), row['cells'], row['line']
       end
 
-      step
+      if(o['doc_string'])
+        ds = o['doc_string']
+        builder.doc_string ds['value'], ds['content_type'].to_s, ds['line']
+      end
+
+      builder.build
     end
 
     def match(o)

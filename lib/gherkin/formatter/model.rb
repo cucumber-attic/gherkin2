@@ -120,7 +120,11 @@ module Gherkin
           end
         
           def replay(formatter)
-            Examples.new(*(@args << @rows)).replay(formatter)
+            build.replay(formatter)
+          end
+          
+          def build
+            Examples.new(*(@args << @rows))
           end
         end
       end
@@ -174,7 +178,11 @@ module Gherkin
           end
         
           def replay(formatter)
-            Step.new(*(@args << @rows << @doc_string)).replay(formatter)
+            build.replay(formatter)
+          end
+          
+          def build
+            Step.new(*(@args << @rows << @doc_string))
           end
         end
       end
@@ -210,10 +218,10 @@ module Gherkin
       class DocString < Hashable
         native_impl('gherkin')
 
-        attr_reader :content_type, :value, :line
+        attr_reader :value, :content_type, :line
         
-        def initialize(content_type, value, line)
-          @content_type, @value, @line = content_type, value, line
+        def initialize(value, content_type, line)
+          @value, @content_type, @line = value, content_type, line
         end
 
         def line_range

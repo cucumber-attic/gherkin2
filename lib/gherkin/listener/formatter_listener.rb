@@ -68,8 +68,8 @@ module Gherkin
         end
       end
 
-      def doc_string(string, content_type, line)
-        @current_builder.doc_string(string, content_type, line)
+      def doc_string(content_type, value, line)
+        @current_builder.doc_string(value, content_type, line)
       end
 
       def eof
