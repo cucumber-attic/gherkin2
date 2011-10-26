@@ -11,7 +11,7 @@
   }
 , "bugs" :
   { "mail" : "cukes@googlegroups.com"
-  , "web" : "http://github.com/cucumber/gherkin/issues"
+  , "url" : "http://github.com/cucumber/gherkin/issues"
   }
 , "directories" : { "lib" : "./lib" }
 , "main" : "./lib/gherkin"
