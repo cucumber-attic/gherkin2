@@ -16,6 +16,7 @@ module Gherkin
       # object can be retrieved with #gherkin_object
       def initialize(io)
         @io = io
+        @array = []
       end
 
       def uri(uri)
@@ -25,6 +26,7 @@ module Gherkin
 
       def feature(feature)
         @gherkin_object = feature.to_hash
+        @array << @gherkin_object
       end
 
       def background(background)
@@ -68,7 +70,7 @@ module Gherkin
       end
 
       def eof
-        @io.write(@gherkin_object.to_json) if @io
+        @io.write(@array.to_json) if @io
       end
 
     private

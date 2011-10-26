@@ -24,47 +24,49 @@ module Gherkin
         f.eof
         
         expected = %{
-          {
-            "keyword": "Feature",
-            "name": "f",
-            "line": 1,
-            "description": "",
-            "elements": [
-              {
-                "keyword": "Feature",
-                "name": "f",
-                "line": 2,
-                "description": "",
-                "type": "scenario",
-                "steps": [
-                  {
-                    "keyword": "Given ",
-                    "name": "g",
-                    "line": 3,
-                    "match": {
-                      "location": "def.rb:33"
+          [
+            {
+              "keyword": "Feature",
+              "name": "f",
+              "line": 1,
+              "description": "",
+              "elements": [
+                {
+                  "keyword": "Feature",
+                  "name": "f",
+                  "line": 2,
+                  "description": "",
+                  "type": "scenario",
+                  "steps": [
+                    {
+                      "keyword": "Given ",
+                      "name": "g",
+                      "line": 3,
+                      "match": {
+                        "location": "def.rb:33"
+                      },
+                      "result": {
+                        "status": "passed",
+                        "duration": 1
+                      }
                     },
-                    "result": {
-                      "status": "passed",
-                      "duration": 1
+                    {
+                      "keyword": "When ",
+                      "name": "w",
+                      "line": 4,
+                      "match": {
+                        "location": "def.rb:44"
+                      },
+                      "result": {
+                        "status": "passed",
+                        "duration": 1
+                      }
                     }
-                  },
-                  {
-                    "keyword": "When ",
-                    "name": "w",
-                    "line": 4,
-                    "match": {
-                      "location": "def.rb:44"
-                    },
-                    "result": {
-                      "status": "passed",
-                      "duration": 1
-                    }
-                  }
-                ]
-              }
-            ]
-          }
+                  ]
+                }
+              ]
+            }
+          ]
         }
 
         JSON.parse(expected).should == JSON.parse(io.string)

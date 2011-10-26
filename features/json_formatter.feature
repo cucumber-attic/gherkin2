@@ -15,13 +15,15 @@ Feature: JSON formatter
       """
     Then the outputted JSON should be:
       """
-      {
-        "comments": [{"value": "# language: no", "line": 1}, {"value": "# Another comment", "line": 2}],
-        "keyword": "Egenskap",
-        "name": "Kjapp",
-        "description": "",
-        "line": 3
-      }
+      [
+        {
+          "comments": [{"value": "# language: no", "line": 1}, {"value": "# Another comment", "line": 2}],
+          "keyword": "Egenskap",
+          "name": "Kjapp",
+          "description": "",
+          "line": 3
+        }
+      ]
       """
 
   Scenario: Feature with scenarios and outlines
@@ -70,212 +72,214 @@ Feature: JSON formatter
       """
     Then the outputted JSON should be:
       """
-      {
-        "description": "",
-        "elements": [
-          {
-            "description": "",
-            "keyword": "Scenario",
-            "line": 4,
-            "name": "Fujin",
-            "steps": [
-              {
-                "keyword": "Given ",
-                "line": 5,
-                "name": "wind"
-              },
-              {
-                "keyword": "Then ",
-                "line": 6,
-                "name": "spirit"
-              }
-            ],
-            "type": "scenario"
-          },
-          {
-            "description": "",
-            "keyword": "Scenario",
-            "line": 9,
-            "name": "_why",
-            "steps": [
-              {
-                "keyword": "Given ",
-                "line": 10,
-                "name": "chunky"
-              },
-              {
-                "keyword": "Then ",
-                "line": 11,
-                "name": "bacon"
-              }
-            ],
-            "tags": [
-              {
-                "line": 8,
-                "name": "@two"
-              }
-            ],
-            "type": "scenario"
-          },
-          {
-            "description": "",
-            "examples": [
-              {
-                "description": "",
-                "keyword": "Examples",
-                "line": 18,
-                "name": "Real life",
-                "rows": [
-                  {
-                    "cells": [
-                      "boredom"
-                    ],
-                    "line": 19
-                  },
-                  {
-                    "cells": [
-                      "airport"
-                    ],
-                    "line": 20
-                  },
-                  {
-                    "cells": [
-                      "meeting"
-                    ],
-                    "line": 21
-                  }
-                ],
-                "tags": [
-                  {
-                    "line": 17,
-                    "name": "@five"
-                  }
-                ]
-              }
-            ],
-            "keyword": "Scenario Outline",
-            "line": 14,
-            "name": "Life",
-            "steps": [
-              {
-                "keyword": "Given ",
-                "line": 15,
-                "name": "some <boredom>"
-              }
-            ],
-            "tags": [
-              {
-                "line": 13,
-                "name": "@three"
-              },
-              {
-                "line": 13,
-                "name": "@four"
-              }
-            ],
-            "type": "scenario_outline"
-          },
-          {
-            "description": "",
-            "keyword": "Scenario",
-            "line": 23,
-            "name": "who stole my mojo?",
-            "steps": [
-              {
-                "keyword": "When ",
-                "line": 24,
-                "name": "I was",
-                "rows": [
-                  {
-                    "cells": [
-                      "asleep"
-                    ],
-                    "line": 25
-                  }
-                ]
-              },
-              {
-                "doc_string": {
-                  "content_type": "plaintext",
-                  "line": 27,
-                  "value": "innocent"
+      [
+        {
+          "description": "",
+          "elements": [
+            {
+              "description": "",
+              "keyword": "Scenario",
+              "line": 4,
+              "name": "Fujin",
+              "steps": [
+                {
+                  "keyword": "Given ",
+                  "line": 5,
+                  "name": "wind"
                 },
-                "keyword": "And ",
-                "line": 26,
-                "name": "so"
-              }
-            ],
-            "type": "scenario"
-          },
-          {
-            "comments": [
-              {
-                "line": 31,
-                "value": "# The"
-              }
-            ],
-            "description": "",
-            "examples": [
-              {
-                "comments": [
-                  {
-                    "line": 36,
-                    "value": "# comments"
+                {
+                  "keyword": "Then ",
+                  "line": 6,
+                  "name": "spirit"
+                }
+              ],
+              "type": "scenario"
+            },
+            {
+              "description": "",
+              "keyword": "Scenario",
+              "line": 9,
+              "name": "_why",
+              "steps": [
+                {
+                  "keyword": "Given ",
+                  "line": 10,
+                  "name": "chunky"
+                },
+                {
+                  "keyword": "Then ",
+                  "line": 11,
+                  "name": "bacon"
+                }
+              ],
+              "tags": [
+                {
+                  "line": 8,
+                  "name": "@two"
+                }
+              ],
+              "type": "scenario"
+            },
+            {
+              "description": "",
+              "examples": [
+                {
+                  "description": "",
+                  "keyword": "Examples",
+                  "line": 18,
+                  "name": "Real life",
+                  "rows": [
+                    {
+                      "cells": [
+                        "boredom"
+                      ],
+                      "line": 19
+                    },
+                    {
+                      "cells": [
+                        "airport"
+                      ],
+                      "line": 20
+                    },
+                    {
+                      "cells": [
+                        "meeting"
+                      ],
+                      "line": 21
+                    }
+                  ],
+                  "tags": [
+                    {
+                      "line": 17,
+                      "name": "@five"
+                    }
+                  ]
+                }
+              ],
+              "keyword": "Scenario Outline",
+              "line": 14,
+              "name": "Life",
+              "steps": [
+                {
+                  "keyword": "Given ",
+                  "line": 15,
+                  "name": "some <boredom>"
+                }
+              ],
+              "tags": [
+                {
+                  "line": 13,
+                  "name": "@three"
+                },
+                {
+                  "line": 13,
+                  "name": "@four"
+                }
+              ],
+              "type": "scenario_outline"
+            },
+            {
+              "description": "",
+              "keyword": "Scenario",
+              "line": 23,
+              "name": "who stole my mojo?",
+              "steps": [
+                {
+                  "keyword": "When ",
+                  "line": 24,
+                  "name": "I was",
+                  "rows": [
+                    {
+                      "cells": [
+                        "asleep"
+                      ],
+                      "line": 25
+                    }
+                  ]
+                },
+                {
+                  "doc_string": {
+                    "content_type": "plaintext",
+                    "line": 27,
+                    "value": "innocent"
                   },
-                  {
-                    "line": 37,
-                    "value": "# everywhere"
-                  }
-                ],
-                "description": "",
-                "keyword": "Examples",
-                "line": 38,
-                "name": "An example",
-                "rows": [
-                  {
-                    "cells": [
-                      "partout"
-                    ],
-                    "comments": [
-                      {
-                        "line": 39,
-                        "value": "# I mean"
-                      }
-                    ],
-                    "line": 40
-                  }
-                ]
-              }
-            ],
-            "keyword": "Scenario Outline",
-            "line": 32,
-            "name": "with",
-            "steps": [
-              {
-                "comments": [
-                  {
-                    "line": 33,
-                    "value": "# all"
-                  }
-                ],
-                "keyword": "Then ",
-                "line": 34,
-                "name": "nice"
-              }
-            ],
-            "type": "scenario_outline"
-          }
-        ],
-        "keyword": "Feature",
-        "line": 2,
-        "name": "OH HAI",
-        "tags": [
-          {
-            "line": 1,
-            "name": "@one"
-          }
-        ]
-      }
+                  "keyword": "And ",
+                  "line": 26,
+                  "name": "so"
+                }
+              ],
+              "type": "scenario"
+            },
+            {
+              "comments": [
+                {
+                  "line": 31,
+                  "value": "# The"
+                }
+              ],
+              "description": "",
+              "examples": [
+                {
+                  "comments": [
+                    {
+                      "line": 36,
+                      "value": "# comments"
+                    },
+                    {
+                      "line": 37,
+                      "value": "# everywhere"
+                    }
+                  ],
+                  "description": "",
+                  "keyword": "Examples",
+                  "line": 38,
+                  "name": "An example",
+                  "rows": [
+                    {
+                      "cells": [
+                        "partout"
+                      ],
+                      "comments": [
+                        {
+                          "line": 39,
+                          "value": "# I mean"
+                        }
+                      ],
+                      "line": 40
+                    }
+                  ]
+                }
+              ],
+              "keyword": "Scenario Outline",
+              "line": 32,
+              "name": "with",
+              "steps": [
+                {
+                  "comments": [
+                    {
+                      "line": 33,
+                      "value": "# all"
+                    }
+                  ],
+                  "keyword": "Then ",
+                  "line": 34,
+                  "name": "nice"
+                }
+              ],
+              "type": "scenario_outline"
+            }
+          ],
+          "keyword": "Feature",
+          "line": 2,
+          "name": "OH HAI",
+          "tags": [
+            {
+              "line": 1,
+              "name": "@one"
+            }
+          ]
+        }
+      ]
       """
 
   Scenario:  Feature with Background
@@ -292,43 +296,45 @@ Feature: JSON formatter
       """
     Then the outputted JSON should be:
       """
-      {
-        "keyword": "Feature",
-        "name": "Kjapp",
-        "description": "",
-        "line": 1,
-        "elements": [
-          {
-            "type": "background",
-            "keyword": "Background",
-            "line": 3,
-            "name": "No idea what Kjapp means",
-            "description": "",
-            "steps": [
-              {
-                "keyword": "Given ",
-                "line": 4,
-                "name": "I Google it"
-              }
-            ]
-          },
-          {
-            "type": "scenario",
-            "comments": [{"value": "# Writing JSON by hand sucks", "line": 6}],
-            "keyword": "Scenario",
-            "name": "",
-            "description": "",
-            "line": 7,
-            "steps": [
-              {
-                "keyword": "Then ",
-                "name": "I think it means \"fast\"",
-                "line": 8
-              }
-            ]
-          }
-        ]
-      }
+      [
+        {
+          "keyword": "Feature",
+          "name": "Kjapp",
+          "description": "",
+          "line": 1,
+          "elements": [
+            {
+              "type": "background",
+              "keyword": "Background",
+              "line": 3,
+              "name": "No idea what Kjapp means",
+              "description": "",
+              "steps": [
+                {
+                  "keyword": "Given ",
+                  "line": 4,
+                  "name": "I Google it"
+                }
+              ]
+            },
+            {
+              "type": "scenario",
+              "comments": [{"value": "# Writing JSON by hand sucks", "line": 6}],
+              "keyword": "Scenario",
+              "name": "",
+              "description": "",
+              "line": 7,
+              "steps": [
+                {
+                  "keyword": "Then ",
+                  "name": "I think it means \"fast\"",
+                  "line": 8
+                }
+              ]
+            }
+          ]
+        }
+      ]
       """
   
   Scenario: Feature with a description
@@ -369,64 +375,66 @@ Feature: JSON formatter
       """
     Then the outputted JSON should be:
       """
-      {
-        "keyword": "Feature",
-        "name": "Foo",
-        "description": "one line  \nanother line  \n\n    some pre-formatted stuff",
-        "line": 1,
-        "elements": [
-          {
-            "description": "  test  \n  test",
-            "keyword": "Background",
-            "line": 7,
-            "name": "name",
-            "type": "background"
-          },
-          {
-            "description": "  test  \n  test",
-            "keyword": "Scenario",
-            "line": 11,
-            "name": "name",
-            "type": "scenario"
-          },
-          {
-            "description": "  test  \n  test",
-            "examples": [
-              {
-                "description": "  test  \n  test",
-                "keyword": "Examples",
-                "line": 21,
-                "name": "name",
-                "rows": [
-                  {
-                    "cells": [
-                      "foo"
-                    ],
-                    "line": 24
-                  },
-                  {
-                    "cells": [
-                      "table"
-                    ],
-                    "line": 25
-                  }
-                ]
-              }
-            ],
-            "keyword": "Scenario Outline",
-            "line": 15,
-            "name": "name",
-            "steps": [
-              {
-                "keyword": "Given ",
-                "line": 19,
-                "name": "<foo>"
-              }
-            ],
-            "type": "scenario_outline"
-          }
-        ]
-      }
+      [
+        {
+          "keyword": "Feature",
+          "name": "Foo",
+          "description": "one line  \nanother line  \n\n    some pre-formatted stuff",
+          "line": 1,
+          "elements": [
+            {
+              "description": "  test  \n  test",
+              "keyword": "Background",
+              "line": 7,
+              "name": "name",
+              "type": "background"
+            },
+            {
+              "description": "  test  \n  test",
+              "keyword": "Scenario",
+              "line": 11,
+              "name": "name",
+              "type": "scenario"
+            },
+            {
+              "description": "  test  \n  test",
+              "examples": [
+                {
+                  "description": "  test  \n  test",
+                  "keyword": "Examples",
+                  "line": 21,
+                  "name": "name",
+                  "rows": [
+                    {
+                      "cells": [
+                        "foo"
+                      ],
+                      "line": 24
+                    },
+                    {
+                      "cells": [
+                        "table"
+                      ],
+                      "line": 25
+                    }
+                  ]
+                }
+              ],
+              "keyword": "Scenario Outline",
+              "line": 15,
+              "name": "name",
+              "steps": [
+                {
+                  "keyword": "Given ",
+                  "line": 19,
+                  "name": "<foo>"
+                }
+              ],
+              "type": "scenario_outline"
+            }
+          ]
+        }
+      ]
       """
 
 

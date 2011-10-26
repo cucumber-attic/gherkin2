@@ -12,9 +12,6 @@ module Gherkin
     # We can't use method_missing - therubyracer isn't able to invoke methods like that.
     [:comment, :tag, :feature, :background, :scenario, :scenario_outline, :examples, :step, :doc_string, :row, :eof, :uri, :syntax_error].each do |event|
       define_method(event) do |*args|
-        event = :scenario_outline if event == :scenarioOutline # Special Java Lexer handling
-        event = :doc_string if event == :docString # Special Java Lexer handling
-        event = :syntax_error if event == :syntaxError # Special Java Lexer handling
         args  = rubify(args)
         args  = sexpify(args)
         @sexps << [event] + args

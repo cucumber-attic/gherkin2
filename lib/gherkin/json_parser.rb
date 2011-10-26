@@ -20,17 +20,19 @@ module Gherkin
       o = JSON.parse(o) if String === o
       @formatter.uri(feature_uri)
 
-      Formatter::Model::Feature.new(comments(o), tags(o), keyword(o), name(o), description(o), line(o)).replay(@formatter)
-      (o["elements"] || []).each do |feature_element|
-        feature_element(feature_element).replay(@formatter)
-        (feature_element["steps"] || []).each do |step|
-          step(step).replay(@formatter)
-          match(step)
-          result(step)
-          embeddings(step)
-        end
-        (feature_element["examples"] || []).each do |eo|
-          Formatter::Model::Examples.new(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), rows(eo['rows'])).replay(@formatter)
+      o.each do |f|
+        Formatter::Model::Feature.new(comments(f), tags(f), keyword(f), name(f), description(f), line(f)).replay(@formatter)
+        (f["elements"] || []).each do |feature_element|
+          feature_element(feature_element).replay(@formatter)
+          (feature_element["steps"] || []).each do |step|
+            step(step).replay(@formatter)
+            match(step)
+            result(step)
+            embeddings(step)
+          end
+          (feature_element["examples"] || []).each do |eo|
+            Formatter::Model::Examples.new(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), rows(eo['rows'])).replay(@formatter)
+          end
         end
       end
 
