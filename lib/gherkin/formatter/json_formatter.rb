@@ -5,18 +5,16 @@ require 'base64'
 
 module Gherkin
   module Formatter
+    # This class doesn't really generate JSON - instead it populates an Array that can easily
+    # be turned into JSON.
     class JSONFormatter
       native_impl('gherkin')
       
       include Base64
-      attr_reader :gherkin_object
       
-      # Creates a new instance that writes the resulting JSON to +io+.
-      # If +io+ is nil, the JSON will not be written, but instead a Ruby
-      # object can be retrieved with #gherkin_object
-      def initialize(io)
-        @io = io
-        @array = []
+      def initialize(feature_hashes)
+        raise "Must be an Array" unless Array===feature_hashes
+        @feature_hashes = feature_hashes
       end
 
       def uri(uri)
@@ -24,9 +22,9 @@ module Gherkin
       end
 
       def feature(feature)
-        @gherkin_object = feature.to_hash
-        @gherkin_object['uri'] = @uri
-        @array << @gherkin_object
+        @feature_hash = feature.to_hash
+        @feature_hash['uri'] = @uri
+        @feature_hashes << @feature_hash
       end
 
       def background(background)
@@ -70,13 +68,12 @@ module Gherkin
       end
 
       def eof
-        @io.write(@array.to_json) if @io
       end
 
     private
 
       def feature_elements
-        @gherkin_object['elements'] ||= []
+        @feature_hash['elements'] ||= []
       end
 
       def feature_element

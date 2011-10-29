@@ -13,16 +13,48 @@ Feature: JSON formatter
       # Another comment
       Egenskap: Kjapp
       """
+    And the following text is parsed:
+      """
+      # language: no
+      # Yet another comment
+      Egenskap: Kjappere
+      """
     Then the outputted JSON should be:
       """
       [
         {
-          "uri": "test.feature",
-          "comments": [{"value": "# language: no", "line": 1}, {"value": "# Another comment", "line": 2}],
-          "keyword": "Egenskap",
-          "name": "Kjapp",
+          "comments": [
+            {
+              "line": 1,
+              "value": "# language: no"
+            },
+            {
+              "line": 2,
+              "value": "# Another comment"
+            }
+          ],
           "description": "",
-          "line": 3
+          "keyword": "Egenskap",
+          "line": 3,
+          "name": "Kjapp",
+          "uri": "test.feature"
+        },
+        {
+          "comments": [
+            {
+              "line": 1,
+              "value": "# language: no"
+            },
+            {
+              "line": 2,
+              "value": "# Yet another comment"
+            }
+          ],
+          "description": "",
+          "keyword": "Egenskap",
+          "line": 3,
+          "name": "Kjappere",
+          "uri": "test.feature"
         }
       ]
       """
