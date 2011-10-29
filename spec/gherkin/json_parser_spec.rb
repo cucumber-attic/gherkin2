@@ -10,7 +10,7 @@ module Gherkin
       io = StringIO.new
       f = Formatter::JSONFormatter.new(io)
       p = JSONParser.new(f, f)
-      p.parse(json, 'unknown.json', 0)
+      p.parse(json)
       expected = JSON.parse(json)
       actual   = JSON.parse(io.string)
       actual.should == expected
@@ -19,6 +19,7 @@ module Gherkin
     it "should parse a barely empty feature" do
       check_json(%{[
         {
+          "uri": "test.feature",
           "keyword": "Feature", 
           "name": "One", 
           "description": "", 
@@ -30,6 +31,7 @@ module Gherkin
     it "should parse feature with tags and one scenario" do
       check_json(%{[
         {
+          "uri": "test.feature",
           "tags": [
             {
               "name": "@foo",
@@ -62,6 +64,7 @@ module Gherkin
     it "should parse feature with match, result and embedding" do
       check_json(%{[
         {
+          "uri": "test.feature",
           "tags": [
             {
               "name": "@foo",

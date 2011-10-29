@@ -17,6 +17,7 @@ Feature: JSON formatter
       """
       [
         {
+          "uri": "test.feature",
           "comments": [{"value": "# language: no", "line": 1}, {"value": "# Another comment", "line": 2}],
           "keyword": "Egenskap",
           "name": "Kjapp",
@@ -74,6 +75,7 @@ Feature: JSON formatter
       """
       [
         {
+          "uri": "test.feature",
           "description": "",
           "elements": [
             {
@@ -298,6 +300,7 @@ Feature: JSON formatter
       """
       [
         {
+          "uri": "test.feature",
           "keyword": "Feature",
           "name": "Kjapp",
           "description": "",
@@ -377,6 +380,7 @@ Feature: JSON formatter
       """
       [
         {
+          "uri": "test.feature",
           "keyword": "Feature",
           "name": "Foo",
           "description": "one line  \nanother line  \n\n    some pre-formatted stuff",

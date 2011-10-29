@@ -26,6 +26,7 @@ module Gherkin
         expected = %{
           [
             {
+              "uri": "f.feature",
               "keyword": "Feature",
               "name": "f",
               "line": 1,

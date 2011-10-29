@@ -12,7 +12,7 @@ Given /^a JSON lexer$/ do
 end
 
 Given /^the following JSON is parsed:$/ do |text|
-  @json_parser.parse(JSON.pretty_generate(JSON.parse(text)), "unknown.json", 0)
+  @json_parser.parse(JSON.pretty_generate(JSON.parse(text)))
 end
 
 Then /^the outputted text should be:$/ do |expected_text|

@@ -20,12 +20,12 @@ module Gherkin
       end
 
       def uri(uri)
-        # We're ignoring the uri - we don't want it as part of the JSON
-        # (The pretty formatter uses it just for visual niceness - comments)
+        @uri = uri
       end
 
       def feature(feature)
         @gherkin_object = feature.to_hash
+        @gherkin_object['uri'] = @uri
         @array << @gherkin_object
       end
 
