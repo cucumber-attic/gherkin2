@@ -15,7 +15,7 @@
 * Added synonyms for Portuguese. (Rodrigo Dumont)
 * Added synonyms for Italian. (Alessandro Mencarini)
 * Added synonyms for Spanish. (Nahuel Garbezza)
-* Added synonyms for French. (Julein Biezemans)
+* Added synonyms for French. (Julien Biezemans)
 
 ## [2.5.1](https://github.com/cucumber/gherkin/compare/v2.5.0...v2.5.1)
 
