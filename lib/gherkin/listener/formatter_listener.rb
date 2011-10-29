@@ -11,54 +11,65 @@ module Gherkin
 
       def initialize(formatter)
         @formatter = formatter
-        @comments = []
-        @tags = []
-        @table = nil
+        @stash = Stash.new
       end
 
       def comment(value, line)
-        @comments << Formatter::Model::Comment.new(value, line)
+        @stash.comment Formatter::Model::Comment.new(value, line)
       end
 
       def tag(name, line)
-        @tags << Formatter::Model::Tag.new(name, line)
+        @stash.tag Formatter::Model::Tag.new(name, line)
       end
 
       def feature(keyword, name, description, line)
-        @formatter.feature(Formatter::Model::Feature.new(grab_comments!, grab_tags!, keyword, name, description, line))
+        @stash.tag_statement do |comments, tags|
+          replay Formatter::Model::Feature.new(comments, tags, keyword, name, description, line)
+        end
       end
 
       def background(keyword, name, description, line)
-        @formatter.background(Formatter::Model::Background.new(grab_comments!, keyword, name, description, line))
+        @stash.tag_statement do |comments, tags|
+          replay Formatter::Model::Background.new(comments, keyword, name, description, line)
+        end
       end
 
       def scenario(keyword, name, description, line)
         replay_step_or_examples
-        @formatter.scenario(Formatter::Model::Scenario.new(grab_comments!, grab_tags!, keyword, name, description, line))
+        @stash.tag_statement do |comments, tags|
+          replay Formatter::Model::Scenario.new(comments, tags, keyword, name, description, line)
+        end
       end
 
       def scenario_outline(keyword, name, description, line)
         replay_step_or_examples
-        @formatter.scenario_outline(Formatter::Model::ScenarioOutline.new(grab_comments!, grab_tags!, keyword, name, description, line))
+        @stash.tag_statement do |comments, tags|
+          replay Formatter::Model::ScenarioOutline.new(comments, tags, keyword, name, description, line)
+        end
       end
 
       def examples(keyword, name, description, line)
         replay_step_or_examples
-        @examples_statement = Formatter::Model::Examples.new(grab_comments!, grab_tags!, keyword, name, description, line, nil)
+        @stash.tag_statement do |comments, tags|
+          @current_builder = Formatter::Model::Examples::Builder.new(comments, tags, keyword, name, description, line)
+        end
       end
 
       def step(keyword, name, line)
         replay_step_or_examples
-        @step_statement = Formatter::Model::Step.new(grab_comments!, keyword, name, line)
+        @stash.basic_statement do |comments|
+          @current_builder = Formatter::Model::Step::Builder.new(comments, keyword, name, line)
+        end
       end
 
       def row(cells, line)
-        @table ||= []
-        @table << Formatter::Model::Row.new(grab_comments!, cells, line)
+        @stash.basic_statement do |comments|
+          @current_builder.row(comments, cells, line)
+        end
       end
 
-      def doc_string(string, content_type, line)
-        @doc_string = Formatter::Model::DocString.new(string, content_type, line)
+      def doc_string(content_type, value, line)
+        @current_builder.doc_string(value, content_type, line)
       end
 
       def eof
@@ -71,46 +82,41 @@ module Gherkin
       end
 
     private
-
-      def grab_comments!
-        comments = @comments
-        @comments = []
-        comments
+    
+      def replay(element)
+        element.replay(@formatter)
       end
-
-      def grab_tags!
-        tags = @tags
-        @tags = []
-        tags
-      end
-
-      def grab_rows!
-        table = @table
-        @table = nil
-        table
-      end
-
-      def grab_doc_string!
-        doc_string = @doc_string
-        @doc_string = nil
-        doc_string
+      
+      class Stash
+        attr_reader :comments, :tags
+        
+        def initialize
+          @comments, @tags = [], []
+        end
+        
+        def comment(comment)
+          @comments << comment
+        end
+        
+        def tag_statement
+          yield @comments, @tags
+          @comments, @tags = [], []
+        end
+        
+        def basic_statement
+          yield @comments
+          @comments = []
+        end
+        
+        def tag(tag)
+          @tags << tag
+        end
       end
 
       def replay_step_or_examples
-        if(@step_statement)
-          if(doc_string = grab_doc_string!)
-            @step_statement.doc_string = doc_string
-          elsif(rows = grab_rows!)
-            @step_statement.rows = rows
-          end
-          @formatter.step(@step_statement)
-          @step_statement = nil
-        end
-        if(@examples_statement)
-          @examples_statement.rows = grab_rows!
-          @formatter.examples(@examples_statement)
-          @examples_statement = nil
-        end
+        return unless @current_builder
+        replay(@current_builder)
+        @current_builder = nil
       end
     end
   end
