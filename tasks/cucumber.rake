@@ -3,7 +3,8 @@ unless ENV['RUBY_CC_VERSION']
 require 'cucumber/rake/task'
 
 Cucumber::Rake::Task.new(:cucumber) do |t|
-  t.cucumber_opts = "--profile default"
+  profile = ENV['TRAVIS'] ? 'travis' : 'default'
+  t.cucumber_opts = "--profile #{profile}"
 end
 
 namespace :cucumber do
