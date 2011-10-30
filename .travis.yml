@@ -7,7 +7,7 @@ branches:
   only:
     - master
 # Needed to build lexers
-before_script: sudo apt-get install -y ragel=6.6-1
+before_script: sudo apt-get install -y ragel
 
 notifications:
   email:
