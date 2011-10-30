@@ -16,7 +16,7 @@ end
 
 Then /^there should be parse errors on (lines .*)$/ do |lines|
   lines.each do |line|
-    Then "there should be a parse error on line #{line}"
+    step "there should be a parse error on line #{line}"
   end
 end
 
