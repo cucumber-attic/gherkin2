@@ -14,4 +14,8 @@ public class ExamplesTableRow extends Row {
     public DiffType getDiffType() {
         return DiffType.NONE;
     }
+
+    public String getId() {
+        return id;
+    }
 }

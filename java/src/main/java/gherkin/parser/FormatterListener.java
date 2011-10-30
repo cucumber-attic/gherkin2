@@ -48,7 +48,7 @@ public class FormatterListener implements Listener {
         }
 
         private String id(String name) {
-            return name.replaceAll("\\s", "-").toLowerCase();
+            return name.replaceAll("[\\s_]", "-").toLowerCase();
         }
 
         public String nextExampleId() {

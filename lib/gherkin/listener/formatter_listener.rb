@@ -129,7 +129,7 @@ module Gherkin
         end
 
         def id(name)
-          (name || '').gsub(/\s/, '-').downcase
+          (name || '').gsub(/[\s_]/, '-').downcase
         end
       end
 

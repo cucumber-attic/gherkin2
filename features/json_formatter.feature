@@ -136,7 +136,7 @@ Feature: JSON formatter
               "description": "",
               "keyword": "Scenario",
               "line": 9,
-              "id": "oh-hai;_why",
+              "id": "oh-hai;-why",
               "name": "_why",
               "steps": [
                 {
