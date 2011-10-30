@@ -1,3 +1,9 @@
+## [2.6.1](https://github.com/cucumber/gherkin/compare/v2.6.0...v2.6.1)
+
+### Bugfixes
+
+* Fixed a regression on 1.8.7 (Aslak Hellesøy)
+
 ## [2.6.0](https://github.com/cucumber/gherkin/compare/v2.5.4...v2.6.0)
 
 ### Changed Features
