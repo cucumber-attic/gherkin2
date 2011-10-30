@@ -1,3 +1,13 @@
+## [2.6.0](https://github.com/cucumber/gherkin/compare/v2.5.4...v2.6.0)
+
+### Changed Features
+
+* JSON formatter must handle multiple features ([#140](https://github.com/cucumber/gherkin/issues/140) Aslak Hellesøy)
+
+### New Features
+
+* Identifiers for Gherkin elements ([#131](https://github.com/cucumber/gherkin/issues/131) Matt Wynne, Aslak Hellesøy)
+
 ## [2.5.4](https://github.com/cucumber/gherkin/compare/v2.5.3...v2.5.4)
 
 ### New Features

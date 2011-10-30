@@ -2,7 +2,8 @@
 
 Gem::Specification.new do |s|
   s.name        = "gherkin"
-  s.version     = "2.5.4"
+  # If bumping the major version here, comment out the cucumber dependency below and uncomment in the Gemfile to build against a local cucumber.
+  s.version     = "2.6.0"
   s.authors     = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
   s.description = "A fast Gherkin lexer/parser based on the Ragel State Machine Compiler."
   s.summary     = "#{s.name}-#{s.version}"
@@ -45,10 +46,10 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency('json', '>= 1.4.6')
 
-  s.add_development_dependency('cucumber', '>= 1.1.0')
+  s.add_development_dependency('cucumber', '>= 1.1.1')
   s.add_development_dependency('rake', '>= 0.9.2')
   s.add_development_dependency('bundler', '>= 1.0.21')
-  s.add_development_dependency('rspec', '>= 2.6.0')
+  s.add_development_dependency('rspec', '>= 2.7.0')
 
   unless ENV['RUBY_CC_VERSION'] || defined?(JRUBY_VERSION)
     s.add_development_dependency('therubyracer', '>= 0.9.8') if ENV['GHERKIN_JS']
