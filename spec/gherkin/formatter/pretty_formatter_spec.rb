@@ -39,8 +39,8 @@ module Gherkin
         @f.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1))
 
         @f.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4))
-        @f.step(Model::Step.new([], "Given ", "some stuff", 5))
-        @f.step(Model::Step.new([], "When ", "foo", 6))
+        @f.step(Model::Step.new([], "Given ", "some stuff", 5, nil, nil))
+        @f.step(Model::Step.new([], "When ", "foo", 6, nil, nil))
 
         @f.match(Model::Match.new([], "features/step_definitions/bar.rb:56"))
         @f.result(Model::Result.new('passed', 22, nil))
@@ -62,7 +62,7 @@ module Gherkin
       it "should print comments when step is longer" do
         @f.uri("features/foo.feature")
         @f.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1))
-        step = Model::Step.new([], "Given ", "some stuff that is longer", 5)
+        step = Model::Step.new([], "Given ", "some stuff that is longer", 5, nil, nil)
         match = Model::Match.new([], "features/step_definitions/bar.rb:56")
         result = Model::Result.new('passed', 0, nil)
 
@@ -83,7 +83,7 @@ module Gherkin
       it "should highlight arguments for regular steps" do
         @f.uri("foo.feature")
         @f.scenario(Model::Scenario.new([], [], "Scenario", "Lots of cukes", "", 3))
-        @f.step(Model::Step.new([], "Given ", "I have 999 cukes in my belly", 3))
+        @f.step(Model::Step.new([], "Given ", "I have 999 cukes in my belly", 3, nil, nil))
         @f.match(Model::Match.new([Gherkin::Formatter::Argument.new(7, '999')], nil))
         @f.result(Model::Result.new('passed', 6, nil))
 
@@ -150,7 +150,7 @@ Feature: Feature Description
       it "should escape backslashes and pipes" do
         io = StringIO.new
         f = Gherkin::Formatter::PrettyFormatter.new(io, true, false)
-        f.__send__(:table, [Gherkin::Formatter::Model::Row.new([], ['|', '\\'], 1)])
+        f.__send__(:table, [Gherkin::Formatter::Model::DataTableRow.new([], ['|', '\\'], 1)])
         io.string.should == '      | \\| | \\\\ |' + "\n"
       end
     end

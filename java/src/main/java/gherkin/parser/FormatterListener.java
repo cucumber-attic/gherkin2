@@ -9,62 +9,82 @@ import java.util.List;
 
 public class FormatterListener implements Listener {
     private final Formatter formatter;
-    private List<Comment> comments = new ArrayList<Comment>();
-    private List<Tag> tags = new ArrayList<Tag>();
-    private Step step;
-    private List<Row> table;
-    private Examples examples;
-    private DocString docString;
+    private Stash stash;
+    private Builder currentBuilder;
+
+    private class Stash {
+        private List<Comment> comments;
+        private List<Tag> tags;
+
+        public void comment(Comment comment) {
+            comments.add(comment);
+        }
+
+        public void tag(Tag tag) {
+            tags.add(tag);
+        }
+
+        public void reset() {
+            comments = new ArrayList<Comment>();
+            tags = new ArrayList<Tag>();
+        }
+    }
 
     public FormatterListener(Formatter formatter) {
         this.formatter = formatter;
+        stash = new Stash();
+        stash.reset();
     }
 
     public void comment(String comment, int line) {
-        comments.add(new Comment(comment, line));
+        stash.comment(new Comment(comment, line));
     }
 
     public void tag(String tag, int line) {
-        tags.add(new Tag(tag, line));
+        stash.tag(new Tag(tag, line));
     }
 
     public void feature(String keyword, String name, String description, int line) {
-        formatter.feature(new Feature(grabComments(), grabTags(), keyword, name, description, line));
+        formatter.feature(new Feature(stash.comments, stash.tags, keyword, name, description, line));
+        stash.reset();
     }
 
     public void background(String keyword, String name, String description, int line) {
-        formatter.background(new Background(grabComments(), keyword, name, description, line));
+        formatter.background(new Background(stash.comments, keyword, name, description, line));
+        stash.reset();
     }
 
     public void scenario(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        formatter.scenario(new Scenario(grabComments(), grabTags(), keyword, name, description, line));
+        formatter.scenario(new Scenario(stash.comments, stash.tags, keyword, name, description, line));
+        stash.reset();
     }
 
     public void scenarioOutline(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        formatter.scenarioOutline(new ScenarioOutline(grabComments(), grabTags(), keyword, name, description, line));
+        formatter.scenarioOutline(new ScenarioOutline(stash.comments, stash.tags, keyword, name, description, line));
+        stash.reset();
     }
 
     public void examples(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        examples = new Examples(grabComments(), grabTags(), keyword, name, description, line, null);
+        currentBuilder = new Examples.Builder(stash.comments, stash.tags, keyword, name, description, line);
+        stash.reset();
     }
 
     public void step(String keyword, String name, int line) {
         replayStepsOrExamples();
-        step = new Step(grabComments(), keyword, name, line);
+        currentBuilder = new Step.Builder(stash.comments, keyword, name, line);
+        stash.reset();
     }
 
     public void row(List<String> cells, int line) {
-        if (table == null) {
-            table = new ArrayList<Row>();
-        }
-        table.add(new Row(grabComments(), cells, line, Row.DiffType.NONE));
+        currentBuilder.row(stash.comments, cells, line);
+        stash.reset();
     }
 
     public void docString(String contentType, String content, int line) {
-        this.docString = new DocString(contentType, content, line);
+        currentBuilder.docString(new DocString(contentType, content, line));
     }
 
     public void eof() {
@@ -79,46 +99,11 @@ public class FormatterListener implements Listener {
         formatter.syntaxError(state, event, legalEvents, uri, line);
     }
 
-    private List<Comment> grabComments() {
-        List<Comment> comments = this.comments;
-        this.comments = new ArrayList<Comment>();
-        return comments;
-    }
-
-    private List<Tag> grabTags() {
-        List<Tag> tags = this.tags;
-        this.tags = new ArrayList<Tag>();
-        return tags;
-    }
-
-    private List<Row> grabRows() {
-        List<Row> table = this.table;
-        this.table = null;
-        return table;
-    }
-
-    private DocString grabDocString() {
-        DocString docString = this.docString;
-        this.docString = null;
-        return docString;
-    }
-
     private void replayStepsOrExamples() {
-        if (step != null) {
-            DocString docString;
-            List<Row> rows;
-            if ((docString = grabDocString()) != null) {
-                step.setDocString(docString);
-            } else if ((rows = grabRows()) != null) {
-                step.setRows(rows);
-            }
-            step.replay(formatter);
-            step = null;
-        }
-        if (examples != null) {
-            examples.setRows(grabRows());
-            examples.replay(formatter);
-            examples = null;
+        if (currentBuilder != null) {
+            currentBuilder.replay(formatter);
+            currentBuilder = null;
         }
     }
+
 }

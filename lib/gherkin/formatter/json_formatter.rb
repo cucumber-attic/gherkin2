@@ -17,6 +17,10 @@ module Gherkin
         @feature_hashes = feature_hashes
       end
 
+      def to_json
+        @feature_hashes.to_json
+      end
+
       def uri(uri)
         @uri = uri
       end

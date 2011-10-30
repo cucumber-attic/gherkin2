@@ -17,7 +17,7 @@ end
 
 Then /^the outputted JSON should be:$/ do |expected_json|
   require 'json'
-  actual_json = @feature_hashes.to_json
+  actual_json = @formatter.to_json
   puts actual_json
   puts JSON.pretty_generate(JSON.parse(actual_json))
   expected = JSON.parse(expected_json)

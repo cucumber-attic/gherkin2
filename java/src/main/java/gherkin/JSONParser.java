@@ -5,6 +5,7 @@ import gherkin.formatter.Formatter;
 import gherkin.formatter.Reporter;
 import gherkin.formatter.model.*;
 import net.iharder.Base64;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
@@ -14,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class JSONParser implements FeatureParser {
+public class JSONParser {
     private final Reporter reporter;
     private final Formatter formatter;
 
@@ -23,23 +24,26 @@ public class JSONParser implements FeatureParser {
         this.formatter = formatter;
     }
 
-    public void parse(String src, String uri, int offset) {
-        formatter.uri(uri);
-        JSONObject o = (JSONObject) JSONValue.parse(src);
-        new Feature(comments(o), tags(o), keyword(o), name(o), description(o), line(o)).replay(formatter);
-        for (Object e : getList(o, "elements")) {
-            JSONObject featureElement = (JSONObject) e;
-            featureElement(featureElement).replay(formatter);
-            for (Object s : getList(featureElement, "steps")) {
-                JSONObject step = (JSONObject) s;
-                step(step);
+    public void parse(String src) {
+        JSONArray featureHashes = (JSONArray) JSONValue.parse(src);
+        for (Object f : featureHashes) {
+            JSONObject o = (JSONObject) f;
+            formatter.uri(getString(o, "uri"));
+            new Feature(comments(o), tags(o), keyword(o), name(o), description(o), line(o)).replay(formatter);
+            for (Object e : getList(o, "elements")) {
+                JSONObject featureElement = (JSONObject) e;
+                featureElement(featureElement).replay(formatter);
+                for (Object s : getList(featureElement, "steps")) {
+                    JSONObject step = (JSONObject) s;
+                    step(step);
+                }
+                for (Object s : getList(featureElement, "examples")) {
+                    JSONObject eo = (JSONObject) s;
+                    new Examples(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), rows(getList(eo, "rows"))).replay(formatter);
+                }
             }
-            for (Object s : getList(featureElement, "examples")) {
-                JSONObject eo = (JSONObject) s;
-                new Examples(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), rows(getList(eo, "rows"))).replay(formatter);
-            }
+            formatter.eof();
         }
-        formatter.eof();
     }
 
     private BasicStatement featureElement(JSONObject o) {
@@ -56,14 +60,18 @@ public class JSONParser implements FeatureParser {
     }
 
     private void step(JSONObject o) {
-        Step step = new Step(comments(o), keyword(o), name(o), line(o));
+        List<Row> rows = null;
         if (o.containsKey("rows")) {
-            step.setRows(rows(getList(o, "rows")));
+            rows = rows(getList(o, "rows"));
         }
+
+        DocString docString = null;
         if (o.containsKey("doc_string")) {
             Map ds = (Map) o.get("doc_string");
-            step.setDocString(new DocString(getString(ds, "content_type"), getString(ds, "value"), getInt(ds, "line")));
+            docString = new DocString(getString(ds, "content_type"), getString(ds, "value"), getInt(ds, "line"));
         }
+
+        Step step = new Step(comments(o), keyword(o), name(o), line(o), rows, docString);
         step.replay(formatter);
 
         if (o.containsKey("match")) {
@@ -92,7 +100,8 @@ public class JSONParser implements FeatureParser {
         List<Row> rows = new ArrayList<Row>(o.size());
         for (Object e : o) {
             Map row = (Map) e;
-            rows.add(new Row(comments(row), getList(row, "cells"), getInt(row, "line"), Row.DiffType.NONE));
+            // TODO - do the right kind
+            rows.add(new DataTableRow(comments(row), getList(row, "cells"), getInt(row, "line")));
         }
         return rows;
     }

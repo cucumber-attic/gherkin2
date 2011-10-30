@@ -10,21 +10,29 @@ import java.util.List;
 import java.util.Map;
 
 public class JSONFormatter implements Reporter, Formatter {
-    private final NiceAppendable out;
-    private Map<Object, Object> featureHash;
+    private Map<Object, Object> featureMap;
     private int stepIndex = 0;
+    private final List<Map<Object, Object>> featureMaps;
+    private String uri;
 
-    public JSONFormatter(Appendable out) {
-        this.out = new NiceAppendable(out);
+    public JSONFormatter(List<Map<Object, Object>> featureMaps) {
+        this.featureMaps = featureMaps;
+    }
+
+    public String toJson() {
+        return JSONValue.toJSONString(featureMaps);
     }
 
     @Override
     public void uri(String uri) {
+        this.uri = uri;
     }
 
     @Override
     public void feature(Feature feature) {
-        featureHash = feature.toMap();
+        featureMap = feature.toMap();
+        featureMap.put("uri", uri);
+        featureMaps.add(featureMap);
     }
 
     @Override
@@ -77,7 +85,6 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void eof() {
-        out.append(JSONValue.toJSONString(featureHash));
     }
 
     @Override
@@ -86,10 +93,10 @@ public class JSONFormatter implements Reporter, Formatter {
     }
 
     private List<Object> getFeatureElements() {
-        List<Object> featureElements = (List) featureHash.get("elements");
+        List<Object> featureElements = (List) featureMap.get("elements");
         if (featureElements == null) {
             featureElements = new ArrayList<Object>();
-            featureHash.put("elements", featureElements);
+            featureMap.put("elements", featureElements);
         }
         return featureElements;
     }

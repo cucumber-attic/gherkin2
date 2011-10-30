@@ -134,7 +134,7 @@ module Gherkin
 
         attr_reader :rows, :doc_string
         
-        def initialize(comments, keyword, name, line, rows=nil, doc_string=nil)
+        def initialize(comments, keyword, name, line, rows, doc_string)
           super(comments, keyword, name, line)
           @rows, @doc_string = rows, doc_string
         end

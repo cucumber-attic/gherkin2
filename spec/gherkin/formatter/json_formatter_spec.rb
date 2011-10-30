@@ -7,13 +7,12 @@ module Gherkin
   module Formatter
     describe JSONFormatter do
       it "renders results" do
-        feature_hashes = []
-        f = JSONFormatter.new(feature_hashes)
+        f = JSONFormatter.new([])
         f.uri("f.feature")
         f.feature(Model::Feature.new([], [], "Feature", "f", "", 1))
         f.scenario(Model::Scenario.new([], [], "Feature", "f", "", 2))
-        f.step(Model::Step.new([], "Given ", "g", 3))
-        f.step(Model::Step.new([], "When ", "w", 4))
+        f.step(Model::Step.new([], "Given ", "g", 3, nil, nil))
+        f.step(Model::Step.new([], "When ", "w", 4, nil, nil))
 
         f.match(Model::Match.new([], "def.rb:33"))
         f.result(Model::Result.new(:passed, 1, nil))
@@ -70,7 +69,7 @@ module Gherkin
           ]
         }
 
-        JSON.parse(expected).should == JSON.parse(feature_hashes.to_json)
+        JSON.parse(expected).should == JSON.parse(f.to_json)
       end
     end
   end

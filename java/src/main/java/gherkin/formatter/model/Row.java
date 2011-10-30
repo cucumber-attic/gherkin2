@@ -5,7 +5,7 @@ import gherkin.formatter.Mappable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Row extends Mappable implements CommentHolder {
+public abstract class Row extends Mappable implements CommentHolder {
     public enum DiffType {
         NONE, DELETE, INSERT
     }
@@ -13,14 +13,8 @@ public class Row extends Mappable implements CommentHolder {
     private final List<Comment> comments;
     private final List<String> cells;
     private final int line;
-    private final DiffType diffType;
 
     public Row(List<Comment> comments, List<String> cells, int line) {
-        this(comments, cells, line, DiffType.NONE);
-    }
-
-    public Row(List<Comment> comments, List<String> cells, int line, DiffType diffType) {
-        this.diffType = diffType;
         if (comments == null) {
             throw new NullPointerException("comments");
         }
@@ -44,10 +38,6 @@ public class Row extends Mappable implements CommentHolder {
         return line;
     }
 
-    public DiffType getDiffType() {
-        return diffType;
-    }
-
     public List<CellResult> createResults(String status) {
         List<CellResult> results = new ArrayList<CellResult>();
         for (String cell : cells) {
@@ -55,4 +45,6 @@ public class Row extends Mappable implements CommentHolder {
         }
         return results;
     }
+
+    public abstract DiffType getDiffType();
 }

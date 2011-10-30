@@ -7,12 +7,11 @@ module Gherkin
   describe JSONParser do 
 
     def check_json(json)
-      feature_hashes = []
-      f = Formatter::JSONFormatter.new(feature_hashes)
+      f = Formatter::JSONFormatter.new([])
       p = JSONParser.new(f, f)
       p.parse(json)
       expected = JSON.parse(json)
-      actual   = JSON.parse(feature_hashes.to_json)
+      actual   = JSON.parse(f.to_json)
       actual.should == expected
     end
 
