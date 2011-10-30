@@ -57,7 +57,7 @@ module Gherkin
 
       def step(keyword, name, line)
         replay_step_or_examples
-        @stash.basic_statement do |comments|
+        @stash.basic_statement do |comments, id|
           @current_builder = Formatter::Model::Step::Builder.new(comments, keyword, name, line)
         end
       end
