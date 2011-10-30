@@ -3,8 +3,11 @@ package gherkin.formatter.model;
 import java.util.List;
 
 public class ExamplesTableRow extends Row {
-    public ExamplesTableRow(List<Comment> comments, List<String> cells, int line) {
+    private final String id;
+
+    public ExamplesTableRow(List<Comment> comments, List<String> cells, int line, String id) {
         super(comments, cells, line);
+        this.id = id;
     }
 
     @Override

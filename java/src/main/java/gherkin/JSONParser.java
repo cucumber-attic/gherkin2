@@ -110,7 +110,7 @@ public class JSONParser {
         List<ExamplesTableRow> rows = new ArrayList<ExamplesTableRow>(o.size());
         for (Object e : o) {
             Map row = (Map) e;
-            rows.add(new ExamplesTableRow(comments(row), getList(row, "cells"), getInt(row, "line")));
+            rows.add(new ExamplesTableRow(comments(row), getList(row, "cells"), getInt(row, "line"), id(row)));
         }
         return rows;
     }

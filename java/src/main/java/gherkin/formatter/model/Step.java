@@ -28,7 +28,7 @@ public class Step extends BasicStatement {
             this.line = line;
         }
 
-        public void row(List<Comment> comments, List<String> cells, int line) {
+        public void row(List<Comment> comments, List<String> cells, int line, String id) {
             if (rows == null) {
                 rows = new ArrayList<DataTableRow>();
             }

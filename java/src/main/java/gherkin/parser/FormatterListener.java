@@ -19,6 +19,7 @@ public class FormatterListener implements Listener {
         private String featureId;
         private String featureElementId;
         private String examplesId;
+        private int rowIndex = 0;
 
         public void comment(Comment comment) {
             comments.add(comment);
@@ -38,15 +39,21 @@ public class FormatterListener implements Listener {
         }
 
         public String featureElementId(String name) {
-            return featureElementId = featureId  + "/" + id(name);
+            return featureElementId = featureId  + ";" + id(name);
         }
 
         public String examplesId(String name) {
-            return examplesId = featureElementId  + "/" + id(name);
+            rowIndex = 0;
+            return examplesId = featureElementId  + ";" + id(name);
         }
 
         private String id(String name) {
             return name.replaceAll("\\s", "-").toLowerCase();
+        }
+
+        public String nextExampleId() {
+            rowIndex++;
+            return "" + examplesId + ";" + rowIndex;
         }
     }
 
@@ -99,7 +106,7 @@ public class FormatterListener implements Listener {
     }
 
     public void row(List<String> cells, int line) {
-        currentBuilder.row(stash.comments, cells, line);
+        currentBuilder.row(stash.comments, cells, line, stash.nextExampleId());
         stash.reset();
     }
 

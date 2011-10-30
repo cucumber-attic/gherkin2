@@ -111,9 +111,9 @@ module Gherkin
             @rows = nil
           end
         
-          def row(comments, cells, line)
+          def row(comments, cells, line, id)
             @rows ||= []
-            @rows << ExamplesTableRow.new(comments, cells, line)
+            @rows << ExamplesTableRow.new(comments, cells, line, id)
           end
         
           def replay(formatter)
@@ -165,7 +165,7 @@ module Gherkin
             @doc_string = nil
           end
         
-          def row(comments, cells, line)
+          def row(comments, cells, line, id)
             @rows ||= []
             @rows << DataTableRow.new(comments, cells, line)
           end
@@ -241,6 +241,12 @@ module Gherkin
 
       class ExamplesTableRow < Row
         native_impl('gherkin')
+        attr_reader :id
+
+        def initialize(comments, cells, line, id)
+          super(comments, cells, line)
+          @id = id
+        end
       end
 
       class Match < Hashable

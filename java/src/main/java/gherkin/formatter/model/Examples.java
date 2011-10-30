@@ -28,11 +28,11 @@ public class Examples extends TagStatement {
             this.id = id;
         }
 
-        public void row(List<Comment> comments, List<String> cells, int line) {
+        public void row(List<Comment> comments, List<String> cells, int line, String id) {
             if (rows == null) {
                 rows = new ArrayList<ExamplesTableRow>();
             }
-            rows.add(new ExamplesTableRow(comments, cells, line));
+            rows.add(new ExamplesTableRow(comments, cells, line, id));
         }
 
         public void replay(Formatter formatter) {

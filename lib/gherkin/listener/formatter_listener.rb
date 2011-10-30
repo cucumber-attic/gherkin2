@@ -63,8 +63,8 @@ module Gherkin
       end
 
       def row(cells, line)
-        @stash.basic_statement do |comments|
-          @current_builder.row(comments, cells, line)
+        @stash.basic_statement do |comments, id|
+          @current_builder.row(comments, cells, line, id)
         end
       end
 
@@ -92,6 +92,7 @@ module Gherkin
         
         def initialize
           @comments, @tags, @ids = [], [], []
+          @row_index = 0
         end
         
         def comment(comment)
@@ -105,19 +106,21 @@ module Gherkin
         end
 
         def feature_element(name)
-          @feature_element_id = "#{@feature_id}/#{id(name)}"
+          @feature_element_id = "#{@feature_id};#{id(name)}"
           yield @comments, @tags, @feature_element_id
           @comments, @tags = [], []
         end
         
         def examples(name)
-          @examples_id = "#{@feature_element_id}/#{id(name)}"
+          @examples_id = "#{@feature_element_id};#{id(name)}"
+          @row_index = 0
           yield @comments, @tags, @examples_id
           @comments, @tags = [], []
         end
         
         def basic_statement
-          yield @comments
+          @row_index += 1
+          yield @comments, "#{@examples_id};#{@row_index}"
           @comments = []
         end
         

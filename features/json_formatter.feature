@@ -116,7 +116,7 @@ Feature: JSON formatter
               "description": "",
               "keyword": "Scenario",
               "line": 4,
-              "id": "oh-hai/fujin",
+              "id": "oh-hai;fujin",
               "name": "Fujin",
               "steps": [
                 {
@@ -136,7 +136,7 @@ Feature: JSON formatter
               "description": "",
               "keyword": "Scenario",
               "line": 9,
-              "id": "oh-hai/_why",
+              "id": "oh-hai;_why",
               "name": "_why",
               "steps": [
                 {
@@ -165,22 +165,25 @@ Feature: JSON formatter
                   "description": "",
                   "keyword": "Examples",
                   "line": 18,
-                  "id": "oh-hai/life/real-life",
+                  "id": "oh-hai;life;real-life",
                   "name": "Real life",
                   "rows": [
                     {
+                      "id": "oh-hai;life;real-life;1",
                       "cells": [
                         "boredom"
                       ],
                       "line": 19
                     },
                     {
+                      "id": "oh-hai;life;real-life;2",
                       "cells": [
                         "airport"
                       ],
                       "line": 20
                     },
                     {
+                      "id": "oh-hai;life;real-life;3",
                       "cells": [
                         "meeting"
                       ],
@@ -197,7 +200,7 @@ Feature: JSON formatter
               ],
               "keyword": "Scenario Outline",
               "line": 14,
-              "id": "oh-hai/life",
+              "id": "oh-hai;life",
               "name": "Life",
               "steps": [
                 {
@@ -222,7 +225,7 @@ Feature: JSON formatter
               "description": "",
               "keyword": "Scenario",
               "line": 23,
-              "id": "oh-hai/who-stole-my-mojo?",
+              "id": "oh-hai;who-stole-my-mojo?",
               "name": "who stole my mojo?",
               "steps": [
                 {
@@ -274,10 +277,11 @@ Feature: JSON formatter
                   "description": "",
                   "keyword": "Examples",
                   "line": 38,
-                  "id": "oh-hai/with/an-example",
+                  "id": "oh-hai;with;an-example",
                   "name": "An example",
                   "rows": [
                     {
+                      "id": "oh-hai;with;an-example;1",
                       "cells": [
                         "partout"
                       ],
@@ -294,7 +298,7 @@ Feature: JSON formatter
               ],
               "keyword": "Scenario Outline",
               "line": 32,
-              "id": "oh-hai/with",
+              "id": "oh-hai;with",
               "name": "with",
               "steps": [
                 {
@@ -367,7 +371,7 @@ Feature: JSON formatter
               "type": "scenario",
               "comments": [{"value": "# Writing JSON by hand sucks", "line": 6}],
               "keyword": "Scenario",
-              "id": "kjapp/",
+              "id": "kjapp;",
               "name": "",
               "description": "",
               "line": 7,
@@ -442,7 +446,7 @@ Feature: JSON formatter
               "description": "  test  \n  test",
               "keyword": "Scenario",
               "line": 11,
-              "id": "foo/s-name",
+              "id": "foo;s-name",
               "name": "s name",
               "type": "scenario"
             },
@@ -453,16 +457,18 @@ Feature: JSON formatter
                   "description": "  test  \n  test",
                   "keyword": "Examples",
                   "line": 21,
-                  "id": "foo/s-o-name/e-name",
+                  "id": "foo;s-o-name;e-name",
                   "name": "e name",
                   "rows": [
                     {
+                      "id": "foo;s-o-name;e-name;1",
                       "cells": [
                         "foo"
                       ],
                       "line": 24
                     },
                     {
+                      "id": "foo;s-o-name;e-name;2",
                       "cells": [
                         "table"
                       ],
@@ -473,7 +479,7 @@ Feature: JSON formatter
               ],
               "keyword": "Scenario Outline",
               "line": 15,
-              "id": "foo/s-o-name",
+              "id": "foo;s-o-name",
               "name": "s o name",
               "steps": [
                 {

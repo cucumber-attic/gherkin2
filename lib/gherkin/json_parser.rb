@@ -31,7 +31,7 @@ module Gherkin
             embeddings(step)
           end
           (feature_element["examples"] || []).each do |eo|
-            Formatter::Model::Examples.new(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), id(eo), rows(eo['rows'])).replay(@formatter)
+            Formatter::Model::Examples.new(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), id(eo), examples_rows(eo['rows'])).replay(@formatter)
           end
         end
       end
@@ -56,7 +56,7 @@ module Gherkin
       builder = Formatter::Model::Step::Builder.new(comments(o), keyword(o), name(o), line(o))
 
       (o['rows'] || []).each do |row|
-        builder.row comments(row), row['cells'], row['line']
+        builder.row comments(row), row['cells'], row['line'], nil
       end
 
       if(o['doc_string'])
@@ -85,8 +85,8 @@ module Gherkin
       end
     end
 
-    def rows(o)
-      o.map{|row| Formatter::Model::Row.new(comments(row), row['cells'], row['line'])}
+    def examples_rows(o)
+      o.map{|row| Formatter::Model::ExamplesTableRow.new(comments(row), row['cells'], row['line'], row['id'])}
     end
 
     def comments(o)
