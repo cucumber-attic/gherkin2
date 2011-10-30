@@ -16,14 +16,16 @@ module PrettyPlease
   end
 
   def json_machinery(gherkin, feature_path)
-    json_formatter      = Gherkin::Formatter::JSONFormatter.new([])
+    json                = StringIO.new
+    json_formatter      = Gherkin::Formatter::JSONFormatter.new(json)
     gherkin_parser      = Gherkin::Parser::Parser.new(json_formatter, true)
     parse(gherkin_parser, gherkin, feature_path)
+    json_formatter.close
 
     io                  = StringIO.new
     pretty_formatter    = Gherkin::Formatter::PrettyFormatter.new(io, true, false)
     json_parser         = Gherkin::JSONParser.new(pretty_formatter, pretty_formatter)
-    json_parser.parse(json_formatter.to_json)
+    json_parser.parse(json.string)
     
     io.string
   end

@@ -32,7 +32,7 @@ public class PrettyFormatter implements Reporter, Formatter {
     private int[][] cellLengths;
     private int[] maxLengths;
     private int rowIndex;
-    private List<Row> rows;
+    private List<? extends Row> rows;
     private Integer rowHeight = null;
     private boolean rowsAbove = false;
 
@@ -189,7 +189,7 @@ public class PrettyFormatter implements Reporter, Formatter {
         return formats.get(key + "_arg");
     }
 
-    public void table(List<Row> rows) {
+    public void table(List<? extends Row> rows) {
         prepareTable(rows);
         if (!executing) {
             for (Row row : rows) {
@@ -199,7 +199,7 @@ public class PrettyFormatter implements Reporter, Formatter {
         }
     }
 
-    private void prepareTable(List<Row> rows) {
+    private void prepareTable(List<? extends Row> rows) {
         this.rows = rows;
         int columnCount = rows.get(0).getCells().size();
         cellLengths = new int[rows.size()][columnCount];
@@ -289,6 +289,11 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void close() {
+        out.close();
     }
 
     private String escapeCell(String cell) {

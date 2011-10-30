@@ -39,7 +39,7 @@ public class JSONParser {
                 }
                 for (Object s : getList(featureElement, "examples")) {
                     JSONObject eo = (JSONObject) s;
-                    new Examples(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), rows(getList(eo, "rows"))).replay(formatter);
+                    new Examples(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), examplesTableRows(getList(eo, "rows"))).replay(formatter);
                 }
             }
             formatter.eof();
@@ -60,9 +60,9 @@ public class JSONParser {
     }
 
     private void step(JSONObject o) {
-        List<Row> rows = null;
+        List<DataTableRow> rows = null;
         if (o.containsKey("rows")) {
-            rows = rows(getList(o, "rows"));
+            rows = dataTableRows(getList(o, "rows"));
         }
 
         DocString docString = null;
@@ -96,12 +96,21 @@ public class JSONParser {
         }
     }
 
-    private List<Row> rows(List o) {
-        List<Row> rows = new ArrayList<Row>(o.size());
+    private List<DataTableRow> dataTableRows(List o) {
+        List<DataTableRow> rows = new ArrayList<DataTableRow>(o.size());
         for (Object e : o) {
             Map row = (Map) e;
             // TODO - do the right kind
             rows.add(new DataTableRow(comments(row), getList(row, "cells"), getInt(row, "line")));
+        }
+        return rows;
+    }
+
+    private List<ExamplesTableRow> examplesTableRows(List o) {
+        List<ExamplesTableRow> rows = new ArrayList<ExamplesTableRow>(o.size());
+        for (Object e : o) {
+            Map row = (Map) e;
+            rows.add(new ExamplesTableRow(comments(row), getList(row, "cells"), getInt(row, "line")));
         }
         return rows;
     }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Examples extends TagStatement {
-    private List<Row> rows;
+    private List<ExamplesTableRow> rows;
 
     public static class Builder implements gherkin.formatter.model.Builder {
         private final List<Comment> comments;
@@ -15,7 +15,7 @@ public class Examples extends TagStatement {
         private final String name;
         private final String description;
         private final int line;
-        private List<Row> rows;
+        private List<ExamplesTableRow> rows;
 
         public Builder(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, int line) {
             this.comments = comments;
@@ -28,7 +28,7 @@ public class Examples extends TagStatement {
 
         public void row(List<Comment> comments, List<String> cells, int line) {
             if (rows == null) {
-                rows = new ArrayList<Row>();
+                rows = new ArrayList<ExamplesTableRow>();
             }
             rows.add(new ExamplesTableRow(comments, cells, line));
         }
@@ -42,7 +42,7 @@ public class Examples extends TagStatement {
         }
     }
 
-    public Examples(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, int line, List<Row> rows) {
+    public Examples(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, int line, List<ExamplesTableRow> rows) {
         super(comments, tags, keyword, name, description, line);
         this.rows = rows;
     }
@@ -52,11 +52,11 @@ public class Examples extends TagStatement {
         formatter.examples(this);
     }
 
-    public List<Row> getRows() {
+    public List<ExamplesTableRow> getRows() {
         return rows;
     }
 
-    public void setRows(List<Row> rows) {
+    public void setRows(List<ExamplesTableRow> rows) {
         this.rows = rows;
     }
 }

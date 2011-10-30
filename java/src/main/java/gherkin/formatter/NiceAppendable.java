@@ -1,5 +1,7 @@
 package gherkin.formatter;
 
+import java.io.Closeable;
+import java.io.Flushable;
 import java.io.IOException;
 
 /**
@@ -46,5 +48,18 @@ public class NiceAppendable {
 
     public NiceAppendable println(CharSequence csq) {
         return append(csq).println();
+    }
+
+    public void close() {
+        try {
+            if (out instanceof Flushable) {
+                ((Flushable) out).flush();
+            }
+            if (out instanceof Closeable) {
+                ((Closeable) out).close();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

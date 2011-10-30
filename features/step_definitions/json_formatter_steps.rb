@@ -11,13 +11,14 @@ class Hash
 end
 
 Given /^a JSON formatter$/ do
-  @feature_hashes = []
-  @formatter = Gherkin::Formatter::JSONFormatter.new(@feature_hashes)
+  @out = StringIO.new
+  @formatter = Gherkin::Formatter::JSONFormatter.new(@out)
 end
 
 Then /^the outputted JSON should be:$/ do |expected_json|
   require 'json'
-  actual_json = @formatter.to_json
+  @formatter.close
+  actual_json = @out.string
   puts actual_json
   puts JSON.pretty_generate(JSON.parse(actual_json))
   expected = JSON.parse(expected_json)

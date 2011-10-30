@@ -1,8 +1,8 @@
 package gherkin.formatter;
 
 import gherkin.TagExpression;
+import gherkin.formatter.model.ExamplesTableRow;
 import gherkin.formatter.model.Range;
-import gherkin.formatter.model.Row;
 import gherkin.formatter.model.Tag;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class TagFilter implements Filter {
         return tagExpression.eval(tagNames);
     }
 
-    public List<Row> filterTableBodyRows(List<Row> examplesRows) {
+    public List<ExamplesTableRow> filterTableBodyRows(List<ExamplesTableRow> examplesRows) {
         return examplesRows;
     }
 }

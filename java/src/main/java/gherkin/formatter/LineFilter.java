@@ -1,7 +1,7 @@
 package gherkin.formatter;
 
+import gherkin.formatter.model.ExamplesTableRow;
 import gherkin.formatter.model.Range;
-import gherkin.formatter.model.Row;
 import gherkin.formatter.model.Tag;
 
 import java.util.ArrayList;
@@ -27,9 +27,9 @@ public class LineFilter implements Filter {
         return false;
     }
 
-    public List<Row> filterTableBodyRows(List<Row> exampleRows) {
-        List<Row> result = new ArrayList<Row>();
-        for (Row row : exampleRows) {
+    public List<ExamplesTableRow> filterTableBodyRows(List<ExamplesTableRow> exampleRows) {
+        List<ExamplesTableRow> result = new ArrayList<ExamplesTableRow>();
+        for (ExamplesTableRow row : exampleRows) {
             if (result.isEmpty()) {
                 result.add(row);
             } else {

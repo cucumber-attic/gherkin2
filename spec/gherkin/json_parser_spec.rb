@@ -1,4 +1,5 @@
 #encoding: utf-8
+require 'stringio'
 require 'spec_helper'
 require 'gherkin/json_parser'
 require 'gherkin/formatter/json_formatter'
@@ -7,11 +8,13 @@ module Gherkin
   describe JSONParser do 
 
     def check_json(json)
-      f = Formatter::JSONFormatter.new([])
+      io = StringIO.new
+      f = Formatter::JSONFormatter.new(io)
       p = JSONParser.new(f, f)
       p.parse(json)
+      f.close
       expected = JSON.parse(json)
-      actual   = JSON.parse(f.to_json)
+      actual   = JSON.parse(io.string)
       actual.should == expected
     end
 

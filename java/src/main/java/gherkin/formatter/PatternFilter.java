@@ -1,7 +1,7 @@
 package gherkin.formatter;
 
+import gherkin.formatter.model.ExamplesTableRow;
 import gherkin.formatter.model.Range;
-import gherkin.formatter.model.Row;
 import gherkin.formatter.model.Tag;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public class PatternFilter implements Filter {
         return false;
     }
 
-    public List<Row> filterTableBodyRows(List<Row> examplesRows) {
+    public List<ExamplesTableRow> filterTableBodyRows(List<ExamplesTableRow> examplesRows) {
         return examplesRows;
     }
 }

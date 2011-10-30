@@ -143,6 +143,11 @@ public class FilterFormatter implements Formatter {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public void close() {
+        formatter.close();
+    }
+
     private void replay() {
         List<Tag> feTags = new ArrayList<Tag>(featureTags);
         feTags.addAll(featureElementTags);

@@ -7,7 +7,8 @@ module Gherkin
   module Formatter
     describe JSONFormatter do
       it "renders results" do
-        f = JSONFormatter.new([])
+        io = StringIO.new
+        f = JSONFormatter.new(io)
         f.uri("f.feature")
         f.feature(Model::Feature.new([], [], "Feature", "f", "", 1))
         f.scenario(Model::Scenario.new([], [], "Feature", "f", "", 2))
@@ -21,6 +22,7 @@ module Gherkin
         f.result(Model::Result.new(:passed, 1, nil))
 
         f.eof
+        f.close
         
         expected = %{
           [
@@ -69,7 +71,7 @@ module Gherkin
           ]
         }
 
-        JSON.parse(expected).should == JSON.parse(f.to_json)
+        JSON.parse(expected).should == JSON.parse(io.string)
       end
     end
   end

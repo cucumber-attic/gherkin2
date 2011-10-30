@@ -10,17 +10,21 @@ import java.util.List;
 import java.util.Map;
 
 public class JSONFormatter implements Reporter, Formatter {
+    private final List<Map<Object, Object>> featureMaps = new ArrayList<Map<Object, Object>>();
+    private final NiceAppendable out;
+
     private Map<Object, Object> featureMap;
     private int stepIndex = 0;
-    private final List<Map<Object, Object>> featureMaps;
     private String uri;
 
-    public JSONFormatter(List<Map<Object, Object>> featureMaps) {
-        this.featureMaps = featureMaps;
+    public JSONFormatter(Appendable out) {
+        this.out = new NiceAppendable(out);
     }
 
-    public String toJson() {
-        return JSONValue.toJSONString(featureMaps);
+    @Override
+    public void close() {
+        out.append(JSONValue.toJSONString(featureMaps));
+        out.close();
     }
 
     @Override

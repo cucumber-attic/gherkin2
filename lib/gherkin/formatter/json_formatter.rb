@@ -12,13 +12,14 @@ module Gherkin
       
       include Base64
       
-      def initialize(feature_hashes)
-        raise "Must be an Array" unless Array===feature_hashes
-        @feature_hashes = feature_hashes
+      def initialize(io)
+        raise "Must be writeable" unless io.respond_to?(:write)
+        @io = io
+        @feature_hashes = []
       end
 
-      def to_json
-        @feature_hashes.to_json
+      def close
+        @io.write(@feature_hashes.to_json)
       end
 
       def uri(uri)

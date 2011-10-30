@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Step extends BasicStatement {
-    private final List<Row> rows;
+    private final List<DataTableRow> rows;
     private final DocString doc_string;
 
     public static class Builder implements gherkin.formatter.model.Builder {
@@ -18,7 +18,7 @@ public class Step extends BasicStatement {
         private final String keyword;
         private final String name;
         private final int line;
-        private List<Row> rows;
+        private List<DataTableRow> rows;
         private DocString doc_string;
 
         public Builder(List<Comment> comments, String keyword, String name, int line) {
@@ -30,7 +30,7 @@ public class Step extends BasicStatement {
 
         public void row(List<Comment> comments, List<String> cells, int line) {
             if (rows == null) {
-                rows = new ArrayList<Row>();
+                rows = new ArrayList<DataTableRow>();
             }
             rows.add(new DataTableRow(comments, cells, line));
         }
@@ -44,7 +44,7 @@ public class Step extends BasicStatement {
         }
     }
 
-    public Step(List<Comment> comments, String keyword, String name, int line, List<Row> rows, DocString docString) {
+    public Step(List<Comment> comments, String keyword, String name, int line, List<DataTableRow> rows, DocString docString) {
         super(comments, keyword, name, line);
         this.rows = rows;
         this.doc_string = docString;
@@ -81,7 +81,7 @@ public class Step extends BasicStatement {
         return new Match(getOutlineArgs(), location);
     }
 
-    public List<Row> getRows() {
+    public List<DataTableRow> getRows() {
         return rows;
     }
 
