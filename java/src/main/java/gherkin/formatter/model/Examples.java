@@ -15,15 +15,17 @@ public class Examples extends TagStatement {
         private final String name;
         private final String description;
         private final int line;
+        private final String id;
         private List<ExamplesTableRow> rows;
 
-        public Builder(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, int line) {
+        public Builder(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, int line, String id) {
             this.comments = comments;
             this.tags = tags;
             this.keyword = keyword;
             this.name = name;
             this.description = description;
             this.line = line;
+            this.id = id;
         }
 
         public void row(List<Comment> comments, List<String> cells, int line) {
@@ -34,7 +36,7 @@ public class Examples extends TagStatement {
         }
 
         public void replay(Formatter formatter) {
-            new Examples(comments, tags, keyword, name, description, line, rows).replay(formatter);
+            new Examples(comments, tags, keyword, name, description, line, id, rows).replay(formatter);
         }
 
         public void docString(DocString docString) {
@@ -42,8 +44,8 @@ public class Examples extends TagStatement {
         }
     }
 
-    public Examples(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, int line, List<ExamplesTableRow> rows) {
-        super(comments, tags, keyword, name, description, line);
+    public Examples(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, int line, String id, List<ExamplesTableRow> rows) {
+        super(comments, tags, keyword, name, description, line, id);
         this.rows = rows;
     }
 

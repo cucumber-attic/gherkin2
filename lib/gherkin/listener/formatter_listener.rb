@@ -23,35 +23,35 @@ module Gherkin
       end
 
       def feature(keyword, name, description, line)
-        @stash.tag_statement do |comments, tags|
-          replay Formatter::Model::Feature.new(comments, tags, keyword, name, description, line)
+        @stash.feature(name) do |comments, tags, id|
+          replay Formatter::Model::Feature.new(comments, tags, keyword, name, description, line, id)
         end
       end
 
       def background(keyword, name, description, line)
-        @stash.tag_statement do |comments, tags|
+        @stash.feature_element(name) do |comments, tags, id|
           replay Formatter::Model::Background.new(comments, keyword, name, description, line)
         end
       end
 
       def scenario(keyword, name, description, line)
         replay_step_or_examples
-        @stash.tag_statement do |comments, tags|
-          replay Formatter::Model::Scenario.new(comments, tags, keyword, name, description, line)
+        @stash.feature_element(name) do |comments, tags, id|
+          replay Formatter::Model::Scenario.new(comments, tags, keyword, name, description, line, id)
         end
       end
 
       def scenario_outline(keyword, name, description, line)
         replay_step_or_examples
-        @stash.tag_statement do |comments, tags|
-          replay Formatter::Model::ScenarioOutline.new(comments, tags, keyword, name, description, line)
+        @stash.feature_element(name) do |comments, tags, id|
+          replay Formatter::Model::ScenarioOutline.new(comments, tags, keyword, name, description, line, id)
         end
       end
 
       def examples(keyword, name, description, line)
         replay_step_or_examples
-        @stash.tag_statement do |comments, tags|
-          @current_builder = Formatter::Model::Examples::Builder.new(comments, tags, keyword, name, description, line)
+        @stash.examples(name) do |comments, tags, id|
+          @current_builder = Formatter::Model::Examples::Builder.new(comments, tags, keyword, name, description, line, id)
         end
       end
 
@@ -88,18 +88,31 @@ module Gherkin
       end
       
       class Stash
-        attr_reader :comments, :tags
+        attr_reader :comments, :tags, :ids
         
         def initialize
-          @comments, @tags = [], []
+          @comments, @tags, @ids = [], [], []
         end
         
         def comment(comment)
           @comments << comment
         end
         
-        def tag_statement
-          yield @comments, @tags
+        def feature(name)
+          @feature_id = id(name)
+          yield @comments, @tags, @feature_id
+          @comments, @tags = [], []
+        end
+
+        def feature_element(name)
+          @feature_element_id = "#{@feature_id}/#{id(name)}"
+          yield @comments, @tags, @feature_element_id
+          @comments, @tags = [], []
+        end
+        
+        def examples(name)
+          @examples_id = "#{@feature_element_id}/#{id(name)}"
+          yield @comments, @tags, @examples_id
           @comments, @tags = [], []
         end
         
@@ -110,6 +123,10 @@ module Gherkin
         
         def tag(tag)
           @tags << tag
+        end
+
+        def id(name)
+          (name || '').gsub(/\s/, '-').downcase
         end
       end
 

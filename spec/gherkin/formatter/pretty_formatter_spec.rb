@@ -36,9 +36,9 @@ module Gherkin
 
       it "should print comments when scenario is longer" do
         @f.uri("features/foo.feature")
-        @f.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1))
+        @f.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1, "hello"))
 
-        @f.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4))
+        @f.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4, "the-scenario"))
         @f.step(Model::Step.new([], "Given ", "some stuff", 5, nil, nil))
         @f.step(Model::Step.new([], "When ", "foo", 6, nil, nil))
 
@@ -61,12 +61,12 @@ module Gherkin
 
       it "should print comments when step is longer" do
         @f.uri("features/foo.feature")
-        @f.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1))
+        @f.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1, "hello"))
         step = Model::Step.new([], "Given ", "some stuff that is longer", 5, nil, nil)
         match = Model::Match.new([], "features/step_definitions/bar.rb:56")
         result = Model::Result.new('passed', 0, nil)
 
-        @f.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4))
+        @f.scenario(Model::Scenario.new([], [], "Scenario", "The scenario", "", 4, "the-scenario"))
         @f.step(step)
         @f.match(match)
         @f.result(result)
@@ -82,7 +82,7 @@ module Gherkin
 
       it "should highlight arguments for regular steps" do
         @f.uri("foo.feature")
-        @f.scenario(Model::Scenario.new([], [], "Scenario", "Lots of cukes", "", 3))
+        @f.scenario(Model::Scenario.new([], [], "Scenario", "Lots of cukes", "", 3, "lots-of-cukes"))
         @f.step(Model::Step.new([], "Given ", "I have 999 cukes in my belly", 3, nil, nil))
         @f.match(Model::Match.new([Gherkin::Formatter::Argument.new(7, '999')], nil))
         @f.result(Model::Result.new('passed', 6, nil))

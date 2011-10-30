@@ -21,7 +21,7 @@ module Gherkin
 
       o.each do |f|
         @formatter.uri(f['uri'])
-        Formatter::Model::Feature.new(comments(f), tags(f), keyword(f), name(f), description(f), line(f)).replay(@formatter)
+        Formatter::Model::Feature.new(comments(f), tags(f), keyword(f), name(f), description(f), line(f), id(f)).replay(@formatter)
         (f["elements"] || []).each do |feature_element|
           feature_element(feature_element).replay(@formatter)
           (feature_element["steps"] || []).each do |step|
@@ -31,7 +31,7 @@ module Gherkin
             embeddings(step)
           end
           (feature_element["examples"] || []).each do |eo|
-            Formatter::Model::Examples.new(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), rows(eo['rows'])).replay(@formatter)
+            Formatter::Model::Examples.new(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), id(eo), rows(eo['rows'])).replay(@formatter)
           end
         end
       end
@@ -46,9 +46,9 @@ module Gherkin
       when 'background'
         Formatter::Model::Background.new(comments(o), keyword(o), name(o), description(o), line(o))
       when 'scenario'
-        Formatter::Model::Scenario.new(comments(o), tags(o), keyword(o), name(o), description(o), line(o))
+        Formatter::Model::Scenario.new(comments(o), tags(o), keyword(o), name(o), description(o), line(o), id(o))
       when 'scenario_outline'
-        Formatter::Model::ScenarioOutline.new(comments(o), tags(o), keyword(o), name(o), description(o), line(o))
+        Formatter::Model::ScenarioOutline.new(comments(o), tags(o), keyword(o), name(o), description(o), line(o), id(o))
       end
     end
 
@@ -115,6 +115,10 @@ module Gherkin
 
     def line(o)
       o['line']
+    end
+
+    def id(o)
+      o['id']
     end
 
     def arguments(m)

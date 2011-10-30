@@ -4,10 +4,12 @@ import java.util.List;
 
 public abstract class TagStatement extends DescribedStatement {
     private final List<Tag> tags;
+    private final String id;
 
-    public TagStatement(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, int line) {
+    public TagStatement(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, int line, String id) {
         super(comments, keyword, name, description, line);
         this.tags = tags;
+        this.id = id;
     }
 
     public List<Tag> getTags() {

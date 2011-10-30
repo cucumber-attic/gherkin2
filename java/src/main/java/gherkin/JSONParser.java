@@ -29,7 +29,7 @@ public class JSONParser {
         for (Object f : featureHashes) {
             JSONObject o = (JSONObject) f;
             formatter.uri(getString(o, "uri"));
-            new Feature(comments(o), tags(o), keyword(o), name(o), description(o), line(o)).replay(formatter);
+            new Feature(comments(o), tags(o), keyword(o), name(o), description(o), line(o), id(o)).replay(formatter);
             for (Object e : getList(o, "elements")) {
                 JSONObject featureElement = (JSONObject) e;
                 featureElement(featureElement).replay(formatter);
@@ -39,7 +39,7 @@ public class JSONParser {
                 }
                 for (Object s : getList(featureElement, "examples")) {
                     JSONObject eo = (JSONObject) s;
-                    new Examples(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), examplesTableRows(getList(eo, "rows"))).replay(formatter);
+                    new Examples(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), id(eo), examplesTableRows(getList(eo, "rows"))).replay(formatter);
                 }
             }
             formatter.eof();
@@ -51,9 +51,9 @@ public class JSONParser {
         if (type.equals("background")) {
             return new Background(comments(o), keyword(o), name(o), description(o), line(o));
         } else if (type.equals("scenario")) {
-            return new Scenario(comments(o), tags(o), keyword(o), name(o), description(o), line(o));
+            return new Scenario(comments(o), tags(o), keyword(o), name(o), description(o), line(o), id(o));
         } else if (type.equals("scenario_outline")) {
-            return new ScenarioOutline(comments(o), tags(o), keyword(o), name(o), description(o), line(o));
+            return new ScenarioOutline(comments(o), tags(o), keyword(o), name(o), description(o), line(o), id(o));
         } else {
             return null;
         }
@@ -151,6 +151,10 @@ public class JSONParser {
 
     private int line(Map o) {
         return getInt(o, "line");
+    }
+
+    private String id(Map o) {
+        return getString(o, "id");
     }
 
     private List<Argument> arguments(Map m) {

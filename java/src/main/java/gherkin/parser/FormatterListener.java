@@ -16,6 +16,10 @@ public class FormatterListener implements Listener {
         private List<Comment> comments;
         private List<Tag> tags;
 
+        private String featureId;
+        private String featureElementId;
+        private String examplesId;
+
         public void comment(Comment comment) {
             comments.add(comment);
         }
@@ -27,6 +31,22 @@ public class FormatterListener implements Listener {
         public void reset() {
             comments = new ArrayList<Comment>();
             tags = new ArrayList<Tag>();
+        }
+
+        public String featureId(String name) {
+            return featureId = id(name);
+        }
+
+        public String featureElementId(String name) {
+            return featureElementId = featureId  + "/" + id(name);
+        }
+
+        public String examplesId(String name) {
+            return examplesId = featureElementId  + "/" + id(name);
+        }
+
+        private String id(String name) {
+            return name.replaceAll("\\s", "-").toLowerCase();
         }
     }
 
@@ -45,7 +65,7 @@ public class FormatterListener implements Listener {
     }
 
     public void feature(String keyword, String name, String description, int line) {
-        formatter.feature(new Feature(stash.comments, stash.tags, keyword, name, description, line));
+        formatter.feature(new Feature(stash.comments, stash.tags, keyword, name, description, line, stash.featureId(name)));
         stash.reset();
     }
 
@@ -56,19 +76,19 @@ public class FormatterListener implements Listener {
 
     public void scenario(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        formatter.scenario(new Scenario(stash.comments, stash.tags, keyword, name, description, line));
+        formatter.scenario(new Scenario(stash.comments, stash.tags, keyword, name, description, line, stash.featureElementId(name)));
         stash.reset();
     }
 
     public void scenarioOutline(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        formatter.scenarioOutline(new ScenarioOutline(stash.comments, stash.tags, keyword, name, description, line));
+        formatter.scenarioOutline(new ScenarioOutline(stash.comments, stash.tags, keyword, name, description, line, stash.featureElementId(name)));
         stash.reset();
     }
 
     public void examples(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
-        currentBuilder = new Examples.Builder(stash.comments, stash.tags, keyword, name, description, line);
+        currentBuilder = new Examples.Builder(stash.comments, stash.tags, keyword, name, description, line, stash.examplesId(name));
         stash.reset();
     }
 

@@ -17,6 +17,7 @@ Feature: JSON lexer
           ],
           "description": "",
           "keyword": "Egenskap",
+          "id": "kjapp",
           "name": "Kjapp",
           "tags": [],
           "uri": "test.feature"
@@ -37,6 +38,7 @@ Feature: JSON lexer
         {
           "comments": [],
           "keyword": "Feature",
+          "id": "oh-hai",
           "name": "OH HAI",
           "tags": [{"name": "@one"}],
           "uri": "test.feature",
@@ -46,6 +48,7 @@ Feature: JSON lexer
               "comments": [],
               "tags": [],
               "keyword": "Scenario",
+              "id": "oh-hai/fujin",
               "name": "Fujin",
               "description": "",
               "type": "scenario",
@@ -69,6 +72,7 @@ Feature: JSON lexer
               "comments": [],
               "tags": [{"name": "@two"}],
               "keyword": "Scenario",
+              "id": "oh-hai/_why",
               "name": "_why",
               "description": "",
               "type": "scenario",
@@ -92,6 +96,7 @@ Feature: JSON lexer
               "comments": [],
               "tags": [{"name": "@three"}, {"name": "@four"}],
               "keyword": "Scenario Outline",
+              "id": "oh-hai/life",
               "name": "Life",
               "description": "",
               "type": "scenario_outline",
@@ -110,6 +115,7 @@ Feature: JSON lexer
                   "comments": [],
                   "tags": [{"name": "@five"}],
                   "keyword": "Examples",
+                  "id": "oh-hai/life/real-life",
                   "name": "Real life",
                   "description": "",
                   "line": 18,
@@ -137,6 +143,7 @@ Feature: JSON lexer
               "comments": [],
               "tags": [],
               "keyword": "Scenario",
+              "id": "oh-hai/who-stole-my-mojo?",
               "name": "who stole my mojo?",
               "description": "",
               "type": "scenario",
@@ -174,6 +181,7 @@ Feature: JSON lexer
               "description": "",
               "type": "scenario_outline",
               "line": 32,
+              "id": "oh-hai/with",
               "name": "with",
               "steps": [
                 {
@@ -189,6 +197,7 @@ Feature: JSON lexer
                   "comments": [{"value": "# comments"}, {"value": "# everywhere"}],
                   "tags": [],
                   "keyword": "Examples",
+                  "id": "oh-hai/with/an-example",
                   "name": "An example",
                   "description": "",
                   "line": 38,
@@ -257,7 +266,7 @@ Feature: JSON lexer
             | bartout |
       """
 
-  Scenario:  Feature with Background
+  Scenario: Feature with Background
     Given the following JSON is parsed:
       """
       [
@@ -265,6 +274,7 @@ Feature: JSON lexer
           "comments": [],
           "description": "",
           "keyword": "Feature",
+          "id": "kjapp",
           "name": "Kjapp",
           "tags": [],
           "uri": "test.feature",
@@ -290,6 +300,7 @@ Feature: JSON lexer
               "comments": [{"value": "# Writing JSON by hand sucks"}],
               "tags": [],
               "keyword": "Scenario",
+              "id": "kjapp/",
               "name": "",
               "description": "",
               "line": 6,

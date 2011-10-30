@@ -37,7 +37,8 @@ Feature: JSON formatter
           "keyword": "Egenskap",
           "line": 3,
           "name": "Kjapp",
-          "uri": "test.feature"
+          "uri": "test.feature",
+          "id": "kjapp"
         },
         {
           "comments": [
@@ -54,7 +55,8 @@ Feature: JSON formatter
           "keyword": "Egenskap",
           "line": 3,
           "name": "Kjappere",
-          "uri": "test.feature"
+          "uri": "test.feature",
+          "id": "kjappere"
         }
       ]
       """
@@ -114,6 +116,7 @@ Feature: JSON formatter
               "description": "",
               "keyword": "Scenario",
               "line": 4,
+              "id": "oh-hai/fujin",
               "name": "Fujin",
               "steps": [
                 {
@@ -133,6 +136,7 @@ Feature: JSON formatter
               "description": "",
               "keyword": "Scenario",
               "line": 9,
+              "id": "oh-hai/_why",
               "name": "_why",
               "steps": [
                 {
@@ -161,6 +165,7 @@ Feature: JSON formatter
                   "description": "",
                   "keyword": "Examples",
                   "line": 18,
+                  "id": "oh-hai/life/real-life",
                   "name": "Real life",
                   "rows": [
                     {
@@ -192,6 +197,7 @@ Feature: JSON formatter
               ],
               "keyword": "Scenario Outline",
               "line": 14,
+              "id": "oh-hai/life",
               "name": "Life",
               "steps": [
                 {
@@ -216,6 +222,7 @@ Feature: JSON formatter
               "description": "",
               "keyword": "Scenario",
               "line": 23,
+              "id": "oh-hai/who-stole-my-mojo?",
               "name": "who stole my mojo?",
               "steps": [
                 {
@@ -267,6 +274,7 @@ Feature: JSON formatter
                   "description": "",
                   "keyword": "Examples",
                   "line": 38,
+                  "id": "oh-hai/with/an-example",
                   "name": "An example",
                   "rows": [
                     {
@@ -286,6 +294,7 @@ Feature: JSON formatter
               ],
               "keyword": "Scenario Outline",
               "line": 32,
+              "id": "oh-hai/with",
               "name": "with",
               "steps": [
                 {
@@ -305,6 +314,7 @@ Feature: JSON formatter
           ],
           "keyword": "Feature",
           "line": 2,
+          "id": "oh-hai",
           "name": "OH HAI",
           "tags": [
             {
@@ -335,6 +345,7 @@ Feature: JSON formatter
           "uri": "test.feature",
           "keyword": "Feature",
           "name": "Kjapp",
+          "id": "kjapp",
           "description": "",
           "line": 1,
           "elements": [
@@ -356,6 +367,7 @@ Feature: JSON formatter
               "type": "scenario",
               "comments": [{"value": "# Writing JSON by hand sucks", "line": 6}],
               "keyword": "Scenario",
+              "id": "kjapp/",
               "name": "",
               "description": "",
               "line": 7,
@@ -388,21 +400,21 @@ Feature: JSON formatter
         
             some pre-formatted stuff
         
-        Background: name
+        Background: b name
             test  
             test 
         
-        Scenario: name
+        Scenario: s name
             test  
             test 
         
-        Scenario Outline: name
+        Scenario Outline: s o name
             test  
             test 
           
           Given <foo> 
             
-          Examples: name
+          Examples: e name
               test  
               test 
             | foo   |
@@ -414,6 +426,7 @@ Feature: JSON formatter
         {
           "uri": "test.feature",
           "keyword": "Feature",
+          "id": "foo",
           "name": "Foo",
           "description": "one line  \nanother line  \n\n    some pre-formatted stuff",
           "line": 1,
@@ -422,14 +435,15 @@ Feature: JSON formatter
               "description": "  test  \n  test",
               "keyword": "Background",
               "line": 7,
-              "name": "name",
+              "name": "b name",
               "type": "background"
             },
             {
               "description": "  test  \n  test",
               "keyword": "Scenario",
               "line": 11,
-              "name": "name",
+              "id": "foo/s-name",
+              "name": "s name",
               "type": "scenario"
             },
             {
@@ -439,7 +453,8 @@ Feature: JSON formatter
                   "description": "  test  \n  test",
                   "keyword": "Examples",
                   "line": 21,
-                  "name": "name",
+                  "id": "foo/s-o-name/e-name",
+                  "name": "e name",
                   "rows": [
                     {
                       "cells": [
@@ -458,7 +473,8 @@ Feature: JSON formatter
               ],
               "keyword": "Scenario Outline",
               "line": 15,
-              "name": "name",
+              "id": "foo/s-o-name",
+              "name": "s o name",
               "steps": [
                 {
                   "keyword": "Given ",

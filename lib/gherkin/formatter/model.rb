@@ -31,11 +31,12 @@ module Gherkin
       end
 
       class TagStatement < DescribedStatement
-        attr_reader :tags
+        attr_reader :tags, :id
 
-        def initialize(comments, tags, keyword, name, description, line)
+        def initialize(comments, tags, keyword, name, description, line, id)
           super(comments, keyword, name, description, line)
           @tags = tags
+          @id = id
         end
 
         def first_non_comment_line
@@ -45,10 +46,6 @@ module Gherkin
 
       class Feature < TagStatement
         native_impl('gherkin')
-
-        def initialize(comments, tags, keyword, name, description, line)
-          super(comments, tags, keyword, name, description, line)
-        end
 
         def replay(formatter)
           formatter.feature(self)
@@ -71,8 +68,8 @@ module Gherkin
       class Scenario < TagStatement
         native_impl('gherkin')
 
-        def initialize(comments, tags, keyword, name, description, line)
-          super(comments, tags, keyword, name, description, line)
+        def initialize(comments, tags, keyword, name, description, line, id)
+          super(comments, tags, keyword, name, description, line, id)
           @type = "scenario"
         end
 
@@ -84,8 +81,8 @@ module Gherkin
       class ScenarioOutline < TagStatement
         native_impl('gherkin')
 
-        def initialize(comments, tags, keyword, name, description, line)
-          super(comments, tags, keyword, name, description, line)
+        def initialize(comments, tags, keyword, name, description, line, id)
+          super(comments, tags, keyword, name, description, line, id)
           @type = "scenario_outline"
         end
 
@@ -99,8 +96,8 @@ module Gherkin
 
         attr_accessor :rows # needs to remain mutable for filters
 
-        def initialize(comments, tags, keyword, name, description, line, rows)
-          super(comments, tags, keyword, name, description, line)
+        def initialize(comments, tags, keyword, name, description, line, id, rows)
+          super(comments, tags, keyword, name, description, line, id)
           @rows = rows
         end
 

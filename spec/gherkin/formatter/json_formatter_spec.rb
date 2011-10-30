@@ -10,8 +10,8 @@ module Gherkin
         io = StringIO.new
         f = JSONFormatter.new(io)
         f.uri("f.feature")
-        f.feature(Model::Feature.new([], [], "Feature", "f", "", 1))
-        f.scenario(Model::Scenario.new([], [], "Feature", "f", "", 2))
+        f.feature(Model::Feature.new([], [], "Feature", "ff", "", 1, "ff"))
+        f.scenario(Model::Scenario.new([], [], "Scenario", "ss", "", 2, "ff/ss"))
         f.step(Model::Step.new([], "Given ", "g", 3, nil, nil))
         f.step(Model::Step.new([], "When ", "w", 4, nil, nil))
 
@@ -27,15 +27,17 @@ module Gherkin
         expected = %{
           [
             {
+              "id": "ff",
               "uri": "f.feature",
               "keyword": "Feature",
-              "name": "f",
+              "name": "ff",
               "line": 1,
               "description": "",
               "elements": [
                 {
-                  "keyword": "Feature",
-                  "name": "f",
+                  "id": "ff/ss",
+                  "keyword": "Scenario",
+                  "name": "ss",
                   "line": 2,
                   "description": "",
                   "type": "scenario",

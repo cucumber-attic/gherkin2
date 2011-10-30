@@ -21,6 +21,7 @@ module Gherkin
     it "should parse a barely empty feature" do
       check_json(%{[
         {
+          "id": "one",
           "uri": "test.feature",
           "keyword": "Feature", 
           "name": "One", 
@@ -33,6 +34,7 @@ module Gherkin
     it "should parse feature with tags and one scenario" do
       check_json(%{[
         {
+          "id": "one",
           "uri": "test.feature",
           "tags": [
             {
@@ -46,6 +48,7 @@ module Gherkin
           "line": 3,
           "elements": [
             {
+              "id": "one/two",
               "type": "scenario",
               "steps": [
                 {
@@ -66,6 +69,7 @@ module Gherkin
     it "should parse feature with match, result and embedding" do
       check_json(%{[
         {
+          "id": "one",
           "uri": "test.feature",
           "tags": [
             {
@@ -79,6 +83,7 @@ module Gherkin
           "line": 3,
           "elements": [
             {
+              "id": "one/a-scenario",
               "type": "scenario",
               "steps": [
                 {
