@@ -1,12 +1,11 @@
 # encoding: UTF-8
 #
-# We use ISO 639-1 (language) and ISO 3166 alpha-2 (region - if appliccable):
+# We use ISO 639-1 (language) and ISO 3166 alpha-2 (region - if applicable):
 # http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
 # http://en.wikipedia.org/wiki/ISO_3166-1
 #
 # If you want several aliases for a keyword, just separate them
-# with a | character. Make sure there are no ambiguities in the
-# keywords.
+# with a | character. The * is a step keyword alias for all translations.
 #
 # If you do *not* want a trailing space after a keyword, end it with a < character.
 # (See Chinese for examples).
