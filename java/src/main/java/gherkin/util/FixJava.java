@@ -20,9 +20,9 @@ public class FixJava {
         return sb.toString();
     }
 
-    public static List<String> map(List objects, Mapper mapper) {
-        List<String> result = new ArrayList<String>(objects.size());
-        for (Object o : objects) {
+    public static <T,R> List<R> map(List<T> objects, Mapper<T,R> mapper) {
+        List<R> result = new ArrayList<R>(objects.size());
+        for (T o : objects) {
             result.add(mapper.map(o));
         }
         return result;

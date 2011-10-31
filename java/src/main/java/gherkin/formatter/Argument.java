@@ -16,4 +16,8 @@ public class Argument extends Mappable {
     public int getOffset() {
         return offset;
     }
+
+    public String toString() {
+        return getVal();
+    }
 }

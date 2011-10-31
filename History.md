@@ -1,3 +1,9 @@
+## [2.6.2](https://github.com/cucumber/gherkin/compare/v2.6.1...v2.6.2)
+
+### Changed Features
+
+* [Java] Minor internal API changes needed for better arity mismatch reporting in Cucumber-JVM (Aslak Hellesøy)
+
 ## [2.6.1](https://github.com/cucumber/gherkin/compare/v2.6.0...v2.6.1)
 
 ### Bugfixes

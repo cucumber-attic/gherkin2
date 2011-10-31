@@ -3,7 +3,7 @@
 Gem::Specification.new do |s|
   s.name        = "gherkin"
   # If bumping the major version here, comment out the cucumber dependency below and uncomment in the Gemfile to build against a local cucumber.
-  s.version     = "2.6.1"
+  s.version     = "2.6.2"
   s.authors     = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
   s.description = "A fast Gherkin lexer/parser based on the Ragel State Machine Compiler."
   s.summary     = "#{s.name}-#{s.version}"

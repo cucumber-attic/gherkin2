@@ -1,5 +1,5 @@
 package gherkin.util;
 
-public interface Mapper {
-    String map(Object string);
+public interface Mapper<T,R> {
+    R map(T o);
 }
