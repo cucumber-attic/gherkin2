@@ -6,8 +6,6 @@ rvm:
 branches:
   only:
     - master
-# Needed to build lexers
-before_script: sudo apt-get install -y ragel
 
 notifications:
   email:
