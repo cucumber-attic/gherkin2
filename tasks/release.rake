@@ -2,7 +2,7 @@ namespace :release do
   desc 'Upload all packages and tag git'
   task :ALL => ['gems:sanity', :ikvm, :mvn_deploy_jar, :mvn_deploy_site, :push_native_gems, :push_npm_package, :release, :push_yard, :symlink_docs, :post_release]
 
-  desc 'Push all gems to rubygems.org (gemcutter)'
+  desc 'Push all gems to rubygems.org'
   task :push_native_gems do
     Dir.chdir('release') do
       Dir['*.gem'].each do |gem_file|

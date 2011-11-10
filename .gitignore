@@ -11,3 +11,4 @@ release
 npm-debug.log
 doc/
 .yardoc
+Gemfile.lock

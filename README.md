@@ -3,11 +3,11 @@
 A fast lexer and parser for the Gherkin language based on Ragel. Gherkin is two things:
 
 * The language that has evolved out of the Cucumber project.
-* This library
+* This library.
 
 Supported platforms:
 
-* Ruby 1.8.6-1.9.2 (MRI, JRuby, REE, Rubinius)
+* Ruby 1.8.6-1.9.3 (MRI, JRuby, REE, Rubinius)
 * Pure Java (jar file)
 * JavaScript (NPM package. Tested with V8/node.js/Chrome, but might work on other JavaScript engines)
 * .NET (dll file)
@@ -190,15 +190,20 @@ Make sure you have openssl installed first.
     bundle install
     rake-compiler cross-ruby VERSION=1.8.7-p352
 
-    # 1.9.2
-    rvm install 1.9.2-p290
-    rvm use 1.9.2-p290
+    # 1.9.3
+    rvm install 1.9.3-p0
+    rvm use 1.9.3-p0
     rvm gemset create cucumber
     rvm gemset use cucumber
     gem install bundler
     unset GHERKIN_JS
     bundle install
-    rake-compiler cross-ruby VERSION=1.9.2-p290
+    rake-compiler cross-ruby VERSION=1.9.3-p0
+
+Now you can build Windows gems:
+
+    rake compile
+    rake gems:win
 
 ## Release process
 

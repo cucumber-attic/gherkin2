@@ -1,3 +1,9 @@
+## [2.6.3](https://github.com/cucumber/gherkin/compare/v2.6.2...v2.6.3) (In Git)
+
+### Changed Features
+
+* Windows gems are compiled against 1.9.3 instead of 1.9.2. Should still work on 1.9.3. (Aslak Hellesøy)
+
 ## [2.6.2](https://github.com/cucumber/gherkin/compare/v2.6.1...v2.6.2)
 
 ### Changed Features
