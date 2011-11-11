@@ -212,8 +212,16 @@ if(typeof exports !== 'undefined') {
   exports.Lexer = Lexer;
 }
 // Require.js export
-if (typeof define !== 'undefined' && define.amd) {
-  define('gherkin/lexer/<%= @i18n.underscored_iso_code %>', [], function() {return Lexer});
+if (typeof define !== 'undefined') {
+  if(define.amd) {
+    define('gherkin/lexer/<%= @i18n.underscored_iso_code %>', [], function() {
+      return Lexer
+    });
+  } else {
+    define('gherkin/lexer/<%= @i18n.underscored_iso_code %>', function(require, exports, module) {
+      exports.Lexer = Lexer;
+    });
+  }
 }
 
 })();
