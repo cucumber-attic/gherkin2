@@ -13,7 +13,7 @@ module Gherkin
         p a
       end
 
-      cxt.load(File.dirname(__FILE__) + "/../../js/lib/gherkin/lexer/#{i18n_underscored_iso_code}.js")
+      cxt.load(File.dirname(__FILE__) + "/../../js/lib/gherkin/lexer/#{i18n_underscored_iso_code}.min.js")
       cxt['exports']['Lexer']
     end
   end

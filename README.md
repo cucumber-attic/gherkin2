@@ -124,18 +124,22 @@ Now you can build the jar with:
 
 ### JavaScript
 
-In order to build and test Gherkin for Javascript you must install:
+In order to build and test Gherkin for JavaScript you must install:
 
 * Node.js (0.4.6 or higher)
 * NPM (0.3.18 or higher)
-* Ragel with Javascript support: http://github.com/dominicmarks/ragel-js
+* Ragel with JavaScript support: http://github.com/dominicmarks/ragel-js
 * Define the GHERKIN_JS environment variable in your shell (any value will do)
 
-Now you can build the Javascript with:
+Prepare the environment:
+
+    pushd js
+    npm link
+    popd
+
+Now you can build the JavaScript with:
 
     rake js
-    cd js
-    npm install
 
 And you can try it out with node.js:
 
@@ -207,7 +211,7 @@ Now you can build Windows gems:
 
 ## Release process
 
-* Make sure GHERKIN_JS is defined (see Javascript section above)
+* Make sure GHERKIN_JS is defined (see JavaScript section above)
 * Bump version in:
   * This file (Installation/Java section)
   * gherkin.gemspec

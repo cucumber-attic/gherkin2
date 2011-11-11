@@ -10,6 +10,7 @@ class RagelTask
   end
 
   RL_OUTPUT_DIR = File.dirname(__FILE__) + "/../ragel/i18n"
+  UGLIFYJS      = File.dirname(__FILE__) + "/../js/node_modules/uglify-js/bin/uglifyjs"
 
   def initialize(lang, i18n)
     @lang     = lang
@@ -24,6 +25,9 @@ class RagelTask
       if(@lang == 'js')
         # Ragel chokes if we put the escaped triple quotes in .rl, so we'll do the replace with sed after the fact. Lots of backslashes!!
         sh %{sed -i '' 's/ESCAPED_TRIPLE_QUOTE/\\\\\\\\\\\\"\\\\\\\\\\\\"\\\\\\\\\\\\"/' #{target}}
+        
+        # Minify
+        sh %{node #{UGLIFYJS} #{target} > #{target.gsub(/\.js$/, '.min.js')}}
       end
     end
 
