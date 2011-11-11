@@ -4,6 +4,7 @@
 
 * Windows gems are compiled against 1.9.3 instead of 1.9.2. Should still work on 1.9.3. (Aslak Hellesøy)
 * NPM package contains UglifyJS-minified scripts (Aslak Hellesøy)
+* NPM package no longer contains Ace ([#109](https://github.com/cucumber/gherkin/issues/109) Aslak Hellesøy)
 * JavaScript exports for require.js works in non-AMD mode (needed for Ace) (Aslak Hellesøy)
 
 ## [2.6.2](https://github.com/cucumber/gherkin/compare/v2.6.1...v2.6.2)
