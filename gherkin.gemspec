@@ -46,15 +46,15 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency('json', '>= 1.4.6')
 
-  s.add_development_dependency('cucumber', '>= 1.1.1')
+  s.add_development_dependency('cucumber', '>= 1.1.2')
   s.add_development_dependency('rake', '>= 0.9.2')
   s.add_development_dependency('bundler', '>= 1.0.21')
   s.add_development_dependency('rspec', '>= 2.7.0')
 
   unless ENV['RUBY_CC_VERSION'] || defined?(JRUBY_VERSION)
-    s.add_development_dependency('therubyracer', '>= 0.9.8') if ENV['GHERKIN_JS']
+    s.add_development_dependency('therubyracer', '>= 0.9.9') if ENV['GHERKIN_JS']
     # For Documentation:
-    s.add_development_dependency('yard', '>= 0.7.2')
+    s.add_development_dependency('yard', '>= 0.7.3')
     s.add_development_dependency('rdiscount', '>= 1.6.8')
   end
 
