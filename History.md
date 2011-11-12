@@ -1,4 +1,10 @@
-## [2.6.3](https://github.com/cucumber/gherkin/compare/v2.6.2...v2.6.3) (In Git)
+## [2.6.4](https://github.com/cucumber/gherkin/compare/v2.6.3...v2.6.4)
+
+### Changed Features
+
+* [Node.js] No more restrictions about what Node.js version this runs on. (Aslak Hellesøy)
+
+## [2.6.3](https://github.com/cucumber/gherkin/compare/v2.6.2...v2.6.3)
 
 ### Changed Features
 
