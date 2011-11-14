@@ -133,6 +133,11 @@ module Gherkin
             verify_filter([13], 1..7, 12..15)
             verify_filter([14], 1..7, 12..15)
           end
+
+          it "should fix issue 145" do
+            self.file = 'issue_145.feature'
+            verify_filter([14], 1..2, 6..12, 14..14)
+          end
         end
 
         context "on the same line as step keyword" do
