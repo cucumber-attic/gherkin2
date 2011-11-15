@@ -28,7 +28,7 @@ module Gherkin
         expected = (line_ranges.map do |line_range|
           source_lines[(line_range.first-1..line_range.last-1)]
         end.flatten).join("\n").gsub(/# __EOF__/, '')
-        io.string.should == expected
+        io.string.strip.should == expected.strip
       end
 
       context "tags" do
@@ -137,6 +137,11 @@ module Gherkin
           it "should fix issue 145" do
             self.file = 'issue_145.feature'
             verify_filter([14], 1..2, 6..12, 14..14)
+          end
+
+          it "should fix issue 145 more tests" do
+            self.file = 'issue_145.feature'
+            verify_filter([13,15,18], 1..2, 6..13, 15..15, 16..18)
           end
         end
 

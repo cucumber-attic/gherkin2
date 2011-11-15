@@ -1,3 +1,9 @@
+## In Git
+
+### Bugfixes
+
+* Bad filtering when Scenario Outline+Examples followed by Scenario ([https://github.com/cucumber/gherkin/issues/145](#145) Aslak Hellesøy)
+
 ## [2.6.4](https://github.com/cucumber/gherkin/compare/v2.6.3...v2.6.4)
 
 ### Changed Features

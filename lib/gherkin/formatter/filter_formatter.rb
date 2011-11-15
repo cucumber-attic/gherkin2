@@ -128,6 +128,7 @@ module Gherkin
         @examples_events.clear
         @examples_tags.clear
         @examples_name = nil
+	@examples_range = nil
       end
 
       def replay_events!(events)

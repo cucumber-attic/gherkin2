@@ -174,6 +174,7 @@ public class FilterFormatter implements Formatter {
         examplesEvents.clear();
         examplesTags.clear();
         examplesName = null;
+        examplesRange = null;
     }
 
     private void replayEvents(List<BasicStatement> events) {

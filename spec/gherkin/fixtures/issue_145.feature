@@ -9,10 +9,10 @@ Feature: issue 145
     Then some assertion
 
     Examples: 
-      | page     |
-      | /home    |
-      | /profile |
-      | /logout  |
+      | page  |
+      | /aaaa |
+      | /bbbb |
+      | /cccc |
 
   Scenario: Scenario 3
     Given some condition
