@@ -1,4 +1,4 @@
-## In Git
+## [2.6.5](https://github.com/cucumber/gherkin/compare/v2.6.4...v2.6.5)
 
 ### Bugfixes
 
