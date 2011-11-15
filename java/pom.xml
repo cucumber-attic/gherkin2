@@ -120,6 +120,33 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>full</shadedClassifierName>
+                            <relocations>
+                              <relocation>
+                                  <pattern>org.json.simple</pattern>
+                                  <shadedPattern>gherkin.deps.org.json.simple</shadedPattern>
+                              </relocation>
+                              <relocation>
+                                  <pattern>net.iharder</pattern>
+                                  <shadedPattern>gherkin.deps.net.iharder</shadedPattern>
+                              </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.6</version>
                 <executions>
@@ -127,12 +154,8 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <copy file="${project.build.directory}/${project.build.finalName}.jar"
+                                <copy file="${project.build.directory}/${project.build.finalName}-full.jar"
                                       tofile="${basedir}/../lib/gherkin.jar"/>
-                                <copy file="${settings.localRepository}/com/googlecode/json-simple/json-simple/1.1/json-simple-1.1.jar"
-                                      todir="${basedir}/../lib"/>
-                                <copy file="${settings.localRepository}/net/iharder/base64/2.3.8/base64-2.3.8.jar"
-                                      todir="${basedir}/../lib"/>
                             </tasks>
                         </configuration>
                         <goals>

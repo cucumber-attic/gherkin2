@@ -1,4 +1,3 @@
-require File.dirname(__FILE__) + '/../spec/gherkin/java_libs'
 # To test out the pure Java main program on .NET, execute:
 #
 #   rake ikvm
@@ -39,26 +38,15 @@ namespace :ikvm do
     end
   end
 
-  def references
-    JAVA_LIBS.keys.map{|name| "-reference:release/#{name}.dll"}.join(' ')
-  end
-
-  task :dependent_dlls do
-    mkdir_p 'release' unless File.directory?('release')
-    JAVA_LIBS.each do |name, jar|
-      ikvmc("-target:library #{jar} -out:release/#{name}.dll")
-    end
-  end
-
   desc 'Make a .NET .exe'
-  task :exe => ['lib/gherkin.jar', :dependent_dlls] do
-    ikvmc("-target:exe lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.exe #{references}")
+  task :exe => ['lib/gherkin.jar'] do
+    ikvmc("-target:exe lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.exe")
   end
 
   desc 'Make a .NET .dll'
-  task :dll => ['lib/gherkin.jar', :dependent_dlls] do
+  task :dll => ['lib/gherkin.jar'] do
     mkdir_p 'release' unless File.directory?('release')
-    ikvmc("-target:library lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.dll  #{references}")
+    ikvmc("-target:library lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.dll")
     cp "release/gherkin-#{GHERKIN_VERSION}.dll", 'lib/gherkin.dll'
   end
 

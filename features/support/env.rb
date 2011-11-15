@@ -14,7 +14,6 @@ end
 require 'gherkin'
 require 'gherkin/sexp_recorder'
 require 'gherkin/output_stream_string_io'
-require 'gherkin/java_libs'
 
 module TransformHelpers
   def tr_line_number(step_arg)
