@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>gherkin</id>
+    <version>1.0.0</version>
+    <authors>Aslak Hellesøy</authors>
+    <owners>Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy</owners>
+    <projectUrl>https://github.com/cucumber/gherkin</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A fast lexer and parser for the Gherkin language based on Ragel</description>
+    <copyright>Copyright (c) 2009-2011 Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy</copyright>
+    <dependencies>
+      <dependency id="IKVM" version="0.46.0.1" />
+    </dependencies>
+  </metadata>
+</package>
