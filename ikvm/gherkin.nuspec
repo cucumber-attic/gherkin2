@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>gherkin</id>
-    <version>VERSION</version>
+    <version>1.0.0</version>
     <authors>Aslak Hellesøy</authors>
     <owners>Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy</owners>
     <projectUrl>https://github.com/cucumber/gherkin</projectUrl>
