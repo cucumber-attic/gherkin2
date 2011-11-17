@@ -38,6 +38,16 @@ namespace :ikvm do
     end
   end
 
+  def nuget(args)
+    mono("--runtime=v4.0 /usr/local/nuget/NuGet.exe #{args}")
+  end
+
+  def write_nuspec
+    template = IO.read("ikvm/gherkin.nuspec.template")
+    template.gsub(/VERSION/, "#{GHERKIN_VERSION}")
+    File.open("package/gherkin.nuspec", 'w') {|f| f.write(template) }
+  end
+
   desc 'Make a .NET .exe'
   task :exe => ['lib/gherkin.jar'] do
     ikvmc("-target:exe lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.exe")
@@ -57,10 +67,22 @@ namespace :ikvm do
       cp dll, 'release'
       cp dll, 'lib'
     end
+  end  
+
+  desc 'Package the assembly with NuGet'
+  task :package => ['lib/gherkin.jar'] do
+    mkdir_p 'package' unless File.directory?('package')
+    mkdir_p 'package/lib' unless File.directory?('package/lib')
+    cp 'lib/gherkin.dll', 'package/lib'
+    write_nuspec
+    nuget("Update -self")
+    nuget("SetApiKey", IO.read("~/.nuget/key"))
+    nuget("Pack package/gherkin.nuspec")
+    nuget("Push package/gherkin.nupkg")   
   end
 end
 
-task :ikvm => ['ikvm:copy_ikvm_dlls', 'ikvm:exe', 'ikvm:dll'] do
+task :ikvm => ['ikvm:package', 'ikvm:copy_ikvm_dlls', 'ikvm:exe', 'ikvm:dll'] do
   puts "************** Pretty printing some features with .NET. **************"
   mono "release/gherkin-#{GHERKIN_VERSION}.exe features"
   puts "************** DONE Pretty printing some features with .NET. All OK. **************"
