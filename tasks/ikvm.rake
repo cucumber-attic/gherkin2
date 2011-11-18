@@ -45,7 +45,6 @@ namespace :ikvm do
     cp GHERKIN_PKG_DLL, GHERKIN_LIB_DLL
   end
 
-  desc "Generate #{GHERKIN_NUPKG}"
   file GHERKIN_NUPKG => [GHERKIN_PKG_DLL, GHERKIN_NUSPEC] do
     pkg_dir = File.dirname(GHERKIN_EXE)
     mkdir_p File.dirname(pkg_dir) unless File.directory?(pkg_dir)
@@ -93,7 +92,7 @@ EOF
   end
 
   task :push => GHERKIN_NUPKG do
-    #nuget("Push #{GHERKIN_NUPKG}")
+    nuget("Push #{GHERKIN_NUPKG}")
   end
 
   file IKVMC_EXE do
