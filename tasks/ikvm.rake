@@ -39,7 +39,7 @@ namespace :ikvm do
   end
 
   def nuget(args)
-    mono("--runtime=v4.0 /usr/local/nuget/NuGet.exe #{args}")
+    mono("/usr/local/nuget/NuGet.exe #{args}")
   end
 
   desc 'Make a .NET .exe'
@@ -50,7 +50,7 @@ namespace :ikvm do
   desc 'Make a .NET .dll'
   task :dll => ['lib/gherkin.jar'] do
     mkdir_p 'release' unless File.directory?('release')
-    ikvmc("-target:library lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.dll")
+    ikvmc("-target:library lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.dll -version:#{GHERKIN_VERSION}")
     cp "release/gherkin-#{GHERKIN_VERSION}.dll", 'lib/gherkin.dll'
   end
 
@@ -69,8 +69,8 @@ namespace :ikvm do
     mkdir_p 'package/lib' unless File.directory?('package/lib')
     cp 'lib/gherkin.dll', 'package/lib'
     cp 'ikvm/gherkin.nuspec', 'package'
-    nuget("Update -self")
-    nuget("SetApiKey", IO.read("~/.nuget/key"))
+    #nuget("Update -self") #can leave this uncommented and update manually
+    #nuget("SetApiKey", IO.read("~/.nuget/key")) # I am definitely making a booboo on the path here, help?
     nuget("Pack package/gherkin.nuspec -Version #{GHERKIN_VERSION} -OutputDirectory package")
     nuget("Push package/gherkin-#{GHERKIN_VERSION}.nupkg")   
   end
