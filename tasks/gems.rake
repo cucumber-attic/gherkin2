@@ -13,19 +13,8 @@ namespace :gems do
 
   desc 'Prepare JRuby binares'
   task :jruby => [:jar] do
-    begin
-      # Need to move the Gemfile.lock out of the way because the latest json gems
-      # don't exist in identical versions: https://github.com/flori/json/pull/95
-      # native gem is 1.6.0 and java gem is 1.6.0.1
-      mv "Gemfile.lock", "Gemfile.lock.hack"
-      sh "rvm jruby@cucumber exec rspec spec"
-    ensure
-      mv "Gemfile.lock.hack", "Gemfile.lock"
-    end
+    sh "rvm jruby@cucumber exec rspec spec"
   end
-
-  desc 'Prepare IronRuby binaries'
-  task :ironruby => [:jruby, 'ikvm:dll', 'ikvm:copy_ikvm_dlls']
 
   task :sanity do
     raise "The jruby gem looks too small" if File.stat("release/gherkin-#{GHERKIN_VERSION}-java.gem").size < 1000000
@@ -36,8 +25,7 @@ namespace :gems do
     :clean,
     :spec,
     :win,
-    :jruby,
-    :ironruby
+    :jruby
   ]
 
 end
