@@ -119,28 +119,30 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>1.4</version>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>jarjar-maven-plugin</artifactId>
+                <version>1.5</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
-                            <goal>shade</goal>
+                            <goal>jarjar</goal>
                         </goals>
                         <configuration>
-                            <shadedArtifactAttached>true</shadedArtifactAttached>
-                            <shadedClassifierName>full</shadedClassifierName>
-                            <relocations>
-                              <relocation>
-                                  <pattern>org.json.simple</pattern>
-                                  <shadedPattern>gherkin.deps.org.json.simple</shadedPattern>
-                              </relocation>
-                              <relocation>
-                                  <pattern>net.iharder</pattern>
-                                  <shadedPattern>gherkin.deps.net.iharder</shadedPattern>
-                              </relocation>
-                            </relocations>
+                            <includes>
+                                <include>com.googlecode.json-simple:json-simple</include>
+                                <include>net.iharder:base64</include>
+                            </includes>
+                            <rules>
+                                <rule>
+                                    <pattern>org.json.simple.**</pattern>
+                                    <result>gherkin.deps.org.json.simple.@1</result>
+                                </rule>
+                                <rule>
+                                    <pattern>net.iharder.**</pattern>
+                                    <result>gherkin.deps.net.iharder.@1</result>
+                                </rule>
+                            </rules>
                         </configuration>
                     </execution>
                 </executions>
@@ -154,7 +156,7 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <copy file="${project.build.directory}/${project.build.finalName}-full.jar"
+                                <copy file="${project.build.directory}/jarjar/uber-${project.build.finalName}.jar"
                                       tofile="${basedir}/../lib/gherkin.jar"/>
                             </tasks>
                         </configuration>

@@ -1,8 +1,18 @@
-## In Git
+## [2.6.6](https://github.com/cucumber/gherkin/compare/v2.6.5...v2.6.6)
 
-* lib/gherkin.jar that goes into the JRuby gem contains json-simple and base64 classes instead of separate jars (Aslak Hellesøy)
+### New Features
+
+* .NET dll is released as a NuGet package instead of being uploaded to https://github.com/cucumber/gherkin/downloads ([#144](https://github.com/cucumber/gherkin/issues/144), [#147](https://github.com/cucumber/gherkin/pull/147) Jeffrey Cameron, Aslak Hellesøy)
+
+### Changed Features
+
+* The lib/gherkin.jar that goes into the JRuby gem contains json-simple and base64 classes instead of separate jars (Aslak Hellesøy)
 * .NET dll, which is based on lib/gherkin.jar also contains json-simple and base64 (Aslak Hellesøy)
-* gherkin jars published to Maven repo does *not* change - the json-simple and base64 jars are separate. (Aslak Hellesøy)
+* gherkin jars published to Maven repo do *not* bundle the json-simple and base64 jars. (Aslak Hellesøy)
+
+### Removed Features
+
+* IronRuby gems are no longer published. Nobody seems to be using it, and it's too much pain to test. (Aslak Hellesøy)
 
 ## [2.6.5](https://github.com/cucumber/gherkin/compare/v2.6.4...v2.6.5)
 

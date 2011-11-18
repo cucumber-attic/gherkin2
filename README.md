@@ -158,12 +158,17 @@ If you're hacking and just want to rebuild the English parser:
 
 TODO: Make all specs pass with js lexer - replace 'c(listener)' with 'js(listener)' in i18n.rb
 
-### .NET and IronRuby
+### .NET dll
 
-You must install Mono and IKVM to build the pure .NET dll and the IronRuby gem:
+You must install Mono from source, or use a release of Mono after November 18 2011.
 
-* Install Mono from http://www.mono-project.com/ and make sure it's on your $PATH
-* Download IKVM from http://www.ikvm.net/ and extract it to /usr/local/ikvm so that you have a /usr/local/ikvm/bin/ikvmc.exe
+You must also download NuGet.exe from [CodePlex](http://nuget.codeplex.com/releases). When it's installed, update it and register your CodePlex API Key:
+
+    # In case we need to update
+    mono /usr/local/nuget/NuGet.exe Update -self
+
+    # The key is at http://nuget.org/Contribute/MyAccount
+    mono /usr/local/nuget/NuGet.exe SetApiKey xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx
 
 Now you can build the .NET dll with:
 
@@ -216,7 +221,6 @@ Now you can build Windows gems:
   * This file (Installation/Java section)
   * gherkin.gemspec
   * java/pom.xml
-  * ikvm/Gherkin/Gherkin.csproj (2 places)
   * js/package.json
 * Run `bundle update`, so Gemfile.lock gets updated with the changes.
 * Commit changes, otherwise you will get an error at the end when a tag is made.
