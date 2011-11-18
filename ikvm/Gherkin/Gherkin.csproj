@@ -33,19 +33,19 @@
     <Reference Include="System" />
     <Reference Include="IKVM.Runtime, Version=0.42.0.3, Culture=neutral, PublicKeyToken=13235d27fcbfff58">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\release\IKVM.Runtime.dll</HintPath>
+      <HintPath>..\..\lib\IKVM.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.OpenJDK.Core, Version=0.42.0.3, Culture=neutral, PublicKeyToken=13235d27fcbfff58">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\release\IKVM.OpenJDK.Core.dll</HintPath>
+      <HintPath>..\..\lib\IKVM.OpenJDK.Core.dll</HintPath>
     </Reference>
     <Reference Include="IKVM.OpenJDK.Text, Version=0.42.0.3, Culture=neutral, PublicKeyToken=13235d27fcbfff58">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\release\IKVM.OpenJDK.Text.dll</HintPath>
+      <HintPath>..\..\lib\IKVM.OpenJDK.Text.dll</HintPath>
     </Reference>
-    <Reference Include="gherkin-2.6.5, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="gherkin, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\release\gherkin-2.6.5.dll</HintPath>
+      <HintPath>..\..\lib\gherkin.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

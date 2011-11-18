@@ -38,6 +38,10 @@ namespace :ikvm do
     end
   end
 
+  def nuget(args)
+    mono("/usr/local/nuget/NuGet.exe #{args}")
+  end
+
   desc 'Make a .NET .exe'
   task :exe => ['lib/gherkin.jar'] do
     ikvmc("-target:exe lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.exe")
@@ -46,7 +50,7 @@ namespace :ikvm do
   desc 'Make a .NET .dll'
   task :dll => ['lib/gherkin.jar'] do
     mkdir_p 'release' unless File.directory?('release')
-    ikvmc("-target:library lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.dll")
+    ikvmc("-target:library lib/gherkin.jar -out:release/gherkin-#{GHERKIN_VERSION}.dll -version:#{GHERKIN_VERSION}")
     cp "release/gherkin-#{GHERKIN_VERSION}.dll", 'lib/gherkin.dll'
   end
 
@@ -57,10 +61,22 @@ namespace :ikvm do
       cp dll, 'release'
       cp dll, 'lib'
     end
+  end  
+
+  desc 'Package the assembly with NuGet'
+  task :package => [:copy_ikvm_dlls, :dll] do
+    mkdir_p 'package' unless File.directory?('package')
+    mkdir_p 'package/lib' unless File.directory?('package/lib')
+    cp 'lib/gherkin.dll', 'package/lib'
+    cp 'ikvm/gherkin.nuspec', 'package'
+    #nuget("Update -self") #can leave this uncommented and update manually
+    #nuget("SetApiKey", IO.read("~/.nuget/key")) # I am definitely making a booboo on the path here, help?
+    nuget("Pack package/gherkin.nuspec -Version #{GHERKIN_VERSION} -OutputDirectory package")
+    nuget("Push package/gherkin-#{GHERKIN_VERSION}.nupkg")   
   end
 end
 
-task :ikvm => ['ikvm:copy_ikvm_dlls', 'ikvm:exe', 'ikvm:dll'] do
+task :ikvm => ['ikvm:package', 'ikvm:copy_ikvm_dlls', 'ikvm:exe', 'ikvm:dll'] do
   puts "************** Pretty printing some features with .NET. **************"
   mono "release/gherkin-#{GHERKIN_VERSION}.exe features"
   puts "************** DONE Pretty printing some features with .NET. All OK. **************"
