@@ -1,5 +1,6 @@
 *.sw?
 *.rbc
+*.nupkg
 .DS_Store
 coverage
 rdoc

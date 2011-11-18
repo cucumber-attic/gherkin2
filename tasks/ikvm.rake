@@ -64,7 +64,7 @@ namespace :ikvm do
   end  
 
   desc 'Package the assembly with NuGet'
-  task :package => ['lib/gherkin.jar'] do
+  task :package => [:copy_ikvm_dlls, :dll] do
     mkdir_p 'package' unless File.directory?('package')
     mkdir_p 'package/lib' unless File.directory?('package/lib')
     cp 'lib/gherkin.dll', 'package/lib'
