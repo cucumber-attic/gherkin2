@@ -7,10 +7,10 @@ A fast lexer and parser for the Gherkin language based on Ragel. Gherkin is two 
 
 Supported platforms:
 
-* Ruby 1.8.6-1.9.3 (MRI, JRuby, REE, Rubinius)
-* Pure Java (jar file)
-* JavaScript (NPM package. Tested with V8/node.js/Chrome, but might work on other JavaScript engines)
-* .NET (dll file)
+* [Ruby](https://rubygems.org/gems/gherkin) 1.8.6-1.9.3 (MRI, JRuby, REE, Rubinius)
+* [Pure Java](http://search.maven.org/#search%7Cga%7C1%7Cgherkin) (jar file)
+* [JavaScript](http://search.npmjs.org/#/gherkin) (Tested with V8/node.js/Chrome, but might work on other JavaScript engines)
+* [.NET](http://nuget.org/List/Packages/gherkin) (dll file)
 
 ## Installation.pmlcolor"
 
