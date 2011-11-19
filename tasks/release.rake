@@ -1,6 +1,6 @@
 namespace :release do
   desc 'Upload all packages and tag git'
-  task :ALL => ['gems:sanity', 'ikvm:package', :mvn_deploy_jar, :mvn_deploy_site, :push_native_gems, :push_npm_package, 'ikvm:push', :release, :push_yard, :symlink_docs, :post_release]
+  task :ALL => ['gems:sanity', 'ikvm:check', :mvn_deploy_jar, :mvn_deploy_site, :push_native_gems, :push_npm_package, 'ikvm:push', :release, :push_yard, :symlink_docs, :post_release]
 
   desc 'Push all gems to rubygems.org'
   task :push_native_gems do
