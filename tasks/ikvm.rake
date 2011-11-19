@@ -60,15 +60,17 @@ namespace :ikvm do
   <metadata>
     <id>gherkin</id>
     <version>#{GHERKIN_VERSION}</version>
-    <authors>Aslak Hellesøy</authors>
+    <authors>aslakhellesoy</authors>
     <owners>Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy</owners>
     <projectUrl>https://github.com/cucumber/gherkin</projectUrl>
+    <licenseUrl>https://github.com/cucumber/gherkin/blob/master/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A fast lexer and parser for the Gherkin language based on Ragel</description>
     <copyright>Copyright (c) 2009-2011 Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy</copyright>
     <dependencies>
       <dependency id="IKVM" version="#{IKVM_VERSION}" />
     </dependencies>
+    <tags>gherkin cucumber specflow bdd lexer parser</tags>
   </metadata>
 </package>
 EOF
