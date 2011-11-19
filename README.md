@@ -12,7 +12,7 @@ Supported platforms:
 * [JavaScript](http://search.npmjs.org/#/gherkin) (Tested with V8/node.js/Chrome, but might work on other JavaScript engines)
 * [.NET](http://nuget.org/List/Packages/gherkin) (dll file)
 
-## Installation.pmlcolor"
+## Installation
 
 ### Ruby/JRuby
 
@@ -61,7 +61,7 @@ You can get it manually from [Maven Central](http://search.maven.org/#browse%7C-
 
 ### .NET
 
-Get the dll from https://github.com/cucumber/gherkin/downloads
+Get the dll from [NuGet](http://nuget.org/List/Packages/gherkin)
 
 ## API Docs
 
@@ -162,7 +162,7 @@ TODO: Make all specs pass with js lexer - replace 'c(listener)' with 'js(listene
 
 You must install Mono from source, or use a release of Mono after November 18 2011.
 
-You must also download NuGet.exe from [CodePlex](http://nuget.codeplex.com/releases). When it's installed, update it and register your CodePlex API Key:
+You must also download NuGet.exe from [CodePlex](http://nuget.codeplex.com/releases) and place it in `/usr/local/nuget/NuGet.exe`. When it's installed, update it and register your NuGet API Key:
 
     # In case we need to update
     mono /usr/local/nuget/NuGet.exe Update -self
@@ -173,6 +173,8 @@ You must also download NuGet.exe from [CodePlex](http://nuget.codeplex.com/relea
 Now you can build the .NET dll with:
 
     rake ikvm
+
+This should put the dll into `release/nuspec/lib/gherkin.dll`
 
 ### MinGW Rubies (for Windows gems)
 
