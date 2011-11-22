@@ -1,7 +1,7 @@
 { "name" : "gherkin"
 , "description" : "A fast Gherkin lexer/parser based on the Ragel State Machine Compiler."
 , "keywords" : [ "testing", "bdd", "cucumber", "gherkin", "tests" ]
-, "version" : "2.6.6"
+, "version" : "2.6.7"
 , "homepage" : "http://github.com/cucumber/gherkin"
 , "author" : "Aslak Hellesøy <aslak.hellesoy@gmail.com>"
 , "contributors" : [ "Aslak Hellesøy <aslak.hellesoy@gmail.com>" ]

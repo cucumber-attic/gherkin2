@@ -1,3 +1,9 @@
+## [2.6.7](https://github.com/cucumber/gherkin/compare/v2.6.6...v2.6.7)
+
+### Bugfixes
+
+* Fix bad packaging of NuSpec package. ([#148](https://github.com/cucumber/gherkin/issues/148) Aslak Hellesøy)
+
 ## [2.6.6](https://github.com/cucumber/gherkin/compare/v2.6.5...v2.6.6)
 
 ### New Features

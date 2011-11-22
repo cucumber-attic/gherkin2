@@ -1,7 +1,12 @@
 # encoding: utf-8
+require 'zip/zipfilesystem'
+
 namespace :ikvm do
   IKVM_VERSION    = '0.46.0.1'
-  IKVM_BIN_DIR    = "ikvm/ikvm-#{IKVM_VERSION}/bin"
+  IKVM_DIR        = "ikvm/ikvm-#{IKVM_VERSION}"
+  IKVM_ZIP        = "ikvm/ikvmbin-#{IKVM_VERSION}.zip"
+  CLOBBER.include(IKVM_DIR, IKVM_ZIP)
+  IKVM_BIN_DIR    = "#{IKVM_DIR}/bin"
   IKVMC_EXE       = "#{IKVM_BIN_DIR}/ikvmc.exe"
   GHERKIN_EXE     = "release/gherkin.exe"
   GHERKIN_PKG_DLL = "release/nuspec/lib/gherkin.dll"
@@ -49,6 +54,13 @@ namespace :ikvm do
     pkg_dir = File.dirname(GHERKIN_EXE)
     mkdir_p File.dirname(pkg_dir) unless File.directory?(pkg_dir)
     nuget("Pack #{GHERKIN_NUSPEC} -Version #{GHERKIN_VERSION} -OutputDirectory #{pkg_dir}")
+    # Now, fix the path inside the file - see https://github.com/cucumber/gherkin/issues/148
+    Zip::ZipFile.open(GHERKIN_NUPKG) do |zipfile|
+      begin
+        zipfile.file.rename 'lib%2Fgherkin.dll', 'lib/gherkin.dll' 
+      rescue => looks_like_nuget_has_been_fixed
+      end
+    end
   end
 
   file GHERKIN_NUSPEC do
@@ -100,7 +112,7 @@ EOF
   end
 
   file IKVMC_EXE do
-    sh("wget http://downloads.sourceforge.net/project/ikvm/ikvm/#{IKVM_VERSION}/ikvmbin-#{IKVM_VERSION}.zip -O ikvm/ikvmbin-#{IKVM_VERSION}.zip")
+    sh("wget http://downloads.sourceforge.net/project/ikvm/ikvm/#{IKVM_VERSION}/ikvmbin-#{IKVM_VERSION}.zip -O #{IKVM_ZIP}")
     Dir.chdir('ikvm') do
       sh("unzip ikvmbin-#{IKVM_VERSION}.zip")
     end
