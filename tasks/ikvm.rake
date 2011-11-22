@@ -76,7 +76,7 @@ namespace :ikvm do
     <owners>Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy</owners>
     <projectUrl>https://github.com/cucumber/gherkin</projectUrl>
     <licenseUrl>https://github.com/cucumber/gherkin/blob/master/LICENSE</licenseUrl>
-    <iconUrl>https://github.com/cucumber/cukes.info/raw/master/templates/images/gherkin/gherkin_32x32.png</iconUrl>
+    <iconUrl>https://github.com/cucumber/cukes.info/raw/master/templates/images/gherkin/gherkin_128x128.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A fast lexer and parser for the Gherkin language based on Ragel</description>
     <copyright>Copyright (c) 2009-2011 Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy</copyright>
