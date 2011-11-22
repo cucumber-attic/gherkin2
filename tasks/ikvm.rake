@@ -1,5 +1,4 @@
 # encoding: utf-8
-require 'zip/zipfilesystem'
 
 namespace :ikvm do
   IKVM_VERSION    = '0.46.0.1'
@@ -55,6 +54,7 @@ namespace :ikvm do
     mkdir_p File.dirname(pkg_dir) unless File.directory?(pkg_dir)
     nuget("Pack #{GHERKIN_NUSPEC} -Version #{GHERKIN_VERSION} -OutputDirectory #{pkg_dir}")
     # Now, fix the path inside the file - see https://github.com/cucumber/gherkin/issues/148
+    require 'zip/zipfilesystem'
     Zip::ZipFile.open(GHERKIN_NUPKG) do |zipfile|
       begin
         zipfile.file.rename 'lib%2Fgherkin.dll', 'lib/gherkin.dll' 
