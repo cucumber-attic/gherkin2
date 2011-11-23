@@ -1,3 +1,9 @@
+## [2.6.8](https://github.com/cucumber/gherkin/compare/v2.6.7...v2.6.8)
+
+### Changed Features
+
+* Steps can be empty. The main reason for this is to allow Cukepatch to show an autocomplete right after a keyword. ([#149](https://github.com/cucumber/gherkin/issues/149) Aslak Hellesøy)
+
 ## [2.6.7](https://github.com/cucumber/gherkin/compare/v2.6.6...v2.6.7)
 
 ### Bugfixes
