@@ -46,7 +46,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency('json', '>= 1.4.6')
 
-  s.add_development_dependency('cucumber', '>= 1.1.2')
+  s.add_development_dependency('cucumber', '>= 1.1.3')
   s.add_development_dependency('rake', '>= 0.9.2')
   s.add_development_dependency('bundler', '>= 1.0.21')
   s.add_development_dependency('rspec', '>= 2.7.0')
