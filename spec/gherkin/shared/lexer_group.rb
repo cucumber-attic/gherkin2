@@ -290,6 +290,14 @@ f'real
             [:eof]
           ]
         end
+
+        it "should parse steps with an empty name" do
+          scan("Given ")
+          @listener.to_sexp.should == [
+            [:step, "Given ", "", 1],
+            [:eof]
+          ]
+        end
       end
             
       describe "A single feature, single scenario, single step" do
