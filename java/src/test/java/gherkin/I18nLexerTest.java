@@ -61,4 +61,22 @@ public class I18nLexerTest {
         verify(listener).feature("Feature", "ÆØÅ", "", 1);
         verify(listener).step("When ", "I pøsh <x> onto the stack", 5);
     }
+
+    @Test
+    public void shouldScanStepWithEmptyName() {
+        Listener listener = mock(Listener.class);
+        Lexer lexer = new I18nLexer(listener);
+
+        String feature = "" +
+                "Feature: F\n" +
+                "  Scenario: S\n" +
+                "    Given ";
+
+        lexer.scan(feature);
+
+        verify(listener).feature("Feature", "F", "", 1);
+        verify(listener).scenario("Scenario", "S", "", 2);
+        verify(listener).step("Given ", "", 3);
+    }
+
 }
