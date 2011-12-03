@@ -1,3 +1,9 @@
+## [2.6.9](https://github.com/cucumber/gherkin/compare/v2.6.8...v2.6.9)
+
+### Changed Features
+
+* Pretty formatter always uses \n for newlines, instead of using platform-specific newline. This makes cross-platform testing less fiddly. (Aslak Hellesøy)
+
 ## [2.6.8](https://github.com/cucumber/gherkin/compare/v2.6.7...v2.6.8)
 
 ### Changed Features

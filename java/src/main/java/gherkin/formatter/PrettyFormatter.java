@@ -11,7 +11,7 @@ import static gherkin.util.FixJava.map;
 
 /**
  * This class pretty prints feature files like they were in the source, only
- * prettier. That is, with consistent indentation. This class is also a {@link Formatter},
+ * prettier. That is, with consistent indentation. This class is also a {@link Reporter},
  * which means it can be used to print execution results - highlighting arguments,
  * printing source information and exception information.
  */
@@ -205,8 +205,11 @@ public class PrettyFormatter implements Reporter, Formatter {
         cellLengths = new int[rows.size()][columnCount];
         maxLengths = new int[columnCount];
         for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
+            Row row = rows.get(rowIndex);
+            List<String> cells = row.getCells();
             for (int colIndex = 0; colIndex < columnCount; colIndex++) {
-                int length = escapeCell(rows.get(rowIndex).getCells().get(colIndex)).length();
+                String cell = cells.get(colIndex);
+                int length = escapeCell(cell).length();
                 cellLengths[rowIndex][colIndex] = length;
                 maxLengths[colIndex] = Math.max(maxLengths[colIndex], length);
             }

@@ -8,7 +8,7 @@ import java.io.IOException;
  * A nice appendable that doesn't throw checked exceptions
  */
 public class NiceAppendable {
-    private static final CharSequence NL = System.getProperty("line.separator");
+    private static final CharSequence NL = "\n";
     private final Appendable out;
 
     public NiceAppendable(Appendable out) {
