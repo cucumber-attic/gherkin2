@@ -296,7 +296,6 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     @Override
     public void close() {
-        out.close();
     }
 
     private String escapeCell(String cell) {

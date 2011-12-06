@@ -3,6 +3,7 @@ package gherkin.formatter;
 import gherkin.formatter.model.*;
 import org.junit.Test;
 
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +12,9 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 public class PrettyFormatterTest {
     private static final List<Comment> NO_COMMENTS = emptyList();
@@ -42,5 +46,13 @@ public class PrettyFormatterTest {
         f.match(new Match(Arrays.asList(new Argument(7, "6")), "somewhere.brainfuck"));
         Thread.sleep(1000);
         f.result(new Result("failed", 55L, "Something\nbad\nhappened"));
+    }
+    
+    @Test
+    public void shouldNotCloseProvidedStream() {
+        PrintStream out = mock(PrintStream.class);
+        Formatter formatter = new PrettyFormatter(out, true, true);
+        formatter.close();
+        verify(out, never()).close();
     }
 }
