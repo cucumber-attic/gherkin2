@@ -54,7 +54,7 @@ The jar file is in the central Maven repo.
     <dependency>
         <groupId>info.cukes</groupId>
         <artifactId>gherkin</artifactId>
-        <version>2.6.9</version>
+        <version>2.7.0</version>
     </dependency>
 
 You can get it manually from [Maven Central](http://search.maven.org/#browse%7C-2073395818)
@@ -145,13 +145,6 @@ And you can try it out with node.js:
 
     node js/example/print.js spec/gherkin/fixtures/1.feature
 
-You can also try out Gherkin running in the browser (likely to move to a separate project):
-
-    # Pull in the Ace (http://ace.ajax.org/) editor:
-    git submodule update --init
-    # Open a sample Gherkin-powered editor in Chrome
-    open js/example/index.html
-
 If you're hacking and just want to rebuild the English parser:
 
   rake js/lib/gherkin/lexer/en.js
@@ -227,8 +220,6 @@ Now you can build Windows gems:
 * Run `bundle update`, so Gemfile.lock gets updated with the changes.
 * Commit changes, otherwise you will get an error at the end when a tag is made.
 * Run `bundle exec rake gems:prepare && ./build_native_gems.sh && bundle exec rake release:ALL`
-  * The specs intermittently fail with a segfault from therubyracer. Running specs can be disabled with SKIP_JS_SPECS=true
-* Announce on Cucumber list, IRC and Twitter.
 
 ## Note on Patches/Pull Requests
  

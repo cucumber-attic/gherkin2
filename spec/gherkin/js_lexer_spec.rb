@@ -1,5 +1,5 @@
 #encoding: utf-8
-if !defined?(JRUBY_VERSION) && !(defined?(RUBY_ENGINE) && RUBY_ENGINE == "ironruby") && ENV['GHERKIN_JS'] && !ENV['SKIP_JS_SPECS']
+if !defined?(JRUBY_VERSION) && !(defined?(RUBY_ENGINE) && RUBY_ENGINE == "ironruby") && ENV['GHERKIN_JS']
 require 'spec_helper'
 require 'gherkin/js_lexer'
 
