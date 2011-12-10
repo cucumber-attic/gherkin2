@@ -1,3 +1,7 @@
+## [2.7.1](https://github.com/cucumber/gherkin/compare/v2.7.0...v2.7.1)
+
+2.7.0 release got hosed
+
 ## [2.7.0](https://github.com/cucumber/gherkin/compare/v2.6.9...v2.7.0)
 
 ### Changed Features
