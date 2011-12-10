@@ -18,7 +18,7 @@ module Gherkin
         @feature_hashes = []
       end
 
-      def close
+      def done
         @io.write(@feature_hashes.to_json)
       end
 

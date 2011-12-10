@@ -22,7 +22,7 @@ public class JSONFormatter implements Reporter, Formatter {
     }
 
     @Override
-    public void close() {
+    public void done() {
         out.append(JSONValue.toJSONString(featureMaps));
     }
 

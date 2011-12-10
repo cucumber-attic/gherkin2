@@ -20,7 +20,7 @@ module PrettyPlease
     json_formatter      = Gherkin::Formatter::JSONFormatter.new(json)
     gherkin_parser      = Gherkin::Parser::Parser.new(json_formatter, true)
     parse(gherkin_parser, gherkin, feature_path)
-    json_formatter.close
+    json_formatter.done
 
     io                  = StringIO.new
     pretty_formatter    = Gherkin::Formatter::PrettyFormatter.new(io, true, false)

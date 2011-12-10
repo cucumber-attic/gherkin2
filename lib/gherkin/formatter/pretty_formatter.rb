@@ -155,6 +155,10 @@ module Gherkin
         # NO-OP
       end
 
+      def done
+        # NO-OP
+      end
+
       def table(rows)
         cell_lengths = rows.map do |row| 
           row.cells.map do |cell| 
@@ -177,7 +181,7 @@ module Gherkin
 
     private
 
-    def doc_string(doc_string)
+      def doc_string(doc_string)
         @io.puts "      \"\"\"" + doc_string.content_type + "\n" + escape_triple_quotes(indent(doc_string.value, '      ')) + "\n      \"\"\""
       end
 

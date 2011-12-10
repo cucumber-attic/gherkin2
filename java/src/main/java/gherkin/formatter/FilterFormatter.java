@@ -144,8 +144,8 @@ public class FilterFormatter implements Formatter {
     }
 
     @Override
-    public void close() {
-        formatter.close();
+    public void done() {
+        formatter.done();
     }
 
     private void replay() {

@@ -12,7 +12,7 @@ module Gherkin
       f = Formatter::JSONFormatter.new(io)
       p = JSONParser.new(f, f)
       p.parse(json)
-      f.close
+      f.done
       expected = JSON.parse(json)
       actual   = JSON.parse(io.string)
       actual.should == expected

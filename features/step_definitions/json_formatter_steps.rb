@@ -17,7 +17,7 @@ end
 
 Then /^the outputted JSON should be:$/ do |expected_json|
   require 'json'
-  @formatter.close
+  @formatter.done
   actual_json = @out.string
   puts actual_json
   puts JSON.pretty_generate(JSON.parse(actual_json))

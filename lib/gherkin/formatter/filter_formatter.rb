@@ -89,6 +89,10 @@ module Gherkin
         @formatter.eof
       end
 
+      def done
+        @formatter.done
+      end
+
     private
 
       def detect_filter(filters)
@@ -128,7 +132,7 @@ module Gherkin
         @examples_events.clear
         @examples_tags.clear
         @examples_name = nil
-	@examples_range = nil
+        @examples_range = nil
       end
 
       def replay_events!(events)

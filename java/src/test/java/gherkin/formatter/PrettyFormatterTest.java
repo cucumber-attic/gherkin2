@@ -52,7 +52,7 @@ public class PrettyFormatterTest {
     public void shouldNotCloseProvidedStream() {
         PrintStream out = mock(PrintStream.class);
         Formatter formatter = new PrettyFormatter(out, true, true);
-        formatter.close();
+        formatter.done();
         verify(out, never()).close();
     }
 }

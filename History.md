@@ -1,3 +1,10 @@
+## [2.7.0](https://github.com/cucumber/gherkin/compare/v2.6.9...v2.7.0)
+
+### Changed Features
+
+* Formatter.close no longer closes streams. (Alan Parkinson)
+* Formatter.close renamed to Formatter.done. (Aslak Hellesøy)
+
 ## [2.6.9](https://github.com/cucumber/gherkin/compare/v2.6.8...v2.6.9)
 
 ### Changed Features

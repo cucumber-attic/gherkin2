@@ -22,7 +22,7 @@ module Gherkin
         f.result(Model::Result.new(:passed, 1, nil))
 
         f.eof
-        f.close
+        f.done
         
         expected = %{
           [

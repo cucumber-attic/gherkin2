@@ -23,9 +23,15 @@ public interface Formatter {
 
     void step(Step step);
 
+    /**
+     * Indicates the End-Of-File for a Gherkin document (.feature file)
+     */
     void eof();
 
     void syntaxError(String state, String event, List<String> legalEvents, String uri, int line);
 
-    void close();
+    /**
+     * Indicates that the last file has been processed.
+     */
+    void done();
 }
