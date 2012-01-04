@@ -8,8 +8,19 @@ import gherkin.lexer.Lexer;
 import gherkin.lexer.Listener;
 import gherkin.util.Mapper;
 
+import java.io.IOException;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static gherkin.util.FixJava.join;
 import static gherkin.util.FixJava.map;
@@ -38,6 +49,16 @@ public class I18n {
 
     public static String codeKeywordFor(String keyword) {
         return keyword.replaceAll("[\\s',!]", "");
+    }
+
+    public static List<I18n> getAll() throws IOException {
+        List<I18n> result = new ArrayList<I18n>();
+        ResourceBundle bundle = ResourceBundle.getBundle("gherkin.I18n", Locale.US);
+        String[] isoCodes = bundle.getString("i18n.isoCodes").split(",");
+        for (String isoCode : isoCodes) {
+            result.add(new I18n(isoCode));
+        }
+        return result;
     }
 
     private final String isoCode;

@@ -41,6 +41,14 @@ file "java/src/main/resources/gherkin/I18nKeywords_iw.properties" => "java/src/m
   cp "java/src/main/resources/gherkin/I18nKeywords_he.properties", "java/src/main/resources/gherkin/I18nKeywords_iw.properties"
 end
 
+java_i18n_properties = "java/src/main/resources/gherkin/I18n.properties"
+file java_i18n_properties => 'lib/gherkin/i18n.yml' do
+  File.open(java_i18n_properties, 'wb') do |io|
+    io.puts("# Generated file. Do not edit.")
+    io.puts("i18n.isoCodes=#{langs.map{|i18n| i18n.iso_code}.join(',')}")
+  end
+end
+
 langs.each do |i18n|
   java = RagelTask.new('java', i18n)
   rb   = RagelTask.new('rb', i18n)
@@ -58,7 +66,7 @@ langs.each do |i18n|
       end
     end
   end
-  file 'lib/gherkin.jar' => [java.target, rb.target, java_properties]
+  file 'lib/gherkin.jar' => [java.target, rb.target, java_properties, java_i18n_properties]
 
   begin
   if !defined?(JRUBY_VERSION)
