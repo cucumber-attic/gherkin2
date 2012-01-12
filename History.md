@@ -1,3 +1,7 @@
+## [2.7.3](https://github.com/cucumber/gherkin/compare/v2.7.2...v2.7.3)
+
+* [Java] Make sure Result constructed with a Throwable always has a JSON error_message (Aslak Hellesøy)
+
 ## [2.7.2](https://github.com/cucumber/gherkin/compare/v2.7.1...v2.7.2)
 
 * [Java] Added gherkin.I18n.getAll() (Aslak Hellesøy)

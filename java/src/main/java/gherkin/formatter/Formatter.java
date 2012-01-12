@@ -1,6 +1,11 @@
 package gherkin.formatter;
 
-import gherkin.formatter.model.*;
+import gherkin.formatter.model.Background;
+import gherkin.formatter.model.Examples;
+import gherkin.formatter.model.Feature;
+import gherkin.formatter.model.Scenario;
+import gherkin.formatter.model.ScenarioOutline;
+import gherkin.formatter.model.Step;
 
 import java.util.List;
 

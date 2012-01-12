@@ -4,7 +4,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Mappable {
     private static final Integer NO_LINE = -1;
@@ -18,9 +23,9 @@ public class Mappable {
             if (value != null && Mappable.class.isAssignableFrom(value.getClass())) {
                 value = ((Mappable) value).toMap();
             }
-            if (value != null && List.class.isAssignableFrom(value.getClass())) {
+            if (value != null && Collection.class.isAssignableFrom(value.getClass())) {
                 List<Object> mappedValue = new ArrayList<Object>();
-                for (Object o : (List) value) {
+                for (Object o : (Collection) value) {
                     if (Mappable.class.isAssignableFrom(o.getClass())) {
                         mappedValue.add(((Mappable) o).toMap());
                     } else {

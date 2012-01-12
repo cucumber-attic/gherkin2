@@ -27,7 +27,7 @@ public class Result extends Mappable {
     public Result(String status, Long duration, Throwable error, Object dummy) {
         this.status = status;
         this.duration = duration;
-        this.error_message = null;
+        this.error_message = error != null ? getErrorMessage(error) : null;
         this.error = error;
     }
 
@@ -53,21 +53,19 @@ public class Result extends Mappable {
         return duration;
     }
 
+    public String getErrorMessage() {
+        return error_message;
+    }
+
     public Throwable getError() {
         return error;
     }
 
-    public String getErrorMessage() {
-        if (error_message != null) {
-            return error_message;
-        } else if (error != null) {
-            StringWriter stringWriter = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(stringWriter);
-            error.printStackTrace(printWriter);
-            return stringWriter.getBuffer().toString();
-        } else {
-            return null;
-        }
+    private String getErrorMessage(Throwable error) {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        error.printStackTrace(printWriter);
+        return stringWriter.getBuffer().toString();
     }
 
     public void replay(Reporter reporter) {

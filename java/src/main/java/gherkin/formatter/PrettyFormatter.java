@@ -1,9 +1,28 @@
 package gherkin.formatter;
 
-import gherkin.formatter.model.*;
+import gherkin.formatter.model.Background;
+import gherkin.formatter.model.BasicStatement;
+import gherkin.formatter.model.CellResult;
+import gherkin.formatter.model.Comment;
+import gherkin.formatter.model.DescribedStatement;
+import gherkin.formatter.model.DocString;
+import gherkin.formatter.model.Examples;
+import gherkin.formatter.model.Feature;
+import gherkin.formatter.model.Match;
+import gherkin.formatter.model.Result;
+import gherkin.formatter.model.Row;
+import gherkin.formatter.model.Scenario;
+import gherkin.formatter.model.ScenarioOutline;
+import gherkin.formatter.model.Step;
+import gherkin.formatter.model.Tag;
+import gherkin.formatter.model.TagStatement;
 import gherkin.util.Mapper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import static gherkin.util.FixJava.join;

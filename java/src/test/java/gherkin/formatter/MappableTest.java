@@ -7,6 +7,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -18,7 +20,7 @@ public class MappableTest {
         public final String a_string = "3";
         public final AnotherMappable a_mappable = new AnotherMappable();
         public final List<Short> a_short_list = asList((short) 4, (short) 5, (short) 6);
-        public final List<AnotherMappable> a_mappable_list = asList(new AnotherMappable());
+        public final Set<AnotherMappable> a_mappable_list = new TreeSet(asList(new AnotherMappable()));
         public final Object an_int_declared_as_object = 7;
         public final transient int a_transient_int = 1;
 

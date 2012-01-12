@@ -1,7 +1,16 @@
 package gherkin.parser;
 
 import gherkin.formatter.Formatter;
-import gherkin.formatter.model.*;
+import gherkin.formatter.model.Background;
+import gherkin.formatter.model.Builder;
+import gherkin.formatter.model.Comment;
+import gherkin.formatter.model.DocString;
+import gherkin.formatter.model.Examples;
+import gherkin.formatter.model.Feature;
+import gherkin.formatter.model.Scenario;
+import gherkin.formatter.model.ScenarioOutline;
+import gherkin.formatter.model.Step;
+import gherkin.formatter.model.Tag;
 import gherkin.lexer.Listener;
 
 import java.util.ArrayList;
@@ -39,12 +48,12 @@ public class FormatterListener implements Listener {
         }
 
         public String featureElementId(String name) {
-            return featureElementId = featureId  + ";" + id(name);
+            return featureElementId = featureId + ";" + id(name);
         }
 
         public String examplesId(String name) {
             rowIndex = 0;
-            return examplesId = featureElementId  + ";" + id(name);
+            return examplesId = featureElementId + ";" + id(name);
         }
 
         private String id(String name) {
