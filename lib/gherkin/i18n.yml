@@ -89,7 +89,7 @@
   given: "*|Pokud"
   when: "*|Když"
   then: "*|Pak"
-  and: "*|A|A také"
+  and: "*|A také|A"
   but: "*|Ale"
 "da":
   name: Danish
