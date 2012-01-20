@@ -1,5 +1,6 @@
 ## [2.7.4](https://github.com/cucumber/gherkin/compare/v2.7.3...v2.7.4)
 
+* Declared json and base64 dependencies as provided so they don't get included in dependant projects (Aslak Hellesøy)
 * Improved Chinese translations ([#155](https://github.com/cucumber/gherkin/pull/155) Riceball LEE)
 * Improved Czech translations ([#154](https://github.com/cucumber/gherkin/pull/154) Konstantin Kudryashov)
 
