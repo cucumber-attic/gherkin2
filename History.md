@@ -1,3 +1,8 @@
+## [2.7.4](https://github.com/cucumber/gherkin/compare/v2.7.3...v2.7.4)
+
+* Improved Chinese translations ([#155](https://github.com/cucumber/gherkin/pull/155) Riceball LEE)
+* Improved Czech translations ([#154](https://github.com/cucumber/gherkin/pull/154) Konstantin Kudryashov)
+
 ## [2.7.3](https://github.com/cucumber/gherkin/compare/v2.7.2...v2.7.3)
 
 * [Java] Make sure Result constructed with a Throwable always has a JSON error_message (Aslak Hellesøy)
