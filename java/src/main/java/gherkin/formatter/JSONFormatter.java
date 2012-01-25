@@ -159,6 +159,6 @@ public class JSONFormatter implements Reporter, Formatter {
     }
 
     protected Gson gson() {
-        return new GsonBuilder().setPrettyPrinting().create();
+        return new GsonBuilder().create();
     }
 }
