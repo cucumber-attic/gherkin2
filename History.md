@@ -1,3 +1,7 @@
+## [2.7.5](https://github.com/cucumber/gherkin/compare/v2.7.4...v2.7.5)
+
+* [Java] Added Formatter.close() so we can close underlying streams after a call to Formatter.done() (Aslak Hellesøy)
+
 ## [2.7.4](https://github.com/cucumber/gherkin/compare/v2.7.3...v2.7.4)
 
 * Declared json and base64 dependencies as provided so they don't get included in dependant projects (Aslak Hellesøy)
