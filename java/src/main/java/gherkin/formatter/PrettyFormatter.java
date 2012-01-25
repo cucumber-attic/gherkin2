@@ -320,6 +320,11 @@ public class PrettyFormatter implements Reporter, Formatter {
         // https://github.com/cucumber/cucumber-jvm/issues/96
     }
 
+    @Override
+    public void close() {
+        out.close();
+    }
+
     private String escapeCell(String cell) {
         return cell.replaceAll("\\\\(?!\\|)", "\\\\\\\\").replaceAll("\\n", "\\\\n").replaceAll("\\|", "\\\\|");
     }

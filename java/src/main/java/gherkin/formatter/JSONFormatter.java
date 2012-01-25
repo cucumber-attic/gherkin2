@@ -29,14 +29,6 @@ public class JSONFormatter implements Reporter, Formatter {
     }
 
     @Override
-    public void done() {
-        out.append(JSONValue.toJSONString(featureMaps));
-        // We're *not* closing the stream here.
-        // https://github.com/cucumber/gherkin/issues/151
-        // https://github.com/cucumber/cucumber-jvm/issues/96
-    }
-
-    @Override
     public void uri(String uri) {
         this.uri = uri;
     }
@@ -98,6 +90,19 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void eof() {
+    }
+
+    @Override
+    public void done() {
+        out.append(JSONValue.toJSONString(featureMaps));
+        // We're *not* closing the stream here.
+        // https://github.com/cucumber/gherkin/issues/151
+        // https://github.com/cucumber/cucumber-jvm/issues/96
+    }
+
+    @Override
+    public void close() {
+        out.close();
     }
 
     @Override

@@ -49,10 +49,19 @@ public class PrettyFormatterTest {
     }
     
     @Test
-    public void shouldNotCloseProvidedStream() {
+    public void shouldNotCloseProvidedStreamInDone() {
         PrintStream out = mock(PrintStream.class);
         Formatter formatter = new PrettyFormatter(out, true, true);
         formatter.done();
         verify(out, never()).close();
+    }
+
+    @Test
+    public void shouldFlushAndCloseProvidedStreamInClose() {
+        PrintStream out = mock(PrintStream.class);
+        Formatter formatter = new PrettyFormatter(out, true, true);
+        formatter.close();
+        verify(out).flush();
+        verify(out).close();
     }
 }

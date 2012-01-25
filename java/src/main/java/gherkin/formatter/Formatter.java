@@ -7,13 +7,14 @@ import gherkin.formatter.model.Scenario;
 import gherkin.formatter.model.ScenarioOutline;
 import gherkin.formatter.model.Step;
 
+import java.io.Closeable;
 import java.util.List;
 
 /**
  * This is the interface you should implement if you want your own custom
  * formatter.
  */
-public interface Formatter {
+public interface Formatter extends Closeable {
     void uri(String uri);
 
     void feature(Feature feature);
@@ -36,7 +37,13 @@ public interface Formatter {
     void syntaxError(String state, String event, List<String> legalEvents, String uri, int line);
 
     /**
-     * Indicates that the last file has been processed.
+     * Indicates that the last file has been processed. This should print out any closing output,
+     * such as completing the JSON string, but it should *not* close any underlying streams/writers.
      */
     void done();
+
+    /**
+     * Closes all underlying streams.
+     */
+    void close();
 }

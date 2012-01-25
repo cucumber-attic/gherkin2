@@ -9,13 +9,20 @@ import java.io.PrintStream;
 import org.junit.Test;
 
 public class JSONFormatterTest {
-
     @Test
-    public void shouldNotCloseProvidedStream() {
+    public void shouldNotCloseProvidedStreamInDone() {
         PrintStream out = mock(PrintStream.class);
         Formatter formatter = new JSONFormatter(out);
         formatter.done();
         verify(out, never()).close();
     }
-    
+
+    @Test
+    public void shouldFlushAndCloseProvidedStreamInClose() {
+        PrintStream out = mock(PrintStream.class);
+        Formatter formatter = new JSONFormatter(out);
+        formatter.close();
+        verify(out).flush();
+        verify(out).close();
+    }
 }

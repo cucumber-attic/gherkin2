@@ -157,6 +157,11 @@ public class FilterFormatter implements Formatter {
         formatter.done();
     }
 
+    @Override
+    public void close() {
+        formatter.close();
+    }
+
     private void replay() {
         List<Tag> feTags = new ArrayList<Tag>(featureTags);
         feTags.addAll(featureElementTags);
