@@ -315,7 +315,9 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     @Override
     public void done() {
-        out.close();
+        // We're *not* closing the stream here.
+        // https://github.com/cucumber/gherkin/issues/151
+        // https://github.com/cucumber/cucumber-jvm/issues/96
     }
 
     private String escapeCell(String cell) {

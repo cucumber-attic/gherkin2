@@ -31,7 +31,9 @@ public class JSONFormatter implements Reporter, Formatter {
     @Override
     public void done() {
         out.append(JSONValue.toJSONString(featureMaps));
-        out.close();
+        // We're *not* closing the stream here.
+        // https://github.com/cucumber/gherkin/issues/151
+        // https://github.com/cucumber/cucumber-jvm/issues/96
     }
 
     @Override
