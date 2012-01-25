@@ -1,5 +1,7 @@
 package gherkin.formatter;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import gherkin.formatter.model.Background;
 import gherkin.formatter.model.Examples;
 import gherkin.formatter.model.Feature;
@@ -9,7 +11,6 @@ import gherkin.formatter.model.Scenario;
 import gherkin.formatter.model.ScenarioOutline;
 import gherkin.formatter.model.Step;
 import net.iharder.Base64;
-import org.json.simple.JSONValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,7 +95,7 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void done() {
-        out.append(JSONValue.toJSONString(featureMaps));
+        out.append(gson().toJson(featureMaps));
         // We're *not* closing the stream here.
         // https://github.com/cucumber/gherkin/issues/151
         // https://github.com/cucumber/cucumber-jvm/issues/96
@@ -156,5 +157,9 @@ public class JSONFormatter implements Reporter, Formatter {
             getLastStep().put("embeddings", embeddings);
         }
         return embeddings;
+    }
+
+    protected Gson gson() {
+        return new GsonBuilder().create();
     }
 }

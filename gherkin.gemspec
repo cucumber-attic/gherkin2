@@ -3,7 +3,7 @@
 Gem::Specification.new do |s|
   s.name        = "gherkin"
   # If bumping the major version here, comment out the cucumber dependency below and uncomment in the Gemfile to build against a local cucumber.
-  s.version     = "2.7.4"
+  s.version     = "2.7.5"
   s.authors     = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
   s.description = "A fast Gherkin lexer/parser based on the Ragel State Machine Compiler."
   s.summary     = "#{s.name}-#{s.version}"
@@ -49,7 +49,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('cucumber', '>= 1.1.4')
   s.add_development_dependency('rake', '>= 0.9.2')
   s.add_development_dependency('bundler', '>= 1.0.21')
-  s.add_development_dependency('rspec', '~> 2.7.0') # 2.8.0 breaks some of our specs
+  s.add_development_dependency('rspec', '~> 2.7.0') # No 2.8.0 until this is fixed: https://github.com/rspec/rspec-expectations/issues/112
   s.add_development_dependency('rubyzip', '>= 0.9.5')
 
   unless ENV['RUBY_CC_VERSION'] || defined?(JRUBY_VERSION)
