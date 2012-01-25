@@ -82,10 +82,9 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void embedding(final String mimeType, final byte[] data) {
-        final Map<String, String> embedding = new HashMap<String, String>() {{
-            put("mime_type", mimeType);
-            put("data", Base64.encodeBytes(data));
-        }};
+        final Map<String, String> embedding = new HashMap<String, String>();
+        embedding.put("mime_type", mimeType);
+        embedding.put("data", Base64.encodeBytes(data));
         getEmbeddings().add(embedding);
     }
 
@@ -160,6 +159,6 @@ public class JSONFormatter implements Reporter, Formatter {
     }
 
     protected Gson gson() {
-        return new GsonBuilder().create();
+        return new GsonBuilder().setPrettyPrinting().create();
     }
 }

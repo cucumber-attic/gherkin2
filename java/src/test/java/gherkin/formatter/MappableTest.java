@@ -1,8 +1,9 @@
 package gherkin.formatter;
 
-import org.json.simple.JSONValue;
+import com.google.gson.Gson;
 import org.junit.Test;
 
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -66,8 +67,9 @@ public class MappableTest {
                 "  ]\n" +
                 "}\n";
 
-        String actual = JSONValue.toJSONString(map);
-        assertEquals(JSONValue.parse(expected), JSONValue.parse(actual));
+        Gson gson = new Gson();
+        String actual = gson.toJson(map);
+        assertEquals(gson.fromJson(new StringReader(expected), Map.class), gson.fromJson(new StringReader(actual), Map.class));
     }
 
 }

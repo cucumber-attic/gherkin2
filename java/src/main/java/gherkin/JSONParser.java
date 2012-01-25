@@ -1,5 +1,6 @@
 package gherkin;
 
+import com.google.gson.Gson;
 import gherkin.formatter.Argument;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.Reporter;
@@ -18,17 +19,16 @@ import gherkin.formatter.model.ScenarioOutline;
 import gherkin.formatter.model.Step;
 import gherkin.formatter.model.Tag;
 import net.iharder.Base64;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class JSONParser {
+    private final Gson gson = new Gson();
     private final Reporter reporter;
     private final Formatter formatter;
 
@@ -38,20 +38,16 @@ public class JSONParser {
     }
 
     public void parse(String src) {
-        JSONArray featureHashes = (JSONArray) JSONValue.parse(src);
-        for (Object f : featureHashes) {
-            JSONObject o = (JSONObject) f;
+        List<Map> featureHashes = gson.fromJson(new StringReader(src), List.class);
+        for (Map o : featureHashes) {
             formatter.uri(getString(o, "uri"));
             new Feature(comments(o), tags(o), keyword(o), name(o), description(o), line(o), id(o)).replay(formatter);
-            for (Object e : getList(o, "elements")) {
-                JSONObject featureElement = (JSONObject) e;
+            for (Map featureElement : (List<Map>)getList(o, "elements")) {
                 featureElement(featureElement).replay(formatter);
-                for (Object s : getList(featureElement, "steps")) {
-                    JSONObject step = (JSONObject) s;
+                for (Map step : (List<Map>)getList(featureElement, "steps")) {
                     step(step);
                 }
-                for (Object s : getList(featureElement, "examples")) {
-                    JSONObject eo = (JSONObject) s;
+                for (Map eo : (List<Map>)getList(featureElement, "examples")) {
                     new Examples(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), id(eo), examplesTableRows(getList(eo, "rows"))).replay(formatter);
                 }
             }
@@ -59,7 +55,7 @@ public class JSONParser {
         }
     }
 
-    private BasicStatement featureElement(JSONObject o) {
+    private BasicStatement featureElement(Map o) {
         String type = (String) o.get("type");
         if (type.equals("background")) {
             return new Background(comments(o), keyword(o), name(o), description(o), line(o));
@@ -72,7 +68,7 @@ public class JSONParser {
         }
     }
 
-    private void step(JSONObject o) {
+    private void step(Map o) {
         List<DataTableRow> rows = null;
         if (o.containsKey("rows")) {
             rows = dataTableRows(getList(o, "rows"));
@@ -113,7 +109,6 @@ public class JSONParser {
         List<DataTableRow> rows = new ArrayList<DataTableRow>(o.size());
         for (Object e : o) {
             Map row = (Map) e;
-            // TODO - do the right kind
             rows.add(new DataTableRow(comments(row), getList(row, "cells"), getInt(row, "line")));
         }
         return rows;
