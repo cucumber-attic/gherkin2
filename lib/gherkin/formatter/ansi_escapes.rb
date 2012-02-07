@@ -90,6 +90,8 @@ module Gherkin
       def up(n)
         "\e[#{n}A"
       end
+
+      extend self
     end
   end
 end
