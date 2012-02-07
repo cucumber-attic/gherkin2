@@ -94,20 +94,18 @@ module Gherkin
     end
 
     def lexer(listener, force_ruby=false)
-      begin
-        if force_ruby
+      if force_ruby
+        rb(listener)
+      else
+        begin
+          c(listener)
+        rescue NameError, LoadError => e
+          warn("WARNING: #{e.message}. Reverting to Ruby lexer.")
           rb(listener)
-        else
-          begin
-            c(listener)
-          rescue NameError, LoadError => e
-            warn("WARNING: #{e.message}. Reverting to Ruby lexer.")
-            rb(listener)
-          end
         end
-      rescue LoadError => e
-        raise LexerNotFound, "No lexer was found for #{iso_code} (#{e.message}). Supported languages are listed in gherkin/i18n.yml."
       end
+    rescue LoadError => e
+      raise LexerNotFound, "No lexer was found for #{iso_code} (#{e.message}). Supported languages are listed in gherkin/i18n.yml."
     end
 
     def c(listener)
