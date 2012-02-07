@@ -4,6 +4,8 @@ require 'gherkin/native'
 
 module Gherkin
   class I18n
+    LexerNotFound = Class.new(LoadError)
+
     native_impl('gherkin') unless defined?(BYPASS_NATIVE_IMPL)
 
     FEATURE_ELEMENT_KEYS = %w{feature background scenario scenario_outline examples}
@@ -104,7 +106,7 @@ module Gherkin
           end
         end
       rescue LoadError => e
-        raise I18nLexerNotFound, "No lexer was found for #{i18n_language_name} (#{e.message}). Supported languages are listed in gherkin/i18n.yml."
+        raise LexerNotFound, "No lexer was found for #{i18n_language_name} (#{e.message}). Supported languages are listed in gherkin/i18n.yml."
       end
     end
 
