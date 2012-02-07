@@ -4,6 +4,8 @@ require 'gherkin/native'
 
 module Gherkin
   class I18n
+    LexerNotFound = Class.new(LoadError)
+
     native_impl('gherkin') unless defined?(BYPASS_NATIVE_IMPL)
 
     FEATURE_ELEMENT_KEYS = %w{feature background scenario scenario_outline examples}
@@ -92,20 +94,18 @@ module Gherkin
     end
 
     def lexer(listener, force_ruby=false)
-      begin
-        if force_ruby
+      if force_ruby
+        rb(listener)
+      else
+        begin
+          c(listener)
+        rescue NameError, LoadError => e
+          warn("WARNING: #{e.message}. Reverting to Ruby lexer.")
           rb(listener)
-        else
-          begin
-            c(listener)
-          rescue NameError, LoadError => e
-            warn("WARNING: #{e.message}. Reverting to Ruby lexer.")
-            rb(listener)
-          end
         end
-      rescue LoadError => e
-        raise I18nLexerNotFound, "No lexer was found for #{i18n_language_name} (#{e.message}). Supported languages are listed in gherkin/i18n.yml."
       end
+    rescue LoadError => e
+      raise LexerNotFound, "No lexer was found for #{iso_code} (#{e.message}). Supported languages are listed in gherkin/i18n.yml."
     end
 
     def c(listener)
