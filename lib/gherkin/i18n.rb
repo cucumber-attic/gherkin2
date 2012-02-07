@@ -106,7 +106,7 @@ module Gherkin
           end
         end
       rescue LoadError => e
-        raise LexerNotFound, "No lexer was found for #{i18n_language_name} (#{e.message}). Supported languages are listed in gherkin/i18n.yml."
+        raise LexerNotFound, "No lexer was found for #{iso_code} (#{e.message}). Supported languages are listed in gherkin/i18n.yml."
       end
     end
 
