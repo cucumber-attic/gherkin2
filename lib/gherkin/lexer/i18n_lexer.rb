@@ -3,7 +3,6 @@ require 'gherkin/native'
 
 module Gherkin
   module Lexer
-    I18nLexerNotFound = Class.new(LoadError)
     LexingError = Class.new(StandardError)
 
     # The main entry point to lexing Gherkin source.
