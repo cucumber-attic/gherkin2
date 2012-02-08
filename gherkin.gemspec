@@ -3,7 +3,7 @@
 Gem::Specification.new do |s|
   s.name        = "gherkin"
   # If bumping the major version here, comment out the cucumber dependency below and uncomment in the Gemfile to build against a local cucumber.
-  s.version     = "2.7.6"
+  s.version     = "2.7.7"
   s.authors     = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
   s.description = "A fast Gherkin lexer/parser based on the Ragel State Machine Compiler."
   s.summary     = "#{s.name}-#{s.version}"
@@ -55,7 +55,7 @@ Gem::Specification.new do |s|
   unless ENV['RUBY_CC_VERSION'] || defined?(JRUBY_VERSION)
     s.add_development_dependency('therubyracer', '>= 0.9.9') if ENV['GHERKIN_JS']
     # For Documentation:
-    s.add_development_dependency('yard', '>= 0.7.4')
+    s.add_development_dependency('yard', '>= 0.7.5')
     s.add_development_dependency('rdiscount', '>= 1.6.8')
   end
 
