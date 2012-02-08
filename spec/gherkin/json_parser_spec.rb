@@ -16,13 +16,17 @@ module Gherkin
       expected = JSON.parse(json)
       actual   = JSON.parse(io.string)
 
-      puts "EXPECTED"
-      puts json
-      puts "ACTUAL"
-      puts io.string
-      puts "======"
+      begin
+        actual.should == expected
+      rescue
+        puts "EXPECTED"
+        puts json
+        puts "ACTUAL"
+        puts io.string
+        puts "======"
 
-      actual.should == expected
+        raise
+      end
     end
 
     xit "should parse a barely empty feature" do
