@@ -1,3 +1,8 @@
+## [2.7.7](https://github.com/cucumber/gherkin/compare/v2.7.6...v2.7.7)
+
+* [Ruby] Expose AnsiEscapes methods on the class level as well, for easy calling without inclusion ([#161](https://github.com/cucumber/gherkin/pull/161) Ben Woosley)
+* [Ruby] Lexer load failure fix ([#159](https://github.com/cucumber/gherkin/pull/159) Ben Woosley)
+
 ## [2.7.6](https://github.com/cucumber/gherkin/compare/v2.7.5...v2.7.6)
 
 * [Java] Previous release accidentally had pretty formatting for both JSONFormatter and JSONPrettyFormatter (Aslak Hellesøy)
