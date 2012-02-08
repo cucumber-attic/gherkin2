@@ -19,7 +19,10 @@ class RagelTask
   end
 
   def define_tasks
-    file target => [lang_ragel, common_ragel] do
+    deps = [lang_ragel, common_ragel]
+    deps.unshift(UGLIFYJS) if(@lang == 'js')
+
+    file target => deps do
       mkdir_p(File.dirname(target)) unless File.directory?(File.dirname(target))
       sh "ragel #{flags} #{lang_ragel} -o #{target}"
       if(@lang == 'js')
@@ -28,6 +31,14 @@ class RagelTask
         
         # Minify
         sh %{node #{UGLIFYJS} #{target} > #{target.gsub(/\.js$/, '.min.js')}}
+      end
+    end
+
+    file UGLIFYJS do
+      unless File.exist?(UGLIFYJS)
+        Dir.chdir('js') do
+          sh "npm link"
+        end
       end
     end
 
