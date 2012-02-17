@@ -5,7 +5,6 @@ import gherkin.formatter.model.ExamplesTableRow;
 import gherkin.formatter.model.Range;
 import gherkin.formatter.model.Tag;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TagFilter implements Filter {
@@ -16,11 +15,7 @@ public class TagFilter implements Filter {
     }
 
     public boolean eval(List<Tag> tags, List<String> names, List<Range> ranges) {
-        List<String> tagNames = new ArrayList<String>();
-        for (Tag tag : tags) {
-            tagNames.add(tag.getName());
-        }
-        return tagExpression.eval(tagNames);
+        return tagExpression.eval(tags);
     }
 
     public List<ExamplesTableRow> filterTableBodyRows(List<ExamplesTableRow> examplesRows) {

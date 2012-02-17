@@ -1,3 +1,7 @@
+## [2.8.0](https://github.com/cucumber/gherkin/compare/v2.7.7...v2.8.0)
+
+* [Ruby/Java] TagExpression.eval() now takes a list of Tag instead of a list of String. This slightly breaks the API (bump), but helps fix some bugs in Cucumber-JVM. (Aslak Hellesøy)
+
 ## [2.7.7](https://github.com/cucumber/gherkin/compare/v2.7.6...v2.7.7)
 
 * [C] Allow compilation with clang (datanoise)

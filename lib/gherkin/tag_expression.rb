@@ -20,7 +20,7 @@ module Gherkin
 
     def eval(tags)
       return true if @ands.flatten.empty?
-      vars = Hash[*tags.map{|tag| [tag, true]}.flatten]
+      vars = Hash[*tags.map{|tag| [tag.name, true]}.flatten]
       !!Kernel.eval(ruby_expression)
     end
 

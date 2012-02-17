@@ -1,5 +1,7 @@
 package gherkin;
 
+import gherkin.formatter.model.Tag;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,7 +18,7 @@ public class TagExpression {
         }
     }
 
-    public boolean eval(Collection<String> tags) {
+    public boolean eval(Collection<Tag> tags) {
         return and.isEmpty() || and.eval(tags);
     }
 
@@ -46,16 +48,16 @@ public class TagExpression {
             }
 
             if (negation) {
-                or.add(new Not(new Tag(tag)));
+                or.add(new Not(new TagExp(tag)));
             } else {
-                or.add(new Tag(tag));
+                or.add(new TagExp(tag));
             }
         }
         and.add(or);
     }
 
     private interface Expression {
-        boolean eval(Collection<String> tags);
+        boolean eval(Collection<Tag> tags);
     }
 
     private class Not implements Expression {
@@ -65,7 +67,7 @@ public class TagExpression {
             this.expression = expression;
         }
 
-        public boolean eval(Collection<String> tags) {
+        public boolean eval(Collection<Tag> tags) {
             return !expression.eval(tags);
         }
     }
@@ -77,7 +79,7 @@ public class TagExpression {
             expressions.add(expression);
         }
 
-        public boolean eval(Collection<String> tags) {
+        public boolean eval(Collection<Tag> tags) {
             boolean result = true;
             for (Expression expression : expressions) {
                 result = expression.eval(tags);
@@ -98,7 +100,7 @@ public class TagExpression {
             expressions.add(expression);
         }
 
-        public boolean eval(Collection<String> tags) {
+        public boolean eval(Collection<Tag> tags) {
             boolean result = false;
             for (Expression expression : expressions) {
                 result = expression.eval(tags);
@@ -108,19 +110,19 @@ public class TagExpression {
         }
     }
 
-    private class Tag implements Expression {
+    private class TagExp implements Expression {
         private final String tagName;
 
-        public Tag(String tagName) {
+        public TagExp(String tagName) {
             if (!tagName.startsWith("@")) {
                 throw new BadTagException(tagName);
             }
             this.tagName = tagName;
         }
 
-        public boolean eval(Collection<String> tags) {
-            for (String tag : tags) {
-                if (tagName.equals(tag)) {
+        public boolean eval(Collection<Tag> tags) {
+            for (Tag tag : tags) {
+                if (tagName.equals(tag.getName())) {
                     return true;
                 }
             }

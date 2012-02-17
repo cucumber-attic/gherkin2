@@ -8,7 +8,7 @@ module Gherkin
       end
 
       def eval(tags, names, ranges)
-        @tag_expression.eval(tags.uniq.map{|tag| tag.name})
+        @tag_expression.eval(tags.uniq)
       end
 
       def filter_table_body_rows(rows)
