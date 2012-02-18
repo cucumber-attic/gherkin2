@@ -58,7 +58,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency('json', '>= 1.4.6')
 
-  s.add_development_dependency('cucumber', '>= 1.1.4')
+  s.add_development_dependency('cucumber', '>= 1.1.5')
   s.add_development_dependency('rake', '>= 0.9.2')
   s.add_development_dependency('bundler', '>= 1.0.22')
   s.add_development_dependency('rspec', '~> 2.7.0') # No 2.8.0 until this is fixed: https://github.com/rspec/rspec-expectations/issues/112
