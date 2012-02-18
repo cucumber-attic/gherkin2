@@ -235,4 +235,4 @@ Now you can build Windows gems:
 
 ## Copyright
 
-Copyright (c) 2009-2011 Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy. See LICENSE for details.
+Copyright (c) 2009-2012 Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy. See LICENSE for details.
