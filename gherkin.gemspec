@@ -2,7 +2,19 @@
 
 Gem::Specification.new do |s|
   s.name        = "gherkin"
-  # If bumping the major version here, comment out the cucumber dependency below and uncomment in the Gemfile to build against a local cucumber.
+  # If the major version is bumped, verify that the change is ok:
+  #
+  # * Comment out cucumber dependency in gemspec
+  # * Uncomment cucumber location in Gemspec
+  # * Bump cucumber's gherkin dependency to the new version
+  # * bundle update
+  # * bundle exec rake
+  #
+  # Repeat these step for cucumber (swap `cucumber` with `gherkin`).
+  #
+  # When both are building OK, do a `bundle exec rake install` in both cucumber and gherkin projects, revert the changes in the first 2 steps 
+  # and release both projects.
+  #
   s.version     = "2.8.0"
   s.authors     = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
   s.description = "A fast Gherkin lexer/parser based on the Ragel State Machine Compiler."
@@ -50,7 +62,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rake', '>= 0.9.2')
   s.add_development_dependency('bundler', '>= 1.0.22')
   s.add_development_dependency('rspec', '~> 2.7.0') # No 2.8.0 until this is fixed: https://github.com/rspec/rspec-expectations/issues/112
-  s.add_development_dependency('rubyzip', '>= 0.9.5')
+  s.add_development_dependency('rubyzip', '>= 0.9.6.1')
 
   unless ENV['RUBY_CC_VERSION'] || defined?(JRUBY_VERSION)
     s.add_development_dependency('therubyracer', '>= 0.9.9') if ENV['GHERKIN_JS']
