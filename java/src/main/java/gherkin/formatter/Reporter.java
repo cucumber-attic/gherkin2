@@ -3,6 +3,8 @@ package gherkin.formatter;
 import gherkin.formatter.model.Match;
 import gherkin.formatter.model.Result;
 
+import java.io.InputStream;
+
 /**
  * Interface for reporting results. This is a different interface from Formatter,
  * which also knows how to print gherkin source. They are separate, because some
@@ -13,5 +15,7 @@ public interface Reporter {
 
     void match(Match match);
 
-    void embedding(String mimeType, byte[] data);
+    void embedding(String mimeType, InputStream data);
+
+    void write(String text);
 }

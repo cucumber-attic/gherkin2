@@ -1,6 +1,8 @@
 package gherkin.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
@@ -37,20 +39,34 @@ public class FixJava {
         }
     }
 
-    public static String readReader(Reader reader) throws RuntimeException {
-        final char[] buffer = new char[0x10000];
-        StringBuilder sb = new StringBuilder();
-        int read;
-        do {
-            try {
-                read = reader.read(buffer, 0, buffer.length);
-                if (read > 0) {
-                    sb.append(buffer, 0, read);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+    public static String readReader(Reader in) throws RuntimeException {
+        try {
+            StringBuilder buffer = new StringBuilder();
+            final char[] data = new char[0x10000];
+            int read;
+
+            while ((read = in.read(data, 0, data.length)) != -1) {
+                buffer.append(data, 0, read);
             }
-        } while (read >= 0);
-        return sb.toString();
+            return buffer.toString();
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static byte[] readStream(InputStream in) throws RuntimeException {
+        try {
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            final byte[] data = new byte[0x10000];
+            int read;
+
+            while ((read = in.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, read);
+            }
+            buffer.flush();
+            return buffer.toByteArray();
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -1,6 +1,11 @@
+## [2.9.0](https://github.com/cucumber/gherkin/compare/v2.8.0...v2.9.0)
+
+* Added output to Reporter API (Aslak Hellesøy)
+* Reporter.embedding takes InputStream instead of byte[], which breaks API hence the minor bump. (Aslak Hellesøy)
+
 ## [2.8.0](https://github.com/cucumber/gherkin/compare/v2.7.7...v2.8.0)
 
-* [Ruby/Java] TagExpression.eval() now takes a list of Tag instead of a list of String. This slightly breaks the API (bump), but helps fix some bugs in Cucumber-JVM. (Aslak Hellesøy)
+* [Ruby/Java] TagExpression.eval() now takes a list of Tag instead of a list of String. This slightly breaks the API (minor bump), but helps fix some bugs in Cucumber-JVM. (Aslak Hellesøy)
 
 ## [2.7.7](https://github.com/cucumber/gherkin/compare/v2.7.6...v2.7.7)
 

@@ -23,6 +23,7 @@ public class AnsiFormats implements Formats {
         put("skipped_arg", new ColorFormat(AnsiEscapes.CYAN, AnsiEscapes.INTENSITY_BOLD));
         put("comment", new ColorFormat(AnsiEscapes.GREY));
         put("tag", new ColorFormat(AnsiEscapes.CYAN));
+        put("output", new ColorFormat(AnsiEscapes.BLUE));
     }};
 
     public static class ColorFormat implements Format {

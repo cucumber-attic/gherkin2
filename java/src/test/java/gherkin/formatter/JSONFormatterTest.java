@@ -77,6 +77,10 @@ public class JSONFormatterTest {
                 "                \"mime_type\": \"text/plain\",\n" +
                 "                \"data\": \"Tm8sIEknbSBub3QgaW50ZXJlc3RlZCBpbiBkZXZlbG9waW5nIGEgcG93ZXJmdWwgYnJhaW4uIEFsbCBJJ20gYWZ0ZXIgaXMganVzdCBhIG1lZGlvY3JlIGJyYWluLCBzb21ldGhpbmcgbGlrZSB0aGUgUHJlc2lkZW50IG9mIHRoZSBBbWVyaWNhbiBUZWxlcGhvbmUgYW5kIFRlbGVncmFwaCBDb21wYW55Lg==\"\n" +
                 "              }\n" +
+                "            ],\n" +
+                "            \"output\": [\n" +
+                "              \"Hello\",\n" +
+                "              \"World\"\n" +
                 "            ]\n" +
                 "          }\n" +
                 "        ]\n" +

@@ -12,10 +12,13 @@ import gherkin.formatter.model.ScenarioOutline;
 import gherkin.formatter.model.Step;
 import net.iharder.Base64;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static gherkin.util.FixJava.readStream;
 
 public class JSONFormatter implements Reporter, Formatter {
     private final List<Map<Object, Object>> featureMaps = new ArrayList<Map<Object, Object>>();
@@ -75,17 +78,22 @@ public class JSONFormatter implements Reporter, Formatter {
     }
 
     @Override
-    public void result(Result result) {
-        getStepAt(stepIndex).put("result", result.toMap());
-        stepIndex++;
+    public void embedding(String mimeType, InputStream data) {
+        final Map<String, String> embedding = new HashMap<String, String>();
+        embedding.put("mime_type", mimeType);
+        embedding.put("data", Base64.encodeBytes(readStream(data)));
+        getEmbeddings().add(embedding);
     }
 
     @Override
-    public void embedding(final String mimeType, final byte[] data) {
-        final Map<String, String> embedding = new HashMap<String, String>();
-        embedding.put("mime_type", mimeType);
-        embedding.put("data", Base64.encodeBytes(data));
-        getEmbeddings().add(embedding);
+    public void write(String text) {
+        getOutput().add(text);
+    }
+
+    @Override
+    public void result(Result result) {
+        getStepAt(stepIndex).put("result", result.toMap());
+        stepIndex++;
     }
 
     @Override
@@ -149,13 +157,22 @@ public class JSONFormatter implements Reporter, Formatter {
         return (Map) getSteps().get(index);
     }
 
-    private List getEmbeddings() {
-        List<Object> embeddings = (List<Object>) getLastStep().get("embeddings");
+    private List<Map<String, String>> getEmbeddings() {
+        List<Map<String, String>> embeddings = (List<Map<String, String>>) getLastStep().get("embeddings");
         if (embeddings == null) {
-            embeddings = new ArrayList<Object>();
+            embeddings = new ArrayList<Map<String, String>>();
             getLastStep().put("embeddings", embeddings);
         }
         return embeddings;
+    }
+
+    private List<String> getOutput() {
+        List<String> output = (List<String>) getLastStep().get("output");
+        if (output == null) {
+            output = new ArrayList<String>();
+            getLastStep().put("output", output);
+        }
+        return output;
     }
 
     protected Gson gson() {

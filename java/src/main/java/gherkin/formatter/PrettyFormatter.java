@@ -18,6 +18,7 @@ import gherkin.formatter.model.Tag;
 import gherkin.formatter.model.TagStatement;
 import gherkin.util.Mapper;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -169,6 +170,16 @@ public class PrettyFormatter implements Reporter, Formatter {
         if (!monochrome) {
             printStep("executing", match.getArguments(), match.getLocation(), false);
         }
+    }
+
+    @Override
+    public void embedding(String mimeType, InputStream data) {
+        // Do nothing
+    }
+
+    @Override
+    public void write(String text) {
+        out.println(getFormat("output").text(text));
     }
 
     public void result(Result result) {

@@ -20,6 +20,7 @@ import gherkin.formatter.model.Step;
 import gherkin.formatter.model.Tag;
 import net.iharder.Base64;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -42,12 +43,12 @@ public class JSONParser {
         for (Map o : featureHashes) {
             formatter.uri(getString(o, "uri"));
             new Feature(comments(o), tags(o), keyword(o), name(o), description(o), line(o), id(o)).replay(formatter);
-            for (Map featureElement : (List<Map>)getList(o, "elements")) {
+            for (Map featureElement : (List<Map>) getList(o, "elements")) {
                 featureElement(featureElement).replay(formatter);
-                for (Map step : (List<Map>)getList(featureElement, "steps")) {
+                for (Map step : (List<Map>) getList(featureElement, "steps")) {
                     step(step);
                 }
-                for (Map eo : (List<Map>)getList(featureElement, "examples")) {
+                for (Map eo : (List<Map>) getList(featureElement, "examples")) {
                     new Examples(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), id(eo), examplesTableRows(getList(eo, "rows"))).replay(formatter);
                 }
             }
@@ -94,13 +95,20 @@ public class JSONParser {
         }
 
         if (o.containsKey("embeddings")) {
-            List<Map> es = (List<Map>) o.get("embeddings");
-            for (Map e : es) {
+            List<Map> embeddings = (List<Map>) o.get("embeddings");
+            for (Map embedding : embeddings) {
                 try {
-                    reporter.embedding(getString(e, "mime_type"), Base64.decode(getString(e, "data")));
+                    reporter.embedding(getString(embedding, "mime_type"), new ByteArrayInputStream(Base64.decode(getString(embedding, "data"))));
                 } catch (IOException ex) {
                     throw new RuntimeException("Couldn't decode data", ex);
                 }
+            }
+        }
+
+        if (o.containsKey("output")) {
+            List<String> output = (List<String>) o.get("output");
+            for (String text : output) {
+                reporter.write(text);
             }
         }
     }
