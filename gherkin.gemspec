@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   # When both are building OK, do a `bundle exec rake install` in both cucumber and gherkin projects, revert the changes in the first 2 steps 
   # and release both projects.
   #
-  s.version     = "2.8.0"
+  s.version     = "2.9.0"
   s.authors     = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
   s.description = "A fast Gherkin lexer/parser based on the Ragel State Machine Compiler."
   s.summary     = "#{s.name}-#{s.version}"
@@ -65,7 +65,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rubyzip', '>= 0.9.6.1')
 
   unless ENV['RUBY_CC_VERSION'] || defined?(JRUBY_VERSION)
-    s.add_development_dependency('therubyracer', '>= 0.9.9') if ENV['GHERKIN_JS']
+    s.add_development_dependency('therubyracer', '>= 0.9.10') if ENV['GHERKIN_JS']
     # For Documentation:
     s.add_development_dependency('yard', '>= 0.7.5')
     s.add_development_dependency('rdiscount', '>= 1.6.8')
