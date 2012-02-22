@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   # If the major version is bumped, verify that the change is ok:
   #
   # * Comment out cucumber dependency in gemspec
-  # * Uncomment cucumber location in Gemspec
+  # * Uncomment cucumber location in Gemfile
   # * Bump cucumber's gherkin dependency to the new version
   # * bundle update
   # * bundle exec rake
@@ -58,7 +58,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency('json', '>= 1.4.6')
 
-  s.add_development_dependency('cucumber', '>= 1.1.5')
+  s.add_development_dependency('cucumber', '>= 1.1.9')
   s.add_development_dependency('rake', '>= 0.9.2')
   s.add_development_dependency('bundler', '>= 1.0.22')
   s.add_development_dependency('rspec', '~> 2.7.0') # No 2.8.0 until this is fixed: https://github.com/rspec/rspec-expectations/issues/112
