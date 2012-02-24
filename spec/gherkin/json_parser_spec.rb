@@ -29,7 +29,7 @@ module Gherkin
       end
     end
 
-    xit "should parse a barely empty feature" do
+    it "should parse a barely empty feature" do
       check_json(%{[
         {
           "id": "one",
@@ -42,7 +42,7 @@ module Gherkin
       ]})
     end
 
-    xit "should parse feature with tags and one scenario" do
+    it "should parse feature with tags and one scenario" do
       check_json(%{[
         {
           "id": "one",
@@ -131,7 +131,7 @@ module Gherkin
       })
     end
 
-    xit "shoud parse a complex feature" do
+    it "shoud parse a complex feature" do
       check_json('[' + fixture("complex.json") + ']')
     end
   end
