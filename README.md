@@ -130,12 +130,16 @@ In order to build and test Gherkin for JavaScript you must install:
 * Node.js (0.4.6 or higher)
 * NPM (0.3.18 or higher)
 * Ragel with JavaScript support: http://github.com/dominicmarks/ragel-js
+** Make sure you have `autoconf` and `automake` (`brew install automake && brew install autoconf`)
+** Make sure you have the official ragel (`brew install ragel`)
+** Make sure you have kelbt (`brew install kelbt`). If that fails, install manually from http://www.complang.org/kelbt/
+** `cd ragel-js/ragel-svn && ./autogen.sh && ./configure --disable-manual`
 * Define the GHERKIN_JS environment variable in your shell (any value will do)
 
 Prepare the environment:
 
     pushd js
-    npm link
+    npm install
     popd
 
 Now you can build the JavaScript with:
