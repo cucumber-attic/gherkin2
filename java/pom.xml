@@ -31,7 +31,7 @@
 
     <distributionManagement>
         <site>
-            <id>cukes</id>
+            <id>cukes.info</id>
             <url>scp://cukes.info/var/www/cucumber_site/gherkin/api/java/${project.version}</url>
         </site>
     </distributionManagement>
