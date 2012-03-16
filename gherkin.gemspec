@@ -60,7 +60,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency('cucumber', '>= 1.1.9')
   s.add_development_dependency('rake', '>= 0.9.2')
-  s.add_development_dependency('bundler', '>= 1.1.1')
+  s.add_development_dependency('bundler', '>= 1.1.0')
   s.add_development_dependency('rspec', '~> 2.7.0') # No 2.8.0 until this is fixed: https://github.com/rspec/rspec-expectations/issues/112
   s.add_development_dependency('rubyzip', '>= 0.9.6.1')
 
