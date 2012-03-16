@@ -1,3 +1,7 @@
+## [2.9.1](https://github.com/cucumber/gherkin/compare/v2.9.0...v2.9.1)
+
+* The build system and instruction has been updated to work on OS X Lion. (Aslak Hellesøy)
+
 ## [2.9.0](https://github.com/cucumber/gherkin/compare/v2.8.0...v2.9.0)
 
 * Added output to Reporter API (Aslak Hellesøy)

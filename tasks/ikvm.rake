@@ -15,7 +15,8 @@ namespace :ikvm do
 
   def mono(args)
     if(`which mono`.strip =~ /mono/)
-      sh("mono #{args}")
+      # http://monomvc.wordpress.com/2012/03/06/nuget-on-mono/
+      sh("mono --runtime=v4.0.30319 #{args}")
     else
       raise "[ERROR] You must install Mono and IKVM build gherkin for .NET. See README.md"
     end
@@ -26,7 +27,7 @@ namespace :ikvm do
       mono("#{IKVMC_EXE} #{args}")
     rescue => e
       if e.message =~ /Cannot open assembly/
-        e.message << "\n\n[ERROR] You must install Mono and IKVM build gherkin for .NET. See README.rdoc"
+        e.message << "\n\n[ERROR] You must install Mono and IKVM build gherkin for .NET. See README.md"
       end
       raise e
     end

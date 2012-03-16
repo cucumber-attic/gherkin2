@@ -52,7 +52,7 @@ Gem::Specification.new do |s|
     s.files += Dir['lib/gherkin/rb_lexer/*.rb']
     s.files += Dir['ext/**/*.c']
     s.extensions = Dir['ext/**/extconf.rb']
-    s.add_development_dependency('rake-compiler', '>= 0.7.9')
+    s.add_development_dependency('rake-compiler', '>= 0.8.0')
   end
   s.files -= Dir['**/.gitignore']
 

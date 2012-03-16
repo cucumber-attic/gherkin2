@@ -158,14 +158,14 @@ TODO: Make all specs pass with js lexer - replace 'c(listener)' with 'js(listene
 
 ### .NET dll
 
-You must install Mono from source, or use a release of Mono after November 18 2011.
+You must install Mono SDK 2.10.8 or newer.
 
 You must also download NuGet.exe from [CodePlex](http://nuget.codeplex.com/releases) and place it in `/usr/local/nuget/NuGet.exe`. When it's installed, update it and register your NuGet API Key:
 
     # In case we need to update
     mono /usr/local/nuget/NuGet.exe Update -self
 
-    # The key is at http://nuget.org/Contribute/MyAccount
+    # The key is at https://nuget.org/account
     mono /usr/local/nuget/NuGet.exe SetApiKey xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx
 
 Now you can build the .NET dll with:
@@ -177,17 +177,30 @@ This should put the dll into `release/nuspec/lib/gherkin.dll`
 ### MinGW Rubies (for Windows gems)
 
 In order to build Windows binaries (so we can release Windows gems from OS X/Linux) we first need to install MinGW. 
-On OS X, download prebuilt binaries (version 4.3.0) from http://crossgcc.rts-software.org/doku.php. 
-Unpack it under /usr/local and add it to your PATH, typically in your `~/.bashrc`:
+Follow the MinGW installation instructions from the [rake-compiler](https://github.com/luislavena/rake-compiler) project.
+IMPORTANT! You may have to get an older version - gcc 4.7.0 is experimental. See [this issue](https://github.com/luislavena/rake-compiler/issues/50)
 
-    export PATH=$PATH:/usr/local/i386-mingw32-4.3.0/bin
-
-Now we need to set up [rake-compiler](http://github.com/luislavena/rake-compiler/)
-We'll start by installing some rubies.
-
-Make sure you have openssl installed first.
+Now, make sure you have openssl installed:
 
     brew install openssl
+
+Next, we're going to install Ruby 1.8.7 and Ruby 1.9.3 for MinGW. We need both versions so we can build Windows binaries for both.
+OS X Lion (or later) doesn't ship with an LLVM free gcc, which you will need in order to install ruby 1.8.7. We can install it with:
+
+    brew install https://raw.github.com/adamv/homebrew-alt/master/duplicates/apple-gcc42.rb
+    export CC=gcc-4.2 
+
+For more info see:
+
+* http://stackoverflow.com/questions/6170813/why-cant-i-install-rails-on-lion-using-rvm
+* https://github.com/mxcl/homebrew/wiki/Custom-GCC-and-cross-compilers
+
+Now we need to set up [rake-compiler](http://github.com/luislavena/rake-compiler/)
+First, set the `CC` variable to your mingw32-gcc, for example:
+
+    export CC=/usr/local/mingw/bin/i686-w64-mingw32-gcc
+
+Now, let's install some rubies:
 
     # 1.8.7
     rvm install 1.8.7-p352
@@ -200,14 +213,14 @@ Make sure you have openssl installed first.
     rake-compiler cross-ruby VERSION=1.8.7-p352
 
     # 1.9.3
-    rvm install 1.9.3-p0
-    rvm use 1.9.3-p0
+    rvm install 1.9.3-p125
+    rvm use 1.9.3-p125
     rvm gemset create cucumber
     rvm gemset use cucumber
     gem install bundler
     unset GHERKIN_JS
     bundle install
-    rake-compiler cross-ruby VERSION=1.9.3-p0
+    rake-compiler cross-ruby VERSION=1.9.3-p125
 
 Now you can build Windows gems:
 
