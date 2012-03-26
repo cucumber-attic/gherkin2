@@ -1,3 +1,7 @@
+## [2.9.3](https://github.com/cucumber/gherkin/compare/v2.9.2...v2.9.3)
+
+* [Java] Fixed a bug in PrettyFormatter.setMonochrome(false) (Aslak Hellesøy)
+
 ## [2.9.2](https://github.com/cucumber/gherkin/compare/v2.9.1...v2.9.2)
 
 * [Java] Ability to PrettyFormatter.setMonochrome(false) post construction (Aslak Hellesøy)

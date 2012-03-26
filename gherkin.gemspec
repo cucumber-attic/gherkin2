@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   # When both are building OK, do a `bundle exec rake install` in both cucumber and gherkin projects, revert the changes in the first 2 steps 
   # and release both projects.
   #
-  s.version     = "2.9.2"
+  s.version     = "2.9.3"
   s.authors     = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
   s.description = "A fast Gherkin lexer/parser based on the Ragel State Machine Compiler."
   s.summary     = "#{s.name}-#{s.version}"
@@ -61,7 +61,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('cucumber', '>= 1.1.9')
   s.add_development_dependency('rake', '>= 0.9.2')
   s.add_development_dependency('bundler', '>= 1.1.0')
-  s.add_development_dependency('rspec', '~> 2.9.0') # No 2.8.0 until this is fixed: https://github.com/rspec/rspec-expectations/issues/112
+  s.add_development_dependency('rspec', '~> 2.9.0')
   s.add_development_dependency('rubyzip', '>= 0.9.6.1')
 
   unless ENV['RUBY_CC_VERSION'] || defined?(JRUBY_VERSION)

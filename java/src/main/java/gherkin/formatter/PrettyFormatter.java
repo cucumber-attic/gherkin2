@@ -62,16 +62,12 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     public PrettyFormatter(Appendable out, boolean monochrome, boolean executing) {
         this.out = new NiceAppendable(out);
-        setMonochrome(monochrome);
         this.executing = executing;
-        setFormats(monochrome);
+        setMonochrome(monochrome);
     }
 
     public void setMonochrome(boolean monochrome) {
         this.monochrome = monochrome;
-    }
-
-    private void setFormats(boolean monochrome) {
         if (monochrome) {
             formats = new MonochromeFormats();
         } else {
