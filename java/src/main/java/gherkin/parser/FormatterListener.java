@@ -72,57 +72,68 @@ public class FormatterListener implements Listener {
         stash.reset();
     }
 
+    @Override
     public void comment(String comment, int line) {
         stash.comment(new Comment(comment, line));
     }
 
+    @Override
     public void tag(String tag, int line) {
         stash.tag(new Tag(tag, line));
     }
 
+    @Override
     public void feature(String keyword, String name, String description, int line) {
         formatter.feature(new Feature(stash.comments, stash.tags, keyword, name, description, line, stash.featureId(name)));
         stash.reset();
     }
 
+    @Override
     public void background(String keyword, String name, String description, int line) {
         formatter.background(new Background(stash.comments, keyword, name, description, line));
         stash.reset();
     }
 
+    @Override
     public void scenario(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
         formatter.scenario(new Scenario(stash.comments, stash.tags, keyword, name, description, line, stash.featureElementId(name)));
         stash.reset();
     }
 
+    @Override
     public void scenarioOutline(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
         formatter.scenarioOutline(new ScenarioOutline(stash.comments, stash.tags, keyword, name, description, line, stash.featureElementId(name)));
         stash.reset();
     }
 
+    @Override
     public void examples(String keyword, String name, String description, int line) {
         replayStepsOrExamples();
         currentBuilder = new Examples.Builder(stash.comments, stash.tags, keyword, name, description, line, stash.examplesId(name));
         stash.reset();
     }
 
+    @Override
     public void step(String keyword, String name, int line) {
         replayStepsOrExamples();
         currentBuilder = new Step.Builder(stash.comments, keyword, name, line);
         stash.reset();
     }
 
+    @Override
     public void row(List<String> cells, int line) {
         currentBuilder.row(stash.comments, cells, line, stash.nextExampleId());
         stash.reset();
     }
 
+    @Override
     public void docString(String contentType, String content, int line) {
         currentBuilder.docString(new DocString(contentType, content, line));
     }
 
+    @Override
     public void eof() {
         replayStepsOrExamples();
         formatter.eof();

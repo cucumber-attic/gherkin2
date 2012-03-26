@@ -70,66 +70,77 @@ public class Parser implements Listener {
         machines.remove(machines.size() - 1);
     }
 
+    @Override
     public void tag(String tag, int line) {
         if (event("tag", line)) {
             listener.tag(tag, line);
         }
     }
 
+    @Override
     public void docString(String contentType, String content, int line) {
         if (event("doc_string", line)) {
             listener.docString(contentType, content, line);
         }
     }
 
+    @Override
     public void feature(String keyword, String name, String description, int line) {
         if (event("feature", line)) {
             listener.feature(keyword, name, description, line);
         }
     }
 
+    @Override
     public void background(String keyword, String name, String description, int line) {
         if (event("background", line)) {
             listener.background(keyword, name, description, line);
         }
     }
 
+    @Override
     public void scenario(String keyword, String name, String description, int line) {
         if (event("scenario", line)) {
             listener.scenario(keyword, name, description, line);
         }
     }
 
+    @Override
     public void scenarioOutline(String keyword, String name, String description, int line) {
         if (event("scenario_outline", line)) {
             listener.scenarioOutline(keyword, name, description, line);
         }
     }
 
+    @Override
     public void examples(String keyword, String name, String description, int line) {
         if (event("examples", line)) {
             listener.examples(keyword, name, description, line);
         }
     }
 
+    @Override
     public void step(String keyword, String name, int line) {
         if (event("step", line)) {
             listener.step(keyword, name, line);
         }
     }
 
+    @Override
     public void comment(String comment, int line) {
         if (event("comment", line)) {
             listener.comment(comment, line);
         }
     }
 
+    @Override
     public void row(List<String> cells, int line) {
         if (event("row", line)) {
             listener.row(cells, line);
         }
     }
 
+    @Override
     public void eof() {
         if (event("eof", 1)) {
             listener.eof();

@@ -1,6 +1,10 @@
+## [2.9.2](https://github.com/cucumber/gherkin/compare/v2.9.1...v2.9.2)
+
+* [Java] Ability to PrettyFormatter.setMonochrome(false) post construction (Aslak Hellesøy)
+
 ## [2.9.1](https://github.com/cucumber/gherkin/compare/v2.9.0...v2.9.1)
 
-* Package gherkin.jar as OSGi bundle ([#166](https://github.com/cucumber/gherkin/pull/166) Jan Stamer)
+* [Java] Package gherkin.jar as OSGi bundle ([#166](https://github.com/cucumber/gherkin/pull/166) Jan Stamer)
 * The build system and instruction has been updated to work on OS X Lion. (Aslak Hellesøy)
 
 ## [2.9.0](https://github.com/cucumber/gherkin/compare/v2.8.0...v2.9.0)

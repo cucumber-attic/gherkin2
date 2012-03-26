@@ -38,7 +38,7 @@ import static gherkin.util.FixJava.map;
 public class PrettyFormatter implements Reporter, Formatter {
     private final StepPrinter stepPrinter = new StepPrinter();
     private final NiceAppendable out;
-    private final boolean monochrome;
+    private boolean monochrome;
     private final boolean executing;
 
     private String uri;
@@ -62,9 +62,13 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     public PrettyFormatter(Appendable out, boolean monochrome, boolean executing) {
         this.out = new NiceAppendable(out);
-        this.monochrome = monochrome;
+        setMonochrome(monochrome);
         this.executing = executing;
         setFormats(monochrome);
+    }
+
+    public void setMonochrome(boolean monochrome) {
+        this.monochrome = monochrome;
     }
 
     private void setFormats(boolean monochrome) {
@@ -75,10 +79,12 @@ public class PrettyFormatter implements Reporter, Formatter {
         }
     }
 
+    @Override
     public void uri(String uri) {
         this.uri = uri;
     }
 
+    @Override
     public void feature(Feature feature) {
         printComments(feature.getComments(), "");
         printTags(feature.getTags(), "");
@@ -86,16 +92,19 @@ public class PrettyFormatter implements Reporter, Formatter {
         printDescription(feature.getDescription(), "  ", false);
     }
 
+    @Override
     public void background(Background background) {
         replay();
         statement = background;
     }
 
+    @Override
     public void scenario(Scenario scenario) {
         replay();
         statement = scenario;
     }
 
+    @Override
     public void scenarioOutline(ScenarioOutline scenarioOutline) {
         replay();
         statement = scenarioOutline;
@@ -146,6 +155,7 @@ public class PrettyFormatter implements Reporter, Formatter {
         return sb.toString();
     }
 
+    @Override
     public void examples(Examples examples) {
         replay();
         out.println();
@@ -160,10 +170,12 @@ public class PrettyFormatter implements Reporter, Formatter {
         table(examples.getRows());
     }
 
+    @Override
     public void step(Step step) {
         steps.add(step);
     }
 
+    @Override
     public void match(Match match) {
         this.match = match;
         printStatement();
@@ -182,6 +194,7 @@ public class PrettyFormatter implements Reporter, Formatter {
         out.println(getFormat("output").text(text));
     }
 
+    @Override
     public void result(Result result) {
         if (!monochrome) {
             out.append(formats.up(1));
@@ -320,6 +333,7 @@ public class PrettyFormatter implements Reporter, Formatter {
         rowsAbove = false;
     }
 
+    @Override
     public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
         throw new UnsupportedOperationException();
     }
@@ -366,9 +380,6 @@ public class PrettyFormatter implements Reporter, Formatter {
         for (int lineWidth : lineWidths) {
             indentations.add(maxLineWidth - lineWidth);
         }
-    }
-
-    public void embedding(String mimeType, byte[] data) {
     }
 
     private void padSpace(int indent) {
