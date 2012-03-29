@@ -1,5 +1,6 @@
 package gherkin.formatter;
 
+import gherkin.formatter.model.HookResult;
 import gherkin.formatter.model.Match;
 import gherkin.formatter.model.Result;
 
@@ -12,6 +13,18 @@ import java.io.InputStream;
  */
 public interface Reporter {
     void result(Result result);
+
+    /**
+     * Included to allow reporting before hook results, usually only if errors
+     * @param result
+     */
+    void before(HookResult result);
+
+    /**
+     * Included to report on after hook results, usually only if errors
+     * @param result
+     */
+    void after(HookResult result);
 
     void match(Match match);
 
