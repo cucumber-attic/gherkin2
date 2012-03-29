@@ -15,5 +15,5 @@ sources.each do |s|
   parser.parse(IO.read(path), path, 0)
 end
 
-formatter.close
+formatter.done
 puts JSON.pretty_generate(JSON.parse(io.string))
