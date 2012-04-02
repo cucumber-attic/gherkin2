@@ -5,7 +5,7 @@ import java.util.List;
 public class ExamplesTableRow extends Row {
     private final String id;
 
-    public ExamplesTableRow(List<Comment> comments, List<String> cells, int line, String id) {
+    public ExamplesTableRow(List<Comment> comments, List<String> cells, Integer line, String id) {
         super(comments, cells, line);
         this.id = id;
     }

@@ -14,11 +14,11 @@ public class Examples extends TagStatement {
         private final String keyword;
         private final String name;
         private final String description;
-        private final int line;
+        private final Integer line;
         private final String id;
         private List<ExamplesTableRow> rows;
 
-        public Builder(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, int line, String id) {
+        public Builder(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, Integer line, String id) {
             this.comments = comments;
             this.tags = tags;
             this.keyword = keyword;
@@ -28,7 +28,7 @@ public class Examples extends TagStatement {
             this.id = id;
         }
 
-        public void row(List<Comment> comments, List<String> cells, int line, String id) {
+        public void row(List<Comment> comments, List<String> cells, Integer line, String id) {
             if (rows == null) {
                 rows = new ArrayList<ExamplesTableRow>();
             }
@@ -44,7 +44,7 @@ public class Examples extends TagStatement {
         }
     }
 
-    public Examples(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, int line, String id, List<ExamplesTableRow> rows) {
+    public Examples(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, Integer line, String id, List<ExamplesTableRow> rows) {
         super(comments, tags, keyword, name, description, line, id);
         this.rows = rows;
     }

@@ -9,9 +9,9 @@ public abstract class BasicStatement extends Mappable implements CommentHolder {
     private final List<Comment> comments;
     private final String keyword;
     private final String name;
-    private final int line;
+    private final Integer line;
 
-    public BasicStatement(List<Comment> comments, String keyword, String name, int line) {
+    public BasicStatement(List<Comment> comments, String keyword, String name, Integer line) {
         this.comments = comments;
         this.keyword = keyword;
         this.name = name;
@@ -29,7 +29,7 @@ public abstract class BasicStatement extends Mappable implements CommentHolder {
         return new Range(first, getLine());
     }
 
-    protected int getFirstNonCommentLine() {
+    protected Integer getFirstNonCommentLine() {
         return line;
     }
 
@@ -45,7 +45,7 @@ public abstract class BasicStatement extends Mappable implements CommentHolder {
         return name;
     }
 
-    public int getLine() {
+    public Integer getLine() {
         return line;
     }
 

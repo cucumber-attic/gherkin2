@@ -6,8 +6,8 @@ public class StepPrinter {
     public void writeStep(NiceAppendable out, Format textFormat, Format argFormat, String stepName, List<Argument> arguments) {
         int textStart = 0;
         for (Argument argument : arguments) {
-            // can be -1 if the argument is missing.
-            if (argument.getOffset() > 0) {
+            // can be null if the argument is missing.
+            if (argument.getOffset() != null) {
                 String text = stepName.substring(textStart, argument.getOffset());
                 out.append(textFormat.text(text));
             }

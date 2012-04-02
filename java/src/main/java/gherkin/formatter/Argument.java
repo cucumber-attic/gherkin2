@@ -1,10 +1,10 @@
 package gherkin.formatter;
 
 public class Argument extends Mappable {
-    private final int offset;
+    private final Integer offset;
     private final String val;
 
-    public Argument(int offset, String val) {
+    public Argument(Integer offset, String val) {
         this.offset = offset;
         this.val = val;
     }
@@ -13,7 +13,7 @@ public class Argument extends Mappable {
         return val;
     }
 
-    public int getOffset() {
+    public Integer getOffset() {
         return offset;
     }
 

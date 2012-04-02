@@ -1,23 +1,23 @@
 package gherkin.formatter.model;
 
 public class Range {
-    private final long first;
-    private final long last;
+    private final Integer first;
+    private final Integer last;
 
-    public Range(long first, long last) {
+    public Range(Integer first, Integer last) {
         this.first = first;
         this.last = last;
     }
 
-    public long getFirst() {
+    public Integer getFirst() {
         return first;
     }
 
-    public long getLast() {
+    public Integer getLast() {
         return last;
     }
 
-    public boolean isInclude(long n) {
+    public boolean isInclude(Integer n) {
         return first <= n && n <= last;
     }
 }

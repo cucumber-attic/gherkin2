@@ -12,9 +12,9 @@ public abstract class Row extends Mappable implements CommentHolder {
 
     private final List<Comment> comments;
     private final List<String> cells;
-    private final int line;
+    private final Integer line;
 
-    public Row(List<Comment> comments, List<String> cells, int line) {
+    public Row(List<Comment> comments, List<String> cells, Integer line) {
         if (comments == null) {
             throw new NullPointerException("comments");
         }
@@ -34,7 +34,7 @@ public abstract class Row extends Mappable implements CommentHolder {
         return cells;
     }
 
-    public int getLine() {
+    public Integer getLine() {
         return line;
     }
 

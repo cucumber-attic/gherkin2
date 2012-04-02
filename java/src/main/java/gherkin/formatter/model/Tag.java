@@ -4,9 +4,9 @@ import gherkin.formatter.Mappable;
 
 public class Tag extends Mappable {
     private final String name;
-    private final int line;
+    private final Integer line;
 
-    public Tag(String name, int line) {
+    public Tag(String name, Integer line) {
         this.name = name;
         this.line = line;
     }
@@ -15,7 +15,7 @@ public class Tag extends Mappable {
         return name;
     }
 
-    public int getLine() {
+    public Integer getLine() {
         return line;
     }
 

@@ -7,7 +7,7 @@ import java.util.List;
 public class Background extends DescribedStatement {
     private final String type = "background";
 
-    public Background(List<Comment> comments, String keyword, String name, String description, int line) {
+    public Background(List<Comment> comments, String keyword, String name, String description, Integer line) {
         super(comments, keyword, name, description, line);
     }
 

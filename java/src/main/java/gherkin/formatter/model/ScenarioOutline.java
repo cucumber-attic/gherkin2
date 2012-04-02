@@ -7,7 +7,7 @@ import java.util.List;
 public class ScenarioOutline extends TagStatement {
     private final String type = "scenario_outline";
 
-    public ScenarioOutline(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, int line, String id) {
+    public ScenarioOutline(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, Integer line, String id) {
         super(comments, tags, keyword, name, description, line, id);
     }
 
