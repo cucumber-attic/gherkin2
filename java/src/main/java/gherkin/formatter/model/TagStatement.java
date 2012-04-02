@@ -6,7 +6,7 @@ public abstract class TagStatement extends DescribedStatement {
     private final List<Tag> tags;
     private final String id;
 
-    public TagStatement(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, int line, String id) {
+    public TagStatement(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, Integer line, String id) {
         super(comments, keyword, name, description, line);
         this.tags = tags;
         this.id = id;
@@ -17,7 +17,7 @@ public abstract class TagStatement extends DescribedStatement {
     }
 
     @Override
-    protected int getFirstNonCommentLine() {
+    protected Integer getFirstNonCommentLine() {
         if (getTags().isEmpty()) {
             return getLine();
         } else {

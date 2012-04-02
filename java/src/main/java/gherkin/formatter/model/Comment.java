@@ -4,9 +4,9 @@ import gherkin.formatter.Mappable;
 
 public class Comment extends Mappable {
     private final String value;
-    private final int line;
+    private final Integer line;
 
-    public Comment(String value, int line) {
+    public Comment(String value, Integer line) {
         this.value = value;
         this.line = line;
     }
@@ -15,7 +15,7 @@ public class Comment extends Mappable {
         return value;
     }
 
-    public int getLine() {
+    public Integer getLine() {
         return line;
     }
 }

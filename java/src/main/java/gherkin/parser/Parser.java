@@ -21,7 +21,7 @@ public class Parser implements Listener {
     private FormatterListener listener;
     private I18nLexer lexer;
     private String featureURI;
-    private int lineOffset;
+    private Integer lineOffset;
     private final Formatter formatter;
 
     public Parser(Formatter formatter) {
@@ -49,7 +49,7 @@ public class Parser implements Listener {
      * @param featureURI the URI where the gherkin originated from. Typically a file path.
      * @param lineOffset the line offset within the uri document the gherkin was taken from. Typically 0.
      */
-    public void parse(String gherkin, String featureURI, int lineOffset) {
+    public void parse(String gherkin, String featureURI, Integer lineOffset) {
         formatter.uri(featureURI);
         this.featureURI = featureURI;
         this.lineOffset = lineOffset;
@@ -71,70 +71,70 @@ public class Parser implements Listener {
     }
 
     @Override
-    public void tag(String tag, int line) {
+    public void tag(String tag, Integer line) {
         if (event("tag", line)) {
             listener.tag(tag, line);
         }
     }
 
     @Override
-    public void docString(String contentType, String content, int line) {
+    public void docString(String contentType, String content, Integer line) {
         if (event("doc_string", line)) {
             listener.docString(contentType, content, line);
         }
     }
 
     @Override
-    public void feature(String keyword, String name, String description, int line) {
+    public void feature(String keyword, String name, String description, Integer line) {
         if (event("feature", line)) {
             listener.feature(keyword, name, description, line);
         }
     }
 
     @Override
-    public void background(String keyword, String name, String description, int line) {
+    public void background(String keyword, String name, String description, Integer line) {
         if (event("background", line)) {
             listener.background(keyword, name, description, line);
         }
     }
 
     @Override
-    public void scenario(String keyword, String name, String description, int line) {
+    public void scenario(String keyword, String name, String description, Integer line) {
         if (event("scenario", line)) {
             listener.scenario(keyword, name, description, line);
         }
     }
 
     @Override
-    public void scenarioOutline(String keyword, String name, String description, int line) {
+    public void scenarioOutline(String keyword, String name, String description, Integer line) {
         if (event("scenario_outline", line)) {
             listener.scenarioOutline(keyword, name, description, line);
         }
     }
 
     @Override
-    public void examples(String keyword, String name, String description, int line) {
+    public void examples(String keyword, String name, String description, Integer line) {
         if (event("examples", line)) {
             listener.examples(keyword, name, description, line);
         }
     }
 
     @Override
-    public void step(String keyword, String name, int line) {
+    public void step(String keyword, String name, Integer line) {
         if (event("step", line)) {
             listener.step(keyword, name, line);
         }
     }
 
     @Override
-    public void comment(String comment, int line) {
+    public void comment(String comment, Integer line) {
         if (event("comment", line)) {
             listener.comment(comment, line);
         }
     }
 
     @Override
-    public void row(List<String> cells, int line) {
+    public void row(List<String> cells, Integer line) {
         if (event("row", line)) {
             listener.row(cells, line);
         }
@@ -147,15 +147,7 @@ public class Parser implements Listener {
         }
     }
 
-    public void syntaxError(String state, String event, List<String> legalEvents, int line) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void syntaxError(String state, String event, List<String> legalEvents, String uri, int line) {
-        throw new RuntimeException("Didn't expect this");
-    }
-
-    private boolean event(String event, int line) {
+    private boolean event(String event, Integer line) {
         try {
             machine().event(event, line);
             return true;
@@ -195,7 +187,7 @@ public class Parser implements Listener {
             this.transitionMap = transitionMap(name);
         }
 
-        public void event(String event, int line) {
+        public void event(String event, Integer line) {
             Map<String, String> states = transitionMap.get(state);
             if (states == null) {
                 throw new RuntimeException("Unknown getState: " + state + " for machine " + name);

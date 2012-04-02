@@ -17,18 +17,18 @@ public class Step extends BasicStatement {
         private final List<Comment> comments;
         private final String keyword;
         private final String name;
-        private final int line;
+        private final Integer line;
         private List<DataTableRow> rows;
         private DocString doc_string;
 
-        public Builder(List<Comment> comments, String keyword, String name, int line) {
+        public Builder(List<Comment> comments, String keyword, String name, Integer line) {
             this.comments = comments;
             this.keyword = keyword;
             this.name = name;
             this.line = line;
         }
 
-        public void row(List<Comment> comments, List<String> cells, int line, String id) {
+        public void row(List<Comment> comments, List<String> cells, Integer line, String id) {
             if (rows == null) {
                 rows = new ArrayList<DataTableRow>();
             }
@@ -44,7 +44,7 @@ public class Step extends BasicStatement {
         }
     }
 
-    public Step(List<Comment> comments, String keyword, String name, int line, List<DataTableRow> rows, DocString docString) {
+    public Step(List<Comment> comments, String keyword, String name, Integer line, List<DataTableRow> rows, DocString docString) {
         super(comments, keyword, name, line);
         this.rows = rows;
         this.doc_string = docString;

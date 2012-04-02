@@ -8,16 +8,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LineFilter implements Filter {
-    private final List<Long> lines;
+    private final List<Integer> lines;
 
-    public LineFilter(List<Long> lines) {
-        this.lines = lines;
+    public LineFilter(List<Integer> lines) {
+        // During our tests, lines is passed in from Ruby, and it's a list of Long.
+        this.lines = toIntegers(lines);
+    }
+
+    private List<Integer> toIntegers(List<?> lines) {
+        List<Integer> result = new ArrayList<Integer>(lines.size());
+        for (Object line : lines) {
+            if(line instanceof Number) {
+                result.add(((Number) line).intValue());
+            } else {
+                throw new IllegalArgumentException("Not a list of numbers: " + lines);
+            }
+        }
+        return result;
     }
 
     public boolean eval(List<Tag> tags, List<String> names, List<Range> ranges) {
         for (Range range : ranges) {
             if (range != null) {
-                for (Long line : lines) {
+                for (Integer line : lines) {
                     if (range.isInclude(line)) {
                         return true;
                     }
@@ -33,8 +46,8 @@ public class LineFilter implements Filter {
             if (result.isEmpty()) {
                 result.add(row);
             } else {
-                for (Long line : lines) {
-                    if (row.getLine() == line) {
+                for (Integer line : lines) {
+                    if (row.getLine().equals(line)) {
                         result.add(row);
                     }
                 }

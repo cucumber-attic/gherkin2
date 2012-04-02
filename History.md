@@ -1,3 +1,8 @@
+## [Git master](https://github.com/cucumber/gherkin/compare/v2.9.3...master)
+
+* [Java] Line numbers are Integer instead of int or Long (Aslak Hellesøy)
+* [Java, Ruby] Fix for exception when an argument is missing. ([#171](https://github.com/cucumber/gherkin/pull/171) Matt Nathan, Aslak Hellesøy)
+
 ## [2.9.3](https://github.com/cucumber/gherkin/compare/v2.9.2...v2.9.3)
 
 * [Java] Fixed a bug in PrettyFormatter.setMonochrome(false) (Aslak Hellesøy)

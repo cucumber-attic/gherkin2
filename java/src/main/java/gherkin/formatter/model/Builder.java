@@ -5,7 +5,7 @@ import gherkin.formatter.Formatter;
 import java.util.List;
 
 public interface Builder {
-    void row(List<Comment> comments, List<String> cells, int line, String id);
+    void row(List<Comment> comments, List<String> cells, Integer line, String id);
 
     void docString(DocString docString);
 

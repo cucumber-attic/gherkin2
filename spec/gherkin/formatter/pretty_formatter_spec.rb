@@ -95,6 +95,25 @@ module Gherkin
         )
       end
 
+      # See https://github.com/cucumber/gherkin/pull/171
+      it "should highlight arguments when there are optional arguments" do
+        @f.uri("foo.feature")
+        @f.scenario(Model::Scenario.new([], [], "Scenario", "Lots of cukes", "", 3, "lots-of-cukes"))
+        @f.step(Model::Step.new([], "Given ", "I have 999 cukes in my belly", 3, nil, nil))
+        @f.match(Model::Match.new([
+          Gherkin::Formatter::Argument.new(nil, nil), # An optional argument
+          Gherkin::Formatter::Argument.new(7, '999')
+        ], nil))
+        @f.result(Model::Result.new('passed', 6, nil))
+
+        assert_io(
+          "\n" +
+          "  Scenario: Lots of cukes              \e[90m# foo.feature:3\e[0m\n" +
+          "    #{executing}Given #{reset}#{executing}I have #{reset}#{executing_arg}999#{reset}#{executing} cukes in my belly#{reset}\n" +
+          "#{up(1)}    #{passed}Given #{reset}#{passed}I have #{reset}#{passed_arg}999#{reset}#{passed} cukes in my belly#{reset}\n"
+        )
+      end
+
       it "should prettify scenario" do
         assert_pretty(%{Feature: Feature Description
   Some preamble

@@ -5,7 +5,7 @@ import gherkin.formatter.Mappable;
 public class DocString extends Mappable {
     private final String content_type;
     private final String value;
-    private final int line;
+    private final Integer line;
 
     public String getContentType() {
         return content_type;
@@ -19,7 +19,7 @@ public class DocString extends Mappable {
         return line;
     }
 
-    public DocString(String contentType, String value, int line) {
+    public DocString(String contentType, String value, Integer line) {
         this.content_type = contentType;
         this.value = value;
         this.line = line;

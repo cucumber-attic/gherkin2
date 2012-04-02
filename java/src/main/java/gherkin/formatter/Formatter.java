@@ -35,7 +35,7 @@ public interface Formatter extends Closeable {
      */
     void eof();
 
-    void syntaxError(String state, String event, List<String> legalEvents, String uri, int line);
+    void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line);
 
     /**
      * Indicates that the last file has been processed. This should print out any closing output,

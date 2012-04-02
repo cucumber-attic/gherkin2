@@ -165,7 +165,7 @@ public class JSONParser {
         return getString(o, "description");
     }
 
-    private int line(Map o) {
+    private Integer line(Map o) {
         return getInt(o, "line");
     }
 
@@ -204,14 +204,14 @@ public class JSONParser {
         return string == null ? null : (String) string;
     }
 
-    private int getInt(Map map, String key) {
+    private Integer getInt(Map map, String key) {
         Object n = map.get(key);
-        return n == null ? -1 : ((Number) n).intValue();
+        return n == null ? null : ((Number) n).intValue();
     }
 
-    private long getLong(Map map, String key) {
+    private Long getLong(Map map, String key) {
         Object n = map.get(key);
-        return n == null ? -1 : ((Number) n).longValue();
+        return n == null ? null : ((Number) n).longValue();
     }
 
     private List getList(Map map, String key) {
