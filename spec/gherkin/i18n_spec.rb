@@ -76,6 +76,80 @@ module Gherkin
         ]
       end
 
+      it "should recognize keywords in Portuguese (1st variant)" do
+        lexer = Gherkin::Lexer::I18nLexer.new(@listener, false)
+        scan_file(lexer, "i18n_pt1.feature")
+        @listener.to_sexp.should == [
+          [:comment, "# language: pt", 1],
+          [:feature, "Funcionalidade", "Reconhece \"Funcionalidade\"", "", 2],
+          [:background, "Contexto", "Reconhece \"Contexto\"", "", 4],
+          [:scenario, "Cenário", "Reconhece \"Cenário\" com acento", "", 6],
+          [:scenario, "Cenario", "Reconhece \"Cenário\" sem acento", "", 8],
+          [:scenario_outline, "Esquema do Cenário", "Reconhece \"Esquema do Cenário\" com acento", "", 10],
+          [:step, "Dado ", "que <Valor> é um valor e que reconhece \"Dado\";", 11],
+          [:step, "Dada ", "a afirmação de que reconhece \"Dada\";", 12],
+          [:step, "Dados ", "os factos acima e ainda que reconhece \"Dados\";", 13],
+          [:step, "Dadas ", "as afirmações acima e ainda que reconhece \"Dadas\";", 14],
+          [:step, "Quando ", "reconhece \"Quando\";", 15],
+          [:step, "Então ", "também reconhece \"Então\" com acento e", 16],
+          [:step, "Entao ", "também reconhece \"Então\" sem acento;", 17],
+          [:step, "E ", "reconhece \"E\";", 18],
+          [:step, "Mas ", "também reconhece \"Mas\".", 19],
+          [:examples, "Exemplos", "Reconhece \"Exemplos\"", "", 21],
+          [:row, ["Valor"], 22],
+          [:row, ["1"], 23],
+          [:scenario_outline, "Esquema do Cenario", "Reconhece \"Esquema do Cenário\" sem acento", "", 25],
+          [:step, "Dado ", "que <Valor> é um valor;", 26],
+          [:examples, "Cenários", "Reconhece \"Cenários\" com acento", "", 28],
+          [:row, ["Valor"], 29],
+          [:row, ["1"], 30],
+          [:scenario_outline, "Delineação do Cenário", "Reconhece \"Delineação do Cenário\" com acento", "", 32],
+          [:step, "Dado ", "que <Valor> é um valor;", 33],
+          [:examples, "Cenarios", "Reconhece \"Cenários\" sem acento", "", 35],
+          [:row, ["Valor"], 36],
+          [:row, ["1"], 37],
+          [:scenario_outline, "Delineacao do Cenario", "Reconhece \"Delineação do Cenário\" sem acento", "", 39],
+          [:step, "Dado ", "que <Valor> é um valor;", 40],
+          [:examples, "Exemplos", "Reconhece \"Exemplos\"", "", 42],
+          [:row, ["Valor"], 43],
+          [:row, ["1"], 44],
+          [:eof]
+        ]
+      end
+
+      it "should recognize keywords in Portuguese (2nd variant)" do
+        lexer = Gherkin::Lexer::I18nLexer.new(@listener, false)
+        scan_file(lexer, "i18n_pt2.feature")
+        @listener.to_sexp.should == [
+          [:comment, "# language: pt", 1],
+          [:feature, "Característica", "Reconhece \"Característica\" com acento", "", 2],
+          [:background, "Cenário de Fundo", "Reconhece \"Cenário de Fundo\" com acento", "", 4],
+          [:eof]
+        ]
+      end
+
+      it "should recognize keywords in Portuguese (3rd variant)" do
+        lexer = Gherkin::Lexer::I18nLexer.new(@listener, false)
+        scan_file(lexer, "i18n_pt3.feature")
+        @listener.to_sexp.should == [
+          [:comment, "# language: pt", 1],
+          [:feature, "Caracteristica", "Reconhece \"Característica\" sem acento", "", 2],
+          [:background, "Cenario de Fundo", "Reconhece \"Cenário de Fundo\" sem acento", "", 4],
+          [:eof]
+        ]
+      end
+
+      it "should recognize keywords in Portuguese (4th variant)" do
+        lexer = Gherkin::Lexer::I18nLexer.new(@listener, false)
+        scan_file(lexer, "i18n_pt4.feature")
+        @listener.to_sexp.should == [
+          [:comment, "# language: pt", 1],
+          [:feature, "Característica", "Reconhece \"Característica\" com acento", "", 2],
+          [:background, "Fundo", "Reconhece \"Fundo\"", "", 4],
+          [:eof]
+        ]
+      end
+
       describe 'keywords' do
         it "should have code keywords without space, comma, exclamation or apostrophe" do
           ['Avast', 'Akkor', 'Etantdonné', 'Lorsque', '假設'].each do |code_keyword|
