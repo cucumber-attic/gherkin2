@@ -81,7 +81,7 @@ public class JSONFormatter implements Reporter, Formatter {
     @Override
     public void embedding(String mimeType, InputStream data) {
         final Map<String, String> embedding = new HashMap<String, String>();
-        embedding.put("mime_type", mimeType);
+        embedding.put("mime_qtype", mimeType);
         embedding.put("data", Base64.encodeBytes(readStream(data)));
         getEmbeddings().add(embedding);
     }
@@ -93,15 +93,8 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void result(Result result) {
-        if (getFeatureElements().size() > 0) {
-            getStepAt(stepIndex).put("result", result.toMap());
-            stepIndex++;
-        } else {
-            //A result was offered before any steps have been offered
-            //Lets just add a failed result directly to the feature
-            //TODO: this gets the exception down, but makes a mess of the JSON
-            getFeatureElements().add(result.toMap());
-        }
+        getStepAt(stepIndex).put("result", result.toMap());
+        stepIndex++;
     }
 
     @Override
@@ -122,7 +115,7 @@ public class JSONFormatter implements Reporter, Formatter {
     public void after(HookResult result) {
         handleHooks(result, false);
     }
-    
+
     private void handleHooks(HookResult result, boolean isBefore) {
         String hook = isBefore ? "before" : "after";
 
