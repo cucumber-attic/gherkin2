@@ -11,10 +11,9 @@ public class StepPrinter {
                 String text = stepName.substring(textStart, argument.getOffset());
                 out.append(textFormat.text(text));
             }
-            String val = argument.getVal();
             // val can be null if the argument isn't there, for example @And("(it )?has something")
-            if (val != null) {
-                out.append(argFormat.text(val));
+            if (argument.getVal() != null) {
+                out.append(argFormat.text(argument.getVal()));
                 textStart = argument.getOffset() + argument.getVal().length();
             }
         }
