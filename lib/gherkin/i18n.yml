@@ -41,17 +41,17 @@
   but: "*|لكن"
 "bm":
   name: Malay
-  native: Melayu
+  native: Bahasa Melayu
   feature: Fungsi
-  background: Kebelakangan
-  scenario: 
-  scenario: outlint:
-  examples: 
-  given: Bagi
-  when: Apabila
-  then: 
-  and: Dan
-  but: Tetapi
+  background: Latar Belakang
+  scenario: Senario
+  scenario_outline: Menggariskan Senario 
+  examples: Contoh 
+  given: "*|Bagi"
+  when: "*|Apabila"
+  then: "*|Kemudian"
+  and: "*|Dan"
+  but: "*|Tetapi"
 "bg":
   name: Bulgarian
   native: български
