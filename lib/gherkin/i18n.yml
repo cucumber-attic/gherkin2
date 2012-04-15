@@ -39,6 +39,19 @@
   then: "*|اذاً|ثم"
   and: "*|و"
   but: "*|لكن"
+"bm":
+  name: Malay
+  native: Melayu
+  feature: Fungsi
+  background: Kebelakangan
+  scenario: 
+  scenario: outlint:
+  examples: 
+  given: Bagi
+  when: Apabila
+  then: 
+  and: Dan
+  but: Tetapi
 "bg":
   name: Bulgarian
   native: български
