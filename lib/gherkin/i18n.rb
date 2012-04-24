@@ -59,9 +59,9 @@ module Gherkin
         require 'gherkin/formatter/pretty_formatter'
         require 'gherkin/formatter/model'
         io = StringIO.new
-        pf = Gherkin::Formatter::PrettyFormatter.new(io, false, false)
+        pf = Gherkin::Formatter::PrettyFormatter.new(io, true, false)
         table = all.map do |i18n|
-          Formatter::Model::Row.new([], [i18n.iso_code, i18n.keywords('name')[0], i18n.keywords('native')[0]], nil)
+          Formatter::Model::DataTableRow.new([], [i18n.iso_code, i18n.keywords('name')[0], i18n.keywords('native')[0]], nil)
         end
         pf.table(table)
         io.string
