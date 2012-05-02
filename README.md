@@ -134,6 +134,7 @@ In order to build and test Gherkin for JavaScript you must install:
   * Make sure you have the official ragel (`brew install ragel`)
   * Make sure you have kelbt (`brew install kelbt`). If that fails, install manually from http://www.complang.org/kelbt/
   * `cd ragel-js/ragel-svn && ./autogen.sh && ./configure --disable-manual`
+  * `make && make install`
 * Define the GHERKIN_JS environment variable in your shell (any value will do)
 
 Prepare the environment:
