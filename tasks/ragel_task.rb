@@ -37,7 +37,7 @@ class RagelTask
     file UGLIFYJS do
       unless File.exist?(UGLIFYJS)
         Dir.chdir('js') do
-          sh "npm link"
+          sh "npm install"
         end
       end
     end
