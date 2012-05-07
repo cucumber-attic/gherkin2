@@ -169,6 +169,7 @@ module Gherkin
           ("\n" + Gherkin::I18n.language_table).should == %{
       | ar        | Arabic              | العربية           |
       | bg        | Bulgarian           | български         |
+      | bm        | Malay               | Bahasa Melayu     |
       | ca        | Catalan             | català            |
       | cs        | Czech               | Česky             |
       | cy-GB     | Welsh               | Cymraeg           |
