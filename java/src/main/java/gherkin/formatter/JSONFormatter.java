@@ -81,7 +81,7 @@ public class JSONFormatter implements Reporter, Formatter {
     @Override
     public void embedding(String mimeType, InputStream data) {
         final Map<String, String> embedding = new HashMap<String, String>();
-        embedding.put("mime_qtype", mimeType);
+        embedding.put("mime_type", mimeType);
         embedding.put("data", Base64.encodeBytes(readStream(data)));
         getEmbeddings().add(embedding);
     }
