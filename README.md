@@ -8,7 +8,7 @@ A fast lexer and parser for the Gherkin language based on Ragel. Gherkin is two 
 
 Supported platforms:
 
-* [Ruby](https://rubygems.org/gems/gherkin) 1.8.6-1.9.3 (MRI, JRuby, REE, Rubinius)
+* [Ruby](https://rubygems.org/gems/gherkin) 1.8.7-1.9.3 (MRI, JRuby, REE, Rubinius)
 * [Pure Java](http://search.maven.org/#search%7Cga%7C1%7Cgherkin) (jar file)
 * [JavaScript](http://search.npmjs.org/#/gherkin) (Tested with V8/node.js/Chrome, but might work on other JavaScript engines)
 * [.NET](http://nuget.org/List/Packages/gherkin) (dll file)
@@ -55,7 +55,7 @@ The jar file is in the central Maven repo.
     <dependency>
         <groupId>info.cukes</groupId>
         <artifactId>gherkin</artifactId>
-        <version>2.9.3</version>
+        <version>2.10.0</version>
     </dependency>
 
 You can get it manually from [Maven Central](http://search.maven.org/#browse%7C-2073395818)
@@ -146,7 +146,7 @@ And you can try it out with node.js:
 
 If you're hacking and just want to rebuild the English parser:
 
-  rake js/lib/gherkin/lexer/en.js
+    rake js/lib/gherkin/lexer/en.js
 
 TODO: Make all specs pass with js lexer - replace 'c(listener)' with 'js(listener)' in i18n.rb
 

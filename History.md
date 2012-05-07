@@ -1,4 +1,4 @@
-## [Git master](https://github.com/cucumber/gherkin/compare/v2.9.3...master)
+## [2.10.0](https://github.com/cucumber/gherkin/compare/v2.9.3...v2.10.0)
 
 * [Core] Added Malay language support. ([#176](https://github.com/cucumber/gherkin/pull/176) Choon Siong)
 * [JRuby] Fixed `I18n.language_table` so that `cucumber --i18n help` works again on JRuby. ([cucumber #272](https://github.com/cucumber/cucumber/issues/272) Aslak Hellesøy)
