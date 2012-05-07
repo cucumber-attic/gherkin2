@@ -5,7 +5,6 @@ import java.util.List;
 public class DataTableRow extends Row {
     private transient final DiffType diffType;
 
-
     public DataTableRow(List<Comment> comments, List<String> cells, Integer line) {
         this(comments, cells, line, DiffType.NONE);
     }

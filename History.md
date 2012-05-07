@@ -1,5 +1,6 @@
 ## [Git master](https://github.com/cucumber/gherkin/compare/v2.9.3...master)
 
+* [JRuby] Fixed `I18n.language_table` so that `cucumber --i18n help` works again on JRuby. ([cucumber #272](https://github.com/cucumber/cucumber/issues/272) Aslak Hellesøy)
 * [Java] Line numbers are Integer instead of int or Long (Aslak Hellesøy)
 * [Java, Ruby] Fix for exception when an argument is missing. ([#171](https://github.com/cucumber/gherkin/pull/171) Matt Nathan, Aslak Hellesøy)
 

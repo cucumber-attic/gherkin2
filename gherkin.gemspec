@@ -62,12 +62,12 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rake', '>= 0.9.2')
   s.add_development_dependency('bundler', '>= 1.1.0')
   s.add_development_dependency('rspec', '~> 2.9.0')
-  s.add_development_dependency('rubyzip', '>= 0.9.6.1')
+  s.add_development_dependency('rubyzip', '>= 0.9.8')
 
   unless ENV['RUBY_CC_VERSION'] || defined?(JRUBY_VERSION)
-    s.add_development_dependency('therubyracer', '>= 0.9.10') if ENV['GHERKIN_JS']
+    s.add_development_dependency('therubyracer', '>= 0.10.1') if ENV['GHERKIN_JS']
     # For Documentation:
-    s.add_development_dependency('yard', '>= 0.7.5')
+    s.add_development_dependency('yard', '>= 0.8.0')
     s.add_development_dependency('rdiscount', '>= 1.6.8')
   end
 
