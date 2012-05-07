@@ -61,7 +61,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('cucumber', '>= 1.2.0')
   s.add_development_dependency('rake', '>= 0.9.2')
   s.add_development_dependency('bundler', '>= 1.1.0')
-  s.add_development_dependency('rspec', '~> 2.9.0')
+  s.add_development_dependency('rspec', '~> 2.10.0')
   s.add_development_dependency('rubyzip', '>= 0.9.8')
 
   unless ENV['RUBY_CC_VERSION'] || defined?(JRUBY_VERSION)
