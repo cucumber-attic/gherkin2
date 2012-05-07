@@ -152,7 +152,9 @@ TODO: Make all specs pass with js lexer - replace 'c(listener)' with 'js(listene
 
 ### .NET dll
 
-You must install Mono SDK 2.10.8 or newer.
+You must install Mono SDK 2.10.8. The OS X package installer is not recommended as it modifies your system PATH and makes Homebrew unhappy. Install with homebrew instead:
+
+    brew install ikvm/mono.rb
 
 You must also download NuGet.exe from [CodePlex](http://nuget.codeplex.com/releases) and place it in `/usr/local/nuget/NuGet.exe`. When it's installed, update it and register your NuGet API Key:
 
@@ -164,9 +166,11 @@ You must also download NuGet.exe from [CodePlex](http://nuget.codeplex.com/relea
 
 Now you can build the .NET dll with:
 
+	mkdir release
     rake ikvm
+    rake release/nuspec/lib/gherkin.dll
 
-This should put the dll into `release/nuspec/lib/gherkin.dll`
+This should build `release/nuspec/lib/gherkin.dll`
 
 ### MinGW Rubies (for Windows gems)
 
@@ -217,6 +221,16 @@ Now you can build Windows gems:
     rake gems:win
 
 ## Release process
+
+Make sure you have access to all the servers where packages are being uploaded:
+
+* npm registry: `npm login`
+* rubygems.org: `gem push`
+* cukes.info: `ssh cukes.info`
+* sonatype: Check `~/.m2/settings.xml`
+* nuget: See .NET section above
+
+Now we can release:
 
 * Make sure GHERKIN_JS is defined (see JavaScript section above)
 * Bump version in:
