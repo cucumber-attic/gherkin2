@@ -1,5 +1,4 @@
 [![Build Status](https://secure.travis-ci.org/cucumber/gherkin.png)](http://travis-ci.org/cucumber/gherkin)
-[![Dependency Status](https://gemnasium.com/cucumber/gherkin.png)](https://gemnasium.com/cucumber/gherkin)
 
 A fast lexer and parser for the Gherkin language based on Ragel. Gherkin is two things:
 
