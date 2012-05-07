@@ -37,4 +37,4 @@ var lexer = new Lexer({
   }
 });
 
-lexer.scan(fs.readFileSync(process.ARGV[2]));
+lexer.scan(fs.readFileSync(process.argv[2]));
