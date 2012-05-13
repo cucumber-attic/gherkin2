@@ -29,6 +29,7 @@ public interface Formatter extends Closeable {
 
     void step(Step step);
 
+
     /**
      * Indicates the End-Of-File for a Gherkin document (.feature file)
      */

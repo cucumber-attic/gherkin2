@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import gherkin.formatter.model.Background;
 import gherkin.formatter.model.Examples;
 import gherkin.formatter.model.Feature;
+import gherkin.formatter.model.HookResult;
 import gherkin.formatter.model.Match;
 import gherkin.formatter.model.Result;
 import gherkin.formatter.model.Scenario;
@@ -94,6 +95,51 @@ public class JSONFormatter implements Reporter, Formatter {
     public void result(Result result) {
         getStepAt(stepIndex).put("result", result.toMap());
         stepIndex++;
+    }
+
+    @Override
+    public void before(HookResult result) {
+        handleHooks(result, true);
+        /*
+"before": [
+    {
+        "location": "some.Where.java",
+        "status": "passed",
+        "duration": 1
+    }
+]
+         */
+    }
+
+    @Override
+    public void after(HookResult result) {
+        handleHooks(result, false);
+    }
+
+    private void handleHooks(HookResult result, boolean isBefore) {
+        String hook = isBefore ? "before" : "after";
+
+        List<Object> hooks = null;
+        for (Object o : getFeatureElements()) {
+            if (o instanceof Map) {
+                Map<Object, Object> hookMap = (Map<Object, Object>) o;
+                if(hookMap.keySet().contains(hook)) {
+                    hooks = (List<Object>)hookMap.get(hook);
+                }
+            }
+        }
+
+        if(hooks == null) {
+            //didn't find it, might be the first time it's there, let us create one
+            hooks = new ArrayList<Object>();
+            Map<Object,Object> hookMap = new HashMap<Object,Object>();
+            hookMap.put(hook, hooks);
+            getFeatureElements().add(hooks);
+        }
+
+
+        hooks.add(result.toMap());
+
     }
 
     @Override
