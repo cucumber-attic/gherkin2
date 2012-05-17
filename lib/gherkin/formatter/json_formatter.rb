@@ -16,6 +16,7 @@ module Gherkin
         raise "Must be writeable" unless io.respond_to?(:write)
         @io = io
         @feature_hashes = []
+        @current_step_or_hook = nil
       end
 
       def done
@@ -34,17 +35,14 @@ module Gherkin
 
       def background(background)
         feature_elements << background.to_hash
-        @step_index = 0
       end
 
       def scenario(scenario)
         feature_elements << scenario.to_hash
-        @step_index = 0
       end
 
       def scenario_outline(scenario_outline)
         feature_elements << scenario_outline.to_hash
-        @step_index = 0
       end
 
       def examples(examples)
@@ -52,30 +50,43 @@ module Gherkin
       end
 
       def step(step)
-        current_steps << step.to_hash
+        @current_step_or_hook = step.to_hash
+        steps << @current_step_or_hook
       end
 
       def match(match)
-        current_steps[@step_index]['match'] = match.to_hash
+        @current_step_or_hook['match'] = match.to_hash
       end
 
       def result(result)
-        current_steps[@step_index]['result'] = result.to_hash
-        @step_index += 1
+        @current_step_or_hook['result'] = result.to_hash
       end
 
-      def last_step
-        current_steps[-1]
+      def before(match, result)
+        add_hook(match, result, "before")
+      end
+
+      def after(match, result)
+        add_hook(match, result, "after")
       end
 
       def embedding(mime_type, data)
         embeddings << {'mime_type' => mime_type, 'data' => encode64s(data)}
       end
 
+      def write(text)
+        output << text
+      end
+
       def eof
       end
 
     private
+
+      def add_hook(match, result, hook)
+        hooks = (feature_element[hook] ||= []);
+        hooks << {'match' => match.to_hash, 'result' => result.to_hash}
+      end
 
       def feature_elements
         @feature_hash['elements'] ||= []
@@ -89,12 +100,16 @@ module Gherkin
         feature_element['examples'] ||= []
       end
 
-      def current_steps
+      def steps
         feature_element['steps'] ||= []
       end
 
       def embeddings
-        last_step['embeddings'] ||= []
+        @current_step_or_hook['embeddings'] ||= []
+      end
+
+      def output
+        @current_step_or_hook['output'] ||= []
       end
 
       def encode64s(data)

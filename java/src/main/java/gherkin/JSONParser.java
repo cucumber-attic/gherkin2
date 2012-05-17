@@ -45,8 +45,14 @@ public class JSONParser {
             new Feature(comments(o), tags(o), keyword(o), name(o), description(o), line(o), id(o)).replay(formatter);
             for (Map featureElement : (List<Map>) getList(o, "elements")) {
                 featureElement(featureElement).replay(formatter);
+                for (Map hook : (List<Map>) getList(featureElement, "before")) {
+                    before(hook);
+                }
                 for (Map step : (List<Map>) getList(featureElement, "steps")) {
                     step(step);
+                }
+                for (Map hook : (List<Map>) getList(featureElement, "after")) {
+                    after(hook);
                 }
                 for (Map eo : (List<Map>) getList(featureElement, "examples")) {
                     new Examples(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), id(eo), examplesTableRows(getList(eo, "rows"))).replay(formatter);
@@ -67,6 +73,22 @@ public class JSONParser {
         } else {
             return null;
         }
+    }
+
+    private void before(Map o) {
+        Map m = (Map) o.get("match");
+        Match match = new Match(arguments(m), location(m));
+        Map r = (Map) o.get("result");
+        Result result = new Result(status(r), duration(r), errorMessage(r));
+        reporter.before(match, result);
+    }
+
+    private void after(Map o) {
+        Map m = (Map) o.get("match");
+        Match match = new Match(arguments(m), location(m));
+        Map r = (Map) o.get("result");
+        Result result = new Result(status(r), duration(r), errorMessage(r));
+        reporter.after(match, result);
     }
 
     private void step(Map o) {

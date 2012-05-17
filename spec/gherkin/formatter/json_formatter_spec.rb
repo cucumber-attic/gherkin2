@@ -12,14 +12,16 @@ module Gherkin
         f.uri("f.feature")
         f.feature(Model::Feature.new([], [], "Feature", "ff", "", 1, "ff"))
         f.scenario(Model::Scenario.new([], [], "Scenario", "ss", "", 2, "ff/ss"))
-        f.step(Model::Step.new([], "Given ", "g", 3, nil, nil))
-        f.step(Model::Step.new([], "When ", "w", 4, nil, nil))
 
+        f.step(Model::Step.new([], "Given ", "g", 3, nil, nil))
         f.match(Model::Match.new([], "def.rb:33"))
         f.result(Model::Result.new(:passed, 1, nil))
 
+        f.step(Model::Step.new([], "When ", "w", 4, nil, nil))
         f.match(Model::Match.new([], "def.rb:44"))
         f.result(Model::Result.new(:passed, 1, nil))
+
+        f.after(Model::Match.new([], "def.rb:55"), Model::Result.new(:passed, 22, nil))
 
         f.eof
         f.done
@@ -64,6 +66,17 @@ module Gherkin
                       "result": {
                         "status": "passed",
                         "duration": 1
+                      }
+                    }
+                  ],
+                  "after": [
+                    {
+                      "match":{
+                        "location":"def.rb:55"
+                      },
+                      "result":{
+                        "status":"passed",
+                        "duration": 22
                       }
                     }
                   ]

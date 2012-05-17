@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import gherkin.formatter.model.Background;
 import gherkin.formatter.model.Examples;
 import gherkin.formatter.model.Feature;
-import gherkin.formatter.model.HookResult;
 import gherkin.formatter.model.Match;
 import gherkin.formatter.model.Result;
 import gherkin.formatter.model.Scenario;
@@ -22,12 +21,12 @@ import java.util.Map;
 import static gherkin.util.FixJava.readStream;
 
 public class JSONFormatter implements Reporter, Formatter {
-    private final List<Map<Object, Object>> featureMaps = new ArrayList<Map<Object, Object>>();
+    private final List<Map<String, Object>> featureMaps = new ArrayList<Map<String, Object>>();
     private final NiceAppendable out;
 
-    private Map<Object, Object> featureMap;
-    private int stepIndex = 0;
+    private Map<String, Object> featureMap;
     private String uri;
+    private Map currentStepOrHook;
 
     public JSONFormatter(Appendable out) {
         this.out = new NiceAppendable(out);
@@ -48,19 +47,16 @@ public class JSONFormatter implements Reporter, Formatter {
     @Override
     public void background(Background background) {
         getFeatureElements().add(background.toMap());
-        stepIndex = 0;
     }
 
     @Override
     public void scenario(Scenario scenario) {
         getFeatureElements().add(scenario.toMap());
-        stepIndex = 0;
     }
 
     @Override
     public void scenarioOutline(ScenarioOutline scenarioOutline) {
         getFeatureElements().add(scenarioOutline.toMap());
-        stepIndex = 0;
     }
 
     @Override
@@ -70,12 +66,13 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void step(Step step) {
-        getSteps().add(step.toMap());
+        currentStepOrHook = step.toMap();
+        getSteps().add(currentStepOrHook);
     }
 
     @Override
     public void match(Match match) {
-        getStepAt(stepIndex).put("match", match.toMap());
+        currentStepOrHook.put("match", match.toMap());
     }
 
     @Override
@@ -93,53 +90,29 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void result(Result result) {
-        getStepAt(stepIndex).put("result", result.toMap());
-        stepIndex++;
+        currentStepOrHook.put("result", result.toMap());
     }
 
     @Override
-    public void before(HookResult result) {
-        handleHooks(result, true);
-        /*
-"before": [
-    {
-        "location": "some.Where.java",
-        "status": "passed",
-        "duration": 1
-    }
-]
-         */
+    public void before(Match match, Result result) {
+        addHook(match, result, "before");
     }
 
     @Override
-    public void after(HookResult result) {
-        handleHooks(result, false);
+    public void after(Match match, Result result) {
+        addHook(match, result, "after");
     }
 
-    private void handleHooks(HookResult result, boolean isBefore) {
-        String hook = isBefore ? "before" : "after";
-
-        List<Object> hooks = null;
-        for (Object o : getFeatureElements()) {
-            if (o instanceof Map) {
-                Map<Object, Object> hookMap = (Map<Object, Object>) o;
-                if(hookMap.keySet().contains(hook)) {
-                    hooks = (List<Object>)hookMap.get(hook);
-                }
-            }
+    private void addHook(final Match match, final Result result, String hook) {
+        List<Map> hooks = getFeatureElement().get(hook);
+        if (hooks == null) {
+            hooks = new ArrayList<Map>();
+            getFeatureElement().put(hook, hooks);
         }
-
-        if(hooks == null) {
-            //didn't find it, might be the first time it's there, let us create one
-            hooks = new ArrayList<Object>();
-            Map<Object,Object> hookMap = new HashMap<Object,Object>();
-            hookMap.put(hook, hooks);
-            getFeatureElements().add(hooks);
-        }
-
-
-        hooks.add(result.toMap());
-
+        Map hookMap = new HashMap();
+        hookMap.put("match", match.toMap());
+        hookMap.put("result", result.toMap());
+        hooks.add(hookMap);
     }
 
     @Override
@@ -164,59 +137,51 @@ public class JSONFormatter implements Reporter, Formatter {
         throw new UnsupportedOperationException();
     }
 
-    private List<Object> getFeatureElements() {
-        List<Object> featureElements = (List) featureMap.get("elements");
+    private List<Map<String, Object>> getFeatureElements() {
+        List<Map<String, Object>> featureElements = (List) featureMap.get("elements");
         if (featureElements == null) {
-            featureElements = new ArrayList<Object>();
+            featureElements = new ArrayList<Map<String, Object>>();
             featureMap.put("elements", featureElements);
         }
         return featureElements;
     }
 
-    private Map<Object, List<Object>> getFeatureElement() {
+    private Map<Object, List<Map>> getFeatureElement() {
         return (Map) getFeatureElements().get(getFeatureElements().size() - 1);
     }
 
-    private List<Object> getAllExamples() {
-        List<Object> allExamples = getFeatureElement().get("examples");
+    private List<Map> getAllExamples() {
+        List<Map> allExamples = getFeatureElement().get("examples");
         if (allExamples == null) {
-            allExamples = new ArrayList<Object>();
+            allExamples = new ArrayList<Map>();
             getFeatureElement().put("examples", allExamples);
         }
         return allExamples;
     }
 
-    private List<Object> getSteps() {
-        List<Object> steps = getFeatureElement().get("steps");
+    private List<Map> getSteps() {
+        List<Map> steps = getFeatureElement().get("steps");
         if (steps == null) {
-            steps = new ArrayList<Object>();
+            steps = new ArrayList<Map>();
             getFeatureElement().put("steps", steps);
         }
         return steps;
     }
 
-    private Map<Object, Object> getLastStep() {
-        return getStepAt(getSteps().size() - 1);
-    }
-
-    private Map<Object, Object> getStepAt(int index) {
-        return (Map) getSteps().get(index);
-    }
-
     private List<Map<String, String>> getEmbeddings() {
-        List<Map<String, String>> embeddings = (List<Map<String, String>>) getLastStep().get("embeddings");
+        List<Map<String, String>> embeddings = (List<Map<String, String>>) currentStepOrHook.get("embeddings");
         if (embeddings == null) {
             embeddings = new ArrayList<Map<String, String>>();
-            getLastStep().put("embeddings", embeddings);
+            currentStepOrHook.put("embeddings", embeddings);
         }
         return embeddings;
     }
 
     private List<String> getOutput() {
-        List<String> output = (List<String>) getLastStep().get("output");
+        List<String> output = (List<String>) currentStepOrHook.get("output");
         if (output == null) {
             output = new ArrayList<String>();
-            getLastStep().put("output", output);
+            currentStepOrHook.put("output", output);
         }
         return output;
     }

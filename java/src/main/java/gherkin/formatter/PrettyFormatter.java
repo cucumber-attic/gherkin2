@@ -8,7 +8,6 @@ import gherkin.formatter.model.DescribedStatement;
 import gherkin.formatter.model.DocString;
 import gherkin.formatter.model.Examples;
 import gherkin.formatter.model.Feature;
-import gherkin.formatter.model.HookResult;
 import gherkin.formatter.model.Match;
 import gherkin.formatter.model.Result;
 import gherkin.formatter.model.Row;
@@ -23,7 +22,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -201,23 +199,23 @@ public class PrettyFormatter implements Reporter, Formatter {
             printStep(result.getStatus(), match.getArguments(), match.getLocation(), true);
         }
         //Match should only be null if there's an error in something that's not a step, so this should be safe
-        if (result.getErrorMessage() != null ) {
+        if (result.getErrorMessage() != null) {
             printError(result);
         }
     }
 
     @Override
-    public void before(HookResult result) {
-        printHookFailure(result, true);
+    public void before(Match match, Result result) {
+        printHookFailure(match, result, true);
     }
 
     @Override
-    public void after(HookResult result) {
-        printHookFailure(result, false);
+    public void after(Match match, Result result) {
+        printHookFailure(match, result, false);
     }
-    
-    private void printHookFailure(HookResult result, boolean isBefore) {
-        if(result.getStatus().equals(Result.FAILED)) {
+
+    private void printHookFailure(Match match, Result result, boolean isBefore) {
+        if (result.getStatus().equals(Result.FAILED)) {
             if (!monochrome) {
                 out.append(formats.up(1));
             }
@@ -225,20 +223,20 @@ public class PrettyFormatter implements Reporter, Formatter {
             Format format = getFormat(result.getStatus());
 
             StringBuffer context = new StringBuffer("Failure in ");
-            if(isBefore){
+            if (isBefore) {
                 context.append("before");
-            }else{
+            } else {
                 context.append("after");
             }
             context.append(" hook:");
-            
+
             out.append(format.text(context.toString()));
-            out.append(format.text(result.getLocation()));
+            out.append(format.text(match.getLocation()));
             out.println();
             out.append(format.text("Message: "));
             out.append(format.text(result.getErrorMessage()));
 
-            if(result.getError() != null) {
+            if (result.getError() != null) {
                 printError(result);
             }
         }

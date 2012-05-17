@@ -14,8 +14,8 @@ import java.util.Map;
 public class Mappable {
     private static final Integer NO_LINE = -1;
 
-    public Map<Object, Object> toMap() {
-        Map<Object, Object> map = new HashMap<Object, Object>();
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<String, Object>();
         List<Field> mappableFields = getMappableFields();
         for (Field field : mappableFields) {
             Object value;

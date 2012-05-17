@@ -1,6 +1,5 @@
 package gherkin.formatter;
 
-import gherkin.formatter.model.HookResult;
 import gherkin.formatter.model.Match;
 import gherkin.formatter.model.Result;
 
@@ -12,19 +11,11 @@ import java.io.InputStream;
  * Reporter implementations (such as Cucumber's JUnitReporter) only cares about results,
  */
 public interface Reporter {
+    void before(Match match, Result result);
+
     void result(Result result);
 
-    /**
-     * Included to allow reporting before hook results, usually only if errors
-     * @param result
-     */
-    void before(HookResult result);
-
-    /**
-     * Included to report on after hook results, usually only if errors
-     * @param result
-     */
-    void after(HookResult result);
+    void after(Match match, Result result);
 
     void match(Match match);
 

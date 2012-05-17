@@ -3,6 +3,7 @@ package gherkin.formatter;
 import com.google.gson.Gson;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -43,7 +44,7 @@ public class MappableTest {
     @Test
     public void should_only_include_primitives_strings_mappables_and_collections_of_mappable() throws MalformedURLException {
         TestMappable tm = new TestMappable();
-        Map<Object, Object> map = tm.toMap();
+        Map<String, Object> map = tm.toMap();
 
         String expected = "" +
                 "{\n" +

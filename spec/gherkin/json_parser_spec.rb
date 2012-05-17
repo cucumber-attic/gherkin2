@@ -79,55 +79,93 @@ module Gherkin
 
     it "should parse feature with match, result and embedding" do
       check_json(%{
-        [
-          {
-            "id": "one",
-            "uri": "test.feature",
-            "tags": [
+          [
               {
-                "name": "@foo",
-                "line": 22
-              }
-            ],
-            "keyword": "Feature", 
-            "name": "One", 
-            "description": "", 
-            "line": 3,
-            "elements": [
-              {
-                "id": "one/a-scenario",
-                "type": "scenario",
-                "steps": [
-                  {
-                    "keyword": "Given ",
-                    "name": "a passing step",
-                    "line": 6,
-                    "match": {
-                      "arguments": [
-                        {
-                          "offset": 22,
-                          "val": "cukes"
-                        }
-                      ],
-                      "location": "features/step_definitions/steps.rb:1"
-                    },
-                    "result": {
-                      "status": "failed",
-                      "error_message": "You suck",
-                      "duration": -1
-                    },
-                    "embeddings": [
+                  "id":"one",
+                  "uri":"test.feature",
+                  "tags":[
                       {
-                        "mime_type": "text/plain",
-                        "data": "Tm8sIEknbSBub3QgaW50ZXJlc3RlZCBpbiBkZXZlbG9waW5nIGEgcG93ZXJmdWwgYnJhaW4uIEFsbCBJJ20gYWZ0ZXIgaXMganVzdCBhIG1lZGlvY3JlIGJyYWluLCBzb21ldGhpbmcgbGlrZSB0aGUgUHJlc2lkZW50IG9mIHRoZSBBbWVyaWNhbiBUZWxlcGhvbmUgYW5kIFRlbGVncmFwaCBDb21wYW55Lg=="
+                          "name":"@foo",
+                          "line":22
                       }
-                    ]
-                  }
-                ]
+                  ],
+                  "keyword":"Feature",
+                  "name":"One",
+                  "description":"",
+                  "line":3,
+                  "elements":[
+                      {
+                          "id":"one/a-scenario",
+                          "type":"scenario",
+                          "before": [
+                              {
+                                  "match":{
+                                      "location":"features/step_definitions/hooks.rb:1"
+                                  },
+                                  "result":{
+                                      "status":"passed",
+                                      "error_message":"Passed hook",
+                                      "duration": 3
+                                  }
+                              },
+                              {
+                                  "match":{
+                                      "location":"features/step_definitions/hooks.rb:2"
+                                  },
+                                  "result":{
+                                      "status":"failed",
+                                      "error_message":"Failed hook",
+                                      "duration": 22
+                                  }
+                              }
+                          ],
+                          "steps":[
+                              {
+                                  "keyword":"Given ",
+                                  "name":"a passing step",
+                                  "line":6,
+                                  "match":{
+                                      "arguments":[
+                                          {
+                                              "offset":22,
+                                              "val":"cukes"
+                                          }
+                                      ],
+                                      "location":"features/step_definitions/steps.rb:1"
+                                  },
+                                  "result":{
+                                      "status":"failed",
+                                      "error_message":"You suck",
+                                      "duration":-1
+                                  },
+                                  "embeddings":[
+                                      {
+                                          "mime_type":"text/plain",
+                                          "data":"Tm8sIEknbSBub3QgaW50ZXJlc3RlZCBpbiBkZXZlbG9waW5nIGEgcG93ZXJmdWwgYnJhaW4uIEFsbCBJJ20gYWZ0ZXIgaXMganVzdCBhIG1lZGlvY3JlIGJyYWluLCBzb21ldGhpbmcgbGlrZSB0aGUgUHJlc2lkZW50IG9mIHRoZSBBbWVyaWNhbiBUZWxlcGhvbmUgYW5kIFRlbGVncmFwaCBDb21wYW55Lg=="
+                                      }
+                                  ],
+                                  "output":[
+                                      "Hello",
+                                      "World"
+                                  ]
+                              }
+                          ],
+                          "after": [
+                              {
+                                  "match":{
+                                      "location":"features/step_definitions/hooks.rb:3"
+                                  },
+                                  "result":{
+                                      "status":"failed",
+                                      "error_message":"Failed After",
+                                      "duration": 22
+                                  }
+                              }
+                          ]
+                      }
+                  ]
               }
-            ]
-          }
-        ]
+          ]
       })
     end
 
