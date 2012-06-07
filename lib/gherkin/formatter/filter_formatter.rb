@@ -96,7 +96,7 @@ module Gherkin
     private
 
       def detect_filter(filters)
-        raise "Inconsistent filters: #{filters.inspect}" if filters.map{|filter| filter.class}.uniq.length > 1
+        raise "Inconsistent filters: #{filters.inspect}. Only one type [line,name,tag] can be used at once." if filters.map{|filter| filter.class}.uniq.length > 1
         case(filters[0])
         when Fixnum 
           LineFilter.new(filters)

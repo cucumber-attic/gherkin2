@@ -14,7 +14,9 @@ import gherkin.formatter.model.Tag;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class FilterFormatter implements Formatter {
@@ -49,6 +51,14 @@ public class FilterFormatter implements Formatter {
     }
 
     private Filter detectFilter(List filters) {
+        Set<Class> filterClasses = new HashSet<Class>();
+        for (Object filter : filters) {
+            filterClasses.add(filter.getClass());
+        }
+        if(filterClasses.size() > 1) {
+            throw new IllegalArgumentException("Inconsistent filters: " + filters + ". Only one type [line,name,tag] can be used at once.");
+        }
+
         Class<?> typeOfFilter = filters.get(0).getClass();
         if (String.class.isAssignableFrom(typeOfFilter)) {
             return new TagFilter(filters);

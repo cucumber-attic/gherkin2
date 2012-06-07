@@ -31,6 +31,14 @@ module Gherkin
         io.string.strip.should == expected.strip
       end
 
+      context "invalid mix" do
+        it "should throw exception on different filters" do
+          lambda do
+            verify_filter(['@tag1', /regexp/, 88], 1..61)
+          end.should raise_exception(/Inconsistent filters/)
+        end
+      end
+
       context "tags" do
         it "should filter on feature tag" do
           verify_filter(['@tag1'], 1..61)
