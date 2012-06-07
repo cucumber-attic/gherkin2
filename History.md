@@ -1,5 +1,6 @@
 ## [2.11.0](https://github.com/cucumber/gherkin/compare/v2.10.0...v2.11.0)
 
+* [Java, Ruby] Formatters don't deal well with things not associated with a step ([#172](https://github.com/cucumber/gherkin/issues/172) David Kowis, Aslak Hellesøy)
 * [Java] Make model classes implement `java.io.Serializable` ([#180](https://github.com/cucumber/gherkin/issues/180) Aslak Hellesøy)
 
 ## [2.10.0](https://github.com/cucumber/gherkin/compare/v2.9.3...v2.10.0)
