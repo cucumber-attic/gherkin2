@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class Match extends Mappable {
+    private static final long serialVersionUID = 1L;
+
     private final List<Argument> arguments;
     private final String location;
     public static final Match UNDEFINED = new Match(Collections.<Argument>emptyList(), null);

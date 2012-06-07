@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Examples extends TagStatement {
+    private static final long serialVersionUID = 1L;
+
     private List<ExamplesTableRow> rows;
 
     public static class Builder implements gherkin.formatter.model.Builder {

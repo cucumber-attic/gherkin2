@@ -1,6 +1,8 @@
 package gherkin.formatter;
 
 public class Argument extends Mappable {
+    private static final long serialVersionUID = 1L;
+
     private final Integer offset;
     private final String val;
 

@@ -3,6 +3,8 @@ package gherkin.formatter.model;
 import gherkin.formatter.Mappable;
 
 public class Tag extends Mappable {
+    private static final long serialVersionUID = 1L;
+
     private final String name;
     private final Integer line;
 

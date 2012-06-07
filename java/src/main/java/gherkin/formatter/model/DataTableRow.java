@@ -3,6 +3,8 @@ package gherkin.formatter.model;
 import java.util.List;
 
 public class DataTableRow extends Row {
+    private static final long serialVersionUID = 1L;
+
     private transient final DiffType diffType;
 
     public DataTableRow(List<Comment> comments, List<String> cells, Integer line) {

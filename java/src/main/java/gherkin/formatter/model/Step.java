@@ -10,6 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Step extends BasicStatement {
+    private static final long serialVersionUID = 1L;
+
     private final List<DataTableRow> rows;
     private final DocString doc_string;
 

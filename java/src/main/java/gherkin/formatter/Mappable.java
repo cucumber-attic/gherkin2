@@ -1,5 +1,6 @@
 package gherkin.formatter;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -11,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Mappable {
+public abstract class Mappable implements Serializable {
     private static final Integer NO_LINE = -1;
 
     public Map<String, Object> toMap() {

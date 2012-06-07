@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CellResult extends Mappable {
+    private static final long serialVersionUID = 1L;
+
     private static final List<String> SEVERITY = Arrays.asList("executing", "executing_arg", "passed", "passed_arg", "undefined", "pending", "pending_arg", "skipped", "skipped_arg", "failed", "failed_arg");
 
     private List<Result> results = new ArrayList<Result>();

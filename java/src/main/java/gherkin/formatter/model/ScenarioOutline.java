@@ -5,6 +5,8 @@ import gherkin.formatter.Formatter;
 import java.util.List;
 
 public class ScenarioOutline extends TagStatement {
+    private static final long serialVersionUID = 1L;
+
     private final String type = "scenario_outline";
 
     public ScenarioOutline(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, Integer line, String id) {

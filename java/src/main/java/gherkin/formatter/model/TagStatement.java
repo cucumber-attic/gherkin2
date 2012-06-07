@@ -3,6 +3,8 @@ package gherkin.formatter.model;
 import java.util.List;
 
 public abstract class TagStatement extends DescribedStatement {
+    private static final long serialVersionUID = 1L;
+
     private final List<Tag> tags;
     private final String id;
 

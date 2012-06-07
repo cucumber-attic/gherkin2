@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 public class Result extends Mappable {
+    private static final long serialVersionUID = 1L;
+
     private final String status;
     private final Long duration;
     private final String error_message;
