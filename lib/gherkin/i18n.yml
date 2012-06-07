@@ -13,7 +13,7 @@
 "en":
   name: English
   native: English
-  feature: Feature
+  feature: Feature|Business Need|Ability
   background: Background
   scenario: Scenario
   scenario_outline: Scenario Outline|Scenario Template

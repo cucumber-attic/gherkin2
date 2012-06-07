@@ -1,5 +1,6 @@
 ## [Git master](https://github.com/cucumber/gherkin/compare/v2.10.0...master)
 
+* [Core] Alias Feature with Business Need and Ability. ([#167](https://github.com/cucumber/gherkin/issues/167) Aslak Hellesøy)
 * [Java] Better exception on bad filter mix. ([#179](https://github.com/cucumber/gherkin/issues/179) Aslak Hellesøy)
 * [Java, Ruby] Formatters don't deal well with things not associated with a step ([#172](https://github.com/cucumber/gherkin/issues/172) David Kowis, Aslak Hellesøy)
 * [Java] Make model classes implement `java.io.Serializable` ([#180](https://github.com/cucumber/gherkin/issues/180) Aslak Hellesøy)
