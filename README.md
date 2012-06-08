@@ -54,7 +54,7 @@ The jar file is in the central Maven repo.
     <dependency>
         <groupId>info.cukes</groupId>
         <artifactId>gherkin</artifactId>
-        <version>2.10.0</version>
+        <version>2.11.0</version>
     </dependency>
 
 You can get it manually from [Maven Central](http://search.maven.org/#browse%7C-2073395818)
@@ -202,7 +202,7 @@ Now we're ready to install the Windows rubies:
     rvm gemset use cucumber
     gem install bundler
     bundle install
-	PATH=/usr/local/mingw/bin:$PATH CC=/usr/local/mingw/bin/i686-w64-mingw32-gcc rake-compiler cross-ruby VERSION=1.9.3-p194
+    PATH=/usr/local/mingw/bin:$PATH CC=/usr/local/mingw/bin/i686-w64-mingw32-gcc rake-compiler cross-ruby VERSION=1.9.3-p194
 
     # 1.8.7
     CC=gcc-4.2 rvm install 1.8.7-p352
@@ -216,7 +216,7 @@ Now we're ready to install the Windows rubies:
 Now you can build Windows gems:
 
     rake compile
-	mkdir release
+    mkdir release
     rake gems:win
 
 ## Release process

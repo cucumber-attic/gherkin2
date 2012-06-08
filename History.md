@@ -1,4 +1,4 @@
-## [Git master](https://github.com/cucumber/gherkin/compare/v2.10.0...master)
+## [2.11.0](https://github.com/cucumber/gherkin/compare/v2.10.0...v2.11.0)
 
 * [Core] Alias Feature with Business Need and Ability. ([#167](https://github.com/cucumber/gherkin/issues/167) Aslak Hellesøy)
 * [Java] Better exception on bad filter mix. ([#179](https://github.com/cucumber/gherkin/issues/179) Aslak Hellesøy)
