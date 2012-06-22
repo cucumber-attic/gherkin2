@@ -84,7 +84,7 @@ module Gherkin
     private
 
       def add_hook(match, result, hook)
-        hooks = (feature_element[hook] ||= []);
+        hooks = feature_element[hook] ||= []
         hooks << {'match' => match.to_hash, 'result' => result.to_hash}
       end
 
