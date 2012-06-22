@@ -17,10 +17,6 @@ class Class
     end
   end
 
-  def implements(java_class_name)
-    # no-op
-  end
-
   # Causes a Java class to be instantiated instead of the Ruby class when 
   # running on JRuby. This is used to test both pure Java and pure Ruby classes 
   # from the same Ruby based test suite. The Java Class must have a package name
@@ -29,6 +25,18 @@ class Class
     require "#{lib}.jar"
 
     class << self
+      def new(*args)
+        begin
+          java_class.new(*javaify(args))
+        rescue ArgumentError => e
+          e.message << "\n#{java_class.name}"
+          raise e
+        rescue NameError => e
+          e.message << "\n args: #{args.inspect}" 
+          raise e
+        end
+      end
+
       def javaify(arg)
         if Array === arg
           arg.map{|a| javaify(a)}
@@ -43,18 +51,6 @@ class Class
           else
             arg
           end
-        end
-      end
-
-      def new(*args)
-        begin
-          java_class.new(*javaify(args))
-        rescue ArgumentError => e
-          e.message << "\n#{java_class.name}"
-          raise e
-        rescue NameError => e
-          e.message << "\n args: #{args.inspect}" 
-          raise e
         end
       end
 

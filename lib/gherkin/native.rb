@@ -1,5 +1,5 @@
-if defined?(RUBY_ENGINE) && RUBY_ENGINE == "ironruby"
-  require 'gherkin/native/ikvm'
+if ENV['GHERKIN_JS_NATIVE']
+  require 'gherkin/native/therubyracer'
 elsif defined?(JRUBY_VERSION)
   require 'gherkin/native/java'
 else
