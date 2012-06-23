@@ -3,13 +3,14 @@ require 'v8'
 class Class
   def native_impl(lib)
     class << self
-      js = {
-        'Gherkin::Formatter::JSONFormatter' => 'js/lib/gherkin/formatter/json_formatter.js'
-      }[self.name]
-
-      if (js)
-        def new(*args)
+      def new(*args)
+        js = {
+          'Gherkin::Formatter::JSONFormatter' => 'js/lib/gherkin/formatter/json_formatter.js'
+        }[self.name]
+        if(js)
           Proxy.new(js, *args)
+        else
+          super(*args)
         end
       end
     end
@@ -17,9 +18,8 @@ class Class
 
   class Proxy
     def initialize(js, *args)
-      raise "No js" if js.nil?
       cxt = V8::Context.new
-      cxt['exports'] = {}
+      cxt['module'] = {}
 
       # Mimic Node.js / Firebug console.log
       cxt['console'] = STDOUT
@@ -28,7 +28,7 @@ class Class
       end
 
       cxt.load(js)
-      @js_obj = cxt['exports'].new(*args)
+      @js_obj = cxt['module']['exports'].new(*args)
     end
 
     def method_missing(name, *args)

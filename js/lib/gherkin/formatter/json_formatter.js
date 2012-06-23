@@ -1,6 +1,4 @@
 // This is a straight port of json_formatter.rb
-// It is tested (within gherkin's build system) from RSpec and Cucumber - 
-// when the environment variables GHERKKIN_JS and GHERKKIN_JS_NATIVE are defined.
 var JSONFormatter = function(io) {
     this.io = io;
     this.feature_hashes = []
@@ -148,4 +146,4 @@ var JSONFormatter = function(io) {
 	}
 }
 
-exports = JSONFormatter;
+module.exports = JSONFormatter;

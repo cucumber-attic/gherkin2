@@ -1,11 +1,11 @@
 #encoding: utf-8
-if !defined?(JRUBY_VERSION) && !(defined?(RUBY_ENGINE) && RUBY_ENGINE == "ironruby") && ENV['GHERKIN_JS']
+if !defined?(JRUBY_VERSION) && ENV['GHERKIN_JS']
 require 'spec_helper'
 require 'gherkin/js_lexer'
 
 module Gherkin
   module Lexer
-    describe "Javascript Lexer" do
+    describe "JavaScript Lexer" do
       before do
         @listener = Gherkin::SexpRecorder.new
         @lexer = Gherkin::JsLexer['en'].new(@listener)
