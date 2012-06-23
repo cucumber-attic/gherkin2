@@ -1,7 +1,7 @@
 require 'v8'
 
 module Gherkin
-  # Thin adapter for the Javascript lexer, primarily used for testing.
+  # Thin adapter for the JavaScript lexer, primarily used for testing.
   class JsLexer
     def self.[](i18n_underscored_iso_code)
       cxt = V8::Context.new

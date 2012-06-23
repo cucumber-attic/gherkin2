@@ -1,5 +1,6 @@
 require 'yaml'
 require 'erb'
+require 'rbconfig'
 
 class RagelTask
   begin
@@ -27,7 +28,8 @@ class RagelTask
       sh "ragel #{flags} #{lang_ragel} -o #{target}"
       if(@lang == 'js')
         # Ragel chokes if we put the escaped triple quotes in .rl, so we'll do the replace with sed after the fact. Lots of backslashes!!
-        sh %{sed -i '' 's/ESCAPED_TRIPLE_QUOTE/\\\\\\\\\\\\"\\\\\\\\\\\\"\\\\\\\\\\\\"/' #{target}}
+        sed = Config::CONFIG['host_os'] =~ /linux/i ? "sed -i" : "sed -i ''"
+        sh %{#{sed} 's/ESCAPED_TRIPLE_QUOTE/\\\\\\\\\\\\"\\\\\\\\\\\\"\\\\\\\\\\\\"/' #{target}}
         
         # Minify
         sh %{node #{UGLIFYJS} #{target} > #{target.gsub(/\.js$/, '.min.js')}}

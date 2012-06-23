@@ -1,5 +1,5 @@
 #encoding: utf-8
-unless defined?(JRUBY_VERSION) || (defined?(RUBY_ENGINE) && RUBY_ENGINE == "ironruby")
+unless defined?(JRUBY_VERSION)
 require 'spec_helper'
 require 'gherkin_lexer_en'
 

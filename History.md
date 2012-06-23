@@ -1,3 +1,7 @@
+## [2.11.1](https://github.com/cucumber/gherkin/compare/v2.11.0...v2.11.1)
+
+* [JavaScript] Native implementation of JSONFormatter (Aslak Hellesøy)
+
 ## [2.11.0](https://github.com/cucumber/gherkin/compare/v2.10.0...v2.11.0)
 
 * [Core] Alias Feature with Business Need and Ability. ([#167](https://github.com/cucumber/gherkin/issues/167) Aslak Hellesøy)

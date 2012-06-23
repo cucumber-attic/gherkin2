@@ -85,7 +85,6 @@ module Gherkin
             }
           ]
         }
-
         JSON.parse(expected).should == JSON.parse(io.string)
       end
     end

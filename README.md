@@ -143,9 +143,18 @@ And you can try it out with node.js:
 
     node js/example/print.js spec/gherkin/fixtures/1.feature
 
+Or the json formatter:
+
+    node js/example/json_fomratter_example.js
+
 If you're hacking and just want to rebuild the English parser:
 
     rake js/lib/gherkin/lexer/en.js
+
+In order to test the native JavaScript implementation of JSONFormatter, you also need to define the `GHERKIN_JS_NATIVE` environment
+variable. It's recommended you don't do this permanently, as it will disable testing the Ruby implementation. Try this instead:
+
+    GHERKIN_JS_NATIVE=true GHERKIN_JS=true bundle exec rake
 
 TODO: Make all specs pass with js lexer - replace 'c(listener)' with 'js(listener)' in i18n.rb
 
@@ -229,6 +238,10 @@ Make sure you have access to all the servers where packages are being uploaded:
 * sonatype: Check `~/.m2/settings.xml` and that you have gnupg (OS X users: Install [GPGTools](http://www.gpgtools.org/installer/index.html))
   * Make sure you have a key [with no sub-key](https://docs.sonatype.org/display/Repository/How+To+Generate+PGP+Signatures+With+Maven)
 * nuget: See .NET section above
+
+Run tests once with GHERKIN_JS_NATIVE=true:
+
+    GHERKIN_JS_NATIVE=true GHERKIN_JS=true bundle exec rake
 
 Now we can release:
 
