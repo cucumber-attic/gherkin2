@@ -1,20 +1,20 @@
 // This is a straight port of json_formatter.rb
 var JSONFormatter = function(io) {
-    this.io = io;
-    this.feature_hashes = []
+    var feature_hashes = [];
+	var uri, feature_hash, current_step_or_hook;
 
     this.done = function() {
-        this.io.write(JSON.stringify(this.feature_hashes));
+        io.write(JSON.stringify(feature_hashes));
     };
 
-    this.uri = function(uri) {
-        this._uri = uri;
+    this.uri = function(_uri) {
+        uri = _uri;
     };
     
     this.feature = function(feature) {
-        this.feature_hash = feature;
-        this.feature_hash['uri'] = this._uri;
-        this.feature_hashes.push(this.feature_hash);
+        feature_hash = feature;
+        feature_hash['uri'] = uri;
+        feature_hashes.push(feature_hash);
     };
 
     this.background = function(background) {
@@ -34,16 +34,16 @@ var JSONFormatter = function(io) {
     };
 
     this.step = function(step) {
-	    this.current_step_or_hook = step;
-	    steps().push(this.current_step_or_hook);
+	    current_step_or_hook = step;
+	    steps().push(current_step_or_hook);
     }
     
     this.match = function(match) {
-	    this.current_step_or_hook['match'] = match;
+	    current_step_or_hook['match'] = match;
     }
 
     this.result = function(result) {
-		this.current_step_or_hook['result'] = result;
+		current_step_or_hook['result'] = result;
     }
 
     this.before = function(match, result) {
@@ -65,7 +65,6 @@ var JSONFormatter = function(io) {
     this.eof = function() {};
     
     // "private" methods
-    var self = this;
 
     function add_hook(match, result, hook) {
         if(!feature_element()[hook]) {
@@ -76,10 +75,10 @@ var JSONFormatter = function(io) {
     }
 
     function feature_elements() {
-        if(!self.feature_hash['elements']) {
-            self.feature_hash['elements'] = [];
+        if(!feature_hash['elements']) {
+            feature_hash['elements'] = [];
         }
-        return self.feature_hash['elements'];
+        return feature_hash['elements'];
     }
 
     function feature_element() {
@@ -101,17 +100,17 @@ var JSONFormatter = function(io) {
     }
 
     function embeddings() {
-        if(!self.current_step_or_hook['embeddings']) {
-            self.current_step_or_hook['embeddings'] = [];
+        if(!current_step_or_hook['embeddings']) {
+            current_step_or_hook['embeddings'] = [];
         }
-        return self.current_step_or_hook['embeddings'];
+        return current_step_or_hook['embeddings'];
     }
 
     function output() {
-        if(!self.current_step_or_hook['output']) {
-            self.current_step_or_hook['output'] = [];
+        if(!current_step_or_hook['output']) {
+            current_step_or_hook['output'] = [];
         }
-        return self.current_step_or_hook['output'];
+        return current_step_or_hook['output'];
     }
     
     // http://gitorious.org/javascript-base64/javascript-base64/blobs/master/base64.js
