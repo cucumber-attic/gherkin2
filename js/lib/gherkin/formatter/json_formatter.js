@@ -4,12 +4,12 @@ var JSONFormatter = function(io) {
     this.feature_hashes = []
 
 	this.uri = function(uri) {
-	    this.uri = uri;
+	    this._uri = uri;
 	};
 	
 	this.feature = function(feature) {
 	    this.feature_hash = feature.to_hash;
-	    this.feature_hash['uri'] = this.uri;
+	    this.feature_hash['uri'] = this._uri;
 	    this.feature_hashes.push(this.feature_hash);
 	};
 
