@@ -1,45 +1,51 @@
 // This is a straight port of json_formatter.rb
+// It is tested (within gherkin's build system) from RSpec and Cucumber - 
+// when the environment variables GHERKKIN_JS and GHERKKIN_JS_NATIVE are defined.
 var JSONFormatter = function(io) {
     this.io = io;
     this.feature_hashes = []
+
+	this.done = function() {
+	    this.io.write(JSON.stringify(this.feature_hashes));
+	};
 
 	this.uri = function(uri) {
 	    this._uri = uri;
 	};
 	
 	this.feature = function(feature) {
-	    this.feature_hash = feature.to_hash;
+	    this.feature_hash = feature;
 	    this.feature_hash['uri'] = this._uri;
 	    this.feature_hashes.push(this.feature_hash);
 	};
 
 	this.background = function(background) {
-	    feature_elements().push(background.to_hash);
+	    feature_elements().push(background);
 	};
 	
 	this.scenario = function(scenario) {
-	    feature_elements().push(scenario.to_hash);
+	    feature_elements().push(scenario);
 	};
 
 	this.scenario_outline = function(scenario_outline) {
-	    feature_elements().push(scenario_outline.to_hash);
+	    feature_elements().push(scenario_outline);
 	};
 
 	this.examples = function(examples) {
-	    all_examples().push(examples.to_hash);
+	    all_examples().push(examples);
 	};
 
     this.step = function(step) {
-      	this.current_step_or_hook = step.to_hash;
+      	this.current_step_or_hook = step;
       	steps().push(this.current_step_or_hook);
     }
 	
     this.match = function(match) {
-      	this.current_step_or_hook['match'] = match.to_hash;
+      	this.current_step_or_hook['match'] = match;
     }
 
     this.result = function(result) {
-      	this.current_step_or_hook['result'] = result.to_hash;
+      	this.current_step_or_hook['result'] = result;
     }
 
     this.before = function(match, result) {
@@ -60,10 +66,6 @@ var JSONFormatter = function(io) {
 
 	this.eof = function() {};
 	
-	this.done = function() {
-	    this.io.write(JSON.stringify(this.feature_hashes));
-	};
-
 	// "private" methods
 	var self = this;
 
@@ -72,7 +74,7 @@ var JSONFormatter = function(io) {
 			feature_element()[hook] = [];
 		}
         var hooks = feature_element()[hook];
-        hooks.push({'match': match.to_hash, 'result': result.to_hash});
+        hooks.push({'match': match, 'result': result});
     }
 
 	function feature_elements() {
@@ -123,25 +125,21 @@ var JSONFormatter = function(io) {
 		var index;
 		for (index=0; index < input.length; index++) {
 			temp_binary = input.charCodeAt(index).toString(2);
-			while (temp_binary.length < 8)
-			{
+			while (temp_binary.length < 8) {
 				temp_binary = "0"+temp_binary;
 			}
 			input_binary = input_binary + temp_binary;
-			while (input_binary.length >= 6)
-			{
+			while (input_binary.length >= 6) {
 				output = output + swaps[parseInt(input_binary.substring(0,6),2)];
 				input_binary = input_binary.substring(6);
 			}
 		}
-		if (input_binary.length == 4)
-		{
+		if (input_binary.length == 4) {
 			temp_binary = input_binary + "00";
 			output = output + swaps[parseInt(temp_binary,2)];
 			output = output + "=";
 		}
-		if (input_binary.length == 2)
-		{
+		if (input_binary.length == 2) {
 			temp_binary = input_binary + "0000";
 			output = output + swaps[parseInt(temp_binary,2)];
 			output = output + "==";
