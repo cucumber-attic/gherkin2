@@ -54,8 +54,11 @@ public class Parser implements Listener {
         this.featureURI = featureURI;
         this.lineOffset = lineOffset;
         pushMachine(machineName);
-        lexer.scan(gherkin);
-        popMachine();
+        try {
+            lexer.scan(gherkin);
+        } finally {
+            popMachine();
+        }
     }
 
     public I18n getI18nLanguage() {

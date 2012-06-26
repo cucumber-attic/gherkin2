@@ -114,13 +114,8 @@ module Gherkin
     end
 
     def rb(listener)
-      require 'gherkin/rb_lexer'
-      RbLexer[underscored_iso_code].new(listener)
-    end
-
-    def js(listener)
-      require 'gherkin/js_lexer'
-      JsLexer[underscored_iso_code].new(listener)
+      require "gherkin/rb_lexer/#{underscored_iso_code}"
+      RbLexer.const_get(underscored_iso_code.capitalize).new(listener)
     end
 
     def underscored_iso_code

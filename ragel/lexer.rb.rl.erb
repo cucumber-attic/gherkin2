@@ -1,8 +1,10 @@
-require 'gherkin/lexer/i18n_lexer'
+require 'gherkin/native'
 
 module Gherkin
   module RbLexer
     class <%= @i18n.underscored_iso_code.capitalize %> #:nodoc:
+      native_impl('gherkin')
+
       %%{
         machine lexer;
         

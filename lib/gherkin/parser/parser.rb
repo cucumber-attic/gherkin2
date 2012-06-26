@@ -21,14 +21,18 @@ module Gherkin
         @raise_on_error = raise_on_error
         @machine_name = machine_name
         @machines = []
-        push_machine(@machine_name)
         @lexer = Gherkin::Lexer::I18nLexer.new(self, force_ruby)
       end
 
       def parse(gherkin, feature_uri, line_offset)
         @formatter.uri(feature_uri)
         @line_offset = line_offset
-        @lexer.scan(gherkin)
+        push_machine(@machine_name)
+        begin
+          @lexer.scan(gherkin)
+        ensure
+          pop_machine
+        end
       end
 
       def i18n_language
@@ -39,17 +43,14 @@ module Gherkin
         @lexer.errors
       end
 
-      # Doesn't yet fall back to super
-      def method_missing(method, *args)
-        # TODO: Catch exception and call super
-        event(method.to_s, args[-1])
-        @listener.__send__(method, *args)
-        if method == :eof
-          pop_machine
-          push_machine(@machine_name)
+      [:comment, :tag, :feature, :background, :scenario, :scenario_outline, :examples, :step, :doc_string, :row, :eof].each do |m|
+        define_method(m) do |*args|
+          if(event(m.to_s, args[-1]))
+            @listener.__send__(m, *args)
+          end
         end
       end
-
+      
       def event(ev, line)
         l = line ? @line_offset+line : nil
         machine.event(ev, l) do |state, legal_events|
