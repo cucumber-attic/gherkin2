@@ -1,4 +1,4 @@
-package gherkin.lexer.i18n;
+package gherkin.lexer;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -8,7 +8,7 @@ import gherkin.lexer.Lexer;
 import gherkin.lexer.Listener;
 import gherkin.lexer.LexingError;
 
-public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
+public class <%= @i18n.underscored_iso_code.capitalize %> implements Lexer {
   %%{
     machine lexer;
     alphtype byte;
@@ -151,7 +151,7 @@ public class <%= @i18n.underscored_iso_code.upcase %> implements Lexer {
 
   private final Listener listener;
 
-  public <%= @i18n.underscored_iso_code.upcase %>(Listener listener) {
+  public <%= @i18n.underscored_iso_code.capitalize %>(Listener listener) {
     this.listener = listener;
   }
 

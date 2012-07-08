@@ -1,13 +1,13 @@
 #encoding: utf-8
 require 'spec_helper'
-require 'gherkin/rb_lexer/en'
+require 'gherkin/lexer/en'
 
 module Gherkin
   module Lexer
     describe "Ruby Lexer" do
       before do
         @listener = Gherkin::SexpRecorder.new
-        @lexer = Gherkin::RbLexer::En.new(@listener)
+        @lexer = Gherkin::Lexer::En.new(@listener)
       end
 
       it_should_behave_like "a Gherkin lexer"

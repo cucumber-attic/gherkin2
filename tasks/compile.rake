@@ -6,13 +6,9 @@ CLEAN.include [
   'pkg', 'tmp',
   '**/*.{o,bundle,jar,so,obj,pdb,lib,def,exp,log,rbc}', 'ext',
   'java/target',
-  'ragel/i18n/*.rl',
-  'lib/gherkin/rb_lexer/*.rb',
   'lib/*.dll',
   'ext/**/*.c',
-  'java/src/main/java/gherkin/lexer/i18n/*.java',
   'java/src/main/resources/gherkin/*.properties',
-  'js/lib/gherkin/lexer/*.js',
   'doc'
 ]
 

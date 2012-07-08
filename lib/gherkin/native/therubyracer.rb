@@ -6,7 +6,7 @@ class Class
       def new(*args)
         js = {
           'Gherkin::Formatter::JSONFormatter' => 'js/lib/gherkin/formatter/json_formatter.js',
-          'Gherkin::RbLexer::En' => 'js/lib/gherkin/lexer/en.js'
+          'Gherkin::Lexer::En' => 'js/lib/gherkin/lexer/en.js'
         }[self.name]
         if(js)
           Proxy.new(js, *args)

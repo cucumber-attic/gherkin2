@@ -2,7 +2,7 @@ package gherkin.parser;
 
 import gherkin.lexer.Lexer;
 import gherkin.lexer.Listener;
-import gherkin.lexer.i18n.EN;
+import gherkin.lexer.En;
 import gherkin.util.FixJava;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class StateMachineReader implements Listener {
 
     public List<List<String>> transitionTable() {
         transitionTable = new ArrayList<List<String>>();
-        Lexer lexer = new EN(this);
+        Lexer lexer = new En(this);
         lexer.scan(FixJava.readResource(machinePath));
         return transitionTable;
     }

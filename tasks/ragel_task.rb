@@ -23,6 +23,7 @@ class RagelTask
     deps = [lang_ragel, common_ragel]
     deps.unshift(UGLIFYJS) if(@lang == 'js')
 
+    min_target = target.gsub(/\.js$/, '.min.js')
     file target => deps do
       mkdir_p(File.dirname(target)) unless File.directory?(File.dirname(target))
       sh "ragel #{flags} #{lang_ragel} -o #{target}"
@@ -32,8 +33,13 @@ class RagelTask
         sh %{#{sed} 's/ESCAPED_TRIPLE_QUOTE/\\\\\\\\\\\\"\\\\\\\\\\\\"\\\\\\\\\\\\"/' #{target}}
         
         # Minify
-        sh %{node #{UGLIFYJS} #{target} > #{target.gsub(/\.js$/, '.min.js')}}
+        sh %{node #{UGLIFYJS} #{target} > #{min_target}}
       end
+    end
+
+    CLEAN.include(target)
+    if(@lang == 'js')
+      CLEAN.include(min_target)
     end
 
     file UGLIFYJS do
@@ -47,17 +53,21 @@ class RagelTask
     file lang_ragel => lang_erb do
       write(ERB.new(IO.read(lang_erb)).result(binding), lang_ragel)
     end
+    
+    CLEAN.include(lang_ragel)
 
     file common_ragel => common_erb  do
       write(ERB.new(IO.read(common_erb)).result(binding), common_ragel)
     end
+    
+    CLEAN.include(common_ragel)
   end
 
   def target
     {
       'c'    => "ext/gherkin_lexer_#{@i18n.underscored_iso_code}/gherkin_lexer_#{@i18n.underscored_iso_code}.c",
-      'java' => "java/src/main/java/gherkin/lexer/i18n/#{@i18n.underscored_iso_code.upcase}.java",
-      'rb'   => "lib/gherkin/rb_lexer/#{@i18n.underscored_iso_code}.rb",
+      'java' => "java/src/main/java/gherkin/lexer/#{@i18n.underscored_iso_code.capitalize}.java",
+      'rb'   => "lib/gherkin/lexer/#{@i18n.underscored_iso_code}.rb",
       'js'   => "js/lib/gherkin/lexer/#{@i18n.underscored_iso_code}.js"
     }[@lang]
   end

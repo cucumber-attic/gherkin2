@@ -99,7 +99,7 @@ public class I18n {
     }
 
     public Lexer lexer(Listener listener) {
-        String qualifiedI18nLexerClassName = "gherkin.lexer.i18n." + localeName().toUpperCase();
+        String qualifiedI18nLexerClassName = "gherkin.lexer." + capitalize(getUnderscoredIsoCode());
         try {
             Class<?> delegateClass = getClass().getClassLoader().loadClass(qualifiedI18nLexerClassName);
             return (Lexer) delegateClass.getConstructor(Listener.class).newInstance(listener);
@@ -107,6 +107,11 @@ public class I18n {
             throw new RuntimeException("Couldn't load lexer class: " + qualifiedI18nLexerClassName, e);
         }
     }
+
+    private String capitalize(String s) {
+        return s.substring(0, 1).toUpperCase() + s.substring(1);
+    }
+
 
     /**
      * Workaround for he and id bugs in the JDK.
