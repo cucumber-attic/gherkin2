@@ -20,7 +20,6 @@ import gherkin.formatter.model.Step;
 import gherkin.formatter.model.Tag;
 import net.iharder.Base64;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -120,7 +119,7 @@ public class JSONParser {
             List<Map> embeddings = (List<Map>) o.get("embeddings");
             for (Map embedding : embeddings) {
                 try {
-                    reporter.embedding(getString(embedding, "mime_type"), new ByteArrayInputStream(Base64.decode(getString(embedding, "data"))));
+                    reporter.embedding(getString(embedding, "mime_type"), Base64.decode(getString(embedding, "data")));
                 } catch (IOException ex) {
                     throw new RuntimeException("Couldn't decode data", ex);
                 }

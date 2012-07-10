@@ -181,7 +181,7 @@ public class PrettyFormatter implements Reporter, Formatter {
     }
 
     @Override
-    public void embedding(String mimeType, InputStream data) {
+    public void embedding(String mimeType, byte[] data) {
         // Do nothing
     }
 

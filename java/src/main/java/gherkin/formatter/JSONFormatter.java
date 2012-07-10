@@ -12,13 +12,10 @@ import gherkin.formatter.model.ScenarioOutline;
 import gherkin.formatter.model.Step;
 import net.iharder.Base64;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static gherkin.util.FixJava.readStream;
 
 public class JSONFormatter implements Reporter, Formatter {
     private final List<Map<String, Object>> featureMaps = new ArrayList<Map<String, Object>>();
@@ -76,10 +73,10 @@ public class JSONFormatter implements Reporter, Formatter {
     }
 
     @Override
-    public void embedding(String mimeType, InputStream data) {
+    public void embedding(String mimeType, byte[] data) {
         final Map<String, String> embedding = new HashMap<String, String>();
         embedding.put("mime_type", mimeType);
-        embedding.put("data", Base64.encodeBytes(readStream(data)));
+        embedding.put("data", Base64.encodeBytes(data));
         getEmbeddings().add(embedding);
     }
 
