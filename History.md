@@ -1,5 +1,6 @@
 ## [Git master](https://github.com/cucumber/gherkin/compare/v2.11.1...master)
 
+* [Java Reporter should take embeddings as `byte[]` and not `InputStream` ([#184](https://github.com/cucumber/gherkin/issues/184) Aslak Hellesøy)
 * [Core] A little addition to russian translation ([#183](https://github.com/cucumber/gherkin/pull/183) Sergey Sytsevich)
 
 ## [2.11.1](https://github.com/cucumber/gherkin/compare/v2.11.0...v2.11.1)
