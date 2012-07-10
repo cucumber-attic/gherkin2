@@ -25,7 +25,7 @@ class Class
       # Mimic Node.js / Firebug console.log
       cxt['console'] = STDOUT
       def STDOUT.log(*a)
-        puts sprintf(*a)
+        puts sprintf(*a.map(&:to_s))
       end
 
       cxt.load(js)
