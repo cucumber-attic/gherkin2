@@ -9,6 +9,7 @@ import gherkin.formatter.model.Result;
  * Reporter implementations (such as Cucumber's JUnitReporter) only cares about results,
  */
 public interface Reporter {
+
     void before(Match match, Result result);
 
     void result(Result result);

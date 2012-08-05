@@ -23,7 +23,9 @@ public class JSONFormatter implements Reporter, Formatter {
 
     private Map<String, Object> featureMap;
     private String uri;
-    private Map currentStepOrHook;
+    private Map<String, Object> currentStep;
+    private int stepIndex = 0;
+    private Map<String, Object> background;
 
     public JSONFormatter(Appendable out) {
         this.out = new NiceAppendable(out);
@@ -39,20 +41,24 @@ public class JSONFormatter implements Reporter, Formatter {
         featureMap = feature.toMap();
         featureMap.put("uri", uri);
         featureMaps.add(featureMap);
+        background = null;
     }
 
     @Override
     public void background(Background background) {
-        getFeatureElements().add(background.toMap());
+        this.background = background.toMap();
+        getFeatureElements().add(this.background);
     }
 
     @Override
     public void scenario(Scenario scenario) {
+        this.background = null;
         getFeatureElements().add(scenario.toMap());
     }
 
     @Override
     public void scenarioOutline(ScenarioOutline scenarioOutline) {
+        this.background = null;
         getFeatureElements().add(scenarioOutline.toMap());
     }
 
@@ -63,31 +69,28 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void step(Step step) {
-        currentStepOrHook = step.toMap();
-        getSteps().add(currentStepOrHook);
+        getSteps().add(step.toMap());
     }
 
     @Override
     public void match(Match match) {
-        currentStepOrHook.put("match", match.toMap());
+        if (background != null) {
+            throw new IllegalStateException("Can't match a background step. This is a bug in library using gherkin.");
+        }
+        currentStep = nextStep();
+        currentStep.put("match", match.toMap());
     }
 
-    @Override
-    public void embedding(String mimeType, byte[] data) {
-        final Map<String, String> embedding = new HashMap<String, String>();
-        embedding.put("mime_type", mimeType);
-        embedding.put("data", Base64.encodeBytes(data));
-        getEmbeddings().add(embedding);
-    }
-
-    @Override
-    public void write(String text) {
-        getOutput().add(text);
+    private Map<String, Object> nextStep() {
+        return getSteps().get(stepIndex++);
     }
 
     @Override
     public void result(Result result) {
-        currentStepOrHook.put("result", result.toMap());
+        if (background != null) {
+            throw new IllegalStateException("Can't add result to a background step. This is a bug in library using gherkin.");
+        }
+        currentStep.put("result", result.toMap());
     }
 
     @Override
@@ -101,15 +104,28 @@ public class JSONFormatter implements Reporter, Formatter {
     }
 
     private void addHook(final Match match, final Result result, String hook) {
-        List<Map> hooks = getFeatureElement().get(hook);
+        List<Map<String, Object>> hooks = (List<Map<String, Object>>) getFeatureElement().get(hook);
         if (hooks == null) {
-            hooks = new ArrayList<Map>();
+            hooks = new ArrayList<Map<String, Object>>();
             getFeatureElement().put(hook, hooks);
         }
         Map hookMap = new HashMap();
         hookMap.put("match", match.toMap());
         hookMap.put("result", result.toMap());
         hooks.add(hookMap);
+    }
+
+    @Override
+    public void embedding(String mimeType, byte[] data) {
+        final Map<String, String> embedding = new HashMap<String, String>();
+        embedding.put("mime_type", mimeType);
+        embedding.put("data", Base64.encodeBytes(data));
+        getEmbeddings().add(embedding);
+    }
+
+    @Override
+    public void write(String text) {
+        getOutput().add(text);
     }
 
     @Override
@@ -143,42 +159,46 @@ public class JSONFormatter implements Reporter, Formatter {
         return featureElements;
     }
 
-    private Map<Object, List<Map>> getFeatureElement() {
-        return (Map) getFeatureElements().get(getFeatureElements().size() - 1);
+    private Map<String, Object> getFeatureElement() {
+        if (background != null) {
+            return background;
+        } else {
+            return (Map) getFeatureElements().get(getFeatureElements().size() - 1);
+        }
     }
 
-    private List<Map> getAllExamples() {
-        List<Map> allExamples = getFeatureElement().get("examples");
+    private List<Map<String, Object>> getAllExamples() {
+        List<Map<String, Object>> allExamples = (List<Map<String, Object>>) getFeatureElement().get("examples");
         if (allExamples == null) {
-            allExamples = new ArrayList<Map>();
+            allExamples = new ArrayList<Map<String, Object>>();
             getFeatureElement().put("examples", allExamples);
         }
         return allExamples;
     }
 
-    private List<Map> getSteps() {
-        List<Map> steps = getFeatureElement().get("steps");
+    private List<Map<String, Object>> getSteps() {
+        List<Map<String, Object>> steps = (List<Map<String, Object>>) getFeatureElement().get("steps");
         if (steps == null) {
-            steps = new ArrayList<Map>();
+            steps = new ArrayList<Map<String, Object>>();
             getFeatureElement().put("steps", steps);
         }
         return steps;
     }
 
     private List<Map<String, String>> getEmbeddings() {
-        List<Map<String, String>> embeddings = (List<Map<String, String>>) currentStepOrHook.get("embeddings");
+        List<Map<String, String>> embeddings = (List<Map<String, String>>) currentStep.get("embeddings");
         if (embeddings == null) {
             embeddings = new ArrayList<Map<String, String>>();
-            currentStepOrHook.put("embeddings", embeddings);
+            currentStep.put("embeddings", embeddings);
         }
         return embeddings;
     }
 
     private List<String> getOutput() {
-        List<String> output = (List<String>) currentStepOrHook.get("output");
+        List<String> output = (List<String>) currentStep.get("output");
         if (output == null) {
             output = new ArrayList<String>();
-            currentStepOrHook.put("output", output);
+            currentStep.put("output", output);
         }
         return output;
     }
