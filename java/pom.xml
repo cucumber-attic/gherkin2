@@ -208,8 +208,8 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <target>
-                                <echo>GENERATING</echo>
                                 <taskdef name="rake" classname="org.jruby.ant.Rake" classpathref="maven.plugin.classpath" />
+                                <rake task="java_lexers"/>
                             </target>
                         </configuration>
                         <goals>
