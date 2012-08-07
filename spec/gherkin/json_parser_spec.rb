@@ -97,8 +97,9 @@ module Gherkin
                       {
                           "id":"one/a-scenario",
                           "type":"scenario",
-                          "before": [
+                          "hooks": [
                               {
+                                  "type": "before",
                                   "match":{
                                       "location":"features/step_definitions/hooks.rb:1"
                                   },
@@ -109,12 +110,24 @@ module Gherkin
                                   }
                               },
                               {
+                                  "type": "before",
                                   "match":{
                                       "location":"features/step_definitions/hooks.rb:2"
                                   },
                                   "result":{
                                       "status":"failed",
                                       "error_message":"Failed hook",
+                                      "duration": 22
+                                  }
+                              },
+                              {
+                                  "type": "after",
+                                  "match":{
+                                      "location":"features/step_definitions/hooks.rb:3"
+                                  },
+                                  "result":{
+                                      "status":"failed",
+                                      "error_message":"Failed After",
                                       "duration": 22
                                   }
                               }
@@ -148,18 +161,6 @@ module Gherkin
                                       "Hello",
                                       "World"
                                   ]
-                              }
-                          ],
-                          "after": [
-                              {
-                                  "match":{
-                                      "location":"features/step_definitions/hooks.rb:3"
-                                  },
-                                  "result":{
-                                      "status":"failed",
-                                      "error_message":"Failed After",
-                                      "duration": 22
-                                  }
                               }
                           ]
                       }

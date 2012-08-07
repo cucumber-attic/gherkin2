@@ -46,12 +46,12 @@ var JSONFormatter = function(io) {
 		current_step_or_hook['result'] = result;
     }
 
-    this.before = function(match, result) {
-        add_hook(match, result, "before");
-    }
-
-    this.after = function(match, result) {
-        add_hook(match, result, "after");
+    this.hook = function(type, match, result) {
+      if(!feature_element()['hooks']) {
+          feature_element()['hooks'] = [];
+      }
+      var hooks = feature_element()['hooks'];
+      hooks.push({'type': type, 'match': match, 'result': result});
     }
 
     this.embedding = function(mime_type, data) {
@@ -65,14 +65,6 @@ var JSONFormatter = function(io) {
     this.eof = function() {};
     
     // "private" methods
-
-    function add_hook(match, result, hook) {
-        if(!feature_element()[hook]) {
-            feature_element()[hook] = [];
-        }
-        var hooks = feature_element()[hook];
-        hooks.push({'match': match, 'result': result});
-    }
 
     function feature_elements() {
         if(!feature_hash['elements']) {

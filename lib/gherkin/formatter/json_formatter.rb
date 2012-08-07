@@ -62,12 +62,9 @@ module Gherkin
         @current_step_or_hook['result'] = result.to_hash
       end
 
-      def before(match, result)
-        add_hook(match, result, "before")
-      end
-
-      def after(match, result)
-        add_hook(match, result, "after")
+      def hook(type, match, result)
+        hooks = feature_element['hooks'] ||= []
+        hooks << {'type' => type, 'match' => match.to_hash, 'result' => result.to_hash}
       end
 
       def embedding(mime_type, data)
@@ -82,11 +79,6 @@ module Gherkin
       end
 
     private
-
-      def add_hook(match, result, hook)
-        hooks = feature_element[hook] ||= []
-        hooks << {'match' => match.to_hash, 'result' => result.to_hash}
-      end
 
       def feature_elements
         @feature_hash['elements'] ||= []

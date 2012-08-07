@@ -19,14 +19,14 @@ module Gherkin
           f.step(Model::Step.new([], "When ", "w", 4, nil, nil))
             f.match(Model::Match.new([], "def.rb:44"))
             f.result(Model::Result.new(:passed, 1, nil))
+          f.hook('after', Model::Match.new([], "def.rb:55"), Model::Result.new(:passed, 22, nil))
 
-        f.scenario_outline(Model::ScenarioOutline.new([], [], "Scenario Outline", "so", "", 102, "ff/so"))
-          f.step(Model::Step.new([], "Given ", "a <foo> and <bar>", 103, nil, nil))
-          rows = []
-          rows << Model::ExamplesTableRow.new([], ["foo", "bar"], 105, 'ff/ex#105')
-          f.examples(Model::Examples.new([], [], "Examples", "ex", "", 104, "ff/ex", rows))
+#        f.scenario_outline(Model::ScenarioOutline.new([], [], "Scenario Outline", "so", "", 102, "ff/so"))
+#          f.step(Model::Step.new([], "Given ", "a <foo> and <bar>", 103, nil, nil))
+#          rows = []
+#          rows << Model::ExamplesTableRow.new([], ["foo", "bar"], 105, 'ff/ex#105')
+#          f.examples(Model::Examples.new([], [], "Examples", "ex", "", 104, "ff/ex", rows))
 
-        f.after(Model::Match.new([], "def.rb:55"), Model::Result.new(:passed, 22, nil))
         f.eof
         f.done
         
@@ -73,8 +73,9 @@ module Gherkin
                       }
                     }
                   ],
-                  "after": [
+                  "hooks": [
                     {
+                      "type": "after",
                       "match":{
                         "location":"def.rb:55"
                       },

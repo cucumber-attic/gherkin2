@@ -24,9 +24,14 @@ module Gherkin
         Formatter::Model::Feature.new(comments(f), tags(f), keyword(f), name(f), description(f), line(f), id(f)).replay(@formatter)
         (f["elements"] || []).each do |feature_element|
           feature_element(feature_element).replay(@formatter)
+          hooks = feature_element["hooks"] || []
 
-          (feature_element["before"] || []).each do |hook|
-            before(hook)
+          hooks.each do |hook|
+            hook(hook) if hook['type'] == 'before'
+          end
+
+          hooks.each do |hook|
+            hook(hook) if hook['type'] == 'background'
           end
 
           (feature_element["steps"] || []).each do |step|
@@ -37,8 +42,8 @@ module Gherkin
             output(step)
           end
 
-          (feature_element["after"] || []).each do |hook|
-            after(hook)
+          hooks.each do |hook|
+            hook(hook) if hook['type'] == 'after'
           end
 
           (feature_element["examples"] || []).each do |eo|
@@ -90,20 +95,13 @@ module Gherkin
       end
     end
 
-    def before(o)
+    def hook(o)
+      t = o['type']
       m = o['match']
       match = Formatter::Model::Match.new([], location(m))
       r = o['result']
       result = Formatter::Model::Result.new(status(r), duration(r), error_message(r))
-      @reporter.before(match, result)
-    end
-
-    def after(o)
-      m = o['match']
-      match = Formatter::Model::Match.new([], location(m))
-      r = o['result']
-      result = Formatter::Model::Result.new(status(r), duration(r), error_message(r))
-      @reporter.after(match, result)
+      @reporter.hook(t, match, result)
     end
 
     def embeddings(o)

@@ -1,5 +1,6 @@
 ## [Git master](https://github.com/cucumber/gherkin/compare/v2.11.1...master)
 
+* [Core] JSONFormatter reports hook results (Before, After and Background) in the same "hooks" array. (Aslak Hellesøy)
 * [Java] JSONFormatter reports results for all steps (regression in 2.11.0) ([#165](https://github.com/cucumber/gherkin/issues/165) Aslak Hellesøy)
 * [Java] Reporter should take embeddings as `byte[]` and not `InputStream` ([#184](https://github.com/cucumber/gherkin/issues/184) Aslak Hellesøy)
 * [Core] Renamed i18n.yml to i18n.json, which simplifies the build system for Java. (Aslak Hellesøy)
