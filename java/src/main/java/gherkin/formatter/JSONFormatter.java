@@ -26,6 +26,7 @@ public class JSONFormatter implements Reporter, Formatter {
     private Map<String, Object> currentStep;
     private int stepIndex = 0;
     private Map<String, Object> background;
+    private Match currentMatch;
 
     public JSONFormatter(Appendable out) {
         this.out = new NiceAppendable(out);
@@ -75,10 +76,11 @@ public class JSONFormatter implements Reporter, Formatter {
     @Override
     public void match(Match match) {
         if (background != null) {
-            throw new IllegalStateException("Can't match a background step. This is a bug in library using gherkin.");
+            currentMatch = match;
+        } else {
+            currentStep = nextStep();
+            currentStep.put("match", match.toMap());
         }
-        currentStep = nextStep();
-        currentStep.put("match", match.toMap());
     }
 
     private Map<String, Object> nextStep() {
@@ -88,28 +90,21 @@ public class JSONFormatter implements Reporter, Formatter {
     @Override
     public void result(Result result) {
         if (background != null) {
-            throw new IllegalStateException("Can't add result to a background step. This is a bug in library using gherkin.");
+            hook("background", currentMatch, result);
+        } else {
+            currentStep.put("result", result.toMap());
         }
-        currentStep.put("result", result.toMap());
     }
 
     @Override
-    public void before(Match match, Result result) {
-        addHook(match, result, "before");
-    }
-
-    @Override
-    public void after(Match match, Result result) {
-        addHook(match, result, "after");
-    }
-
-    private void addHook(final Match match, final Result result, String hook) {
-        List<Map<String, Object>> hooks = (List<Map<String, Object>>) getFeatureElement().get(hook);
+    public void hook(String type, Match match, Result result) {
+        List<Map<String, Object>> hooks = (List<Map<String, Object>>) getFeatureElement().get("hooks");
         if (hooks == null) {
             hooks = new ArrayList<Map<String, Object>>();
-            getFeatureElement().put(hook, hooks);
+            getFeatureElement().put("hooks", hooks);
         }
         Map hookMap = new HashMap();
+        hookMap.put("type", type);
         hookMap.put("match", match.toMap());
         hookMap.put("result", result.toMap());
         hooks.add(hookMap);

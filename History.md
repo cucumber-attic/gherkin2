@@ -2,6 +2,7 @@
 
 * [Java] JSONFormatter reports results for all steps (regression in 2.11.0) ([#165](https://github.com/cucumber/gherkin/issues/165) Aslak Hellesøy)
 * [Java] Reporter should take embeddings as `byte[]` and not `InputStream` ([#184](https://github.com/cucumber/gherkin/issues/184) Aslak Hellesøy)
+* [Core] Renamed i18n.yml to i18n.json, which simplifies the build system for Java. (Aslak Hellesøy)
 * [Core] A little addition to russian translation ([#183](https://github.com/cucumber/gherkin/pull/183) Sergey Sytsevich)
 
 ## [2.11.1](https://github.com/cucumber/gherkin/compare/v2.11.0...v2.11.1)

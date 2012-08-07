@@ -204,16 +204,7 @@ public class PrettyFormatter implements Reporter, Formatter {
     }
 
     @Override
-    public void before(Match match, Result result) {
-        printHookFailure(match, result, true);
-    }
-
-    @Override
-    public void after(Match match, Result result) {
-        printHookFailure(match, result, false);
-    }
-
-    private void printHookFailure(Match match, Result result, boolean isBefore) {
+    public void hook(String type, Match match, Result result) {
         if (result.getStatus().equals(Result.FAILED)) {
             if (!monochrome) {
                 out.append(formats.up(1));
@@ -222,12 +213,7 @@ public class PrettyFormatter implements Reporter, Formatter {
             Format format = getFormat(result.getStatus());
 
             StringBuffer context = new StringBuffer("Failure in ");
-            if (isBefore) {
-                context.append("before");
-            } else {
-                context.append("after");
-            }
-            context.append(" hook:");
+            context.append(type).append(" hook:");
 
             out.append(format.text(context.toString()));
             out.append(format.text(match.getLocation()));

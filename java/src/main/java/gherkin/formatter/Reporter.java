@@ -10,11 +10,9 @@ import gherkin.formatter.model.Result;
  */
 public interface Reporter {
 
-    void before(Match match, Result result);
+    void hook(String type, Match match, Result result);
 
     void result(Result result);
-
-    void after(Match match, Result result);
 
     void match(Match match);
 

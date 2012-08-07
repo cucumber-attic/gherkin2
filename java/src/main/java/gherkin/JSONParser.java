@@ -44,14 +44,25 @@ public class JSONParser {
             new Feature(comments(o), tags(o), keyword(o), name(o), description(o), line(o), id(o)).replay(formatter);
             for (Map featureElement : (List<Map>) getList(o, "elements")) {
                 featureElement(featureElement).replay(formatter);
-                for (Map hook : (List<Map>) getList(featureElement, "before")) {
-                    before(hook);
+                List<Map> hooks = (List<Map>) getList(featureElement, "hooks");
+
+                for (Map hook : hooks) {
+                    if("before".equals(hook.get("type"))) {
+                        hook(hook);
+                    }
+                }
+                for (Map hook : hooks) {
+                    if("background".equals(hook.get("type"))) {
+                        hook(hook);
+                    }
                 }
                 for (Map step : (List<Map>) getList(featureElement, "steps")) {
                     step(step);
                 }
-                for (Map hook : (List<Map>) getList(featureElement, "after")) {
-                    after(hook);
+                for (Map hook : hooks) {
+                    if("after".equals(hook.get("type"))) {
+                        hook(hook);
+                    }
                 }
                 for (Map eo : (List<Map>) getList(featureElement, "examples")) {
                     new Examples(comments(eo), tags(eo), keyword(eo), name(eo), description(eo), line(eo), id(eo), examplesTableRows(getList(eo, "rows"))).replay(formatter);
@@ -74,20 +85,13 @@ public class JSONParser {
         }
     }
 
-    private void before(Map o) {
+    private void hook(Map o) {
+        String type = (String) o.get("type");
         Map m = (Map) o.get("match");
         Match match = new Match(arguments(m), location(m));
         Map r = (Map) o.get("result");
         Result result = new Result(status(r), duration(r), errorMessage(r));
-        reporter.before(match, result);
-    }
-
-    private void after(Map o) {
-        Map m = (Map) o.get("match");
-        Match match = new Match(arguments(m), location(m));
-        Map r = (Map) o.get("result");
-        Result result = new Result(status(r), duration(r), errorMessage(r));
-        reporter.after(match, result);
+        reporter.hook(type, match, result);
     }
 
     private void step(Map o) {
