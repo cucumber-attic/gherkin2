@@ -1,4 +1,4 @@
-require 'yaml'
+require 'json'
 require 'gherkin/rubify'
 require 'gherkin/native'
 
@@ -11,7 +11,7 @@ module Gherkin
     FEATURE_ELEMENT_KEYS = %w{feature background scenario scenario_outline examples}
     STEP_KEYWORD_KEYS    = %w{given when then and but}
     KEYWORD_KEYS         = FEATURE_ELEMENT_KEYS + STEP_KEYWORD_KEYS
-    LANGUAGES            = YAML.load_file(File.dirname(__FILE__) + '/i18n.yml')
+    LANGUAGES            = JSON.parse(IO.read(File.dirname(__FILE__) + '/i18n.json'))
 
     class << self
       include Rubify
@@ -105,7 +105,7 @@ module Gherkin
         end
       end
     rescue LoadError => e
-      raise LexerNotFound, "No lexer was found for #{iso_code} (#{e.message}). Supported languages are listed in gherkin/i18n.yml."
+      raise LexerNotFound, "No lexer was found for #{iso_code} (#{e.message}). Supported languages are listed in gherkin/i18n.json."
     end
 
     def c(listener)

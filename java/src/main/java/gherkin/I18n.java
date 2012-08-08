@@ -1,5 +1,7 @@
 package gherkin;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import gherkin.formatter.PrettyFormatter;
 import gherkin.formatter.model.Comment;
 import gherkin.formatter.model.DataTableRow;
@@ -9,16 +11,17 @@ import gherkin.lexer.Listener;
 import gherkin.util.Mapper;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -47,14 +50,25 @@ public class I18n {
         }
     };
 
+    private static Map<String, Map<String, String>> I18N;
+
+    static {
+        try {
+            I18N = new Gson().fromJson(new InputStreamReader(I18n.class.getResourceAsStream("/gherkin/i18n.json"), "UTF-8"), new TypeToken<Map<String, Map<String, String>>>() {
+            }.getType());
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static String codeKeywordFor(String keyword) {
         return keyword.replaceAll("[\\s',!]", "");
     }
 
     public static List<I18n> getAll() throws IOException {
         List<I18n> result = new ArrayList<I18n>();
-        ResourceBundle bundle = ResourceBundle.getBundle("gherkin.I18n", Locale.US);
-        String[] isoCodes = bundle.getString("i18n.isoCodes").split(",");
+
+        Set<String> isoCodes = new TreeSet<String>(I18N.keySet());
         for (String isoCode : isoCodes) {
             result.add(new I18n(isoCode));
         }
@@ -70,19 +84,17 @@ public class I18n {
         this.locale = localeFor(this.isoCode);
         this.keywords = new HashMap<String, List<String>>();
 
-        populateKeywords();
-    }
-
-    private void populateKeywords() {
-        ResourceBundle keywordBundle = ResourceBundle.getBundle("gherkin.I18nKeywords", locale);
-        Enumeration<String> keys = keywordBundle.getKeys();
-        while (keys.hasMoreElements()) {
-            List<String> keywordList = new ArrayList<String>();
-            String key = keys.nextElement();
-
-            String value = keywordBundle.getString(key);
-            keywordList.addAll(Arrays.asList(value.split("\\|")));
-            keywords.put(key, Collections.unmodifiableList(keywordList));
+        Map<String, String> keywordMap = I18N.get(isoCode);
+        for (Map.Entry<String, String> entry : keywordMap.entrySet()) {
+            List<String> keywordList = Arrays.asList(entry.getValue().split("\\|"));
+            if(STEP_KEYWORD_KEYS.contains(entry.getKey())) {
+                List<String> stepKeywords = new ArrayList<String>();
+                for (String s : keywordList) {
+                    stepKeywords.add((s + " ").replaceFirst("< $", ""));
+                }
+                keywordList = stepKeywords;
+            }
+            this.keywords.put(entry.getKey(), Collections.unmodifiableList(keywordList));
         }
     }
 
@@ -110,18 +122,6 @@ public class I18n {
 
     private String capitalize(String s) {
         return s.substring(0, 1).toUpperCase() + s.substring(1);
-    }
-
-
-    /**
-     * Workaround for he and id bugs in the JDK.
-     * http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6457127
-     * http://forums.sun.com/thread.jspa?threadID=5335461
-     *
-     * @return locale name.
-     */
-    private String localeName() {
-        return locale.toString().replaceAll("^iw", "he").replaceAll("^in", "id");
     }
 
     public List<String> keywords(String key) {
