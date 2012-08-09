@@ -14,12 +14,7 @@ module Gherkin
 
         f.scenario(Model::Scenario.new([], [], "Scenario", "ss", "", 2, "ff/ss"))
           f.step(Model::Step.new([], "Given ", "g", 3, nil, nil))
-            f.match(Model::Match.new([], "def.rb:33"))
-            f.result(Model::Result.new(:passed, 1, nil))
           f.step(Model::Step.new([], "When ", "w", 4, nil, nil))
-            f.match(Model::Match.new([], "def.rb:44"))
-            f.result(Model::Result.new(:passed, 1, nil))
-          f.hook('after', Model::Match.new([], "def.rb:55"), Model::Result.new(:passed, 22, nil))
 
 #        f.scenario_outline(Model::ScenarioOutline.new([], [], "Scenario Outline", "so", "", 102, "ff/so"))
 #          f.step(Model::Step.new([], "Given ", "a <foo> and <bar>", 103, nil, nil))
@@ -29,6 +24,16 @@ module Gherkin
 
         f.eof
         f.done
+
+        f.match(Model::Match.new([], "def.rb:33"))
+        f.result(Model::Result.new(:passed, 1, nil))
+
+        f.match(Model::Match.new([], "def.rb:44"))
+        f.result(Model::Result.new(:passed, 1, nil))
+
+        f.hook('after', Model::Match.new([], "def.rb:55"), Model::Result.new(:passed, 22, nil))
+
+        f.close
         
         expected = %{
           [

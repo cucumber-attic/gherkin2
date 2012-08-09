@@ -17,16 +17,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JSONFormatter implements Reporter, Formatter {
+public class JSONFormatter implements Formatter, Reporter {
     private final List<Map<String, Object>> featureMaps = new ArrayList<Map<String, Object>>();
     private final NiceAppendable out;
 
     private Map<String, Object> featureMap;
     private String uri;
-    private Map<String, Object> currentStep;
-    private int stepIndex = 0;
     private Map<String, Object> background;
-    private Match currentMatch;
+    private List<Map<String, Object>> steps = new ArrayList<Map<String, Object>>();
 
     public JSONFormatter(Appendable out) {
         this.out = new NiceAppendable(out);
@@ -70,30 +68,41 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void step(Step step) {
-        getSteps().add(step.toMap());
+        Map<String, Object> stepMap = step.toMap();
+        steps.add(stepMap);
+        getSteps().add(stepMap);
+    }
+
+    @Override
+    public void eof() {
+    }
+
+    @Override
+    public void done() {
+        out.append(gson().toJson(featureMaps));
+        // We're *not* closing the stream here.
+        // https://github.com/cucumber/gherkin/issues/151
+        // https://github.com/cucumber/cucumber-jvm/issues/96
+    }
+
+    @Override
+    public void close() {
+        out.close();
+    }
+
+    @Override
+    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void match(Match match) {
-        if (background != null) {
-            currentMatch = match;
-        } else {
-            currentStep = nextStep();
-            currentStep.put("match", match.toMap());
-        }
-    }
-
-    private Map<String, Object> nextStep() {
-        return getSteps().get(stepIndex++);
+        steps.get(0).put("match", match.toMap());
     }
 
     @Override
     public void result(Result result) {
-        if (background != null) {
-            hook("background", currentMatch, result);
-        } else {
-            currentStep.put("result", result.toMap());
-        }
+        steps.remove(0).put("result", result.toMap());
     }
 
     @Override
@@ -118,31 +127,27 @@ public class JSONFormatter implements Reporter, Formatter {
         getEmbeddings().add(embedding);
     }
 
+    private List<Map<String, String>> getEmbeddings() {
+        List<Map<String, String>> embeddings = (List<Map<String, String>>) steps.get(0).get("embeddings");
+        if (embeddings == null) {
+            embeddings = new ArrayList<Map<String, String>>();
+            steps.get(0).put("embeddings", embeddings);
+        }
+        return embeddings;
+    }
+
     @Override
     public void write(String text) {
         getOutput().add(text);
     }
 
-    @Override
-    public void eof() {
-    }
-
-    @Override
-    public void done() {
-        out.append(gson().toJson(featureMaps));
-        // We're *not* closing the stream here.
-        // https://github.com/cucumber/gherkin/issues/151
-        // https://github.com/cucumber/cucumber-jvm/issues/96
-    }
-
-    @Override
-    public void close() {
-        out.close();
-    }
-
-    @Override
-    public void syntaxError(String state, String event, List<String> legalEvents, String uri, Integer line) {
-        throw new UnsupportedOperationException();
+    private List<String> getOutput() {
+        List<String> output = (List<String>) steps.get(0).get("output");
+        if (output == null) {
+            output = new ArrayList<String>();
+            steps.get(0).put("output", output);
+        }
+        return output;
     }
 
     private List<Map<String, Object>> getFeatureElements() {
@@ -178,24 +183,6 @@ public class JSONFormatter implements Reporter, Formatter {
             getFeatureElement().put("steps", steps);
         }
         return steps;
-    }
-
-    private List<Map<String, String>> getEmbeddings() {
-        List<Map<String, String>> embeddings = (List<Map<String, String>>) currentStep.get("embeddings");
-        if (embeddings == null) {
-            embeddings = new ArrayList<Map<String, String>>();
-            currentStep.put("embeddings", embeddings);
-        }
-        return embeddings;
-    }
-
-    private List<String> getOutput() {
-        List<String> output = (List<String>) currentStep.get("output");
-        if (output == null) {
-            output = new ArrayList<String>();
-            currentStep.put("output", output);
-        }
-        return output;
     }
 
     protected Gson gson() {

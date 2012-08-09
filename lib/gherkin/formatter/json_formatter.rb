@@ -19,10 +19,6 @@ module Gherkin
         @current_step_or_hook = nil
       end
 
-      def done
-        @io.write(@feature_hashes.to_json)
-      end
-
       def uri(uri)
         @uri = uri
       end
@@ -76,6 +72,13 @@ module Gherkin
       end
 
       def eof
+      end
+
+      def done
+      end
+
+      def close
+        @io.write(@feature_hashes.to_json)
       end
 
     private

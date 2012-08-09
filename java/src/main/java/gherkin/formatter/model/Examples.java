@@ -30,6 +30,7 @@ public class Examples extends TagStatement {
             this.id = id;
         }
 
+        @Override
         public void row(List<Comment> comments, List<String> cells, Integer line, String id) {
             if (rows == null) {
                 rows = new ArrayList<ExamplesTableRow>();
@@ -37,10 +38,12 @@ public class Examples extends TagStatement {
             rows.add(new ExamplesTableRow(comments, cells, line, id));
         }
 
+        @Override
         public void replay(Formatter formatter) {
             new Examples(comments, tags, keyword, name, description, line, id, rows).replay(formatter);
         }
 
+        @Override
         public void docString(DocString docString) {
             throw new IllegalStateException("Can't have DocString in Examples");
         }

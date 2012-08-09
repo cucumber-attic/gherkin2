@@ -30,6 +30,7 @@ public class Step extends BasicStatement {
             this.line = line;
         }
 
+        @Override
         public void row(List<Comment> comments, List<String> cells, Integer line, String id) {
             if (rows == null) {
                 rows = new ArrayList<DataTableRow>();
@@ -37,10 +38,12 @@ public class Step extends BasicStatement {
             rows.add(new DataTableRow(comments, cells, line));
         }
 
+        @Override
         public void replay(Formatter formatter) {
             new Step(comments, keyword, name, line, rows, doc_string).replay(formatter);
         }
 
+        @Override
         public void docString(DocString docString) {
             doc_string = docString;
         }

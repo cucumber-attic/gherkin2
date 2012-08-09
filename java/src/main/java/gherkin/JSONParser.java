@@ -114,11 +114,6 @@ public class JSONParser {
             new Match(arguments(m), location(m)).replay(reporter);
         }
 
-        if (o.containsKey("result")) {
-            Map r = (Map) o.get("result");
-            new Result(status(r), duration(r), errorMessage(r)).replay(reporter);
-        }
-
         if (o.containsKey("embeddings")) {
             List<Map> embeddings = (List<Map>) o.get("embeddings");
             for (Map embedding : embeddings) {
@@ -135,6 +130,11 @@ public class JSONParser {
             for (String text : output) {
                 reporter.write(text);
             }
+        }
+
+        if (o.containsKey("result")) {
+            Map r = (Map) o.get("result");
+            new Result(status(r), duration(r), errorMessage(r)).replay(reporter);
         }
     }
 
