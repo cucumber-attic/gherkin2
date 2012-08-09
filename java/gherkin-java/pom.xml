@@ -10,6 +10,7 @@
         <relativePath>../</relativePath>
     </parent>
     <artifactId>gherkin</artifactId>
+    <packaging>bundle</packaging>
     <name>Gherkin Java Implementation</name>
     <dependencies>
         <dependency>
@@ -45,20 +46,33 @@
                     <include>gherkin/i18n.json</include>
                 </includes>
             </resource>
-            <resource>
-                <directory>${basedir}/src/main/resources</directory>
-                <includes>
-                    <include>gherkin/*.properties</include>
-                </includes>
-            </resource>
         </resources>
         <plugins>
+           	<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.3.6</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Export-Package>gherkin.*</Export-Package>
+					</instructions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>gherkin.Main</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
             <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<executions>
 					<execution>
@@ -71,7 +85,6 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
 				<version>1.7.1</version>
 				<executions>
@@ -83,6 +96,20 @@
 						<configuration>
 							<createSourcesJar>true</createSourcesJar>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
