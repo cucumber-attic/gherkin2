@@ -1,7 +1,7 @@
 package gherkin.formatter;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import gherkin.deps.com.google.gson.Gson;
+import gherkin.deps.com.google.gson.GsonBuilder;
 
 public class JSONPrettyFormatter extends JSONFormatter {
     public JSONPrettyFormatter(Appendable out) {

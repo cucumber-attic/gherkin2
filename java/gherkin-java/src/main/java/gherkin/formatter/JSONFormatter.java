@@ -1,7 +1,7 @@
 package gherkin.formatter;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import gherkin.deps.com.google.gson.Gson;
+import gherkin.deps.com.google.gson.GsonBuilder;
 import gherkin.formatter.model.Background;
 import gherkin.formatter.model.Examples;
 import gherkin.formatter.model.Feature;
@@ -10,7 +10,7 @@ import gherkin.formatter.model.Result;
 import gherkin.formatter.model.Scenario;
 import gherkin.formatter.model.ScenarioOutline;
 import gherkin.formatter.model.Step;
-import net.iharder.Base64;
+import gherkin.deps.net.iharder.Base64;
 
 import java.util.ArrayList;
 import java.util.HashMap;

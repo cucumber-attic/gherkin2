@@ -1,6 +1,6 @@
 package gherkin.formatter;
 
-import com.google.gson.Gson;
+import gherkin.deps.com.google.gson.Gson;
 import gherkin.JSONParser;
 import org.junit.Test;
 
