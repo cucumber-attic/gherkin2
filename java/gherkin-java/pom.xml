@@ -36,7 +36,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <resources>
             <resource>
@@ -54,7 +53,8 @@
 				<version>2.3.6</version>
 				<extensions>true</extensions>
 				<configuration>
-					<instructions>
+				    <excludeDependencies>true</excludeDependencies>
+				    <instructions>
 						<Export-Package>gherkin.*</Export-Package>
 					</instructions>
 				</configuration>
@@ -74,15 +74,6 @@
             </plugin>
             <plugin>
 				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>bind-sources</id>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-						<phase>verify</phase>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-shade-plugin</artifactId>
