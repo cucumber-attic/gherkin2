@@ -16,7 +16,7 @@ desc "Compile the Java extensions"
 task :jar => 'lib/gherkin.jar'
 
 file 'lib/gherkin.jar' => Dir['java/src/main/java/**/*.java'] do
-  sh("mvn -f java/pom.xml package")
+  sh("mvn -f java/pom.xml verify")
 end
 
 desc "Build Javascript lexers"

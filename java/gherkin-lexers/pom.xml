@@ -10,6 +10,7 @@
         <relativePath>../</relativePath>
     </parent>
     <artifactId>gherkin-lexers</artifactId>
+    <name>Gherkin Internationalized Lexers</name>
     <dependencies>
       <dependency>
         <groupId>info.cukes</groupId>
