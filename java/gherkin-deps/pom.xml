@@ -2,14 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>info.cukes</groupId>
-		<artifactId>gherkin-parent</artifactId>
-		<version>2.11.1</version>
-		<relativePath>../</relativePath>
-	</parent>
 	<groupId>info.cukes</groupId>
 	<artifactId>gherkin-deps</artifactId>
+	<version>NEVER_EXPOSED</version>
 	<name>Gherkin Repackaged Dependencies</name>
 	<dependencies>
 		<dependency>

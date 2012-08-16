@@ -12,11 +12,11 @@
 	<packaging>bundle</packaging>
 	<name>Gherkin Java Implementation</name>
 	<dependencies>
-		<dependency>
+	    <dependency>
 			<groupId>info.cukes</groupId>
 			<artifactId>gherkin-deps</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
+			<version>NEVER_EXPOSED</version>
+   	   </dependency>
 		<dependency>
 			<groupId>info.cukes</groupId>
 			<artifactId>gherkin-lexers</artifactId>
@@ -110,11 +110,11 @@
 						<id>copy-jar</id>
 						<phase>verify</phase>
 						<configuration>
-							<tasks>
+							<target>
 								<copy
 									file="${project.build.directory}/${project.build.finalName}.jar"
 									tofile="${basedir}/../../lib/gherkin.jar" />
-							</tasks>
+							</target>
 						</configuration>
 						<goals>
 							<goal>run</goal>
