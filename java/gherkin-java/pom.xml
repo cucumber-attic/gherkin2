@@ -97,6 +97,9 @@
 					<execution>
 						<id>sign-artifacts</id>
 						<phase>verify</phase>
+						<configuration>
+						  <useAgent>true</useAgent>
+						</configuration>
 						<goals>
 							<goal>sign</goal>
 						</goals>

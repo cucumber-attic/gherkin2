@@ -85,7 +85,17 @@ module Gherkin
             }
           ]
         }
-        JSON.parse(expected).should == JSON.parse(io.string)
+
+        begin
+          JSON.parse(expected).should == JSON.parse(io.string)
+        rescue
+          puts "ACTUAL"
+          puts JSON.pretty_generate(JSON.parse(io.string))
+          puts "======"
+
+          raise
+        end
+
       end
     end
   end
