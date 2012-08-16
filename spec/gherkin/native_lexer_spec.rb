@@ -1,9 +1,18 @@
 #encoding: utf-8
 require 'spec_helper'
-require 'gherkin/lexer/en'
 
 module Gherkin
   module Lexer
+    begin
+      require 'gherkin/lexer/en'
+    rescue LoadError
+      # For Java/JRuby we might not have the generated ruby lexer, which
+      # won't be used anyway. Just define a stub.
+      class En
+        native_impl('gherkin')
+      end 
+    end
+
     describe "Native Lexer" do
       before do
         @listener = Gherkin::SexpRecorder.new
