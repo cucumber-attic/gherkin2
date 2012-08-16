@@ -1,6 +1,6 @@
 package gherkin.formatter;
 
-import com.google.gson.Gson;
+import gherkin.deps.com.google.gson.Gson;
 import org.junit.Test;
 
 import java.io.StringReader;
@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;

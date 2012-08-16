@@ -1,7 +1,7 @@
 package gherkin;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import gherkin.deps.com.google.gson.Gson;
+import gherkin.deps.com.google.gson.reflect.TypeToken;
 import gherkin.formatter.PrettyFormatter;
 import gherkin.formatter.model.Comment;
 import gherkin.formatter.model.DataTableRow;

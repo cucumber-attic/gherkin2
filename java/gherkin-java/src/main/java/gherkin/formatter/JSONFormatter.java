@@ -1,7 +1,7 @@
 package gherkin.formatter;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import gherkin.deps.com.google.gson.Gson;
+import gherkin.deps.com.google.gson.GsonBuilder;
 import gherkin.formatter.model.Background;
 import gherkin.formatter.model.Examples;
 import gherkin.formatter.model.Feature;
@@ -10,10 +10,11 @@ import gherkin.formatter.model.Result;
 import gherkin.formatter.model.Scenario;
 import gherkin.formatter.model.ScenarioOutline;
 import gherkin.formatter.model.Step;
-import net.iharder.Base64;
+import gherkin.deps.net.iharder.Base64;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,7 @@ public class JSONFormatter implements Reporter, Formatter {
 
     private Map<String, Object> featureMap;
     private String uri;
+    private Iterator<Map> stepsIterator;
     private Map currentStepOrHook;
 
     public JSONFormatter(Appendable out) {
@@ -63,12 +65,17 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void step(Step step) {
-        currentStepOrHook = step.toMap();
-        getSteps().add(currentStepOrHook);
+        getSteps().add(step.toMap());
+        stepsIterator = null;
+        currentStepOrHook = null;
     }
 
     @Override
     public void match(Match match) {
+    	if (stepsIterator == null){
+    		stepsIterator = getSteps().iterator();
+    	}
+    	currentStepOrHook = stepsIterator.next();
         currentStepOrHook.put("match", match.toMap());
     }
 
@@ -87,6 +94,8 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void result(Result result) {
+    	//relies on match being called.... probably not safe as the contract 
+    	//the reporter/formatter are supposed to indicate are not documented/clear.
         currentStepOrHook.put("result", result.toMap());
     }
 

@@ -1,8 +1,4 @@
-.idea
-*.iml
-*.iws
-*.ipr
-target
+/dependency-reduced-pom.xml
 /.settings
 /.classpath
 /.project
