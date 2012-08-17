@@ -45,8 +45,18 @@
         <dependency>
             <groupId>info.cukes</groupId>
             <artifactId>gherkin-jvm-deps</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.2</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.code.gson</groupId>
+                    <artifactId>gson</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>net.iharder</groupId>
+                    <artifactId>base64</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
