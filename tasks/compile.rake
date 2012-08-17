@@ -8,7 +8,6 @@ CLEAN.include [
   'java/target',
   'lib/*.dll',
   'ext/**/*.c',
-  'java/src/main/resources/gherkin/*.properties',
   'doc'
 ]
 
@@ -19,21 +18,18 @@ file 'lib/gherkin.jar' => Dir['java/src/main/java/**/*.java'] do
   sh("mvn -f java/pom.xml package")
 end
 
-desc "Build Javascript lexers"
+desc "Build JavaScript lexers"
 task :js
 
 rl_langs = ENV['RL_LANGS'] ? ENV['RL_LANGS'].split(',') : []
 langs = Gherkin::I18n.all.select { |lang| rl_langs.empty? || rl_langs.include?(lang.iso_code) }
-
-desc 'Generate Java Lexers'
-task :java_lexers
 
 langs.each do |i18n|
   java = RagelTask.new('java', i18n)
   rb   = RagelTask.new('rb', i18n)
   js   = RagelTask.new('js', i18n)
 
-  task :java_lexers => java.target
+  file 'lib/gherkin.jar' => [java.target]
 
   begin
   if !defined?(JRUBY_VERSION)

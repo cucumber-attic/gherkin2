@@ -1,7 +1,7 @@
 package gherkin.formatter;
 
-import com.google.gson.Gson;
 import gherkin.JSONParser;
+import gherkin.deps.com.google.gson.Gson;
 import org.junit.Test;
 
 import java.io.PrintStream;

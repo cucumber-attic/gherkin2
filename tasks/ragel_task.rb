@@ -66,7 +66,7 @@ class RagelTask
   def target
     {
       'c'    => "ext/gherkin_lexer_#{@i18n.underscored_iso_code}/gherkin_lexer_#{@i18n.underscored_iso_code}.c",
-      'java' => "java/target/generated-sources/lexers/gherkin/lexer/#{@i18n.underscored_iso_code.capitalize}.java",
+      'java' => "java/src/main/java/gherkin/lexer/#{@i18n.underscored_iso_code.capitalize}.java",
       'rb'   => "lib/gherkin/lexer/#{@i18n.underscored_iso_code}.rb",
       'js'   => "js/lib/gherkin/lexer/#{@i18n.underscored_iso_code}.js"
     }[@lang]

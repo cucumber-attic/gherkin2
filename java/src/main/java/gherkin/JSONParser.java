@@ -1,6 +1,7 @@
 package gherkin;
 
-import com.google.gson.Gson;
+import gherkin.deps.com.google.gson.Gson;
+import gherkin.deps.net.iharder.Base64;
 import gherkin.formatter.Argument;
 import gherkin.formatter.Formatter;
 import gherkin.formatter.Reporter;
@@ -18,7 +19,6 @@ import gherkin.formatter.model.Scenario;
 import gherkin.formatter.model.ScenarioOutline;
 import gherkin.formatter.model.Step;
 import gherkin.formatter.model.Tag;
-import net.iharder.Base64;
 
 import java.io.IOException;
 import java.io.StringReader;
