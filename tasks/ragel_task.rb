@@ -37,7 +37,9 @@ class RagelTask
       end
     end
 
-    CLEAN.include(target)
+    if(@lang != 'java')
+      CLEAN.include(target)
+    end
     if(@lang == 'js')
       CLEAN.include(min_target)
     end
