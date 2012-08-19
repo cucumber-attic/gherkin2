@@ -1,3 +1,7 @@
+## [master](https://github.com/cucumber/gherkin/compare/v2.11.2...master)
+
+* [JavaScript] Can't run on IE because of `const` keyword ([#186](https://github.com/cucumber/gherkin/issues/186) Aslak Hellesøy)
+
 ## [2.11.2](https://github.com/cucumber/gherkin/compare/v2.11.1...v2.11.2)
 
 * [Java] Depend on an external gherkin-jvm-deps jar with repackaged dependencies (Aslak Hellesøy, Rex Hoffman)
