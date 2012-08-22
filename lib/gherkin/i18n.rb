@@ -11,7 +11,7 @@ module Gherkin
     FEATURE_ELEMENT_KEYS = %w{feature background scenario scenario_outline examples}
     STEP_KEYWORD_KEYS    = %w{given when then and but}
     KEYWORD_KEYS         = FEATURE_ELEMENT_KEYS + STEP_KEYWORD_KEYS
-    LANGUAGES            = JSON.parse(IO.read(File.dirname(__FILE__) + '/i18n.json', :encoding => 'utf-8'))
+    LANGUAGES            = JSON.parse(File.open(File.dirname(__FILE__) + '/i18n.json', 'r:utf-8').read)
 
     class << self
       include Rubify
