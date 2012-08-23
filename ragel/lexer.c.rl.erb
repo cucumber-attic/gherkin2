@@ -221,14 +221,14 @@ static VALUE rb_eGherkinLexingError;
         buff = data;
       }
 
-      // Allocate as a ruby string so that it gets cleaned up by GC
+      /* Allocate as a ruby string so that it gets cleaned up by GC */
       newstr_val = rb_str_new(buff, len);
       newstr = RSTRING_PTR(newstr_val);
 
 
       for (count = 0; count < len; count++) {
         if(buff[count] == 10) {
-          newstr[newstr_count] = '\0'; // terminate new string at first newline found
+          newstr[newstr_count] = '\0'; /* terminate new string at first newline found */
           break;
         } else {
           if (buff[count] == '%') {
@@ -242,7 +242,7 @@ static VALUE rb_eGherkinLexingError;
       }
 
       line = lexer->line_number;
-      lexer_init(lexer); // Re-initialize so we can scan again with the same lexer
+      lexer_init(lexer); /* Re-initialize so we can scan again with the same lexer */
       raise_lexer_error(newstr, line);
     } else {
       rb_funcall(listener, rb_intern("eof"), 0);
@@ -260,7 +260,7 @@ static VALUE
 unindent(VALUE con, int start_col)
 {
   VALUE re;
-  // Gherkin will crash gracefully if the string representation of start_col pushes the pattern past 32 characters
+  /* Gherkin will crash gracefully if the string representation of start_col pushes the pattern past 32 characters */
   char pat[32]; 
   snprintf(pat, 32, "^[\t ]{0,%d}", start_col); 
   re = rb_reg_regcomp(rb_str_new2(pat));
@@ -428,7 +428,7 @@ static VALUE CLexer_scan(VALUE self, VALUE input)
     assert(lexer->content_start <= len && "content starts after data end");
     assert(lexer->mark < len && "mark is after data end");
     
-    // Reset lexer by re-initializing the whole thing
+    /* Reset lexer by re-initializing the whole thing */
     lexer_init(lexer);
 
     if (cs == lexer_error) {
