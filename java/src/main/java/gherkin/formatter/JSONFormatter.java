@@ -23,8 +23,17 @@ public class JSONFormatter implements Reporter, Formatter {
 
     private Map<String, Object> featureMap;
     private String uri;
-    private Map currentStepOrHook;
 
+    private Map getCurrentStep(){
+    	for (Map stepOrHook : getSteps()){
+    		if (stepOrHook.get("result") == null){
+    			return stepOrHook;
+    		}
+    	}
+    	return null;
+    }
+    
+    
     public JSONFormatter(Appendable out) {
         this.out = new NiceAppendable(out);
     }
@@ -63,13 +72,12 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void step(Step step) {
-        currentStepOrHook = step.toMap();
-        getSteps().add(currentStepOrHook);
+        getSteps().add(step.toMap());
     }
 
     @Override
     public void match(Match match) {
-        currentStepOrHook.put("match", match.toMap());
+    	getCurrentStep().put("match", match.toMap());
     }
 
     @Override
@@ -87,7 +95,7 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void result(Result result) {
-        currentStepOrHook.put("result", result.toMap());
+    	getCurrentStep().put("result", result.toMap());
     }
 
     @Override
@@ -166,19 +174,19 @@ public class JSONFormatter implements Reporter, Formatter {
     }
 
     private List<Map<String, String>> getEmbeddings() {
-        List<Map<String, String>> embeddings = (List<Map<String, String>>) currentStepOrHook.get("embeddings");
+        List<Map<String, String>> embeddings = (List<Map<String, String>>) getCurrentStep().get("embeddings");
         if (embeddings == null) {
             embeddings = new ArrayList<Map<String, String>>();
-            currentStepOrHook.put("embeddings", embeddings);
+            getCurrentStep().put("embeddings", embeddings);
         }
         return embeddings;
     }
 
     private List<String> getOutput() {
-        List<String> output = (List<String>) currentStepOrHook.get("output");
+        List<String> output = (List<String>) getCurrentStep().get("output");
         if (output == null) {
             output = new ArrayList<String>();
-            currentStepOrHook.put("output", output);
+            getCurrentStep().put("output", output);
         }
         return output;
     }
