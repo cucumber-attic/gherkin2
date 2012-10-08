@@ -1,5 +1,7 @@
 ## [master](https://github.com/cucumber/gherkin/compare/v2.11.2...master)
 
+* [.NET] Upgraded IKVM from 0.46.0.1 to 7.1.4532.2 - quite a version bump! (Aslak Hellesøy)
+* [JavaScript] Added a README to prevent npm warnings. (Aslak Hellesøy)
 * [Ruby] Don't use C++ style comments. ([#191](https://github.com/cucumber/gherkin/pull/191) Sam Goldman)
 * [Core] Fix for Australian language support ([#196](https://github.com/cucumber/gherkin/pull/196) hogfish)
 * [Ruby] Add encoding option to IO.read ([#190](https://github.com/cucumber/gherkin/pull/190), [#192](https://github.com/cucumber/gherkin/issues/192) [#194](https://github.com/cucumber/gherkin/pull/194) HUANG Wei, Levin Alexander)

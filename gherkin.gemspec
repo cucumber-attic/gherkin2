@@ -52,7 +52,7 @@ Gem::Specification.new do |s|
     s.files += Dir['lib/gherkin/rb_lexer/*.rb']
     s.files += Dir['ext/**/*.c']
     s.extensions = Dir['ext/**/extconf.rb']
-    s.add_development_dependency('rake-compiler', '>= 0.8.0')
+    s.add_development_dependency('rake-compiler', '>= 0.8.1')
   end
   s.files -= Dir['**/.gitignore']
 
@@ -60,7 +60,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency('cucumber', '>= 1.2.1')
   s.add_development_dependency('rake', '>= 0.9.2')
-  s.add_development_dependency('bundler', '>= 1.1.5')
+  s.add_development_dependency('bundler', '>= 1.2.1')
   s.add_development_dependency('rspec', '~> 2.11.0')
   s.add_development_dependency('rubyzip', '>= 0.9.9')
 
@@ -73,5 +73,5 @@ Gem::Specification.new do |s|
 
   # Only needed by Cucumber. Remove when Cucumber no longer needs those.
   s.add_development_dependency('term-ansicolor', '>= 1.0.7')
-  s.add_development_dependency('builder', '>= 2.1.2')
+  s.add_development_dependency('builder', '>= 3.1.3')
 end

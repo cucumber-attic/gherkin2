@@ -10,7 +10,7 @@
     <description>A fast lexer and parser for the Gherkin language based on Ragel</description>
     <copyright>Copyright (c) 2009-2011 Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy</copyright>
     <dependencies>
-      <dependency id="IKVM" version="0.46.0.1" />
+      <dependency id="IKVM" version="7.1.4532.2" />
     </dependencies>
   </metadata>
 </package>

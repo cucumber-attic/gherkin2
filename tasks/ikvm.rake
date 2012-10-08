@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 namespace :ikvm do
-  IKVM_VERSION    = '0.46.0.1'
+  IKVM_VERSION    = '7.1.4532.2'
   IKVM_DIR        = "ikvm/ikvm-#{IKVM_VERSION}"
   IKVM_ZIP        = "ikvm/ikvmbin-#{IKVM_VERSION}.zip"
   CLOBBER.include(IKVM_DIR, IKVM_ZIP)
