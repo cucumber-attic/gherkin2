@@ -54,7 +54,7 @@ The jar file is in the central Maven repo.
     <dependency>
         <groupId>info.cukes</groupId>
         <artifactId>gherkin</artifactId>
-        <version>2.11.2</version>
+        <version>2.11.3</version>
     </dependency>
 
 You can get it manually from [Maven Central](http://search.maven.org/#browse%7C-2073395818)
@@ -251,6 +251,7 @@ Now we can release:
   * gherkin.gemspec
   * java/pom.xml
   * js/package.json
+  * History.md
 * Run `bundle update`, so Gemfile.lock gets updated with the changes.
 * Commit changes, otherwise you will get an error at the end when a tag is made.
 * Run `bundle exec rake gems:prepare && ./build_native_gems.sh && bundle exec rake release:ALL`

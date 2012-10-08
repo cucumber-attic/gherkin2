@@ -1,4 +1,4 @@
-## [master](https://github.com/cucumber/gherkin/compare/v2.11.2...master)
+## [2.11.3](https://github.com/cucumber/gherkin/compare/v2.11.2...v2.11.3)
 
 * [.NET] Upgraded IKVM from 0.46.0.1 to 7.1.4532.2 - quite a version bump! (Aslak Hellesøy)
 * [JavaScript] Added a README to prevent npm warnings. (Aslak Hellesøy)

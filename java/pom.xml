@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>info.cukes</groupId>
     <artifactId>gherkin</artifactId>
-    <version>2.11.2</version>
+    <version>2.11.3</version>
     <packaging>bundle</packaging>
     <name>Gherkin</name>
     <description>Pure Java Gherkin</description>
@@ -29,13 +29,6 @@
         <url>git://github.com/cucumber/gherkin.git</url>
     </scm>
 
-    <distributionManagement>
-        <site>
-            <id>cukes.info</id>
-            <url>scp://cukes.info/var/www/cucumber_site/gherkin/api/java/${project.version}</url>
-        </site>
-    </distributionManagement>
-    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
