@@ -23,8 +23,61 @@ public class JSONFormatter implements Reporter, Formatter {
 
     private Map<String, Object> featureMap;
     private String uri;
-    private Map currentStepOrHook;
 
+    private enum Phase {step, match, result, embedding, output};
+    
+    /**
+     * In order to handle steps being added all at once, this method determines allows methods to
+     * opperator correctly if 
+     * 
+     * step
+     * match
+     * result
+     * embedding
+     * output
+     * step
+     * match
+     * result
+     * embedding
+     * output
+     * 
+     * or if 
+     * 
+     * step
+     * step
+     * match
+     * result
+     * embedding
+     * output
+     * match
+     * result
+     * embedding
+     * output
+     * 
+     * is called
+     * 
+     * @return the correct step for the current operation based on past method calls to the formatter interface
+     */
+    private Map getCurrentStep(Phase phase){
+    	String target = phase.ordinal() <= Phase.match.ordinal()?Phase.match.name():Phase.result.name();
+        boolean lastWith = false;
+        lastWith = (phase.ordinal() > Phase.result.ordinal());
+        Map lastWithValue = null;
+    	for (Map stepOrHook : getSteps()){
+    		if (stepOrHook.get(target) == null){
+    			if (lastWith){
+       			    return lastWithValue;
+    			} else {
+    				return stepOrHook;
+    			}
+    		} else {
+    			lastWithValue = stepOrHook;
+    		}
+    	}
+    	return lastWithValue;
+    }
+    
+    
     public JSONFormatter(Appendable out) {
         this.out = new NiceAppendable(out);
     }
@@ -63,13 +116,12 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void step(Step step) {
-        currentStepOrHook = step.toMap();
-        getSteps().add(currentStepOrHook);
+        getSteps().add(step.toMap());
     }
 
     @Override
     public void match(Match match) {
-        currentStepOrHook.put("match", match.toMap());
+    	getCurrentStep(Phase.match).put("match", match.toMap());
     }
 
     @Override
@@ -87,7 +139,7 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void result(Result result) {
-        currentStepOrHook.put("result", result.toMap());
+    	getCurrentStep(Phase.result).put("result", result.toMap());
     }
 
     @Override
@@ -166,19 +218,19 @@ public class JSONFormatter implements Reporter, Formatter {
     }
 
     private List<Map<String, String>> getEmbeddings() {
-        List<Map<String, String>> embeddings = (List<Map<String, String>>) currentStepOrHook.get("embeddings");
+        List<Map<String, String>> embeddings = (List<Map<String, String>>) getCurrentStep(Phase.embedding).get("embeddings");
         if (embeddings == null) {
             embeddings = new ArrayList<Map<String, String>>();
-            currentStepOrHook.put("embeddings", embeddings);
+            getCurrentStep(Phase.embedding).put("embeddings", embeddings);
         }
         return embeddings;
     }
 
     private List<String> getOutput() {
-        List<String> output = (List<String>) currentStepOrHook.get("output");
+        List<String> output = (List<String>) getCurrentStep(Phase.output).get("output");
         if (output == null) {
             output = new ArrayList<String>();
-            currentStepOrHook.put("output", output);
+            getCurrentStep(Phase.output).put("output", output);
         }
         return output;
     }

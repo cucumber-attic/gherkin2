@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>info.cukes</groupId>
     <artifactId>gherkin</artifactId>
-    <version>2.11.2</version>
+    <version>2.11.3-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>Gherkin</name>
     <description>Pure Java Gherkin</description>
@@ -46,7 +46,6 @@
             <groupId>info.cukes</groupId>
             <artifactId>gherkin-jvm-deps</artifactId>
             <version>1.0.2</version>
-            <scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <groupId>com.google.code.gson</groupId>
