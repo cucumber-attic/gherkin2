@@ -1,5 +1,6 @@
 ## [master](https://github.com/cucumber/gherkin/compare/v2.11.2...master)
 
+* [Ruby] Add encoding option to IO.read ([#190](https://github.com/cucumber/gherkin/pull/190), [#192](https://github.com/cucumber/gherkin/issues/192) [#194](https://github.com/cucumber/gherkin/pull/194) HUANG Wei, Levin Alexander)
 * [JavaScript] Can't run on IE because of `const` keyword ([#186](https://github.com/cucumber/gherkin/issues/186) Aslak Hellesøy)
 
 ## [2.11.2](https://github.com/cucumber/gherkin/compare/v2.11.1...v2.11.2)
