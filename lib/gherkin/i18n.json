@@ -128,16 +128,16 @@
 	"en-au": {
 	  "name": "Australian",
 	  "native": "Australian",
-	  "feature": "Crikey",
-	  "background": "Background",
-	  "scenario": "Mate",
-	  "scenario_outline": "Blokes",
-	  "examples": "Cobber",
-	  "given": "*|Ya know how",
-	  "when": "*|When",
-	  "then": "*|Ya gotta",
-	  "and": "*|N",
-	  "but": "*|Cept"
+	  "feature": "Pretty much",
+	  "background": "First off",
+	  "scenario": "Awww, look mate",
+	  "scenario_outline": "Reckon it's like",
+	  "examples": "You'll wanna",
+	  "given": "*|Y'know",
+	  "when": "*|It's just unbelievable",
+	  "then": "*|But at the end of the day I reckon",
+	  "and": "*|Too right",
+	  "but": "*|Yeah nah"
 	},
 	"en-lol": {
 	  "name": "LOLCAT",
