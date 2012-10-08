@@ -2,7 +2,7 @@
  * Creates a new Lexer for a specific language.
  */
 exports.Lexer = function(lang) {
-  return require('./gherkin/lexer/' + lang).Lexer;
+  return require('./gherkin/lexer/' + lang);
 };
 
 /**
