@@ -215,7 +215,7 @@ if(typeof module !== 'undefined') {
 if (typeof define !== 'undefined') {
   if(define.amd) {
     define('gherkin/lexer/<%= @i18n.underscored_iso_code %>', [], function() {
-      return Lexer
+      return Lexer;
     });
   } else {
     define('gherkin/lexer/<%= @i18n.underscored_iso_code %>', function(require, exports, module) {

@@ -5,6 +5,7 @@ class Class
     class << self
       def new(*args)
         js = {
+          # Add more mappings here if needed. The mappings are only used by test code.
           'Gherkin::Formatter::JSONFormatter' => 'js/lib/gherkin/formatter/json_formatter.js',
           'Gherkin::Lexer::En' => 'js/lib/gherkin/lexer/en.js'
         }[self.name]
