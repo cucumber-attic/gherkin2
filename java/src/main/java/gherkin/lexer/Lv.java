@@ -740,7 +740,7 @@ case 1:
 	case 5:
 // line 41 "/Users/ahellesoy/github/gherkin/tasks/../ragel/i18n/lv.java.rl"
 	{
-      String con = unindent(startCol, substring(data, contentStart, nextKeywordStart-1).replaceFirst("(\\r?\\n)?([\\t ])*\\Z", "").replaceAll("\\\\\"\\\\\"\\\\\"", "\"\"\""));
+      String con = unindent(startCol, substring(data, contentStart, nextKeywordStart-1).replaceFirst("(\\r?\\n)?([\\t ])*\\Z", "").replace("\\\"\\\"\\\"", "\"\"\""));
       String conType = substring(data, docstringContentTypeStart, docstringContentTypeEnd).trim();
       listener.docString(conType, con, currentLine);
     }
@@ -860,9 +860,9 @@ case 1:
 	{
       String con = substring(data, contentStart, p).trim();
       currentRow.add(con
-        .replaceAll("\\\\\\|", "|")
-        .replaceAll("\\\\n", "\n")
-        .replaceAll("\\\\\\\\", "\\\\")
+        .replace("\\|", "|")
+        .replace("\\n", "\n")
+        .replace("\\\\", "\\")
       );
     }
 	break;

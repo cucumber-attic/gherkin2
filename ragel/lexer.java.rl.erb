@@ -39,7 +39,7 @@ public class <%= @i18n.underscored_iso_code.capitalize %> implements Lexer {
     }
 
     action store_docstring_content {
-      String con = unindent(startCol, substring(data, contentStart, nextKeywordStart-1).replaceFirst("(\\r?\\n)?([\\t ])*\\Z", "").replaceAll("\\\\\"\\\\\"\\\\\"", "\"\"\""));
+      String con = unindent(startCol, substring(data, contentStart, nextKeywordStart-1).replaceFirst("(\\r?\\n)?([\\t ])*\\Z", "").replace("\\\"\\\"\\\"", "\"\"\""));
       String conType = substring(data, docstringContentTypeStart, docstringContentTypeEnd).trim();
       listener.docString(conType, con, currentLine);
     }
@@ -127,9 +127,9 @@ public class <%= @i18n.underscored_iso_code.capitalize %> implements Lexer {
     action store_cell_content {
       String con = substring(data, contentStart, p).trim();
       currentRow.add(con
-        .replaceAll("\\\\\\|", "|")
-        .replaceAll("\\\\n", "\n")
-        .replaceAll("\\\\\\\\", "\\\\")
+        .replace("\\|", "|")
+        .replace("\\n", "\n")
+        .replace("\\\\", "\\")
       );
     }
 
