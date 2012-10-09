@@ -12,11 +12,12 @@ require 'gherkin'
 require 'stringio'
 require 'gherkin/sexp_recorder'
 require 'gherkin/output_stream_string_io'
-require 'gherkin/shared/bom_group'
+require 'gherkin/shared/encoding_group'
 require 'gherkin/shared/lexer_group'
 require 'gherkin/shared/tags_group'
 require 'gherkin/shared/doc_string_group'
 require 'gherkin/shared/row_group'
+require 'gherkin/lexer/encoding'
 $:.unshift(File.dirname(__FILE__))
 
 module GherkinSpecHelper
@@ -25,7 +26,8 @@ module GherkinSpecHelper
   end
 
   def fixture(file)
-    File.new(File.dirname(__FILE__) + "/gherkin/fixtures/" + file).read
+    encoding = Gherkin::Lexer::Encoding.new
+    source = encoding.read_file(File.dirname(__FILE__) + "/gherkin/fixtures/" + file)
   end
 
   def rubify_hash(hash)

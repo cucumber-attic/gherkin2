@@ -1,5 +1,6 @@
 ## [2.11.4](https://github.com/cucumber/gherkin/compare/v2.11.3...v2.11.4)
 
+* [Core] Support for file encodings different from UTF-8 in feature files. ([#158](https://github.com/cucumber/gherkin/issues/158) Aslak Hellesøy)
 * [Core] Added Persian/Farsi (Sam Naseri)
 * [JavaScript] Fix lexer instantiation. ([#197](https://github.com/cucumber/gherkin/pull/197) Julien Biezemans)
 

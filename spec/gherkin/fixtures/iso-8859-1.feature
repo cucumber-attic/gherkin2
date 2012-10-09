@@ -1,0 +1,6 @@
+# language: no
+# encoding: iSo-8859-1
+Egenskap: ISO-8859-1
+  Scenario: ∆ÿ≈
+    NÂr this is encoded as Latin-1
+    SÂ everything should parse
