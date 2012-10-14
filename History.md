@@ -1,5 +1,6 @@
 ## [2.11.5](https://github.com/cucumber/gherkin/compare/v2.11.4...v2.11.5)
 
+* [Core] Czech translation cleaned a little bit up. ([#202](https://github.com/cucumber/gherkin/pull/202) Jakub Linhart)
 * [JavaScript] No lexer modules in 2.11.4 NPM package ([#198](https://github.com/cucumber/gherkin/issues/198) Aslak Hellesøy)
 
 ## [2.11.4](https://github.com/cucumber/gherkin/compare/v2.11.3...v2.11.4)
