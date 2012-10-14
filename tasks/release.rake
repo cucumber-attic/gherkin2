@@ -24,6 +24,9 @@ namespace :release do
   
   desc 'Push npm package to http://npmjs.org/'
   task :push_npm_package do
+    en_min_js = File.expand_path(File.dirname(__FILE__) + '/../js/lib/gherkin/lexer/en.min.js')
+    raise "No #{en_min_js}. Did you set GHERKIN_JS=true in your shell?" unless File.file?(en_min_js)
+
     Dir.chdir('js') do
       sh("npm publish")
     end

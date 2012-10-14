@@ -1,3 +1,7 @@
+## [2.11.5](https://github.com/cucumber/gherkin/compare/v2.11.4...v2.11.5)
+
+* [JavaScript] No lexer modules in 2.11.4 NPM package ([#198](https://github.com/cucumber/gherkin/issues/198) Aslak Hellesøy)
+
 ## [2.11.4](https://github.com/cucumber/gherkin/compare/v2.11.3...v2.11.4)
 
 * [Core] Support for file encodings different from UTF-8 in feature files. ([#158](https://github.com/cucumber/gherkin/issues/158) Aslak Hellesøy)
