@@ -10,7 +10,7 @@ public class Examples extends TagStatement {
 
     private List<ExamplesTableRow> rows;
 
-    public static class Builder implements gherkin.formatter.model.Builder {
+    public static class ExamplesBuilder implements Builder {
         private final List<Comment> comments;
         private final List<Tag> tags;
         private final String keyword;
@@ -18,9 +18,9 @@ public class Examples extends TagStatement {
         private final String description;
         private final Integer line;
         private final String id;
-        private List<ExamplesTableRow> rows;
+        private List<ExamplesTableRow> rows = new ArrayList<ExamplesTableRow>();;
 
-        public Builder(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, Integer line, String id) {
+        public ExamplesBuilder(List<Comment> comments, List<Tag> tags, String keyword, String name, String description, Integer line, String id) {
             this.comments = comments;
             this.tags = tags;
             this.keyword = keyword;
@@ -31,14 +31,18 @@ public class Examples extends TagStatement {
         }
 
         public void row(List<Comment> comments, List<String> cells, Integer line, String id) {
-            if (rows == null) {
-                rows = new ArrayList<ExamplesTableRow>();
-            }
             rows.add(new ExamplesTableRow(comments, cells, line, id));
         }
 
         public void replay(Formatter formatter) {
             new Examples(comments, tags, keyword, name, description, line, id, rows).replay(formatter);
+        }
+
+        @Override
+        public void populateStepContainer(StepContainer stepContainer) {
+            for (int i = 1; i < rows.size(); i++) {
+                stepContainer.addScenario(rows.get(0), rows.get(i), tags);
+            }
         }
 
         public void docString(DocString docString) {

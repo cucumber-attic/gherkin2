@@ -15,7 +15,7 @@ public class Step extends BasicStatement {
     private final List<DataTableRow> rows;
     private final DocString doc_string;
 
-    public static class Builder implements gherkin.formatter.model.Builder {
+    public static class StepBuilder implements Builder {
         private final List<Comment> comments;
         private final String keyword;
         private final String name;
@@ -23,7 +23,7 @@ public class Step extends BasicStatement {
         private List<DataTableRow> rows;
         private DocString doc_string;
 
-        public Builder(List<Comment> comments, String keyword, String name, Integer line) {
+        public StepBuilder(List<Comment> comments, String keyword, String name, Integer line) {
             this.comments = comments;
             this.keyword = keyword;
             this.name = name;
@@ -39,6 +39,11 @@ public class Step extends BasicStatement {
 
         public void replay(Formatter formatter) {
             new Step(comments, keyword, name, line, rows, doc_string).replay(formatter);
+        }
+
+        @Override
+        public void populateStepContainer(StepContainer stepContainer) {
+            stepContainer.addStep(new Step(comments, keyword, name, line, rows, doc_string));
         }
 
         public void docString(DocString docString) {

@@ -13,62 +13,15 @@ import gherkin.formatter.model.Step;
 import gherkin.formatter.model.Tag;
 import gherkin.lexer.Listener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FormatterListener implements Listener {
     private final Formatter formatter;
-    private Stash stash;
+    private final Stash stash = new Stash();
     private Builder currentBuilder;
-
-    private class Stash {
-        private List<Comment> comments;
-        private List<Tag> tags;
-
-        private String featureId;
-        private String featureElementId;
-        private String examplesId;
-        private int rowIndex = 0;
-
-        public void comment(Comment comment) {
-            comments.add(comment);
-        }
-
-        public void tag(Tag tag) {
-            tags.add(tag);
-        }
-
-        public void reset() {
-            comments = new ArrayList<Comment>();
-            tags = new ArrayList<Tag>();
-        }
-
-        public String featureId(String name) {
-            return featureId = id(name);
-        }
-
-        public String featureElementId(String name) {
-            return featureElementId = featureId + ";" + id(name);
-        }
-
-        public String examplesId(String name) {
-            rowIndex = 0;
-            return examplesId = featureElementId + ";" + id(name);
-        }
-
-        private String id(String name) {
-            return name.replaceAll("[\\s_]", "-").toLowerCase();
-        }
-
-        public String nextExampleId() {
-            rowIndex++;
-            return "" + examplesId + ";" + rowIndex;
-        }
-    }
 
     public FormatterListener(Formatter formatter) {
         this.formatter = formatter;
-        stash = new Stash();
         stash.reset();
     }
 
@@ -97,28 +50,30 @@ public class FormatterListener implements Listener {
     @Override
     public void scenario(String keyword, String name, String description, Integer line) {
         replayStepsOrExamples();
-        formatter.scenario(new Scenario(stash.comments, stash.tags, keyword, name, description, line, stash.featureElementId(name)));
+        Scenario scenario = new Scenario(stash.comments, stash.tags, keyword, name, description, line, stash.featureElementId(name), null);
+        formatter.scenario(scenario);
         stash.reset();
     }
 
     @Override
     public void scenarioOutline(String keyword, String name, String description, Integer line) {
         replayStepsOrExamples();
-        formatter.scenarioOutline(new ScenarioOutline(stash.comments, stash.tags, keyword, name, description, line, stash.featureElementId(name)));
+        ScenarioOutline scenarioOutline = new ScenarioOutline(stash.comments, stash.tags, keyword, name, description, line, stash.featureElementId(name), null);
+        formatter.scenarioOutline(scenarioOutline);
         stash.reset();
     }
 
     @Override
     public void examples(String keyword, String name, String description, Integer line) {
         replayStepsOrExamples();
-        currentBuilder = new Examples.Builder(stash.comments, stash.tags, keyword, name, description, line, stash.examplesId(name));
+        currentBuilder = new Examples.ExamplesBuilder(stash.comments, stash.tags, keyword, name, description, line, stash.examplesId(name));
         stash.reset();
     }
 
     @Override
     public void step(String keyword, String name, Integer line) {
         replayStepsOrExamples();
-        currentBuilder = new Step.Builder(stash.comments, keyword, name, line);
+        currentBuilder = new Step.StepBuilder(stash.comments, keyword, name, line);
         stash.reset();
     }
 

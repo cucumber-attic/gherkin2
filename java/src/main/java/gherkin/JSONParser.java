@@ -66,9 +66,9 @@ public class JSONParser {
         if (type.equals("background")) {
             return new Background(comments(o), keyword(o), name(o), description(o), line(o));
         } else if (type.equals("scenario")) {
-            return new Scenario(comments(o), tags(o), keyword(o), name(o), description(o), line(o), id(o));
+            return new Scenario(comments(o), tags(o), keyword(o), name(o), description(o), line(o), id(o), null);
         } else if (type.equals("scenario_outline")) {
-            return new ScenarioOutline(comments(o), tags(o), keyword(o), name(o), description(o), line(o), id(o));
+            return new ScenarioOutline(comments(o), tags(o), keyword(o), name(o), description(o), line(o), id(o), null);
         } else {
             return null;
         }

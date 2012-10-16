@@ -10,4 +10,6 @@ public interface Builder {
     void docString(DocString docString);
 
     void replay(Formatter formatter);
+
+    void populateStepContainer(StepContainer stepContainer);
 }
