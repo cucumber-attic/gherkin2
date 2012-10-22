@@ -63,7 +63,7 @@ module Gherkin
       end
       
       def append_duration(timestamp)
-      	#check to make sure result exists (scenario outlines do not have results!)
+      	#check to make sure result exists (scenario outlines do not have results yet)
       	if !@current_step_or_hook['result'].nil?
         	#convert to nanoseconds
         	timestamp = timestamp * 1000000000
