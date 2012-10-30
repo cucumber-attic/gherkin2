@@ -65,8 +65,8 @@ Get the dll from [NuGet](http://nuget.org/List/Packages/gherkin)
 
 ## API Docs
 
-* [Ruby](http://cukes.info/gherkin/api/ruby/latest/)
-* [Java](http://cukes.info/gherkin/api/java/latest/apidocs/index.html)
+* [Ruby](http://cukes.info/api/gherkin/yardoc/)
+* [Java](http://cukes.info/api/gherkin/javadoc/)
 
 ## Hacking: Installing the toolchain
 
