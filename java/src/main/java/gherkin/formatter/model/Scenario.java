@@ -1,9 +1,9 @@
 package gherkin.formatter.model;
 
 import gherkin.formatter.Formatter;
+import gherkin.formatter.visitors.Next;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,8 +12,8 @@ public class Scenario extends TagStatement implements StepContainer {
 
     @SuppressWarnings("unused") // it's in the JSON
     private final String type = "scenario";
-    private final List<Step> steps = new ArrayList<Step>();
     private final Background background;
+    private final List<Step> steps = new ArrayList<Step>();
 
     @SuppressWarnings("unused") // Legacy API
     @Deprecated
@@ -47,12 +47,22 @@ public class Scenario extends TagStatement implements StepContainer {
     }
 
     @Override
-    public void addScenario(ExamplesTableRow header, ExamplesTableRow row, List<Tag> tags) {
+    public List<Scenario> getScenarios() {
+        return Collections.singletonList(this);
+    }
+
+    @Override
+    public void addExamples(Examples examples) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Collection<Scenario> getScenarios() {
-        return Collections.singletonList(this);
+    public void accept(Visitor visitor, Next next) throws Exception {
+        if (background != null) {
+            next.push(background);
+        }
+        next.pushAll(steps);
+        visitor.visitScenario(this, next);
+
     }
 }

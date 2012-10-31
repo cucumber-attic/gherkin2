@@ -23,34 +23,48 @@ public class StateMachineReader implements Listener {
         return transitionTable;
     }
 
+    @Override
     public void tag(String tag, Integer line) {
     }
 
+    @Override
     public void comment(String comment, Integer line) {
     }
 
+    @Override
     public void feature(String keyword, String name, String description, Integer line) {
     }
 
+    @Override
     public void background(String keyword, String name, String description, Integer line) {
     }
 
+    @Override
     public void scenario(String keyword, String name, String description, Integer line) {
     }
 
+    @Override
     public void scenarioOutline(String keyword, String name, String description, Integer line) {
     }
 
+    @Override
     public void examples(String keyword, String name, String description, Integer line) {
     }
 
+    @Override
     public void step(String keyword, String name, Integer line) {
     }
 
+    @Override
     public void docString(String contentType, String content, Integer line) {
     }
 
+    @Override
     public void eof() {
+    }
+
+    @Override
+    public void syntaxError(String state, String event, List<String> legalEvents, String featureURI, Integer line) {
     }
 
     public void row(List<String> cells, Integer line) {

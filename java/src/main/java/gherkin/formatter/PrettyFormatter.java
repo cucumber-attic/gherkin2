@@ -255,7 +255,7 @@ public class PrettyFormatter implements Reporter, Formatter {
         out.append(indentedLocation(location, proceed));
 
         out.println();
-        if (step.getRows() != null) {
+        if (!step.getRows().isEmpty()) {
             table(step.getRows());
         } else if (step.getDocString() != null) {
             docString(step.getDocString());
@@ -448,14 +448,14 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     private static final Pattern START = Pattern.compile("^", Pattern.MULTILINE);
 
-    private static String indent(String s, String indentation) {
+    public static String indent(String s, String indentation) {
         return START.matcher(s).replaceAll(indentation);
     }
 
     private static final Pattern TRIPLE_QUOTES = Pattern.compile("\"\"\"", Pattern.MULTILINE);
     private static final String ESCAPED_TRIPLE_QUOTES = "\\\\\"\\\\\"\\\\\"";
 
-    private static String escapeTripleQuotes(String s) {
+    public static String escapeTripleQuotes(String s) {
         return TRIPLE_QUOTES.matcher(s).replaceAll(ESCAPED_TRIPLE_QUOTES);
     }
 }

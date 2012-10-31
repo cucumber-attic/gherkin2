@@ -2,6 +2,7 @@ package gherkin.formatter.model;
 
 import gherkin.formatter.Argument;
 import gherkin.formatter.Formatter;
+import gherkin.formatter.visitors.Next;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Step extends BasicStatement {
+public class Step extends BasicStatement implements Visitable {
     private static final long serialVersionUID = 1L;
 
     private final List<DataTableRow> rows;
@@ -20,7 +21,8 @@ public class Step extends BasicStatement {
         private final String keyword;
         private final String name;
         private final Integer line;
-        private List<DataTableRow> rows;
+        private List<DataTableRow> rows = new ArrayList<DataTableRow>();
+
         private DocString doc_string;
 
         public StepBuilder(List<Comment> comments, String keyword, String name, Integer line) {
@@ -31,9 +33,6 @@ public class Step extends BasicStatement {
         }
 
         public void row(List<Comment> comments, List<String> cells, Integer line, String id) {
-            if (rows == null) {
-                rows = new ArrayList<DataTableRow>();
-            }
             rows.add(new DataTableRow(comments, cells, line));
         }
 
@@ -60,7 +59,7 @@ public class Step extends BasicStatement {
     @Override
     public Range getLineRange() {
         Range range = super.getLineRange();
-        if (getRows() != null) {
+        if (!getRows().isEmpty()) {
             range = new Range(range.getFirst(), getRows().get(getRows().size() - 1).getLine());
         } else if (getDocString() != null) {
             range = new Range(range.getFirst(), getDocString().getLineRange().getLast());
@@ -98,5 +97,14 @@ public class Step extends BasicStatement {
 
     public StackTraceElement getStackTraceElement(String path) {
         return new StackTraceElement("✽", getKeyword() + getName(), path, getLine());
+    }
+
+    @Override
+    public void accept(Visitor visitor, Next next) throws Exception {
+        if (doc_string != null) {
+            next.push(doc_string);
+        }
+        next.pushAll(rows);
+        visitor.visitStep(this, next);
     }
 }

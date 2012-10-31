@@ -1,6 +1,7 @@
 package gherkin.formatter.model;
 
 import gherkin.formatter.Formatter;
+import gherkin.formatter.visitors.Next;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,5 +30,10 @@ public class Feature extends TagStatement {
 
     public void addStepContainer(StepContainer stepContainer) {
         stepContainers.add(stepContainer);
+    }
+
+    public void accept(final Visitor visitor, Next next) throws Exception {
+        next.pushAll(stepContainers);
+        visitor.visitFeature(this, next);
     }
 }

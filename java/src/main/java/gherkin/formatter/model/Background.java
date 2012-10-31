@@ -1,13 +1,14 @@
 package gherkin.formatter.model;
 
 import gherkin.formatter.Formatter;
+import gherkin.formatter.visitors.Next;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public class Background extends DescribedStatement implements StepContainer {
+    @SuppressWarnings("unused")
     private final String type = "background";
     private List<Step> steps = new ArrayList<Step>();
 
@@ -30,12 +31,18 @@ public class Background extends DescribedStatement implements StepContainer {
     }
 
     @Override
-    public void addScenario(ExamplesTableRow header, ExamplesTableRow row, List<Tag> tags) {
+    public List<Scenario> getScenarios() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Collection<Scenario> getScenarios() {
+    public void addExamples(Examples examples) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void accept(Visitor visitor, Next next) throws Exception {
+        next.pushAll(steps);
+        visitor.visitBackground(this, next);
     }
 }

@@ -18,11 +18,23 @@ public class Parser implements Listener {
 
     private final boolean throwOnError;
     private final String machineName;
-    private FormatterListener listener;
-    private I18nLexer lexer;
+    private final Listener listener;
+    private final I18nLexer lexer;
     private String featureURI;
     private Integer lineOffset;
     private final Formatter formatter;
+
+    public Parser(Listener listener) {
+        this(listener, true, "root");
+    }
+
+    public Parser(Listener listener, boolean throwOnError, String machineName) {
+        this.listener = listener;
+        this.throwOnError = throwOnError;
+        this.machineName = machineName;
+        this.formatter = null;
+        this.lexer = new I18nLexer(this);
+    }
 
     public Parser(Formatter formatter) {
         this(formatter, true);
@@ -42,7 +54,7 @@ public class Parser implements Listener {
         this.listener = new FormatterListener(formatter);
         this.throwOnError = throwOnError;
         this.machineName = machineName;
-        this.lexer = new I18nLexer(this, forceRubyDummy);
+        this.lexer = new I18nLexer(this);
     }
 
     /**
@@ -50,7 +62,9 @@ public class Parser implements Listener {
      * @param lineOffset the line offset within the uri document the gherkin was taken from. Typically 0.
      */
     public void parse(String gherkin, String featureURI, Integer lineOffset) {
-        formatter.uri(featureURI);
+        if (formatter != null) {
+            formatter.uri(featureURI);
+        }
         this.featureURI = featureURI;
         this.lineOffset = lineOffset;
         pushMachine(machineName);
@@ -148,6 +162,11 @@ public class Parser implements Listener {
         if (event("eof", 1)) {
             listener.eof();
         }
+    }
+
+    @Override
+    public void syntaxError(String state, String event, List<String> legalEvents, String featureURI, Integer line) {
+        listener.syntaxError(state, event, legalEvents, featureURI, line);
     }
 
     private boolean event(String event, Integer line) {

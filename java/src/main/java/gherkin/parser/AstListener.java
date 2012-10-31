@@ -96,6 +96,11 @@ public class AstListener implements Listener {
         replayStepsOrExamples();
     }
 
+    @Override
+    public void syntaxError(String state, String event, List<String> legalEvents, String featureURI, Integer line) {
+        throw new UnsupportedOperationException();
+    }
+
     public Feature getFeature() {
         return feature;
     }

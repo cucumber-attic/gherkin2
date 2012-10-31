@@ -1,5 +1,7 @@
 package gherkin.formatter.model;
 
+import gherkin.formatter.visitors.Next;
+
 import java.util.List;
 
 public class DataTableRow extends Row {
@@ -18,5 +20,10 @@ public class DataTableRow extends Row {
 
     public DiffType getDiffType() {
         return diffType;
+    }
+
+    @Override
+    public void accept(Visitor visitor, Next bakctrack) throws Exception {
+        visitor.visitDataTableRow(this, bakctrack);
     }
 }

@@ -5,7 +5,7 @@ import gherkin.formatter.Mappable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Row extends Mappable implements CommentHolder {
+public abstract class Row extends Mappable implements CommentHolder, Visitable {
     public enum DiffType {
         NONE, DELETE, INSERT
     }

@@ -24,4 +24,6 @@ public interface Listener {
     void docString(String contentType, String content, Integer line);
 
     void eof();
+
+    void syntaxError(String state, String event, List<String> legalEvents, String featureURI, Integer line);
 }
