@@ -120,7 +120,7 @@ Feature: Gherkin Feature lexer/parser
         Feature: Documentation is fun
           Scenario Outline: With lots of docs
             We need lots of embedded documentation for some reason 
-            \"\"\" # Not interpreted as a pystring, just plain text
+            \"\"\" # Not interpreted as a docstring, just plain text
             Oh hai
             \"\"\"
       
