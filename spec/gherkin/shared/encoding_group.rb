@@ -15,6 +15,20 @@ module Gherkin
           ]
         end
 
+        describe "and language specification" do
+          it "should work just fine" do
+            @lexer = Gherkin::Lexer::I18nLexer.new(@listener)
+            scan_file("with_bom_and_language_spec.feature")
+            @listener.to_sexp.should == [
+              [:comment, "# language: nl", 1], 
+              [:feature, "Functionaliteit", "Feature Text", "", 2],
+              [:scenario, "Scenario", "Reading a Scenario", "", 3],
+              [:step, "Gegeven ", "there is a step", 4],
+              [:eof]
+            ]
+          end
+        end
+
         describe "with ISO-8859-1 encoding" do
           it "should work just fine" do
             @lexer = Gherkin::Lexer::I18nLexer.new(@listener)

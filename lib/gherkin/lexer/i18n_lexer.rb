@@ -1,3 +1,4 @@
+#encoding: utf-8
 require 'gherkin/i18n'
 require 'gherkin/native'
 
@@ -9,8 +10,8 @@ module Gherkin
     class I18nLexer
       native_impl('gherkin')
 
-      COMMENT_OR_EMPTY_LINE_PATTERN = /^\s*#|^\s*$/
-      LANGUAGE_PATTERN = /^\s*#\s*language\s*:\s*([a-zA-Z\-]+)/ #:nodoc:
+      COMMENT_OR_EMPTY_LINE_PATTERN = /^(\xEF\xBB\xBF)?\s*#|^\s*$/
+      LANGUAGE_PATTERN = /^(\xEF\xBB\xBF)?\s*#\s*language\s*:\s*([a-zA-Z\-]+)/ #:nodoc:
       attr_reader :i18n_language
 
       def initialize(listener, force_ruby=false)
@@ -34,7 +35,7 @@ module Gherkin
         source.each_line do |line|
           break unless COMMENT_OR_EMPTY_LINE_PATTERN =~ line
           if LANGUAGE_PATTERN =~ line
-            key = $1
+            key = $2
             break
           end
         end
