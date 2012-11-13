@@ -6,8 +6,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class I18nLexer implements Lexer {
-    private static final Pattern COMMENT_OR_EMPTY_LINE_PATTERN = Pattern.compile("^\\s*#|^\\s*$");
-    private static final Pattern LANGUAGE_PATTERN = Pattern.compile("^\\s*#\\s*language\\s*:\\s*([a-zA-Z\\-]+)");
+    private static final Pattern COMMENT_OR_EMPTY_LINE_PATTERN = Pattern.compile("^([\\W]+)?\\s*#|^\\s*$");
+    private static final Pattern LANGUAGE_PATTERN = Pattern.compile("^([\\W]+)?\\s*#\\s*language\\s*:\\s*([a-zA-Z\\-]+)");
     private final Listener listener;
     private I18n i18n;
 
@@ -43,7 +43,7 @@ public class I18nLexer implements Lexer {
             }
             Matcher matcher = LANGUAGE_PATTERN.matcher(line);
             if (matcher.find()) {
-                key = matcher.group(1);
+                key = matcher.group(2);
                 break;
             }
         }
