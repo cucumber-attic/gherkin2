@@ -1,3 +1,7 @@
+## In Git
+
+* [Ruby,Java] Gherkin does not seem to parse BOM when feature contains language specification. ([#211](https://github.com/cucumber/gherkin/issues/211), [#212](https://github.com/cucumber/gherkin/pull/212) Rob Westgeest)
+
 ## [2.11.5](https://github.com/cucumber/gherkin/compare/v2.11.4...v2.11.5)
 
 * [Core] Czech translation cleaned a little bit up. ([#202](https://github.com/cucumber/gherkin/pull/202) Jakub Linhart)
