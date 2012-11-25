@@ -587,6 +587,20 @@
 	  "and": "*|Ve",
 	  "but": "*|Fakat|Ama"
 	},
+	"tt": {
+	  "name": "Tatar",
+	  "native": "Татарча",
+	  "feature": "Мөмкинлек|Үзенчәлеклелек",
+	  "background": "Кереш",
+	  "scenario": "Сценарий",
+	  "scenario_outline": "Сценарийның төзелеше",
+	  "examples": "Үрнәкләр|Мисаллар",
+	  "given": "*|Әйтик",
+	  "when": "*|Әгәр",
+	  "then": "*|Нәтиҗәдә",
+	  "and": "*|Һәм|Вә",
+	  "but": "*|Ләкин|Әмма"
+	},
 	"uk": {
 	  "name": "Ukrainian",
 	  "native": "Українська",
