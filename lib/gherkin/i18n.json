@@ -293,6 +293,20 @@
 	  "and": "*|וגם",
 	  "but": "*|אבל"
 	},
+	"hi": {
+	  "name": "Hindi",
+	  "native": "हिंदी",
+	  "feature": "रूप लेख",
+	  "background": "पृष्ठभूमि",
+	  "scenario": "परिदृश्य",
+	  "scenario_outline": "परिदृश्य रूपरेखा",
+	  "examples": "उदाहरण",
+	  "given": "*|अगर|यदि|चूंकि",
+	  "when": "*|जब",
+	  "then": "*|तब",
+	  "and": "*|और|तथा",
+	  "but": "*|पर"
+	},
 	"hr": {
 	  "name": "Croatian",
 	  "native": "hrvatski",
