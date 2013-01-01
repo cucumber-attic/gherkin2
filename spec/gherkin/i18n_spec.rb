@@ -188,6 +188,7 @@ module Gherkin
       | fi        | Finnish             | suomi             |
       | fr        | French              | français          |
       | he        | Hebrew              | עברית             |
+      | hi        | Hindi               | हिंदी           |
       | hr        | Croatian            | hrvatski          |
       | hu        | Hungarian           | magyar            |
       | id        | Indonesian          | Bahasa Indonesia  |
