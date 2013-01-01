@@ -237,20 +237,20 @@
 	  "and": "*|Ja",
 	  "but": "*|Kuid"
 	},
-    "fa": {
-        "name": "Persian",
-        "native": "فارسی",
-        "feature": "وِیژگی",
-        "background": "زمینه",
-        "scenario": "سناریو",
-        "scenario_outline": "الگوی سناریو",
-        "examples": "نمونه ها",
-        "given": "*|با فرض",
-        "when": "*|هنگامی",
-        "then": "*|آنگاه",
-        "and": "*|و",
-        "but": "*|اما"
-    },
+	"fa": {
+	  "name": "Persian",
+	  "native": "فارسی",
+	  "feature": "وِیژگی",
+	  "background": "زمینه",
+	  "scenario": "سناریو",
+	  "scenario_outline": "الگوی سناریو",
+	  "examples": "نمونه ها",
+	  "given": "*|با فرض",
+	  "when": "*|هنگامی",
+	  "then": "*|آنگاه",
+	  "and": "*|و",
+	  "but": "*|اما"
+	},
 	"fi": {
 	  "name": "Finnish",
 	  "native": "suomi",
