@@ -237,20 +237,20 @@
 	  "and": "*|Ja",
 	  "but": "*|Kuid"
 	},
-    "fa": {
-        "name": "Persian",
-        "native": "فارسی",
-        "feature": "وِیژگی",
-        "background": "زمینه",
-        "scenario": "سناریو",
-        "scenario_outline": "الگوی سناریو",
-        "examples": "نمونه ها",
-        "given": "*|با فرض",
-        "when": "*|هنگامی",
-        "then": "*|آنگاه",
-        "and": "*|و",
-        "but": "*|اما"
-    },
+	"fa": {
+	  "name": "Persian",
+	  "native": "فارسی",
+	  "feature": "وِیژگی",
+	  "background": "زمینه",
+	  "scenario": "سناریو",
+	  "scenario_outline": "الگوی سناریو",
+	  "examples": "نمونه ها",
+	  "given": "*|با فرض",
+	  "when": "*|هنگامی",
+	  "then": "*|آنگاه",
+	  "and": "*|و",
+	  "but": "*|اما"
+	},
 	"fi": {
 	  "name": "Finnish",
 	  "native": "suomi",
@@ -292,6 +292,20 @@
 	  "then": "*|אז|אזי",
 	  "and": "*|וגם",
 	  "but": "*|אבל"
+	},
+	"hi": {
+	  "name": "Hindi",
+	  "native": "हिंदी",
+	  "feature": "रूप लेख",
+	  "background": "पृष्ठभूमि",
+	  "scenario": "परिदृश्य",
+	  "scenario_outline": "परिदृश्य रूपरेखा",
+	  "examples": "उदाहरण",
+	  "given": "*|अगर|यदि|चूंकि",
+	  "when": "*|जब",
+	  "then": "*|तब",
+	  "and": "*|और|तथा",
+	  "but": "*|पर"
 	},
 	"hr": {
 	  "name": "Croatian",
