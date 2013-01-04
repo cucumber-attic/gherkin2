@@ -53,7 +53,7 @@ module Gherkin
           [:step, "当", "我按相加按钮", 7],
           [:step, "那么", "我应该在屏幕上看到的结果是13", 8],
           [:eof]
-        ] 
+        ]
       end
 
       it "should parse languages with spaces after some keywords but not others" do
@@ -188,7 +188,7 @@ module Gherkin
       | fi        | Finnish             | suomi             |
       | fr        | French              | français          |
       | he        | Hebrew              | עברית             |
-      | hi        | Hindi               | हिंदी           |
+      | hi        | Hindi               | हिंदी             |
       | hr        | Croatian            | hrvatski          |
       | hu        | Hungarian           | magyar            |
       | id        | Indonesian          | Bahasa Indonesia  |
