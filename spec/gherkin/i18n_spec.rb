@@ -210,6 +210,7 @@ module Gherkin
       | sr-Latn   | Serbian (Latin)     | Srpski (Latinica) |
       | sv        | Swedish             | Svenska           |
       | tr        | Turkish             | Türkçe            |
+      | tt        | Tatar               | Татарча           |
       | uk        | Ukrainian           | Українська        |
       | uz        | Uzbek               | Узбекча           |
       | vi        | Vietnamese          | Tiếng Việt        |
