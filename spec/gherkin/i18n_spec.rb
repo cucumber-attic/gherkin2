@@ -162,7 +162,7 @@ module Gherkin
         end
 
         it "should report keyword regexp" do
-          Gherkin::I18n.keyword_regexp(:step).should =~ /\|Quando \|Quand \|Quan \|Pryd \|Pokud \|/
+          Gherkin::I18n.keyword_regexp(:step).should =~ /\|Quando \|Quand \|Quan \|Pryd \|/
         end
 
         it "should print available languages" do
@@ -209,6 +209,7 @@ module Gherkin
       | sr-Cyrl   | Serbian             | Српски            |
       | sr-Latn   | Serbian (Latin)     | Srpski (Latinica) |
       | sv        | Swedish             | Svenska           |
+      | tl        | Telugu              | తెలుగు            |
       | tr        | Turkish             | Türkçe            |
       | tt        | Tatar               | Татарча           |
       | uk        | Ukrainian           | Українська        |
