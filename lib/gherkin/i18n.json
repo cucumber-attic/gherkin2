@@ -587,6 +587,20 @@
 	  "and": "*|И",
 	  "but": "*|Али"
 	},
+	"tl": {
+	  "name": "Telugu",
+	  "native": "తెలుగు",
+	  "feature": "గుణము",
+	  "background": "నేపథ్యం",
+	  "scenario": "సన్నివేశం",
+	  "scenario_outline": "కథనం",
+	  "examples": "ఉదాహరణలు",
+	  "given": "*|చెప్పబడినది",
+	  "when": "*|ఈ పరిస్థితిలో",
+	  "then": "*|అప్పుడు",
+	  "and": "*|మరియు",
+	  "but": "*|కాని"
+	},
 	"tr": {
 	  "name": "Turkish",
 	  "native": "Türkçe",
