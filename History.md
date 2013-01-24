@@ -1,5 +1,10 @@
 ## In Git
 
+* [Core] Better Slovak ([#208](https://github.com/cucumber/gherkin/pull/208) Michal Kvasnicak)
+* [Core] New: Tatar ([#213](https://github.com/cucumber/gherkin/pull/213) Valeriy Utyaganov)
+* [Core] New: Telugu ([#218](https://github.com/cucumber/gherkin/pull/218) srinivasvedantam)
+* [Core] New: Hindi ([#222](https://github.com/cucumber/gherkin/pull/222) Kumar Harsh)
+* [Java] Fix JSON formatter ([#216](https://github.com/cucumber/gherkin/pull/216), [#195](https://github.com/cucumber/gherkin/pull/195) Joseph Hughes, Rex Hoffman)
 * [Ruby,Java] Gherkin does not seem to parse BOM when feature contains language specification. ([#211](https://github.com/cucumber/gherkin/issues/211), [#212](https://github.com/cucumber/gherkin/pull/212) Rob Westgeest)
 
 ## [2.11.5](https://github.com/cucumber/gherkin/compare/v2.11.4...v2.11.5)

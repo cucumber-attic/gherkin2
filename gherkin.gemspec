@@ -52,26 +52,26 @@ Gem::Specification.new do |s|
     s.files += Dir['lib/gherkin/rb_lexer/*.rb']
     s.files += Dir['ext/**/*.c']
     s.extensions = Dir['ext/**/extconf.rb']
-    s.add_development_dependency('rake-compiler', '>= 0.8.1')
+    s.add_development_dependency('rake-compiler', '>= 0.8.2')
   end
   s.files -= Dir['**/.gitignore']
 
-  s.add_runtime_dependency('json', '>= 1.4.6')
+  s.add_runtime_dependency('json', '>= 1.7.6')
 
   s.add_development_dependency('cucumber', '>= 1.2.1')
-  s.add_development_dependency('rake', '>= 10.0.0')
-  s.add_development_dependency('bundler', '>= 1.2.1') # Make sure it's in sync with /.travis.yml
-  s.add_development_dependency('rspec', '~> 2.11.0')
+  s.add_development_dependency('rake', '>= 10.0.3')
+  s.add_development_dependency('bundler', '>= 1.2.3') # Make sure it's in sync with /.travis.yml
+  s.add_development_dependency('rspec', '~> 2.12.0')
   s.add_development_dependency('rubyzip', '>= 0.9.9')
 
   unless ENV['RUBY_CC_VERSION'] || defined?(JRUBY_VERSION)
-    s.add_development_dependency('therubyracer', '>= 0.10.2') if ENV['GHERKIN_JS']
+    s.add_development_dependency('therubyracer', '>= 0.11.2') if ENV['GHERKIN_JS']
     # For Documentation:
-    s.add_development_dependency('yard', '>= 0.8.2.1')
+    s.add_development_dependency('yard', '>= 0.8.3')
     s.add_development_dependency('rdiscount', '>= 1.6.8')
   end
 
   # Only needed by Cucumber. Remove when Cucumber no longer needs those.
   s.add_development_dependency('term-ansicolor', '>= 1.0.7')
-  s.add_development_dependency('builder', '>= 3.1.3')
+  s.add_development_dependency('builder', '>= 3.1.4')
 end

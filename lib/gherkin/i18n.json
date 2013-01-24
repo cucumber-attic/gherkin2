@@ -237,20 +237,20 @@
 	  "and": "*|Ja",
 	  "but": "*|Kuid"
 	},
-    "fa": {
-        "name": "Persian",
-        "native": "فارسی",
-        "feature": "وِیژگی",
-        "background": "زمینه",
-        "scenario": "سناریو",
-        "scenario_outline": "الگوی سناریو",
-        "examples": "نمونه ها",
-        "given": "*|با فرض",
-        "when": "*|هنگامی",
-        "then": "*|آنگاه",
-        "and": "*|و",
-        "but": "*|اما"
-    },
+	"fa": {
+	  "name": "Persian",
+	  "native": "فارسی",
+	  "feature": "وِیژگی",
+	  "background": "زمینه",
+	  "scenario": "سناریو",
+	  "scenario_outline": "الگوی سناریو",
+	  "examples": "نمونه ها",
+	  "given": "*|با فرض",
+	  "when": "*|هنگامی",
+	  "then": "*|آنگاه",
+	  "and": "*|و",
+	  "but": "*|اما"
+	},
 	"fi": {
 	  "name": "Finnish",
 	  "native": "suomi",
@@ -292,6 +292,20 @@
 	  "then": "*|אז|אזי",
 	  "and": "*|וגם",
 	  "but": "*|אבל"
+	},
+	"hi": {
+	  "name": "Hindi",
+	  "native": "हिंदी",
+	  "feature": "रूप लेख",
+	  "background": "पृष्ठभूमि",
+	  "scenario": "परिदृश्य",
+	  "scenario_outline": "परिदृश्य रूपरेखा",
+	  "examples": "उदाहरण",
+	  "given": "*|अगर|यदि|चूंकि",
+	  "when": "*|जब",
+	  "then": "*|तब",
+	  "and": "*|और|तथा",
+	  "but": "*|पर"
 	},
 	"hr": {
 	  "name": "Croatian",
@@ -534,15 +548,15 @@
 	"sk": {
 	  "name": "Slovak",
 	  "native": "Slovensky",
-	  "feature": "Požiadavka",
+	  "feature": "Požiadavka|Funkcia|Vlastnosť",
 	  "background": "Pozadie",
 	  "scenario": "Scenár",
-	  "scenario_outline": "Náčrt Scenáru",
+	  "scenario_outline": "Náčrt Scenáru|Náčrt Scenára|Osnova Scenára",
 	  "examples": "Príklady",
-	  "given": "*|Pokiaľ",
-	  "when": "*|Keď",
-	  "then": "*|Tak",
-	  "and": "*|A",
+	  "given": "*|Pokiaľ|Za predpokladu",
+	  "when": "*|Keď|Ak",
+	  "then": "*|Tak|Potom",
+	  "and": "*|A|A tiež|A taktiež|A zároveň",
 	  "but": "*|Ale"
 	},
 	"sr-Latn": {
@@ -573,6 +587,20 @@
 	  "and": "*|И",
 	  "but": "*|Али"
 	},
+	"tl": {
+	  "name": "Telugu",
+	  "native": "తెలుగు",
+	  "feature": "గుణము",
+	  "background": "నేపథ్యం",
+	  "scenario": "సన్నివేశం",
+	  "scenario_outline": "కథనం",
+	  "examples": "ఉదాహరణలు",
+	  "given": "*|చెప్పబడినది",
+	  "when": "*|ఈ పరిస్థితిలో",
+	  "then": "*|అప్పుడు",
+	  "and": "*|మరియు",
+	  "but": "*|కాని"
+	},
 	"tr": {
 	  "name": "Turkish",
 	  "native": "Türkçe",
@@ -586,6 +614,20 @@
 	  "then": "*|O zaman",
 	  "and": "*|Ve",
 	  "but": "*|Fakat|Ama"
+	},
+	"tt": {
+	  "name": "Tatar",
+	  "native": "Татарча",
+	  "feature": "Мөмкинлек|Үзенчәлеклелек",
+	  "background": "Кереш",
+	  "scenario": "Сценарий",
+	  "scenario_outline": "Сценарийның төзелеше",
+	  "examples": "Үрнәкләр|Мисаллар",
+	  "given": "*|Әйтик",
+	  "when": "*|Әгәр",
+	  "then": "*|Нәтиҗәдә",
+	  "and": "*|Һәм|Вә",
+	  "but": "*|Ләкин|Әмма"
 	},
 	"uk": {
 	  "name": "Ukrainian",
