@@ -10,7 +10,6 @@ import gherkin.lexer.Lexer;
 import gherkin.lexer.Listener;
 import gherkin.util.Mapper;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
@@ -65,7 +64,7 @@ public class I18n {
         return keyword.replaceAll("[\\s',!]", "");
     }
 
-    public static List<I18n> getAll() throws IOException {
+    public static List<I18n> getAll() {
         List<I18n> result = new ArrayList<I18n>();
 
         Set<String> isoCodes = new TreeSet<String>(I18N.keySet());
