@@ -132,8 +132,8 @@
 var Lexer = function(listener) {
   // Check that listener has the required functions
   var events = ['comment', 'tag', 'feature', 'background', 'scenario', 'scenario_outline', 'examples', 'step', 'doc_string', 'row', 'eof'];
-  for(e in events) {
-    var event = events[e];
+  for(var i=0, len=events.length; i<len; i++) {
+    var event = events[i];
     if(typeof listener[event] != 'function') {
       throw "Error. No " + event + " function exists on " + JSON.stringify(listener);
     }
