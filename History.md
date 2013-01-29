@@ -1,5 +1,7 @@
 ## In Git
 
+* [JavaScript] Fix for JS Lexer ([#215](https://github.com/cucumber/gherkin/pull/215) Alexis Hevia)
+* [JavaScript] Failing JS Features ([#228](https://github.com/cucumber/gherkin/issues/228) Aslak Hellesøy)
 * [Core] Better Slovak ([#208](https://github.com/cucumber/gherkin/pull/208) Michal Kvasnicak)
 * [Core] New: Tatar ([#213](https://github.com/cucumber/gherkin/pull/213) Valeriy Utyaganov)
 * [Core] New: Telugu ([#218](https://github.com/cucumber/gherkin/pull/218) srinivasvedantam)
