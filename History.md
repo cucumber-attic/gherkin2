@@ -1,5 +1,6 @@
 ## In Git
 
+* [JavaScript] Add duration value to json formatter ([#204](https://github.com/cucumber/gherkin/pull/204) Rick Beyer)
 * [JavaScript] Fix for JS Lexer ([#215](https://github.com/cucumber/gherkin/pull/215) Alexis Hevia)
 * [JavaScript] Failing JS Features ([#228](https://github.com/cucumber/gherkin/issues/228) Aslak Hellesøy)
 * [Core] Better Slovak ([#208](https://github.com/cucumber/gherkin/pull/208) Michal Kvasnicak)
