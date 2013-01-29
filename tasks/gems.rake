@@ -1,7 +1,7 @@
 namespace :gems do
   task :win do
     unless File.directory?(File.expand_path('~/.rake-compiler'))
-      STDERR.puts "[ERROR] You must install MinGW rubies to build gherkin gems for Windows. See README.rdoc"
+      STDERR.puts "[ERROR] You must install MinGW rubies to build gherkin gems for Windows. See README.md"
       exit(1)
     end
     # rvm and mingw ruby versions have to match to avoid errors

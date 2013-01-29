@@ -194,6 +194,9 @@ Next, we're going to install Ruby 1.8.7 and Ruby 1.9.3 for MinGW. We need both v
 OS X Lion (or later) doesn't ship with an LLVM free gcc, which you will need in order to install ruby 1.8.7. We can install it with:
 
     brew install https://raw.github.com/Homebrew/homebrew-dupes/master/apple-gcc42.rb
+    export PATH=/usr/local/mingw/bin:$PATH
+    # Test that it's on your PATH
+    i686-w64-mingw32-gcc -v
 
 For more info see:
 
@@ -254,7 +257,7 @@ Now we can release:
   * History.md
 * Run `bundle update`, so Gemfile.lock gets updated with the changes.
 * Commit changes, otherwise you will get an error at the end when a tag is made.
-* Run `bundle exec rake gems:prepare && ./build_native_gems.sh && bundle exec rake release:ALL`
+* Run `i686-w64-mingw32-gcc -v && bundle exec rake gems:prepare && ./build_native_gems.sh && bundle exec rake release:ALL`
 
 ## Note on Patches/Pull Requests
  
