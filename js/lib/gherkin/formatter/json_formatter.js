@@ -1,7 +1,7 @@
 // This is a straight port of json_formatter.rb
 var JSONFormatter = function(io) {
     var feature_hashes = [];
-	var uri, feature_hash, current_step_or_hook;
+    var uri, feature_hash, current_step_or_hook;
 
     this.done = function() {
         io.write(JSON.stringify(feature_hashes));
@@ -34,16 +34,16 @@ var JSONFormatter = function(io) {
     };
 
     this.step = function(step) {
-	    current_step_or_hook = step;
-	    steps().push(current_step_or_hook);
+        current_step_or_hook = step;
+        steps().push(current_step_or_hook);
     }
     
     this.match = function(match) {
-	    current_step_or_hook['match'] = match;
+        current_step_or_hook['match'] = match;
     }
 
     this.result = function(result) {
-		current_step_or_hook['result'] = result;
+        current_step_or_hook['result'] = result;
     }
 
     this.before = function(match, result) {
@@ -55,7 +55,7 @@ var JSONFormatter = function(io) {
     }
 
     this.embedding = function(mime_type, data) {
-	    embeddings().push({'mime_type': mime_type, 'data': encode64s(data)})
+        embeddings().push({'mime_type': mime_type, 'data': encode64s(data)})
     }
 
     this.write = function(text) {
