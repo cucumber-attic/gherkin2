@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   # When both are building OK, do a `bundle exec rake install` in both cucumber and gherkin projects, revert the changes in the first 2 steps 
   # and release both projects. Do this for both ruby 1.8.7, ruby 1.9.3 and jruby.
   #
-  s.version     = "2.11.5"
+  s.version     = "2.11.6"
   s.authors     = ["Mike Sassak", "Gregory Hnatiuk", "Aslak Hellesøy"]
   s.description = "A fast Gherkin lexer/parser based on the Ragel State Machine Compiler."
   s.summary     = "#{s.name}-#{s.version}"

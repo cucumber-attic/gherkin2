@@ -1,4 +1,4 @@
-## In Git
+## [2.11.6](https://github.com/cucumber/gherkin/compare/v2.11.5...v2.11.6)
 
 * [JavaScript] Add duration value to json formatter ([#204](https://github.com/cucumber/gherkin/pull/204) Rick Beyer)
 * [JavaScript] Fix for JS Lexer ([#215](https://github.com/cucumber/gherkin/pull/215) Alexis Hevia)

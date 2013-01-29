@@ -54,7 +54,7 @@ The jar file is in the central Maven repo.
     <dependency>
         <groupId>info.cukes</groupId>
         <artifactId>gherkin</artifactId>
-        <version>2.11.5</version>
+        <version>2.11.6</version>
     </dependency>
 
 You can get it manually from [Maven Central](http://search.maven.org/#browse%7C-2073395818)
@@ -174,7 +174,7 @@ You must also download NuGet.exe from [CodePlex](http://nuget.codeplex.com/relea
 
 Now you can build the .NET dll with:
 
-	mkdir release
+    mkdir release
     rake ikvm
     rake release/nuspec/lib/gherkin.dll
 
@@ -184,7 +184,7 @@ This should build `release/nuspec/lib/gherkin.dll`
 
 In order to build Windows binaries (so we can release Windows gems from OS X/Linux) we first need to install MinGW:
 
-	./install_mingw_os_x.sh
+    ./install_mingw_os_x.sh
 
 Now, make sure you have openssl installed - it's needed to build the rubies.
 
