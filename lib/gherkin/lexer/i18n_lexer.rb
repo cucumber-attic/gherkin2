@@ -14,9 +14,10 @@ module Gherkin
       LANGUAGE_PATTERN = /^(\xEF\xBB\xBF)?\s*#\s*language\s*:\s*([a-zA-Z\-]+)/ #:nodoc:
       attr_reader :i18n_language
 
-      def initialize(listener, force_ruby=false)
+      def initialize(listener, force_ruby=false, iso_code='en')
         @listener = listener
         @force_ruby = force_ruby
+        @iso_code = iso_code
       end
 
       def scan(source)
@@ -31,7 +32,7 @@ module Gherkin
       end
 
       def lang(source)
-        key = 'en'
+        key = @iso_code
         source.each_line do |line|
           break unless COMMENT_OR_EMPTY_LINE_PATTERN =~ line
           if LANGUAGE_PATTERN =~ line
