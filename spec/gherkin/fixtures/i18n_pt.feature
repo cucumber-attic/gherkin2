@@ -29,14 +29,14 @@ Funcionalidade: Reconhece "Funcionalidade"
       | Valor |
       |     1 |
 
-  Delineação do Cenário: Reconhece "Delineação do Cenário" com acento
+  Delinear o Cenário: Reconhece "Delinear o Cenário" com acento
     Dado que <Valor> é um valor;
 
     Cenarios: Reconhece "Cenários" sem acento
       | Valor |
       |     1 |
 
-  Delineacao do Cenario:  Reconhece "Delineação do Cenário" sem acento
+  Delinear o Cenario:  Reconhece "Delinear o Cenário" sem acento
     Dado que <Valor> é um valor;
 
     Exemplos: Reconhece "Exemplos"
