@@ -2,6 +2,10 @@ if RUBY_VERSION =~ /1.9/
   Encoding.default_external = Encoding::UTF_8
   Encoding.default_internal = Encoding::UTF_8
 end
+if defined?(JRUBY_VERSION)
+  java_import java.util.ArrayList
+  ArrayList.__persistent__ = true
+end
 
 require 'rubygems'
 require 'bundler'
