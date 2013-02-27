@@ -495,7 +495,7 @@
 	  "background": "Contexto",
 	  "feature": "Funcionalidade|Característica|Caracteristica",
 	  "scenario": "Cenário|Cenario",
-	  "scenario_outline": "Esquema do Cenário|Esquema do Cenario|Delinar o Cenário|Delinear o Cenario",
+	  "scenario_outline": "Esquema do Cenário|Esquema do Cenario|Delinear o Cenário|Delinear o Cenario",
 	  "examples": "Exemplos|Cenários|Cenarios",
 	  "given": "*|Dado|Dada|Dados|Dadas",
 	  "when": "*|Quando",
