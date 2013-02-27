@@ -25,11 +25,11 @@ public class JSONFormatter implements Reporter, Formatter {
     private String uri;
 
     private enum Phase {step, match, result, embedding, output};
-    
+
     /**
      * In order to handle steps being added all at once, this method determines allows methods to
-     * opperator correctly if 
-     * 
+     * opperator correctly if
+     *
      * step
      * match
      * result
@@ -40,9 +40,9 @@ public class JSONFormatter implements Reporter, Formatter {
      * result
      * embedding
      * output
-     * 
-     * or if 
-     * 
+     *
+     * or if
+     *
      * step
      * step
      * match
@@ -53,9 +53,9 @@ public class JSONFormatter implements Reporter, Formatter {
      * result
      * embedding
      * output
-     * 
+     *
      * is called
-     * 
+     *
      * @return the correct step for the current operation based on past method calls to the formatter interface
      */
     private Map getCurrentStep(Phase phase){
@@ -76,8 +76,8 @@ public class JSONFormatter implements Reporter, Formatter {
     	}
     	return lastWithValue;
     }
-    
-    
+
+
     public JSONFormatter(Appendable out) {
         this.out = new NiceAppendable(out);
     }
@@ -162,6 +162,16 @@ public class JSONFormatter implements Reporter, Formatter {
         hookMap.put("match", match.toMap());
         hookMap.put("result", result.toMap());
         hooks.add(hookMap);
+    }
+
+    public void appendDuration(final int timestamp) {
+        final Map result = (Map) getCurrentStep(Phase.result).get("result");
+      	// check to make sure result exists (scenario outlines do not have results yet)
+      	if (result != null) {
+            //convert to nanoseconds
+            final long nanos = timestamp * 1000000000L;
+            result.put("duration", nanos);
+        }
     }
 
     @Override

@@ -26,6 +26,10 @@ public class TagExpression {
         return limits;
     }
 
+    public boolean isEmpty() {
+        return and.isEmpty();
+    }
+
     private void add(String[] tags) {
         Or or = new Or();
         for (String tag : tags) {
