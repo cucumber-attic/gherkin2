@@ -7,10 +7,14 @@ module Gherkin
     def tag(name)
       Formatter::Model::Tag.new(name, 0)
     end
-    
+
     context "no tags" do
       before(:each) do
         @e = Gherkin::TagExpression.new([])
+      end
+
+      it 'should be empty' do
+        @e.should be_empty
       end
 
       it "should match @foo" do
