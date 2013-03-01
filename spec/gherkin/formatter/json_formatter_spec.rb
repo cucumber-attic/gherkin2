@@ -25,7 +25,7 @@ module Gherkin
 
         f.eof
         f.done
-        
+
         expected = %{
           [
             {
@@ -85,7 +85,58 @@ module Gherkin
             }
           ]
         }
-        JSON.parse(expected).should == JSON.parse(io.string)
+        JSON.parse(io.string).should == JSON.parse(expected)
+      end
+
+      it 'supports append_duration' do
+        io = StringIO.new
+        f = JSONFormatter.new(io)
+        f.uri("f.feature")
+        f.feature(Model::Feature.new([], [], "Feature", "ff", "", 1, "ff"))
+        f.scenario(Model::Scenario.new([], [], "Scenario", "ss", "", 2, "ff/ss"))
+        f.step(Model::Step.new([], "Given ", "g", 3, nil, nil))
+        f.match(Model::Match.new([], "def.rb:33"))
+        f.result(Model::Result.new(:passed, 3, nil))
+        f.append_duration(1)
+        f.eof
+        f.done
+        expected = %{
+          [
+            {
+              "id": "ff",
+              "uri": "f.feature",
+              "keyword": "Feature",
+              "name": "ff",
+              "line": 1,
+              "description": "",
+              "elements": [
+                {
+                  "id": "ff/ss",
+                  "keyword": "Scenario",
+                  "name": "ss",
+                  "line": 2,
+                  "description": "",
+                  "type": "scenario",
+                  "steps": [
+                    {
+                      "keyword": "Given ",
+                      "name": "g",
+                      "line": 3,
+                      "match": {
+                        "location": "def.rb:33"
+                      },
+                      "result": {
+                        "status": "passed",
+                        "duration": 1000000000
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+        JSON.parse(io.string).should == JSON.parse(expected)
       end
     end
   end
