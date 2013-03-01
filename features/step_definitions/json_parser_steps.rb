@@ -1,6 +1,7 @@
 require 'stringio'
 require 'gherkin/formatter/pretty_formatter'
 require 'gherkin/json_parser'
+require 'multi_json'
 
 Given /^a PrettyFormatter$/ do
   @io = StringIO.new
@@ -12,7 +13,7 @@ Given /^a JSON lexer$/ do
 end
 
 Given /^the following JSON is parsed:$/ do |text|
-  @json_parser.parse(JSON.pretty_generate(JSON.parse(text)))
+  @json_parser.parse(MultiJson.dump(MultiJson.load(text), :pretty => true))
 end
 
 Then /^the outputted text should be:$/ do |expected_text|

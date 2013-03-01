@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   #
   # Repeat these step for cucumber (swap `cucumber` with `gherkin`).
   #
-  # When both are building OK, do a `bundle exec rake install` in both cucumber and gherkin projects, revert the changes in the first 2 steps 
+  # When both are building OK, do a `bundle exec rake install` in both cucumber and gherkin projects, revert the changes in the first 2 steps
   # and release both projects. Do this for both ruby 1.8.7, ruby 1.9.3 and jruby.
   #
   s.version     = "2.11.6"
@@ -36,11 +36,11 @@ Gem::Specification.new do |s|
   s.files -= Dir['lib/**/*.dll']
   s.files -= Dir['lib/**/*.bundle']
   s.files -= Dir['lib/**/*.so']
-  
+
   if ENV['GEM_PLATFORM']
     puts "GEM_PLATFORM:#{ENV['GEM_PLATFORM']}"
   end
-  s.platform = ENV['GEM_PLATFORM'] if ENV['GEM_PLATFORM'] 
+  s.platform = ENV['GEM_PLATFORM'] if ENV['GEM_PLATFORM']
   case s.platform.to_s
   when /java/
     s.files += Dir['lib/*.jar']
@@ -56,7 +56,7 @@ Gem::Specification.new do |s|
   end
   s.files -= Dir['**/.gitignore']
 
-  s.add_runtime_dependency('json', '>= 1.7.6')
+  s.add_runtime_dependency('multi_json', '~> 1.3')
 
   s.add_development_dependency('cucumber', '>= 1.2.1')
   s.add_development_dependency('rake', '>= 10.0.3')
