@@ -1,7 +1,8 @@
 require 'spec_helper'
-require 'stringio'
 require 'gherkin/formatter/json_formatter'
 require 'gherkin/formatter/model'
+require 'multi_json'
+require 'stringio'
 
 module Gherkin
   module Formatter
@@ -25,7 +26,7 @@ module Gherkin
 
         f.eof
         f.done
-        
+
         expected = %{
           [
             {
@@ -85,7 +86,7 @@ module Gherkin
             }
           ]
         }
-        JSON.parse(expected).should == JSON.parse(io.string)
+        MultiJson.load(expected).should == MultiJson.load(io.string)
       end
     end
   end

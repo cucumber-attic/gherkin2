@@ -136,7 +136,7 @@
     ]
   },
   {
-    "file_colon_line": "features/step_definitions/json_parser_steps.rb:5",
+    "file_colon_line": "features/step_definitions/json_parser_steps.rb:6",
     "flags": "",
     "source": "^a PrettyFormatter$",
     "steps": [
@@ -144,7 +144,7 @@
     ]
   },
   {
-    "file_colon_line": "features/step_definitions/json_parser_steps.rb:10",
+    "file_colon_line": "features/step_definitions/json_parser_steps.rb:11",
     "flags": "",
     "source": "^a JSON lexer$",
     "steps": [
@@ -152,7 +152,7 @@
     ]
   },
   {
-    "file_colon_line": "features/step_definitions/json_parser_steps.rb:14",
+    "file_colon_line": "features/step_definitions/json_parser_steps.rb:15",
     "flags": "",
     "source": "^the following JSON is parsed:$",
     "steps": [
@@ -165,7 +165,7 @@
     ]
   },
   {
-    "file_colon_line": "features/step_definitions/json_parser_steps.rb:18",
+    "file_colon_line": "features/step_definitions/json_parser_steps.rb:19",
     "flags": "",
     "source": "^the outputted text should be:$",
     "steps": [

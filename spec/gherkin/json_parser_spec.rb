@@ -3,9 +3,10 @@ require 'stringio'
 require 'spec_helper'
 require 'gherkin/json_parser'
 require 'gherkin/formatter/json_formatter'
+require 'multi_json'
 
 module Gherkin
-  describe JSONParser do 
+  describe JSONParser do
 
     def check_json(json)
       io = StringIO.new
@@ -13,8 +14,8 @@ module Gherkin
       p = JSONParser.new(f, f)
       p.parse(json)
       f.done
-      expected = JSON.parse(json)
-      actual   = JSON.parse(io.string)
+      expected = MultiJson.load(json)
+      actual   = MultiJson.load(io.string)
 
       begin
         actual.should == expected
@@ -34,10 +35,10 @@ module Gherkin
         {
           "id": "one",
           "uri": "test.feature",
-          "keyword": "Feature", 
-          "name": "One", 
-          "description": "", 
-          "line" : 3 
+          "keyword": "Feature",
+          "name": "One",
+          "description": "",
+          "line" : 3
         }
       ]})
     end
@@ -53,9 +54,9 @@ module Gherkin
               "line": 22
             }
           ],
-          "keyword": "Feature", 
-          "name": "One", 
-          "description": "", 
+          "keyword": "Feature",
+          "name": "One",
+          "description": "",
           "line": 3,
           "elements": [
             {
