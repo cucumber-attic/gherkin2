@@ -16,13 +16,13 @@ Given /^a JSON formatter$/ do
 end
 
 Then /^the outputted JSON should be:$/ do |expected_json|
-  require 'json'
+  require 'multi_json'
   @formatter.done
   actual_json = @out.string
   puts actual_json
-  puts JSON.pretty_generate(JSON.parse(actual_json))
-  expected = JSON.parse(expected_json)
-  actual   = JSON.parse(actual_json)
+  puts MultiJson.dump(MultiJson.load(actual_json), :pretty => true)
+  expected = MultiJson.load(expected_json)
+  actual   = MultiJson.load(actual_json)
   actual.should == expected
 end
 

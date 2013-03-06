@@ -1,8 +1,8 @@
-require 'json'
-require 'gherkin/formatter/model'
-require 'gherkin/formatter/argument'
-require 'gherkin/native'
 require 'base64'
+require 'gherkin/formatter/argument'
+require 'gherkin/formatter/model'
+require 'gherkin/native'
+require 'multi_json'
 
 module Gherkin
   class JSONParser
@@ -17,7 +17,7 @@ module Gherkin
     # Parse a gherkin object +o+, which can either be a JSON String,
     # or a Hash (from a parsed JSON String).
     def parse(o)
-      o = JSON.parse(o) if String === o
+      o = MultiJson.load(o) if String === o
 
       o.each do |f|
         @formatter.uri(f['uri'])

@@ -1,7 +1,8 @@
 require 'spec_helper'
-require 'stringio'
 require 'gherkin/formatter/json_formatter'
 require 'gherkin/formatter/model'
+require 'multi_json'
+require 'stringio'
 
 module Gherkin
   module Formatter
@@ -85,7 +86,7 @@ module Gherkin
             }
           ]
         }
-        JSON.parse(io.string).should == JSON.parse(expected)
+        MultiJson.load(expected).should == MultiJson.load(io.string)
       end
 
       it 'supports append_duration' do
@@ -136,7 +137,7 @@ module Gherkin
             }
           ]
         }
-        JSON.parse(io.string).should == JSON.parse(expected)
+        MultiJson.load(expected).should == MultiJson.load(io.string)
       end
     end
   end
