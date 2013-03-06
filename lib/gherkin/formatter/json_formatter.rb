@@ -1,4 +1,4 @@
-require 'json'
+require 'multi_json'
 require 'gherkin/formatter/model'
 require 'gherkin/native'
 require 'base64'
