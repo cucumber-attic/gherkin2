@@ -1,4 +1,4 @@
-require 'json'
+require 'multi_json'
 require 'gherkin/formatter/model'
 require 'gherkin/native'
 require 'base64'
@@ -9,9 +9,9 @@ module Gherkin
     # be turned into JSON.
     class JSONFormatter
       native_impl('gherkin')
-      
+
       include Base64
-      
+
       def initialize(io)
         raise "Must be writeable" unless io.respond_to?(:write)
         @io = io
@@ -20,7 +20,7 @@ module Gherkin
       end
 
       def done
-        @io.write(@feature_hashes.to_json)
+        @io.write(MultiJson.dump(@feature_hashes))
       end
 
       def uri(uri)
@@ -60,6 +60,17 @@ module Gherkin
 
       def result(result)
         @current_step_or_hook['result'] = result.to_hash
+      end
+
+      def append_duration(timestamp)
+      	#check to make sure result exists (scenario outlines do not have results yet)
+      	if !@current_step_or_hook['result'].nil?
+        	#convert to nanoseconds
+        	timestamp = timestamp * 1000000000
+        	rshash = @current_step_or_hook['result'].to_hash
+        	rshash['duration'] = timestamp.to_i
+        	@current_step_or_hook['result'] = rshash
+       	end
       end
 
       def before(match, result)

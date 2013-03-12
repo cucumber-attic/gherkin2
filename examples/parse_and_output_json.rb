@@ -1,7 +1,7 @@
 require 'gherkin/parser/parser'
 require 'gherkin/formatter/json_formatter'
 require 'stringio'
-require 'json'
+require 'multi_json'
 
 # This example reads a couple of features and outputs them as JSON.
 
@@ -16,4 +16,4 @@ sources.each do |s|
 end
 
 formatter.done
-puts JSON.pretty_generate(JSON.parse(io.string))
+puts MultiJson.dump(MultiJson.load(io.string), :pretty => true)

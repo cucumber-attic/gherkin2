@@ -1,7 +1,8 @@
 require 'spec_helper'
-require 'stringio'
 require 'gherkin/formatter/json_formatter'
 require 'gherkin/formatter/model'
+require 'multi_json'
+require 'stringio'
 
 module Gherkin
   module Formatter
@@ -25,7 +26,7 @@ module Gherkin
 
         f.eof
         f.done
-        
+
         expected = %{
           [
             {
@@ -85,7 +86,58 @@ module Gherkin
             }
           ]
         }
-        JSON.parse(expected).should == JSON.parse(io.string)
+        MultiJson.load(expected).should == MultiJson.load(io.string)
+      end
+
+      it 'supports append_duration' do
+        io = StringIO.new
+        f = JSONFormatter.new(io)
+        f.uri("f.feature")
+        f.feature(Model::Feature.new([], [], "Feature", "ff", "", 1, "ff"))
+        f.scenario(Model::Scenario.new([], [], "Scenario", "ss", "", 2, "ff/ss"))
+        f.step(Model::Step.new([], "Given ", "g", 3, nil, nil))
+        f.match(Model::Match.new([], "def.rb:33"))
+        f.result(Model::Result.new(:passed, 3, nil))
+        f.append_duration(1)
+        f.eof
+        f.done
+        expected = %{
+          [
+            {
+              "id": "ff",
+              "uri": "f.feature",
+              "keyword": "Feature",
+              "name": "ff",
+              "line": 1,
+              "description": "",
+              "elements": [
+                {
+                  "id": "ff/ss",
+                  "keyword": "Scenario",
+                  "name": "ss",
+                  "line": 2,
+                  "description": "",
+                  "type": "scenario",
+                  "steps": [
+                    {
+                      "keyword": "Given ",
+                      "name": "g",
+                      "line": 3,
+                      "match": {
+                        "location": "def.rb:33"
+                      },
+                      "result": {
+                        "status": "passed",
+                        "duration": 1000000000
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+        MultiJson.load(expected).should == MultiJson.load(io.string)
       end
     end
   end

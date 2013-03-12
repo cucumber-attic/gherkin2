@@ -54,7 +54,7 @@ The jar file is in the central Maven repo.
     <dependency>
         <groupId>info.cukes</groupId>
         <artifactId>gherkin</artifactId>
-        <version>2.11.5</version>
+        <version>2.11.6</version>
     </dependency>
 
 You can get it manually from [Maven Central](http://search.maven.org/#browse%7C-2073395818)
@@ -174,7 +174,7 @@ You must also download NuGet.exe from [CodePlex](http://nuget.codeplex.com/relea
 
 Now you can build the .NET dll with:
 
-	mkdir release
+    mkdir release
     rake ikvm
     rake release/nuspec/lib/gherkin.dll
 
@@ -184,7 +184,7 @@ This should build `release/nuspec/lib/gherkin.dll`
 
 In order to build Windows binaries (so we can release Windows gems from OS X/Linux) we first need to install MinGW:
 
-	./install_mingw_os_x.sh
+    ./install_mingw_os_x.sh
 
 Now, make sure you have openssl installed - it's needed to build the rubies.
 
@@ -194,6 +194,9 @@ Next, we're going to install Ruby 1.8.7 and Ruby 1.9.3 for MinGW. We need both v
 OS X Lion (or later) doesn't ship with an LLVM free gcc, which you will need in order to install ruby 1.8.7. We can install it with:
 
     brew install https://raw.github.com/Homebrew/homebrew-dupes/master/apple-gcc42.rb
+    export PATH=/usr/local/mingw/bin:$PATH
+    # Test that it's on your PATH
+    i686-w64-mingw32-gcc -v
 
 For more info see:
 
@@ -254,7 +257,7 @@ Now we can release:
   * History.md
 * Run `bundle update`, so Gemfile.lock gets updated with the changes.
 * Commit changes, otherwise you will get an error at the end when a tag is made.
-* Run `bundle exec rake gems:prepare && ./build_native_gems.sh && bundle exec rake release:ALL`
+* Run `i686-w64-mingw32-gcc -v && bundle exec rake gems:prepare && ./build_native_gems.sh && bundle exec rake release:ALL`
 
 ## Note on Patches/Pull Requests
  

@@ -4,6 +4,7 @@ require 'cucumber/rake/task'
 
 Cucumber::Rake::Task.new(:cucumber) do |t|
   profile = ENV['TRAVIS'] ? 'travis' : 'default'
+  profile = 'javascript' if ENV['GHERKIN_JS_NATIVE']
   t.cucumber_opts = "--profile #{profile}"
 end
 

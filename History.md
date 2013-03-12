@@ -1,11 +1,15 @@
-## In Git
+## [2.11.6](https://github.com/cucumber/gherkin/compare/v2.11.5...v2.11.6)
 
+* [JavaScript] Add duration value to json formatter ([#204](https://github.com/cucumber/gherkin/pull/204) Rick Beyer)
+* [JavaScript] Fix for JS Lexer ([#215](https://github.com/cucumber/gherkin/pull/215) Alexis Hevia)
+* [JavaScript] Failing JS Features ([#228](https://github.com/cucumber/gherkin/issues/228) Aslak Hellesøy)
 * [Core] Better Slovak ([#208](https://github.com/cucumber/gherkin/pull/208) Michal Kvasnicak)
 * [Core] New: Tatar ([#213](https://github.com/cucumber/gherkin/pull/213) Valeriy Utyaganov)
 * [Core] New: Telugu ([#218](https://github.com/cucumber/gherkin/pull/218) srinivasvedantam)
 * [Core] New: Hindi ([#222](https://github.com/cucumber/gherkin/pull/222) Kumar Harsh)
 * [Java] Fix JSON formatter ([#216](https://github.com/cucumber/gherkin/pull/216), [#195](https://github.com/cucumber/gherkin/pull/195) Joseph Hughes, Rex Hoffman)
 * [Ruby,Java] Gherkin does not seem to parse BOM when feature contains language specification. ([#211](https://github.com/cucumber/gherkin/issues/211), [#212](https://github.com/cucumber/gherkin/pull/212) Rob Westgeest)
+* [Java] Fixed a couple of build problems ([#226](https://github.com/cucumber/gherkin/pull/226), [#227](https://github.com/cucumber/gherkin/pull/227) signed)
 
 ## [2.11.5](https://github.com/cucumber/gherkin/compare/v2.11.4...v2.11.5)
 

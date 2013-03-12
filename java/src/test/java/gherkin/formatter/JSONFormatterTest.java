@@ -92,9 +92,7 @@ public class JSONFormatterTest {
         
         jsonFormatter.done();
         jsonFormatter.close();
-        System.out.println(stringBuilder.toString());
-        
-        
+
         Gson gson = new Gson();
         List result = gson.fromJson(stringBuilder.toString(), List.class);
 
