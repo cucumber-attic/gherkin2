@@ -153,6 +153,20 @@
 	  "and": "*|AN",
 	  "but": "*|BUT"
 	},
+	"en-old": {
+	  "name": "Old English",
+	  "native": "Englisc",
+	  "feature": "Hwaet|Hwæt",
+	  "background": "Aer|Ær",
+	  "scenario": "Swa",
+	  "scenario_outline": "Swa hwaer swa|Swa hwær swa",
+	  "examples": "Se the|Se þe|Se ðe",
+	  "given": "*|Thurh|Þurh|Ðurh",
+	  "when": "*|Tha|Þa|Ða",
+	  "then": "*|Tha|Þa|Ða|Tha the|Þa þe|Ða ðe",
+	  "and": "*|Ond|7",
+	  "but": "*|Ac"
+	},
 	"en-pirate": {
 	  "name": "Pirate",
 	  "native": "Pirate",
