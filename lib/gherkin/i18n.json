@@ -125,6 +125,20 @@
 	  "and": "*|Und",
 	  "but": "*|Aber"
 	},
+    "el": {
+        "name": "Greek",
+        "native": "Ελληνικά",
+        "feature": "Δυνατότητα|Λειτουργία",
+        "background": "Υπόβαθρο",
+        "scenario": "Σενάριο",
+        "scenario_outline": "Περιγραφή Σεναρίου",
+        "examples": "Παραδείγματα|Σενάρια",
+        "given": "*|Δεδομένου|Δεδομένου ότι",
+        "when": "*|Όταν",
+        "then": "*|Τότε",
+        "and": "*|Και",
+        "but": "*|Αλλά"
+    },
 	"en-au": {
 	  "name": "Australian",
 	  "native": "Australian",
