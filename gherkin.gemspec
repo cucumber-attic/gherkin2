@@ -53,6 +53,7 @@ Gem::Specification.new do |s|
     s.files += Dir['ext/**/*.c']
     s.extensions = Dir['ext/**/extconf.rb']
     s.add_development_dependency('rake-compiler', '>= 0.8.2')
+    s.add_development_dependency('json', '~> 1.7')
   end
   s.files -= Dir['**/.gitignore']
 
