@@ -1,1 +1,244 @@
-[{"steps":[{"args":[],"name":"they have arrived"}],"source":"^they have arrived$","file_colon_line":"features/step_definitions/eyeball_steps.rb:1","flags":""},{"steps":[],"source":"^a \"(ruby|native)\" \"([^\\\"]*)\" parser$","file_colon_line":"features/step_definitions/gherkin_steps.rb:1","flags":""},{"steps":[{"args":[],"name":"the following text is parsed:"}],"source":"^the\\ following\\ text\\ is\\ parsed:$","file_colon_line":"features/step_definitions/gherkin_steps.rb:5","flags":""},{"steps":[{"args":[],"name":"there should be no parse errors"}],"source":"^there\\ should\\ be\\ no\\ parse\\ errors$","file_colon_line":"features/step_definitions/gherkin_steps.rb:9","flags":""},{"steps":[{"args":[{"offset":33,"val":"line 1"}],"name":"there should be a parse error on line 1"}],"source":"^there should be a parse error on (line \\d+)$","file_colon_line":"features/step_definitions/gherkin_steps.rb:13","flags":""},{"steps":[{"args":[{"offset":32,"val":"lines 1 and 2"}],"name":"there should be parse errors on lines 1 and 2"},{"args":[{"offset":32,"val":"lines 1 through 3"}],"name":"there should be parse errors on lines 1 through 3"},{"args":[{"offset":32,"val":"lines 10 and 17"}],"name":"there should be parse errors on lines 10 and 17"},{"args":[{"offset":32,"val":"lines 3 and 5"}],"name":"there should be parse errors on lines 3 and 5"},{"args":[{"offset":32,"val":"lines 5, 10 and 12"}],"name":"there should be parse errors on lines 5, 10 and 12"}],"source":"^there should be parse errors on (lines .*)$","file_colon_line":"features/step_definitions/gherkin_steps.rb:17","flags":""},{"steps":[],"source":"^a JSON formatter$","file_colon_line":"features/step_definitions/json_formatter_steps.rb:13","flags":""},{"steps":[{"args":[],"name":"the outputted JSON should be:"}],"source":"^the outputted JSON should be:$","file_colon_line":"features/step_definitions/json_formatter_steps.rb:18","flags":""},{"steps":[],"source":"^a PrettyFormatter$","file_colon_line":"features/step_definitions/json_parser_steps.rb:6","flags":""},{"steps":[],"source":"^a JSON lexer$","file_colon_line":"features/step_definitions/json_parser_steps.rb:11","flags":""},{"steps":[{"args":[],"name":"the following JSON is parsed:"}],"source":"^the following JSON is parsed:$","file_colon_line":"features/step_definitions/json_parser_steps.rb:15","flags":""},{"steps":[{"args":[],"name":"the outputted text should be:"}],"source":"^the outputted text should be:$","file_colon_line":"features/step_definitions/json_parser_steps.rb:19","flags":""},{"steps":[{"args":[],"name":"I have Cucumber's source code next to Gherkin's"}],"source":"^I have Cucumber's source code next to Gherkin's$","file_colon_line":"features/step_definitions/pretty_formatter_steps.rb:50","flags":""},{"steps":[{"args":[],"name":"I find all of the .feature files"}],"source":"^I find all of the \\.feature files$","file_colon_line":"features/step_definitions/pretty_formatter_steps.rb:55","flags":""},{"steps":[{"args":[{"offset":45,"val":"json"}],"name":"I send each prettified original through the \"json\" machinery"},{"args":[{"offset":45,"val":"pretty"}],"name":"I send each prettified original through the \"pretty\" machinery"}],"source":"^I send each prettified original through the \"([^\"]*)\" machinery$","file_colon_line":"features/step_definitions/pretty_formatter_steps.rb:59","flags":""},{"steps":[{"args":[],"name":"the machinery output should be identical to the prettified original"}],"source":"^the machinery output should be identical to the prettified original$","file_colon_line":"features/step_definitions/pretty_formatter_steps.rb:83","flags":""}]
+[
+  {
+    "source": "^they have arrived$",
+    "flags": "",
+    "file_colon_line": "features/step_definitions/eyeball_steps.rb:1",
+    "steps": [
+      {
+        "name": "they have arrived",
+        "args": [
+
+        ]
+      }
+    ]
+  },
+  {
+    "source": "^a \"(ruby|native)\" \"([^\\\"]*)\" parser$",
+    "flags": "",
+    "file_colon_line": "features/step_definitions/gherkin_steps.rb:1",
+    "steps": [
+
+    ]
+  },
+  {
+    "source": "^the\\ following\\ text\\ is\\ parsed:$",
+    "flags": "",
+    "file_colon_line": "features/step_definitions/gherkin_steps.rb:5",
+    "steps": [
+      {
+        "name": "the following text is parsed:",
+        "args": [
+
+        ]
+      }
+    ]
+  },
+  {
+    "source": "^there\\ should\\ be\\ no\\ parse\\ errors$",
+    "flags": "",
+    "file_colon_line": "features/step_definitions/gherkin_steps.rb:9",
+    "steps": [
+      {
+        "name": "there should be no parse errors",
+        "args": [
+
+        ]
+      }
+    ]
+  },
+  {
+    "source": "^there should be a parse error on (line \\d+)$",
+    "flags": "",
+    "file_colon_line": "features/step_definitions/gherkin_steps.rb:13",
+    "steps": [
+      {
+        "name": "there should be a parse error on line 1",
+        "args": [
+          {
+            "offset": 33,
+            "val": "line 1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "source": "^there should be parse errors on (lines .*)$",
+    "flags": "",
+    "file_colon_line": "features/step_definitions/gherkin_steps.rb:17",
+    "steps": [
+      {
+        "name": "there should be parse errors on lines 1 and 2",
+        "args": [
+          {
+            "offset": 32,
+            "val": "lines 1 and 2"
+          }
+        ]
+      },
+      {
+        "name": "there should be parse errors on lines 1 through 3",
+        "args": [
+          {
+            "offset": 32,
+            "val": "lines 1 through 3"
+          }
+        ]
+      },
+      {
+        "name": "there should be parse errors on lines 10 and 17",
+        "args": [
+          {
+            "offset": 32,
+            "val": "lines 10 and 17"
+          }
+        ]
+      },
+      {
+        "name": "there should be parse errors on lines 3 and 5",
+        "args": [
+          {
+            "offset": 32,
+            "val": "lines 3 and 5"
+          }
+        ]
+      },
+      {
+        "name": "there should be parse errors on lines 5, 10 and 12",
+        "args": [
+          {
+            "offset": 32,
+            "val": "lines 5, 10 and 12"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "source": "^a JSON formatter$",
+    "flags": "",
+    "file_colon_line": "features/step_definitions/json_formatter_steps.rb:13",
+    "steps": [
+
+    ]
+  },
+  {
+    "source": "^the outputted JSON should be:$",
+    "flags": "",
+    "file_colon_line": "features/step_definitions/json_formatter_steps.rb:18",
+    "steps": [
+      {
+        "name": "the outputted JSON should be:",
+        "args": [
+
+        ]
+      }
+    ]
+  },
+  {
+    "source": "^a PrettyFormatter$",
+    "flags": "",
+    "file_colon_line": "features/step_definitions/json_parser_steps.rb:6",
+    "steps": [
+
+    ]
+  },
+  {
+    "source": "^a JSON lexer$",
+    "flags": "",
+    "file_colon_line": "features/step_definitions/json_parser_steps.rb:11",
+    "steps": [
+
+    ]
+  },
+  {
+    "source": "^the following JSON is parsed:$",
+    "flags": "",
+    "file_colon_line": "features/step_definitions/json_parser_steps.rb:15",
+    "steps": [
+      {
+        "name": "the following JSON is parsed:",
+        "args": [
+
+        ]
+      }
+    ]
+  },
+  {
+    "source": "^the outputted text should be:$",
+    "flags": "",
+    "file_colon_line": "features/step_definitions/json_parser_steps.rb:19",
+    "steps": [
+      {
+        "name": "the outputted text should be:",
+        "args": [
+
+        ]
+      }
+    ]
+  },
+  {
+    "source": "^I have Cucumber's source code next to Gherkin's$",
+    "flags": "",
+    "file_colon_line": "features/step_definitions/pretty_formatter_steps.rb:50",
+    "steps": [
+      {
+        "name": "I have Cucumber's source code next to Gherkin's",
+        "args": [
+
+        ]
+      }
+    ]
+  },
+  {
+    "source": "^I find all of the \\.feature files$",
+    "flags": "",
+    "file_colon_line": "features/step_definitions/pretty_formatter_steps.rb:55",
+    "steps": [
+      {
+        "name": "I find all of the .feature files",
+        "args": [
+
+        ]
+      }
+    ]
+  },
+  {
+    "source": "^I send each prettified original through the \"([^\"]*)\" machinery$",
+    "flags": "",
+    "file_colon_line": "features/step_definitions/pretty_formatter_steps.rb:59",
+    "steps": [
+      {
+        "name": "I send each prettified original through the \"json\" machinery",
+        "args": [
+          {
+            "offset": 45,
+            "val": "json"
+          }
+        ]
+      },
+      {
+        "name": "I send each prettified original through the \"pretty\" machinery",
+        "args": [
+          {
+            "offset": 45,
+            "val": "pretty"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "source": "^the machinery output should be identical to the prettified original$",
+    "flags": "",
+    "file_colon_line": "features/step_definitions/pretty_formatter_steps.rb:83",
+    "steps": [
+      {
+        "name": "the machinery output should be identical to the prettified original",
+        "args": [
+
+        ]
+      }
+    ]
+  }
+]
