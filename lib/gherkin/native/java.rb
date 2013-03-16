@@ -42,6 +42,10 @@ class Class
           arg.map{|a| javaify(a)}
         else
           case(arg)
+          when Hash
+            h = {}
+            arg.each_pair {|k, v| h[javaify(k)] = javaify(v) }
+            h
           when Regexp
             java.util.regex.Pattern.compile(arg.source)
           when Symbol
