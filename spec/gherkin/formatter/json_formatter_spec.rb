@@ -89,6 +89,23 @@ module Gherkin
         MultiJson.load(expected).should == MultiJson.load(io.string)
       end
 
+      it "pretty prints results" do
+        io = StringIO.new
+        f = JSONFormatter.new(io, :pretty => true)
+        # f.uri("f.feature")
+        f.feature(Model::Feature.new([], [], "Feature", nil, nil, nil, nil))
+        f.eof
+        f.done
+
+        expected = %{[
+  {
+    "keyword": "Feature",
+    "uri": null
+  }
+]}
+        io.string.should == expected
+      end
+
       it 'supports append_duration' do
         io = StringIO.new
         f = JSONFormatter.new(io)
