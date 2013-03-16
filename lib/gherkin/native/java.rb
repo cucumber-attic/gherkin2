@@ -32,7 +32,7 @@ class Class
           e.message << "\n#{java_class.name}"
           raise e
         rescue NameError => e
-          e.message << "\n args: #{args.inspect}" 
+          e.message << "\n args: #{args.inspect}"
           raise e
         end
       end
@@ -46,7 +46,7 @@ class Class
             java.util.regex.Pattern.compile(arg.source)
           when Symbol
             arg.to_s
-          when IO
+          when IO, StringIO
             IOWriter.new(arg)
           else
             arg
