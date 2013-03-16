@@ -175,6 +175,7 @@ module Gherkin
       | cy-GB     | Welsh               | Cymraeg           |
       | da        | Danish              | dansk             |
       | de        | German              | Deutsch           |
+      | el        | Greek               | Ελληνικά          |
       | en        | English             | English           |
       | en-Scouse | Scouse              | Scouse            |
       | en-au     | Australian          | Australian        |
