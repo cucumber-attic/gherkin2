@@ -13,6 +13,7 @@ import gherkin.formatter.model.ScenarioOutline;
 import gherkin.formatter.model.Step;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class JSONFormatter implements Reporter, Formatter {
     private final List<Map<String, Object>> featureMaps = new ArrayList<Map<String, Object>>();
     private final NiceAppendable out;
+    private final boolean isPretty;
 
     private Map<String, Object> featureMap;
     private String uri;
@@ -77,9 +79,13 @@ public class JSONFormatter implements Reporter, Formatter {
     	return lastWithValue;
     }
 
-
     public JSONFormatter(Appendable out) {
+        this(out, Collections.emptyMap());
+    }
+
+    public JSONFormatter(Appendable out, Map options) {
         this.out = new NiceAppendable(out);
+        this.isPretty = options.containsKey("pretty") && (Boolean) options.get("pretty");
     }
 
     @Override
@@ -246,6 +252,10 @@ public class JSONFormatter implements Reporter, Formatter {
     }
 
     protected Gson gson() {
-        return new GsonBuilder().create();
+        final GsonBuilder gb = new GsonBuilder().serializeNulls();
+        if (isPretty) {
+            gb.setPrettyPrinting();
+        }
+        return gb.create();
     }
 }
