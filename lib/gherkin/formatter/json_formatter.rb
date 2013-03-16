@@ -12,15 +12,16 @@ module Gherkin
 
       include Base64
 
-      def initialize(io)
+      def initialize(io, options = {})
         raise "Must be writeable" unless io.respond_to?(:write)
         @io = io
+        @dump_options = options
         @feature_hashes = []
         @current_step_or_hook = nil
       end
 
       def done
-        @io.write(MultiJson.dump(@feature_hashes))
+        @io.write(MultiJson.dump(@feature_hashes, dump_options))
       end
 
       def uri(uri)
@@ -126,6 +127,10 @@ module Gherkin
       def encode64s(data)
         # Strip newlines
         Base64.encode64(data).gsub(/\n/, '')
+      end
+
+      def dump_options
+        @dump_options
       end
     end
   end
