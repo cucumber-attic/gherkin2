@@ -1,11 +1,12 @@
 ## [Git master](https://github.com/cucumber/gherkin/compare/v2.11.6...master)
 
 * JSONFormatter outputs prettyfied json (Oleg Sukhodolsky)
-* [Java, JRuby] JSONFormatter.appendDuration(), TagExpression.isEmpty()  added to match ruby versions ([#234](https://github.com/cucumber/gherkin/issues/234)Oleg Sukhodolsky)
+* [Java, JRuby] JSONFormatter.appendDuration(), TagExpression.isEmpty()  added to match ruby versions ([#234](https://github.com/cucumber/gherkin/issues/234) Oleg Sukhodolsky)
+* [Core] New: Greek ([#237](https://github.com/cucumber/gherkin/issues/237), [#244](https://github.com/cucumber/gherkin/issues/244) Konstantinos Rousis)
 * [Core] New: Old English (Englisc) added ([#240](https://github.com/cucumber/gherkin/issues/240), [#241](https://github.com/cucumber/gherkin/issues/241) Sean Miller)
 * [JRuby] fixed problem with passing StringIO to PrettyFormatter (Oleg Sukhodolsky)
 * [Ruby] MultiJson is used insted of JSon ([#235](https://github.com/cucumber/gherkin/issues/235) Erik Michaels-Ober)
-* [Ruby] TagExpression.eval() deprecated, TagExpression.evaluate() added to replace it. ([#238](https://github.com/cucumber/gherkin/issues/238)Oleg Sukhodolsky)
+* [Ruby] TagExpression.eval() deprecated, TagExpression.evaluate() added to replace it. ([#238](https://github.com/cucumber/gherkin/issues/238) Oleg Sukhodolsky)
 
 ## [2.11.6](https://github.com/cucumber/gherkin/compare/v2.11.5...v2.11.6)
 
