@@ -18,11 +18,11 @@ module Gherkin
       end
 
       it "should match @foo" do
-        @e.eval([tag('@foo')]).should == true
+        @e.evaluate([tag('@foo')]).should == true
       end
 
       it "should match empty tags" do
-        @e.eval([]).should == true
+        @e.evaluate([]).should == true
       end
     end
 
@@ -32,15 +32,15 @@ module Gherkin
       end
 
       it "should match @foo" do
-        @e.eval([tag('@foo')]).should == true
+        @e.evaluate([tag('@foo')]).should == true
       end
 
       it "should not match @bar" do
-        @e.eval([tag('@bar')]).should == false
+        @e.evaluate([tag('@bar')]).should == false
       end
 
       it "should not match no tags" do
-        @e.eval([]).should == false
+        @e.evaluate([]).should == false
       end
     end
 
@@ -50,11 +50,11 @@ module Gherkin
       end
 
       it "should match @bar" do
-        @e.eval([tag('@bar')]).should == true
+        @e.evaluate([tag('@bar')]).should == true
       end
 
       it "should not match @foo" do
-        @e.eval([tag('@foo')]).should == false
+        @e.evaluate([tag('@foo')]).should == false
       end
     end
 
@@ -64,15 +64,15 @@ module Gherkin
       end
 
       it "should match @foo" do
-        @e.eval([tag('@foo')]).should == true
+        @e.evaluate([tag('@foo')]).should == true
       end
 
       it "should match @bar" do
-        @e.eval([tag('@bar')]).should == true
+        @e.evaluate([tag('@bar')]).should == true
       end
 
       it "should not match @zap" do
-        @e.eval([tag('@zap')]).should == false
+        @e.evaluate([tag('@zap')]).should == false
       end
     end
 
@@ -82,11 +82,11 @@ module Gherkin
       end
 
       it "should match @foo" do
-        @e.eval([tag('@foo')]).should == true
+        @e.evaluate([tag('@foo')]).should == true
       end
 
       it "should not match @foo @zap" do
-        @e.eval([tag('@foo'), tag('@zap')]).should == false
+        @e.evaluate([tag('@foo'), tag('@zap')]).should == false
       end
     end
 
@@ -100,7 +100,7 @@ module Gherkin
       end
 
       it "should match @foo @zap" do
-        @e.eval([tag('@foo'), tag('@zap')]).should == true
+        @e.evaluate([tag('@foo'), tag('@zap')]).should == true
       end
     end
 

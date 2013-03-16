@@ -15,7 +15,7 @@ public class TagFilter implements Filter {
     }
 
     public boolean eval(List<Tag> tags, List<String> names, List<Range> ranges) {
-        return tagExpression.eval(tags);
+        return tagExpression.evaluate(tags);
     }
 
     public List<ExamplesTableRow> filterTableBodyRows(List<ExamplesTableRow> examplesRows) {
