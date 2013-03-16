@@ -1,3 +1,11 @@
+## [Git master](https://github.com/cucumber/gherkin/compare/v2.11.6...master)
+
+* JSONFormatter outputs prettyfied json (Oleg Sukhodolsky)
+* [Java, JRuby] JSONFormatter.appendDuration(), TagExpression.isEmpty()  added to match ruby versions ([#234](https://github.com/cucumber/gherkin/issues/234)Oleg Sukhodolsky)
+* [Core] New: Old English (Englisc) added ([#240](https://github.com/cucumber/gherkin/issues/240), [#241](https://github.com/cucumber/gherkin/issues/241) Sean Miller)
+* [JRuby] fixed problem with passing StringIO to PrettyFormatter (Oleg Sukhodolsky)
+* [Ruby] MultiJson is used insted of JSon ([#235](https://github.com/cucumber/gherkin/issues/235) Erik Michaels-Ober)
+
 ## [2.11.6](https://github.com/cucumber/gherkin/compare/v2.11.5...v2.11.6)
 
 * [JavaScript] Add duration value to json formatter ([#204](https://github.com/cucumber/gherkin/pull/204) Rick Beyer)
