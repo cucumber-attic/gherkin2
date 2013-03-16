@@ -20,7 +20,7 @@ module Gherkin
       end
 
       def done
-        @io.write(MultiJson.dump(@feature_hashes))
+        @io.write(MultiJson.dump(@feature_hashes, :pretty => true))
       end
 
       def uri(uri)
