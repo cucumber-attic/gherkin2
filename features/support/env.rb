@@ -13,7 +13,6 @@ Bundler.setup
 end
 require 'gherkin'
 require 'gherkin/sexp_recorder'
-require 'gherkin/output_stream_string_io'
 
 module TransformHelpers
   def tr_line_number(step_arg)
@@ -31,12 +30,12 @@ end
 
 class GherkinWorld
   include TransformHelpers
-  
+
   def initialize
     @formatter = Gherkin::SexpRecorder.new
   end
 end
 
-World do 
+World do
   GherkinWorld.new
 end
