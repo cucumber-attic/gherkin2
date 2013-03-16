@@ -5,6 +5,7 @@
 * [Core] New: Old English (Englisc) added ([#240](https://github.com/cucumber/gherkin/issues/240), [#241](https://github.com/cucumber/gherkin/issues/241) Sean Miller)
 * [JRuby] fixed problem with passing StringIO to PrettyFormatter (Oleg Sukhodolsky)
 * [Ruby] MultiJson is used insted of JSon ([#235](https://github.com/cucumber/gherkin/issues/235) Erik Michaels-Ober)
+* [Ruby] TagExpression.eval() deprecated, TagExpression.evaluate() added to replace it. ([#238](https://github.com/cucumber/gherkin/issues/238)Oleg Sukhodolsky)
 
 ## [2.11.6](https://github.com/cucumber/gherkin/compare/v2.11.5...v2.11.6)
 
