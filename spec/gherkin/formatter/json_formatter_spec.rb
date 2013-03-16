@@ -97,13 +97,15 @@ module Gherkin
         f.eof
         f.done
 
-        expected = %{[
-  {
-    "keyword": "Feature",
-    "uri": null
-  }
-]}
-        io.string.should == expected
+        expected = %{
+          [
+            {
+              "keyword": "Feature",
+              "uri": null
+            }
+          ]
+        }
+        io.string.should == MultiJson.dump(MultiJson.load(expected), :pretty => true)
       end
 
       it 'supports append_duration' do
