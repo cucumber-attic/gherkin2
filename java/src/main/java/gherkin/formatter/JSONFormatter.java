@@ -23,7 +23,7 @@ public class JSONFormatter implements Reporter, Formatter {
 
     private Map<String, Object> featureMap;
     private String uri;
-    private List<Map> beforeHooks = new ArrayList<Map>(); 
+    private List<Map> beforeHooks = new ArrayList<Map>();
 
     private enum Phase {step, match, result, embedding, output};
 
@@ -59,23 +59,23 @@ public class JSONFormatter implements Reporter, Formatter {
      *
      * @return the correct step for the current operation based on past method calls to the formatter interface
      */
-    private Map getCurrentStep(Phase phase){
-    	String target = phase.ordinal() <= Phase.match.ordinal()?Phase.match.name():Phase.result.name();
+    private Map getCurrentStep(Phase phase) {
+        String target = phase.ordinal() <= Phase.match.ordinal()?Phase.match.name():Phase.result.name();
         boolean lastWith = false;
         lastWith = (phase.ordinal() > Phase.result.ordinal());
         Map lastWithValue = null;
-    	for (Map stepOrHook : getSteps()){
-    		if (stepOrHook.get(target) == null){
-    			if (lastWith){
-       			    return lastWithValue;
-    			} else {
-    				return stepOrHook;
-    			}
-    		} else {
-    			lastWithValue = stepOrHook;
-    		}
-    	}
-    	return lastWithValue;
+        for (Map stepOrHook : getSteps()) {
+            if (stepOrHook.get(target) == null) {
+                if (lastWith) {
+                    return lastWithValue;
+                } else {
+                    return stepOrHook;
+                }
+            } else {
+                lastWithValue = stepOrHook;
+            }
+        }
+        return lastWithValue;
     }
 
 
@@ -103,9 +103,9 @@ public class JSONFormatter implements Reporter, Formatter {
     @Override
     public void scenario(Scenario scenario) {
         getFeatureElements().add(scenario.toMap());
-        if(beforeHooks.size()>0){
-        	getFeatureElement().put("before", beforeHooks);
-        	beforeHooks=new ArrayList<Map>();
+        if (beforeHooks.size() > 0) {
+            getFeatureElement().put("before", beforeHooks);
+            beforeHooks = new ArrayList<Map>();
         }
     }
 
@@ -126,7 +126,7 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void match(Match match) {
-    	getCurrentStep(Phase.match).put("match", match.toMap());
+        getCurrentStep(Phase.match).put("match", match.toMap());
     }
 
     @Override
@@ -144,12 +144,16 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void result(Result result) {
-    	getCurrentStep(Phase.result).put("result", result.toMap());
+        getCurrentStep(Phase.result).put("result", result.toMap());
     }
 
     @Override
     public void before(Match match, Result result) {
-        addBeforeHook(match, result);
+        if (getFeatureElement() == null) {
+            beforeHooks.add(buildHookMap(match,result));
+        } else {
+            addHook(match, result, "before");
+        }
     }
 
     @Override
@@ -158,7 +162,6 @@ public class JSONFormatter implements Reporter, Formatter {
     }
 
     private void addHook(final Match match, final Result result, final String hook) {
-    	
         List<Map> hooks = getFeatureElement().get(hook);
         if (hooks == null) {
             hooks = new ArrayList<Map>();
@@ -166,28 +169,18 @@ public class JSONFormatter implements Reporter, Formatter {
         }
         hooks.add(buildHookMap(match,result));
     }
-    
-    private void addBeforeHook(final Match match, final Result result){
-    	if(getFeatureElement()==null){ 		
-    		beforeHooks.add(buildHookMap(match,result));
-    	}
-    	else{
-    		addHook(match, result, "before");
-    	}
-        
-    }
-    
-    private Map buildHookMap(final Match match, final Result result){
-    	Map hookMap = new HashMap();
-    	hookMap.put("match", match.toMap());
+
+    private Map buildHookMap(final Match match, final Result result) {
+        final Map hookMap = new HashMap();
+        hookMap.put("match", match.toMap());
         hookMap.put("result", result.toMap());
         return hookMap;
     }
 
     public void appendDuration(final int timestamp) {
         final Map result = (Map) getCurrentStep(Phase.result).get("result");
-      	// check to make sure result exists (scenario outlines do not have results yet)
-      	if (result != null) {
+        // check to make sure result exists (scenario outlines do not have results yet)
+        if (result != null) {
             //convert to nanoseconds
             final long nanos = timestamp * 1000000000L;
             result.put("duration", nanos);
@@ -226,12 +219,11 @@ public class JSONFormatter implements Reporter, Formatter {
     }
 
     private Map<Object, List<Map>> getFeatureElement() {
-    	if(getFeatureElements().size()>0){
-    		return (Map) getFeatureElements().get(getFeatureElements().size() - 1);
-    	}
-    	else{
-    		return null;
-    	}
+        if (getFeatureElements().size() > 0) {
+            return (Map) getFeatureElements().get(getFeatureElements().size() - 1);
+        } else {
+            return null;
+        }
     }
 
     private List<Map> getAllExamples() {
