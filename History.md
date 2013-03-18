@@ -1,7 +1,8 @@
 ## [Git master](https://github.com/cucumber/gherkin/compare/v2.11.6...master)
 
-* JSONFormatter outputs prettyfied json (Oleg Sukhodolsky)
-* [Java, JRuby] JSONFormatter.appendDuration(), TagExpression.isEmpty()  added to match ruby versions ([#234](https://github.com/cucumber/gherkin/issues/234) Oleg Sukhodolsky)
+* [Java, JRuby] Fix ArrayOutOfBoundException in JSONFormatter ([#239](https://github.com/cucumber/gherkin/issues/239) Joseph Hughes)
+* [Java, Ruby] JSONFormatter outputs prettyfied json (Oleg Sukhodolsky)
+* [Java, JRuby] JSONFormatter.appendDuration(), TagExpression.isEmpty() added to match ruby versions ([#234](https://github.com/cucumber/gherkin/issues/234) Oleg Sukhodolsky)
 * [Core] New: Greek ([#237](https://github.com/cucumber/gherkin/issues/237), [#244](https://github.com/cucumber/gherkin/issues/244) Konstantinos Rousis)
 * [Core] New: Old English (Englisc) added ([#240](https://github.com/cucumber/gherkin/issues/240), [#241](https://github.com/cucumber/gherkin/issues/241) Sean Miller)
 * [JRuby] fixed problem with passing StringIO to PrettyFormatter (Oleg Sukhodolsky)
