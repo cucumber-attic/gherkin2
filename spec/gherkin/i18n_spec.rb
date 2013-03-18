@@ -76,9 +76,9 @@ module Gherkin
         ]
       end
 
-      it "should recognize keywords in Portuguese (1st variant)" do
+      it "should recognize keywords in Portuguese" do
         lexer = Gherkin::Lexer::I18nLexer.new(@listener, false)
-        scan_file(lexer, "i18n_pt1.feature")
+        scan_file(lexer, "i18n_pt.feature")
         @listener.to_sexp.should == [
           [:comment, "# language: pt", 1],
           [:feature, "Funcionalidade", "Reconhece \"Funcionalidade\"", "", 2],
@@ -103,49 +103,16 @@ module Gherkin
           [:examples, "Cenários", "Reconhece \"Cenários\" com acento", "", 28],
           [:row, ["Valor"], 29],
           [:row, ["1"], 30],
-          [:scenario_outline, "Delineação do Cenário", "Reconhece \"Delineação do Cenário\" com acento", "", 32],
+          [:scenario_outline, "Delinear o Cenário", "Reconhece \"Delinear o Cenário\" com acento", "", 32],
           [:step, "Dado ", "que <Valor> é um valor;", 33],
           [:examples, "Cenarios", "Reconhece \"Cenários\" sem acento", "", 35],
           [:row, ["Valor"], 36],
           [:row, ["1"], 37],
-          [:scenario_outline, "Delineacao do Cenario", "Reconhece \"Delineação do Cenário\" sem acento", "", 39],
+          [:scenario_outline, "Delinear o Cenario", "Reconhece \"Delinear o Cenário\" sem acento", "", 39],
           [:step, "Dado ", "que <Valor> é um valor;", 40],
           [:examples, "Exemplos", "Reconhece \"Exemplos\"", "", 42],
           [:row, ["Valor"], 43],
           [:row, ["1"], 44],
-          [:eof]
-        ]
-      end
-
-      it "should recognize keywords in Portuguese (2nd variant)" do
-        lexer = Gherkin::Lexer::I18nLexer.new(@listener, false)
-        scan_file(lexer, "i18n_pt2.feature")
-        @listener.to_sexp.should == [
-          [:comment, "# language: pt", 1],
-          [:feature, "Característica", "Reconhece \"Característica\" com acento", "", 2],
-          [:background, "Cenário de Fundo", "Reconhece \"Cenário de Fundo\" com acento", "", 4],
-          [:eof]
-        ]
-      end
-
-      it "should recognize keywords in Portuguese (3rd variant)" do
-        lexer = Gherkin::Lexer::I18nLexer.new(@listener, false)
-        scan_file(lexer, "i18n_pt3.feature")
-        @listener.to_sexp.should == [
-          [:comment, "# language: pt", 1],
-          [:feature, "Caracteristica", "Reconhece \"Característica\" sem acento", "", 2],
-          [:background, "Cenario de Fundo", "Reconhece \"Cenário de Fundo\" sem acento", "", 4],
-          [:eof]
-        ]
-      end
-
-      it "should recognize keywords in Portuguese (4th variant)" do
-        lexer = Gherkin::Lexer::I18nLexer.new(@listener, false)
-        scan_file(lexer, "i18n_pt4.feature")
-        @listener.to_sexp.should == [
-          [:comment, "# language: pt", 1],
-          [:feature, "Característica", "Reconhece \"Característica\" com acento", "", 2],
-          [:background, "Fundo", "Reconhece \"Fundo\"", "", 4],
           [:eof]
         ]
       end
