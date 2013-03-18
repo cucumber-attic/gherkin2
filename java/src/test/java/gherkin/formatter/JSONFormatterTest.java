@@ -68,9 +68,11 @@ public class JSONFormatterTest {
     public void testOrderingOfCalls() {
         StringBuilder stringBuilder = new StringBuilder();
         JSONFormatter jsonFormatter = new JSONPrettyFormatter(stringBuilder);
-
+        
         Feature feature = new Feature(new ArrayList<Comment>(), new ArrayList<Tag>(), "", "Test Feature", "", 12, "");
         jsonFormatter.feature(feature);
+        
+        jsonFormatter.before(new Match(null, null), new Result("passed", 565L, ""));
         Scenario scenario = new Scenario(new ArrayList<Comment>(), new ArrayList<Tag>(), "", "Test Scenario", "", 13, "");
         jsonFormatter.scenario(scenario);
         
