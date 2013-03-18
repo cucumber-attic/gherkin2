@@ -76,73 +76,67 @@ public class PrettyFormatterTest {
     public void shouldFormatAsDesigned() throws IOException {
 
         StringBuilder featureBuilder = new StringBuilder();
-        featureBuilder.append("# language: pt\n");
-        featureBuilder.append("Funcionalidade: formatar no Cucumber\n");
-        featureBuilder.append("Cenário: O Cucumber consegue formatar uma tabela incompleta.\n");
-        featureBuilder.append("Quando eu monto uma tabela como esta:\n");
-        featureBuilder.append("\t|nome|valor|\n");
+        featureBuilder.append("Feature: PrettyFormatter\n");
+        featureBuilder.append("Scenario: Formmat beautifully\n");
+        featureBuilder.append("When I have this table:\n");
+        featureBuilder.append("\t|name|value|\n");
         featureBuilder.append("\t|a|b|\n");
-        featureBuilder.append("Então deve formatar corretamente.\n");
+        featureBuilder.append("Then should formatt beautifully.\n");
         String feature = featureBuilder.toString();
 
         List<String> lines = doFormatter(feature);
 
-        assertEquals("Formatter produces unexpected quantity of lines. ", 8, lines.size());
-
-        assertEquals("# language: pt", lines.get(0));
-        assertEquals("Funcionalidade: formatar no Cucumber", lines.get(1));
-        assertEquals("", lines.get(2));
-        assertEquals("  Cenário: O Cucumber consegue formatar uma tabela incompleta.", lines.get(3));
-        assertEquals("    Quando eu monto uma tabela como esta:", lines.get(4));
-        assertEquals("      | nome | valor |", lines.get(5));
-        assertEquals("      | a    | b     |", lines.get(6));
-        assertEquals("    Então deve formatar corretamente.", lines.get(7));
+        assertEquals("Formatter produces unexpected quantity of lines. ", 7, lines.size());
+        
+        assertEquals("Feature: PrettyFormatter", lines.get(0));
+        assertEquals("", lines.get(1));
+        assertEquals("  Scenario: Formmat beautifully", lines.get(2));
+        assertEquals("    When I have this table:", lines.get(3));
+        assertEquals("      | name | value |", lines.get(4));
+        assertEquals("      | a    | b     |", lines.get(5));
+        assertEquals("    Then should formatt beautifully.", lines.get(6));
 
     }
 
-    /**
-     * @see https://github.com/cucumber/gherkin/issues/175
-     */
     @Test
-    public void issue175a() throws IOException {
+    public void whenIMissSomeCellsInARowShouldFill() throws IOException {
 
         StringBuilder featureBuilder = new StringBuilder();
-        featureBuilder.append("# language: pt\n");
-        featureBuilder.append("Funcionalidade: formatar no Cucumber\n");
-        featureBuilder.append("Cenário: O Cucumber consegue formatar uma tabela incompleta.\n");
-        featureBuilder.append("Quando eu monto uma tabela como esta:\n");
-        featureBuilder.append("\t|nome|valor|\n");
+        featureBuilder.append("Feature: PrettyFormatter\n");
+        featureBuilder.append("Scenario: Formmat beautifully\n");
+        featureBuilder.append("When I have this table:\n");
+        featureBuilder.append("\t|name|value|\n");
         featureBuilder.append("\t|a|\n"); // <--- here is different
-        featureBuilder.append("Então deve formatar corretamente.\n");
+        featureBuilder.append("Then should formatt beautifully.\n");
         String feature = featureBuilder.toString();
 
         List<String> lines = doFormatter(feature);
 
-        assertEquals("Formatter produces unexpected quantity of lines. ", 8, lines.size());
+        assertEquals("Formatter produces unexpected quantity of lines. ", 7, lines.size());
 
-        assertEquals("      | a    |       |", lines.get(6));
+        assertEquals("      | a    |       |", lines.get(5));
 
     }
 
     @Test
-    public void issue175b() throws IOException {
+    public void whenIAddSomeExtraCellsInARowShouldFillOthersRows() throws IOException {
 
         StringBuilder featureBuilder = new StringBuilder();
-        featureBuilder.append("# language: pt\n");
-        featureBuilder.append("Funcionalidade: formatar no Cucumber\n");
-        featureBuilder.append("Cenário: O Cucumber consegue formatar uma tabela incompleta.\n");
-        featureBuilder.append("Quando eu monto uma tabela como esta:\n");
-        featureBuilder.append("\t|nome|valor|\n");
+        featureBuilder.append("Feature: PrettyFormatter\n");
+        featureBuilder.append("Scenario: Formmat beautifully\n");
+        featureBuilder.append("When I have this table:\n");
+        featureBuilder.append("\t|name|value|\n");
         featureBuilder.append("\t|a|b|c|\n"); // <--- here is different
-        featureBuilder.append("Então deve formatar corretamente.\n");
+        featureBuilder.append("Then should formatt beautifully.\n");
+
         String feature = featureBuilder.toString();
 
         List<String> lines = doFormatter(feature);
 
-        assertEquals("Formatter produces unexpected quantity of lines. ", 8, lines.size());
+        assertEquals("Formatter produces unexpected quantity of lines. ", 7, lines.size());
 
-        assertEquals("      | nome | valor |   |", lines.get(5));
-        assertEquals("      | a    | b     | c |", lines.get(6));
+        assertEquals("      | name | value |   |", lines.get(4));
+        assertEquals("      | a    | b     | c |", lines.get(5));
 
     }
 
@@ -166,11 +160,11 @@ public class PrettyFormatterTest {
 
         String line;
         List<String> lines = new ArrayList<String>();
-        // int lineNumber = 0;
+         int lineNumber = 0;
 
         while ((line = br.readLine()) != null) {
-            // System.out.println(lineNumber+":"+line);
-            // lineNumber++;
+             System.out.println(lineNumber+":"+line);
+             lineNumber++;
             lines.add(line);
         }
 
