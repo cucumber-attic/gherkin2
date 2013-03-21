@@ -4,7 +4,7 @@ var JSONFormatter = function(io) {
     var uri, feature_hash, current_step_or_hook;
 
     this.done = function() {
-        io.write(JSON.stringify(feature_hashes));
+        io.write(JSON.stringify(feature_hashes, null, 2));
     };
 
     this.uri = function(_uri) {
@@ -63,7 +63,16 @@ var JSONFormatter = function(io) {
     };
 
     this.eof = function() {};
-    
+
+    this.append_duration = function(timestamp) {
+        if (current_step_or_hook['result']) {
+            timestamp = timestamp * 1000000000
+            rshash = current_step_or_hook['result']
+            rshash['duration'] = timestamp
+            current_step_or_hook['result'] = rshash
+        }
+    }
+
     // "private" methods
 
     function add_hook(match, result, hook) {
