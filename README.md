@@ -128,6 +128,7 @@ In order to build and test Gherkin for JavaScript you must install:
 
 * Node.js (0.6.17 or higher with npm)
 * Ragel with JavaScript support: http://github.com/dominicmarks/ragel-js
+  * Make sure you have gcc/g++ 4.6 (4.7 is to strict to build ragel-js)
   * Make sure you have `autoconf` and `automake` (`brew install automake`)
   * Make sure you have the official ragel (`brew install ragel`)
   * Make sure you have kelbt (`brew install kelbt`). If that fails, install manually from http://www.complang.org/kelbt/
@@ -135,9 +136,13 @@ In order to build and test Gherkin for JavaScript you must install:
   * `make && make install`
 * Define the GHERKIN_JS environment variable in your shell (any value will do)
 
+Update gems (to install gems which are needed only for js support):
+
+    bundle update
+
 Now you can build the JavaScript with:
 
-    rake js
+    bundle exec rake js
 
 And you can try it out with node.js:
 
@@ -171,6 +176,7 @@ You must also download NuGet.exe from [CodePlex](http://nuget.codeplex.com/relea
 
     # The key is at https://nuget.org/account
     mono --runtime=v4.0.30319 /usr/local/nuget/NuGet.exe SetApiKey xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx
+    (Note: you may need to run 'mozroots --import --sync' to help mono trusts https setificate, see http://monomvc.wordpress.com/2012/03/06/nuget-on-mono/ for more information)
 
 Now you can build the .NET dll with:
 
@@ -260,7 +266,7 @@ Now we can release:
 * Run `i686-w64-mingw32-gcc -v && bundle exec rake gems:prepare && ./build_native_gems.sh && bundle exec rake release:ALL`
 
 ## Note on Patches/Pull Requests
- 
+
 * Fork the project.
 * Run `bundle install` to install dependencies.
 * Run `rake` to make sure all the tests are passing.
