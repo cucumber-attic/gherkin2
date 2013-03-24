@@ -139,7 +139,11 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     private String indentedLocation(String location, boolean proceed) {
         StringBuilder sb = new StringBuilder();
-        int indentation = proceed ? indentations.remove(0) : indentations.get(0);
+        int indentation = 0;
+        if (indentations.size() > 0) {
+            indentation = proceed ? indentations.remove(0) : indentations.get(0);
+        }
+
         if (location == null) {
             return "";
         }
