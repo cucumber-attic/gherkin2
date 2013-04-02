@@ -27,6 +27,7 @@ module Gherkin
       def parse(gherkin, feature_uri, line_offset)
         @formatter.uri(feature_uri)
         @line_offset = line_offset
+        @feature_uri = feature_uri
         push_machine(@machine_name)
         begin
           @lexer.scan(gherkin)
