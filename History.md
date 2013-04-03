@@ -8,6 +8,7 @@
 * [JRuby] fixed problem with passing StringIO to PrettyFormatter (Oleg Sukhodolsky)
 * [Ruby] MultiJson is used insted of JSon ([#235](https://github.com/cucumber/gherkin/issues/235) Erik Michaels-Ober)
 * [Ruby] TagExpression.eval() deprecated, TagExpression.evaluate() added to replace it. ([#238](https://github.com/cucumber/gherkin/issues/238) Oleg Sukhodolsky)
+* [Ruby] File name is displayed on parse error ([#247](https://github.com/cucumber/gherkin/issues/247), [#248](https://github.com/cucumber/gherkin/issues/248) @lukaso)
 
 ## [2.11.6](https://github.com/cucumber/gherkin/compare/v2.11.5...v2.11.6)
 
