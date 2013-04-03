@@ -8,7 +8,7 @@ module Gherkin
           p = Parser.new(mock('formatter').as_null_object)
           lambda do
             p.parse("Feature: f\nFeature: f", __FILE__, __LINE__-1)
-          end.should raise_error(/Parse error at/)
+          end.should raise_error(Regexp.new("Parse error at #{__FILE__}:\\d+"))
         end
       end
     end
