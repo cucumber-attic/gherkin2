@@ -257,7 +257,7 @@ Now we can release:
 * Make sure GHERKIN_JS is defined (see JavaScript section above)
 * Bump version in:
   * This file (Installation/Java section)
-  * gherkin.gemspec
+  * lib/gherkin/platform.rb
   * java/pom.xml
   * js/package.json
   * History.md
