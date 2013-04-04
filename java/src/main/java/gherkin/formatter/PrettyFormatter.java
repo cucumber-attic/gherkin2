@@ -282,7 +282,7 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     private void prepareTable(List<? extends Row> rows) {
         this.rows = rows;
-        
+
         // find the largest row
         int columnCount = 0;
         for (Row row : rows) {
@@ -295,20 +295,19 @@ public class PrettyFormatter implements Reporter, Formatter {
         maxLengths = new int[columnCount];
         for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
             Row row = rows.get(rowIndex);
-            List<String> cells = row.getCells();
+            final List<String> cells = row.getCells();
             for (int colIndex = 0; colIndex < columnCount; colIndex++) {
-            	
-                // check missing cells
-                if (colIndex >= cells.size()) {
-                    cells.add("");
-                }
-                String cell = cells.get(colIndex);                
-                int length = escapeCell(cell).length();
+                final String cell = getCellSafely(cells, colIndex);
+                final int length = escapeCell(cell).length();
                 cellLengths[rowIndex][colIndex] = length;
                 maxLengths[colIndex] = Math.max(maxLengths[colIndex], length);
             }
         }
         rowIndex = 0;
+    }
+
+    private String getCellSafely(final List<String> cells, final int colIndex) {
+        return (colIndex < cells.size()) ? cells.get(colIndex) : "";
     }
 
     public void row(List<CellResult> cellResults) {
@@ -337,11 +336,11 @@ public class PrettyFormatter implements Reporter, Formatter {
                 break;
         }
         for (int colIndex = 0; colIndex < maxLengths.length; colIndex++) {
-            String cellText = escapeCell(row.getCells().get(colIndex));
+            String cellText = escapeCell(getCellSafely(row.getCells(), colIndex));
             String status = null;
             switch (row.getDiffType()) {
                 case NONE:
-                    status = cellResults.get(colIndex).getStatus();
+                    status = cellResults.size() < colIndex ? cellResults.get(colIndex).getStatus() : "skipped";
                     break;
                 case DELETE:
                     status = "skipped";

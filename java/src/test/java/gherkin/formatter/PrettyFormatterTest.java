@@ -171,5 +171,5 @@ public class PrettyFormatterTest {
         return lines;
 
     }
-    
+
 }
