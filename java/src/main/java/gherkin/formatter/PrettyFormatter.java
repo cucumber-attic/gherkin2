@@ -282,14 +282,27 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     private void prepareTable(List<? extends Row> rows) {
         this.rows = rows;
-        int columnCount = rows.get(0).getCells().size();
+        
+        // find the largest row
+        int columnCount = 0;
+        for (Row row : rows) {
+            if (columnCount < row.getCells().size()) {
+                columnCount = row.getCells().size();
+            }
+        }
+
         cellLengths = new int[rows.size()][columnCount];
         maxLengths = new int[columnCount];
         for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
             Row row = rows.get(rowIndex);
             List<String> cells = row.getCells();
             for (int colIndex = 0; colIndex < columnCount; colIndex++) {
-                String cell = cells.get(colIndex);
+            	
+                // check missing cells
+                if (colIndex >= cells.size()) {
+                    cells.add("");
+                }
+                String cell = cells.get(colIndex);                
                 int length = escapeCell(cell).length();
                 cellLengths[rowIndex][colIndex] = length;
                 maxLengths[colIndex] = Math.max(maxLengths[colIndex], length);
