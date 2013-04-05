@@ -1,4 +1,4 @@
-## [Git master](https://github.com/cucumber/gherkin/compare/v2.11.6...master)
+## [2.11.7](https://github.com/cucumber/gherkin/compare/v2.11.6...v2.11.7)
 
 * [Java, JRuby] Fix ArrayOutOfBoundException in JSONFormatter ([#239](https://github.com/cucumber/gherkin/issues/239) Joseph Hughes)
 * [Java, Ruby] JSONFormatter outputs prettyfied json (Oleg Sukhodolsky)
