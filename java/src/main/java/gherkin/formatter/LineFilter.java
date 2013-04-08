@@ -18,7 +18,7 @@ public class LineFilter implements Filter {
     private List<Integer> toIntegers(List<?> lines) {
         List<Integer> result = new ArrayList<Integer>(lines.size());
         for (Object line : lines) {
-            if(line instanceof Number) {
+            if (line instanceof Number) {
                 result.add(((Number) line).intValue());
             } else {
                 throw new IllegalArgumentException("Not a list of numbers: " + lines);

@@ -241,6 +241,11 @@ module Gherkin
       | but (code)       | "Mais"                                                                                                                                                |
 }
         end
+
+        it "should not list keywords that start with a number" do
+          Gherkin::I18n.get('en-old').code_keywords.should include("Ðaðe")
+          Gherkin::I18n.get('en-old').code_keywords.should_not include("7")
+        end
       end
     end
   end

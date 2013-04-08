@@ -1,3 +1,7 @@
+## [Git master](https://github.com/cucumber/gherkin/compare/v2.11.7...master)
+
+* [Java, JRuby] Filter out code keywords starting with a number: `I18n.code_keywords`. (Aslak Hellesøy)
+
 ## [2.11.7](https://github.com/cucumber/gherkin/compare/v2.11.6...v2.11.7)
 
 * [Java, JRuby] Fix ArrayOutOfBoundException in JSONFormatter ([#239](https://github.com/cucumber/gherkin/issues/239) Joseph Hughes)

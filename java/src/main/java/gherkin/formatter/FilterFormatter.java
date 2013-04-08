@@ -55,7 +55,7 @@ public class FilterFormatter implements Formatter {
         for (Object filter : filters) {
             filterClasses.add(filter.getClass());
         }
-        if(filterClasses.size() > 1) {
+        if (filterClasses.size() > 1) {
             throw new IllegalArgumentException("Inconsistent filters: " + filters + ". Only one type [line,name,tag] can be used at once.");
         }
 

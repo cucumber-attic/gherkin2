@@ -1,8 +1,8 @@
 package gherkin.parser;
 
+import gherkin.lexer.En;
 import gherkin.lexer.Lexer;
 import gherkin.lexer.Listener;
-import gherkin.lexer.En;
 import gherkin.util.FixJava;
 
 import java.util.ArrayList;

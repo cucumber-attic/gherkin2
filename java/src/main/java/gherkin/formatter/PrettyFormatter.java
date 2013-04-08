@@ -18,7 +18,6 @@ import gherkin.formatter.model.Tag;
 import gherkin.formatter.model.TagStatement;
 import gherkin.util.Mapper;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -42,9 +41,10 @@ public class PrettyFormatter implements Reporter, Formatter {
     private final boolean executing;
 
     private String uri;
-    private Mapper tagNameMapper = new Mapper() {
-        public String map(Object tag) {
-            return ((Tag) tag).getName();
+    private Mapper<Tag, String> tagNameMapper = new Mapper<Tag, String>() {
+        @Override
+        public String map(Tag tag) {
+            return tag.getName();
         }
     };
     private Formats formats;

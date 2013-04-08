@@ -49,7 +49,7 @@ public class FixJava {
                 buffer.append(data, 0, read);
             }
             return buffer.toString();
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -65,7 +65,7 @@ public class FixJava {
             }
             buffer.flush();
             return buffer.toByteArray();
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -37,15 +38,17 @@ public class I18n {
         KEYWORD_KEYS.addAll(STEP_KEYWORD_KEYS);
     }
 
-    private static final Mapper QUOTE_MAPPER = new Mapper() {
-        public String map(Object o) {
-            return '"' + (String) o + '"';
+    private static final Mapper<String, String> QUOTE_MAPPER = new Mapper<String, String>() {
+        @Override
+        public String map(String o) {
+            return '"' + o + '"';
         }
     };
 
-    private static final Mapper CODE_KEYWORD_MAPPER = new Mapper() {
-        public String map(Object keyword) {
-            return codeKeywordFor((String) keyword);
+    private static final Mapper<String, String> CODE_KEYWORD_MAPPER = new Mapper<String, String>() {
+        @Override
+        public String map(String keyword) {
+            return codeKeywordFor(keyword);
         }
     };
 
@@ -86,7 +89,7 @@ public class I18n {
         Map<String, String> keywordMap = I18N.get(isoCode);
         for (Map.Entry<String, String> entry : keywordMap.entrySet()) {
             List<String> keywordList = Arrays.asList(entry.getValue().split("\\|"));
-            if(STEP_KEYWORD_KEYS.contains(entry.getKey())) {
+            if (STEP_KEYWORD_KEYS.contains(entry.getKey())) {
                 List<String> stepKeywords = new ArrayList<String>();
                 for (String s : keywordList) {
                     stepKeywords.add((s + " ").replaceFirst("< $", ""));
@@ -133,6 +136,12 @@ public class I18n {
     public List<String> getCodeKeywords() {
         List<String> result = map(getStepKeywords(), CODE_KEYWORD_MAPPER);
         result.remove("*");
+        ListIterator<String> it = result.listIterator();
+        while (it.hasNext()) {
+            if (it.next().matches("^\\d.*")) {
+                it.remove();
+            }
+        }
         return result;
     }
 

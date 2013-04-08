@@ -131,6 +131,7 @@ module Gherkin
     def code_keywords
       result = step_keywords.map{|keyword| self.class.code_keyword_for(keyword)}
       result.delete('*')
+      result.delete_if {|kw| kw =~ /^\d/}
       result
     end
 
