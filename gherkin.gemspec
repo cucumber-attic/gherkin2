@@ -63,7 +63,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('cucumber', '>= 1.2.1')
   s.add_development_dependency('rake', '>= 10.0.3')
   s.add_development_dependency('bundler', '>= 1.2.3') # Make sure it's in sync with /.travis.yml
-  s.add_development_dependency('rspec', '~> 2.12.0')
+  s.add_development_dependency('rspec', '~> 2.13.0')
   s.add_development_dependency('rubyzip', '>= 0.9.9')
 
   unless ENV['RUBY_CC_VERSION'] || Gherkin::JRUBY
