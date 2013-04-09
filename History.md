@@ -1,4 +1,4 @@
-## [Git master](https://github.com/cucumber/gherkin/compare/v2.11.7...master)
+## [2.11.8](https://github.com/cucumber/gherkin/compare/v2.11.7...v2.11.8)
 
 * [Java, JRuby] Filter out code keywords starting with a number: `I18n.code_keywords`. (Aslak Hellesøy)
 

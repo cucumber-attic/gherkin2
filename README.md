@@ -54,7 +54,7 @@ The jar file is in the central Maven repo.
     <dependency>
         <groupId>info.cukes</groupId>
         <artifactId>gherkin</artifactId>
-        <version>2.11.7</version>
+        <version>2.11.8</version>
     </dependency>
 
 You can get it manually from [Maven Central](http://search.maven.org/#browse%7C-2073395818)
@@ -150,7 +150,7 @@ And you can try it out with node.js:
 
 Or the json formatter:
 
-    node js/example/json_fomratter_example.js
+    node js/example/json_formatter_example.js
 
 If you're hacking and just want to rebuild the English parser:
 
@@ -214,19 +214,17 @@ Now we're ready to install the Windows rubies:
     unset GHERKIN_JS
 
     # 1.9.3
-    rvm install 1.9.3-p362
-    rvm use 1.9.3-p362
-    rvm gemset create cucumber
-    rvm gemset use cucumber
+    rvm install 1.9.3-p392
+    rvm use 1.9.3-p392
+    rvm gemset use cucumber --create
     gem install bundler
     bundle install
-    PATH=/usr/local/mingw/bin:$PATH CC=/usr/local/mingw/bin/i686-w64-mingw32-gcc rake-compiler cross-ruby VERSION=1.9.3-p362
+    PATH=/usr/local/mingw/bin:$PATH CC=/usr/local/mingw/bin/i686-w64-mingw32-gcc rake-compiler cross-ruby VERSION=1.9.3-p392
 
     # 1.8.7
     CC=gcc-4.2 rvm install 1.8.7-p371
     rvm use 1.8.7-p371
-    rvm gemset create cucumber
-    rvm gemset use cucumber
+    rvm gemset use cucumber --create
     gem install bundler
     bundle install
     PATH=/usr/local/mingw/bin:$PATH CC=/usr/local/mingw/bin/i686-w64-mingw32-gcc rake-compiler cross-ruby VERSION=1.8.7-p371

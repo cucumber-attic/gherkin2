@@ -67,7 +67,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rubyzip', '>= 0.9.9')
 
   unless ENV['RUBY_CC_VERSION'] || Gherkin::JRUBY
-    s.add_development_dependency('therubyracer', '>= 0.11.2') if ENV['GHERKIN_JS']
+    s.add_development_dependency('therubyracer', '>= 0.11.4') if ENV['GHERKIN_JS']
     # For Documentation:
     s.add_development_dependency('yard', '>= 0.8.3')
     s.add_development_dependency('rdiscount', '>= 1.6.8')
