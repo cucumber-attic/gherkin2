@@ -22,14 +22,16 @@ class RagelTask
   def define_tasks
     deps = [lang_ragel, common_ragel]
     deps.unshift(UGLIFYJS) if(@lang == 'js')
+    sed = Config::CONFIG['host_os'] =~ /linux/i ? "sed -i" : "sed -i ''"
 
     min_target = target.gsub(/\.js$/, '.min.js')
     file target => deps do
       mkdir_p(File.dirname(target)) unless File.directory?(File.dirname(target))
       sh "ragel #{flags} #{lang_ragel} -o #{target}"
+      # Remove absolute paths from ragel-generated sources
+      sh %{#{sed} "s|#{Dir.pwd}/tasks/../||" #{target}}
       if(@lang == 'js')
         # Ragel chokes if we put the escaped triple quotes in .rl, so we'll do the replace with sed after the fact. Lots of backslashes!!
-        sed = Config::CONFIG['host_os'] =~ /linux/i ? "sed -i" : "sed -i ''"
         sh %{#{sed} 's/ESCAPED_TRIPLE_QUOTE/\\\\\\\\\\\\"\\\\\\\\\\\\"\\\\\\\\\\\\"/' #{target}}
         sh %{#{sed} 's/const/var/' #{target}}
         
