@@ -189,6 +189,7 @@ module Gherkin
       | fa        | Persian             | فارسی             |
       | fi        | Finnish             | suomi             |
       | fr        | French              | français          |
+      | gl        | Galician            | galego            |
       | he        | Hebrew              | עברית             |
       | hi        | Hindi               | हिंदी             |
       | hr        | Croatian            | hrvatski          |
