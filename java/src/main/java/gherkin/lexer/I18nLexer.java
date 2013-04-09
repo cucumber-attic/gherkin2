@@ -10,13 +10,19 @@ public class I18nLexer implements Lexer {
     private static final Pattern LANGUAGE_PATTERN = Pattern.compile("^([\\W]+)?\\s*#\\s*language\\s*:\\s*([a-zA-Z\\-]+)");
     private final Listener listener;
     private I18n i18n;
+    private String isoCode;
 
     public I18nLexer(Listener listener) {
-        this(listener, false);
+        this(listener, false, "en");
     }
 
     public I18nLexer(Listener listener, boolean forceRubyDummy) {
+        this(listener, forceRubyDummy, "en");
+    }
+
+    public I18nLexer(Listener listener, boolean forceRubyDummy, String isoCode) {
         this.listener = listener;
+        this.isoCode = isoCode;
     }
 
     /**
@@ -36,7 +42,7 @@ public class I18nLexer implements Lexer {
     }
 
     private I18n i18nLanguageForSource(String source) {
-        String key = "en";
+        String key = isoCode;
         for (String line : source.split("\\n")) {
             if (!COMMENT_OR_EMPTY_LINE_PATTERN.matcher(line).find()) {
                 break;

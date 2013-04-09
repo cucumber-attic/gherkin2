@@ -37,12 +37,16 @@ public class Parser implements Listener {
     }
 
     public Parser(Formatter formatter, boolean throwOnError, String machineName, boolean forceRubyDummy) {
+        this(formatter, throwOnError, machineName, forceRubyDummy, "en");
+    }
+
+    public Parser(Formatter formatter, boolean throwOnError, String machineName, boolean forceRubyDummy, String isoCode) {
         if (formatter == null) throw new NullPointerException("formatter");
         this.formatter = formatter;
         this.listener = new FormatterListener(formatter);
         this.throwOnError = throwOnError;
         this.machineName = machineName;
-        this.lexer = new I18nLexer(this, forceRubyDummy);
+        this.lexer = new I18nLexer(this, forceRubyDummy, isoCode);
     }
 
     /**
