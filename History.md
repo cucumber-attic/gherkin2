@@ -1,5 +1,6 @@
 ## [2.11.8](https://github.com/cucumber/gherkin/compare/v2.11.7...v2.11.8)
 
+* [Core] Added Galician (gl) ([#249](https://github.com/cucumber/gherkin/pull/249) son-cativo)
 * [Java, JRuby] Set default i18n when create Parser ([#229](https://github.com/cucumber/gherkin/pull/229) Tomohiko Himura)
 * [Java, JRuby] Filter out code keywords starting with a number: `I18n.code_keywords`. (Aslak Hellesøy)
 
