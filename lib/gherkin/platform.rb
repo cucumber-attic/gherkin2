@@ -2,6 +2,7 @@
 
 module Gherkin
 unless defined?(Gherkin::VERSION)
+  # See the comment in gherkin.gemspec if you bump the MINOR version (MAJOR.MINOR.PATCH).
   VERSION       = '2.11.8'
   JRUBY         = defined?(JRUBY_VERSION)
 
