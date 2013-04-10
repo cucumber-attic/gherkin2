@@ -4,7 +4,7 @@ require 'gherkin/platform'
 
 Gem::Specification.new do |s|
   s.name        = "gherkin"
-  # If the MINOT version is bumped (MAJOR.MINOR.PATCH), verify that the change is ok:
+  # If the MINOR version is bumped (MAJOR.MINOR.PATCH), verify that the change is ok:
   #
   # * Comment out the cucumber dependency below
   # * Uncomment the cucumber location in Gemfile
