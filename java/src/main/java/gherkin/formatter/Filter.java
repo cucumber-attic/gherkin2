@@ -7,7 +7,7 @@ import gherkin.formatter.model.Tag;
 import java.util.List;
 
 public interface Filter {
-    boolean eval(List<Tag> tags, List<String> names, List<Range> ranges);
+    boolean evaluate(List<Tag> tags, List<String> names, List<Range> ranges);
 
     List<ExamplesTableRow> filterTableBodyRows(List<ExamplesTableRow> examplesRows);
 }

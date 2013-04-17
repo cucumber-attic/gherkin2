@@ -7,7 +7,7 @@ module Gherkin
         @tag_expression = TagExpression.new(tags)
       end
 
-      def eval(tags, names, ranges)
+      def evaluate(tags, names, ranges)
         @tag_expression.evaluate(tags.uniq)
       end
 

@@ -14,7 +14,7 @@ public class TagFilter implements Filter {
         tagExpression = new TagExpression(tags);
     }
 
-    public boolean eval(List<Tag> tags, List<String> names, List<Range> ranges) {
+    public boolean evaluate(List<Tag> tags, List<String> names, List<Range> ranges) {
         return tagExpression.evaluate(tags);
     }
 

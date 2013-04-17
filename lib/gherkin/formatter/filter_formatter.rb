@@ -68,7 +68,7 @@ module Gherkin
         end
 
         @examples_range = examples.line_range.first..table_body_range.last
-        if(@filter.eval([], [], [table_body_range]))
+        if(@filter.evaluate([], [], [table_body_range]))
           examples.rows = @filter.filter_table_body_rows(examples.rows)
         end
         @examples_events = [examples]
@@ -108,12 +108,12 @@ module Gherkin
       end
 
       def replay!
-        feature_element_ok = @filter.eval(
+        feature_element_ok = @filter.evaluate(
           (@feature_tags + @feature_element_tags), 
           [@feature_name, @feature_element_name].compact, 
           [@feature_element_range].compact
         )
-        examples_ok = @filter.eval(
+        examples_ok = @filter.evaluate(
           (@feature_tags + @feature_element_tags + @examples_tags), 
           [@feature_name, @feature_element_name, @examples_name].compact, 
           [@feature_element_range, @examples_range].compact

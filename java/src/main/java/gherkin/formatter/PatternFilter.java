@@ -14,7 +14,7 @@ public class PatternFilter implements Filter {
         this.patterns = patterns;
     }
 
-    public boolean eval(List<Tag> tags, List<String> names, List<Range> ranges) {
+    public boolean evaluate(List<Tag> tags, List<String> names, List<Range> ranges) {
         for (String name : names) {
             if (name != null) {
                 for (Pattern pattern : patterns) {

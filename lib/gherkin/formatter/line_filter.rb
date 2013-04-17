@@ -5,7 +5,7 @@ module Gherkin
         @lines = lines
       end
 
-      def eval(tags, names, ranges)
+      def evaluate(tags, names, ranges)
         ranges.detect do |range|
           @lines.detect do |line|
             range.include?(line)

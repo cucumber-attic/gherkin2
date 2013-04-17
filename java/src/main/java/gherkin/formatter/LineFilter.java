@@ -27,7 +27,7 @@ public class LineFilter implements Filter {
         return result;
     }
 
-    public boolean eval(List<Tag> tags, List<String> names, List<Range> ranges) {
+    public boolean evaluate(List<Tag> tags, List<String> names, List<Range> ranges) {
         for (Range range : ranges) {
             if (range != null) {
                 for (Integer line : lines) {

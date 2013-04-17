@@ -5,7 +5,7 @@ module Gherkin
         @regexen = regexen
       end
 
-      def eval(tags, names, ranges)
+      def evaluate(tags, names, ranges)
         @regexen.detect do |regexp| 
           names.detect do |name|
             name =~ regexp

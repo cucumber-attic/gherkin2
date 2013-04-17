@@ -130,7 +130,7 @@ public class FilterFormatter implements Formatter {
                 tableBodyRange = new Range(examples.getRows().get(1).getLine(), examples.getRows().get(examples.getRows().size() - 1).getLine());
         }
         examplesRange = new Range(examples.getLineRange().getFirst(), tableBodyRange.getLast());
-        if (filter.eval(Collections.<Tag>emptyList(), Collections.<String>emptyList(), Collections.singletonList(tableBodyRange))) {
+        if (filter.evaluate(Collections.<Tag>emptyList(), Collections.<String>emptyList(), Collections.singletonList(tableBodyRange))) {
             examples.setRows(filter.filterTableBodyRows(examples.getRows()));
         }
         examplesEvents = new ArrayList<BasicStatement>();
@@ -177,7 +177,7 @@ public class FilterFormatter implements Formatter {
         feTags.addAll(featureElementTags);
         List<String> feNames = Arrays.asList(featureName, featureElementName);
         List<Range> feRanges = Arrays.asList(featureElementRange);
-        boolean featureElementOk = filter.eval(feTags, feNames, feRanges);
+        boolean featureElementOk = filter.evaluate(feTags, feNames, feRanges);
 
         List<Tag> exTags = new ArrayList<Tag>(feTags);
         exTags.addAll(examplesTags);
@@ -185,7 +185,7 @@ public class FilterFormatter implements Formatter {
         exNames.add(examplesName);
         List<Range> exRanges = new ArrayList<Range>(feRanges);
         exRanges.add(examplesRange);
-        boolean examplesOk = filter.eval(exTags, exNames, exRanges);
+        boolean examplesOk = filter.evaluate(exTags, exNames, exRanges);
 
         if (featureElementOk || examplesOk) {
             replayEvents(featureEvents);
