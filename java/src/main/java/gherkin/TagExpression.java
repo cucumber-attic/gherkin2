@@ -18,11 +18,6 @@ public class TagExpression {
         }
     }
 
-    @Deprecated
-    public boolean eval(Collection<Tag> tags) {
-        return evaluate(tags);
-    }
-
     public boolean evaluate(Collection<Tag> tags) {
         return and.isEmpty() || and.eval(tags);
     }
