@@ -25,7 +25,7 @@ public class JSONFormatter implements Reporter, Formatter {
     private String uri;
     private List<Map> beforeHooks = new ArrayList<Map>();
 
-    private enum Phase {step, match, result, embedding, output};
+    private enum Phase {step, match, embedding, result, output};
 
     /**
      * In order to handle steps being added all at once, this method determines allows methods to

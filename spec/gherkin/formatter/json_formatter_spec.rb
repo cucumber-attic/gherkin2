@@ -16,6 +16,12 @@ module Gherkin
 
         f.step(Model::Step.new([], "Given ", "g", 3, nil, nil))
         f.match(Model::Match.new([], "def.rb:33"))
+        data = "abc"
+        if defined?(JRUBY_VERSION)
+          data = data.to_java_bytes
+        end
+        f.embedding("mime-type", data)
+
         f.result(Model::Result.new(:passed, 1, nil))
 
         f.step(Model::Step.new([], "When ", "w", 4, nil, nil))
@@ -52,6 +58,12 @@ module Gherkin
                       "match": {
                         "location": "def.rb:33"
                       },
+                      "embeddings": [
+                        {
+                          "mime_type": "mime-type",
+                          "data": "YWJj"
+                        }
+                      ],
                       "result": {
                         "status": "passed",
                         "duration": 1
@@ -86,7 +98,7 @@ module Gherkin
             }
           ]
         }
-        MultiJson.load(expected).should == MultiJson.load(io.string)
+        MultiJson.load(io.string).should == MultiJson.load(expected)
       end
 
       it "renders results as pretty json" do
@@ -156,7 +168,7 @@ module Gherkin
             }
           ]
         }
-        MultiJson.load(expected).should == MultiJson.load(io.string)
+        MultiJson.load(io.string).should == MultiJson.load(expected)
       end
     end
   end
