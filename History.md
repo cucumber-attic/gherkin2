@@ -1,3 +1,8 @@
+## [Git](https://github.com/cucumber/gherkin/compare/v2.11.8...master)
+* [Java, Ruby] TagExpression.eval() removed (Oleg Sukhodolsky)
+* [Java, Ruby] Filter.eval() renamed to evaluate()  (Oleg Sukhodolsky)
+* [Java, JRuby] JSONFormatter's java version changed to connect embedding to the recent step the same way as Ruby's one does. (Oleg Sukhodolsky)
+
 ## [2.11.8](https://github.com/cucumber/gherkin/compare/v2.11.7...v2.11.8)
 
 * [Core] Added Galician (gl) ([#249](https://github.com/cucumber/gherkin/pull/249) son-cativo)
