@@ -46,6 +46,16 @@ end
 
 RSpec.configure do |c|
   c.include(GherkinSpecHelper)
+  c.filter_run_excluding :ruby => lambda {|version|
+    case version.to_s
+    when "!jruby"
+      RUBY_ENGINE == "jruby"
+    when /^> (.*)/
+      !(RUBY_VERSION.to_s > $1)
+    else
+      !(RUBY_VERSION.to_s =~ /^#{version.to_s}/)
+    end
+  }
 end
 
 # Allows comparison of Java List with Ruby Array (rows)

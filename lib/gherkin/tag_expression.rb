@@ -2,8 +2,6 @@ require 'gherkin/native'
 
 module Gherkin
   class TagExpression
-    native_impl('gherkin')
-
     attr_reader :limits
 
     def initialize(tag_expressions)

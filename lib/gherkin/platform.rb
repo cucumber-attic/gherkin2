@@ -3,7 +3,7 @@
 module Gherkin
 unless defined?(Gherkin::VERSION)
   # See the comment in gherkin.gemspec if you bump the MINOR version (MAJOR.MINOR.PATCH).
-  VERSION       = '2.11.8'
+  VERSION       = '2.12.0'
   JRUBY         = defined?(JRUBY_VERSION)
 
   if !JRUBY && !(RUBY_VERSION =~ /^(1\.8\.7|1\.9\.3|2\.0)/)

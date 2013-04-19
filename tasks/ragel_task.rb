@@ -22,7 +22,7 @@ class RagelTask
   def define_tasks
     deps = [lang_ragel, common_ragel]
     deps.unshift(UGLIFYJS) if(@lang == 'js')
-    sed = Config::CONFIG['host_os'] =~ /linux/i ? "sed -i" : "sed -i ''"
+    sed = RbConfig::CONFIG['host_os'] =~ /linux/i ? "sed -i" : "sed -i ''"
 
     min_target = target.gsub(/\.js$/, '.min.js')
     file target => deps do

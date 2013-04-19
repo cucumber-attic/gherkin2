@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class FixJava {
@@ -22,7 +23,7 @@ public class FixJava {
         return sb.toString();
     }
 
-    public static <T, R> List<R> map(List<T> objects, Mapper<T, R> mapper) {
+    public static <T, R> List<R> map(Collection<T> objects, Mapper<T, R> mapper) {
         List<R> result = new ArrayList<R>(objects.size());
         for (T o : objects) {
             result.add(mapper.map(o));

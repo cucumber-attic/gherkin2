@@ -3,7 +3,7 @@ require 'gherkin/tag_expression'
 require 'gherkin/formatter/model'
 
 module Gherkin
-  describe TagExpression do
+  describe TagExpression, :ruby => '!jruby' do
     def tag(name)
       Formatter::Model::Tag.new(name, 0)
     end
@@ -109,10 +109,8 @@ module Gherkin
         @e = Gherkin::TagExpression.new([' @foo:3 , ~@bar ', ' @zap:5 '])
       end
 
-      unless defined?(JRUBY_VERSION)
-        it "should split and trim (ruby implementation detail)" do
-          @e.__send__(:ruby_expression).should == "(!vars['@bar']||vars['@foo'])&&(vars['@zap'])"
-        end
+      it "should split and trim (ruby implementation detail)" do
+        @e.__send__(:ruby_expression).should == "(!vars['@bar']||vars['@foo'])&&(vars['@zap'])"
       end
 
       it "should have limits" do

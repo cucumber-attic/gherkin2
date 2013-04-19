@@ -61,7 +61,11 @@ public class FilterFormatter implements Formatter {
 
         Class<?> typeOfFilter = filters.get(0).getClass();
         if (String.class.isAssignableFrom(typeOfFilter)) {
-            return new TagFilter(filters);
+            if (filters.size() > 1) {
+                System.err.println("Using more than one tagExpression is deprecated." + filters);
+            }
+            String tagExpression = convertLegacyTagExpression(filters);
+            return new TagFilter(tagExpression);
         } else if (Number.class.isAssignableFrom(typeOfFilter)) {
             return new LineFilter(filters);
         } else if (Pattern.class.isAssignableFrom(typeOfFilter)) {
@@ -69,6 +73,33 @@ public class FilterFormatter implements Formatter {
         } else {
             throw new RuntimeException("Could not create filter method for unknown filter of type: " + typeOfFilter);
         }
+    }
+
+    static String convertLegacyTagExpression(List<String> tagParts) {
+        StringBuilder b = new StringBuilder();
+        boolean and = false;
+        for (String tagPart : tagParts) {
+            if (tagPart.contains("~")) {
+                System.err.println("~ for negation is deprecated. Use !");
+                tagPart = tagPart.replace('~', '!');
+            }
+            if (tagPart.contains(",")) {
+                System.err.println(", for OR is deprecated. Use ||");
+                tagPart = tagPart.replace("~", "||");
+            }
+            if (and) b.append("&&");
+            and = true;
+
+            b.append("(");
+            boolean or = false;
+            for (String tag : tagPart.split(",")) {
+                if (or) b.append("||");
+                or = true;
+                b.append(tag);
+            }
+            b.append(")");
+        }
+        return b.toString();
     }
 
     @Override
