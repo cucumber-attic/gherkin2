@@ -1,4 +1,5 @@
-## [Git](https://github.com/cucumber/gherkin/compare/v2.11.8...master)
+## [2.12.0](https://github.com/cucumber/gherkin/compare/v2.11.8...v2.12.0)
+
 * [Java, Ruby] TagExpression.eval() removed (Oleg Sukhodolsky)
 * [Java, Ruby] Filter.eval() renamed to evaluate()  (Oleg Sukhodolsky)
 * [Java, JRuby] JSONFormatter's java version changed to connect embedding to the recent step the same way as Ruby's one does. (Oleg Sukhodolsky)
