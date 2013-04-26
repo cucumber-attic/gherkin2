@@ -1,6 +1,7 @@
 package gherkin.formatter;
 
 import gherkin.formatter.model.*;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.PrintStream;
@@ -63,5 +64,26 @@ public class PrettyFormatterTest {
         formatter.close();
         verify(out).flush();
         verify(out).close();
+    }
+
+    /**
+     * Tests the logic to indent code accepts 0-argument steps.
+     * If the underlying {@link Match} instance passed to {@link PrettyFormatter}
+     * doesn't have a "statement", it doesn't initialize the "indentations" array.
+     * Afterwards, "indentedLocation(location, proceed)" method is called, which
+     * assumes the "indentations" array is not empty, which doesn't hold in this
+     * case.
+     */
+    @Test
+    public void shouldAlwaysCalculateIndentations() {
+        PrintStream out = mock(PrintStream.class);
+        PrettyFormatter formatter = new PrettyFormatter(out, false, true);
+        Match match = new Match(Collections.<Argument>emptyList(), "/fake/location");
+
+        try {
+            formatter.match(match);
+        } catch (final ArrayIndexOutOfBoundsException indentedLocationsBug) {
+            Assert.fail("bug in indentation of 0-argument steps");
+        }
     }
 }
