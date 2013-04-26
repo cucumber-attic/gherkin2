@@ -248,21 +248,23 @@ public class PrettyFormatter implements Reporter, Formatter {
     }
 
     private void printStep(String status, List<Argument> arguments, String location, boolean proceed) {
-        Step step = proceed ? steps.remove(0) : steps.get(0);
-        Format textFormat = getFormat(status);
-        Format argFormat = getArgFormat(status);
+        if (!steps.isEmpty()) {
+            Step step = proceed ? steps.remove(0) : steps.get(0);
+            Format textFormat = getFormat(status);
+            Format argFormat = getArgFormat(status);
 
-        printComments(step.getComments(), "    ");
-        out.append("    ");
-        out.append(textFormat.text(step.getKeyword()));
-        stepPrinter.writeStep(out, textFormat, argFormat, step.getName(), arguments);
-        out.append(indentedLocation(location, proceed));
+            printComments(step.getComments(), "    ");
+            out.append("    ");
+            out.append(textFormat.text(step.getKeyword()));
+            stepPrinter.writeStep(out, textFormat, argFormat, step.getName(), arguments);
+            out.append(indentedLocation(location, proceed));
 
-        out.println();
-        if (step.getRows() != null) {
-            table(step.getRows());
-        } else if (step.getDocString() != null) {
-            docString(step.getDocString());
+            out.println();
+            if (step.getRows() != null) {
+                table(step.getRows());
+            } else if (step.getDocString() != null) {
+                docString(step.getDocString());
+            }
         }
     }
 

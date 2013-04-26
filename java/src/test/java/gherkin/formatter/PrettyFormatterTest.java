@@ -67,7 +67,7 @@ public class PrettyFormatterTest {
     }
 
     /**
-     * Tests the logic to indent code accepts 0-argument steps.
+     * Tests the indentation logic in {@link PrettyFormatter} accepts 0-argument steps.
      * If the underlying {@link Match} instance passed to {@link PrettyFormatter}
      * doesn't have a "statement", it doesn't initialize the "indentations" array.
      * Afterwards, "indentedLocation(location, proceed)" method is called, which
@@ -84,6 +84,12 @@ public class PrettyFormatterTest {
             formatter.match(match);
         } catch (final ArrayIndexOutOfBoundsException indentedLocationsBug) {
             Assert.fail("bug in indentation of 0-argument steps");
+        } catch (final IndexOutOfBoundsException indentedLocationsBug) {
+            Assert.fail("bug in indentation of 0-argument steps");
+        } finally {
+            formatter.close();
+            verify(out).flush();
+            verify(out).close();
         }
     }
 }
