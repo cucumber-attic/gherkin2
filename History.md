@@ -1,6 +1,7 @@
 ## [Git master](https://github.com/cucumber/gherkin/compare/v2.12.0...master)
 
 * [Core] Added Thai (th) ([#253](https://github.com/cucumber/gherkin/pull/253) Twin Panichsombat)
+
 ## [2.12.0](https://github.com/cucumber/gherkin/compare/v2.11.8...v2.12.0)
 
 * [Java, Ruby] TagExpression.eval() removed (Oleg Sukhodolsky)
