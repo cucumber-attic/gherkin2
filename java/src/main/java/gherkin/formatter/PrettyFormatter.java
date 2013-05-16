@@ -112,6 +112,10 @@ public class PrettyFormatter implements Reporter, Formatter {
     }
 
     private void printSteps() {
+        if (indentations.isEmpty()) {
+            calculateLocationIndentations();
+        }
+
         while (!steps.isEmpty()) {
             printStep("skipped", Collections.<Argument>emptyList(), null, true);
         }
@@ -176,6 +180,7 @@ public class PrettyFormatter implements Reporter, Formatter {
         this.match = match;
         printStatement();
         if (!monochrome) {
+            calculateLocationIndentations();
             printStep("executing", match.getArguments(), match.getLocation(), false);
         }
     }
@@ -419,7 +424,9 @@ public class PrettyFormatter implements Reporter, Formatter {
         int i = 0;
 
         List<BasicStatement> statements = new ArrayList<BasicStatement>();
-        statements.add(statement);
+        if (statement != null) {
+            statements.add(statement);
+        }
         statements.addAll(steps);
         int maxLineWidth = 0;
         for (BasicStatement statement : statements) {
