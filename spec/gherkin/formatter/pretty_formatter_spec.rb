@@ -12,10 +12,10 @@ module Gherkin
     describe PrettyFormatter do
       include AnsiEscapes
 
-      def assert_io(s)
+      def assert_io_include(s)
         actual = @io.string
         actual.gsub!(/\e\[m/, "\e[0m") # JANSI resets without the 0.
-        actual.should == s
+        actual.should include(s)
       end
       
       def assert_pretty(input, expected_output=input)
@@ -48,14 +48,16 @@ module Gherkin
         @f.match(Model::Match.new([], "features/step_definitions/bar.rb:96"))
         @f.result(Model::Result.new('passed', 33, nil))
 
-        assert_io(%{Feature: Hello
+        @f.eof()
+
+        assert_io_include(%{Feature: Hello
   World
 
   Scenario: The scenario #{comments}# features/foo.feature:4#{reset}
-    #{executing}Given #{reset}#{executing}some stuff#{reset}     #{comments}# features/step_definitions/bar.rb:56#{reset}
-#{up(1)}    #{passed}Given #{reset}#{passed}some stuff#{reset}     #{comments}# features/step_definitions/bar.rb:56#{reset}
-    #{executing}When #{reset}#{executing}foo#{reset}             #{comments}# features/step_definitions/bar.rb:96#{reset}
-#{up(1)}    #{passed}When #{reset}#{passed}foo#{reset}             #{comments}# features/step_definitions/bar.rb:96#{reset}
+})
+        assert_io_include(%{    #{passed}Given #{reset}#{passed}some stuff#{reset}     #{comments}# features/step_definitions/bar.rb:56#{reset}
+})
+        assert_io_include(%{    #{passed}When #{reset}#{passed}foo#{reset}             #{comments}# features/step_definitions/bar.rb:96#{reset}
 })
       end
 
@@ -71,12 +73,14 @@ module Gherkin
         @f.match(match)
         @f.result(result)
 
-        assert_io(%{Feature: Hello
+        @f.eof()
+
+        assert_io_include(%{Feature: Hello
   World
 
   Scenario: The scenario            #{comments}# features/foo.feature:4#{reset}
-    #{executing}Given #{reset}#{executing}some stuff that is longer#{reset} #{comments}# features/step_definitions/bar.rb:56#{reset}
-#{up(1)}    #{passed}Given #{reset}#{passed}some stuff that is longer#{reset} #{comments}# features/step_definitions/bar.rb:56#{reset}
+})
+        assert_io_include(%{    #{passed}Given #{reset}#{passed}some stuff that is longer#{reset} #{comments}# features/step_definitions/bar.rb:56#{reset}
 })
       end
 
@@ -86,12 +90,13 @@ module Gherkin
         @f.step(Model::Step.new([], "Given ", "I have 999 cukes in my belly", 3, nil, nil))
         @f.match(Model::Match.new([Gherkin::Formatter::Argument.new(7, '999')], nil))
         @f.result(Model::Result.new('passed', 6, nil))
+        @f.eof()
 
-        assert_io(
+        assert_io_include(
           "\n" +
-          "  Scenario: Lots of cukes              \e[90m# foo.feature:3\e[0m\n" +
-          "    #{executing}Given #{reset}#{executing}I have #{reset}#{executing_arg}999#{reset}#{executing} cukes in my belly#{reset}\n" +
-          "#{up(1)}    #{passed}Given #{reset}#{passed}I have #{reset}#{passed_arg}999#{reset}#{passed} cukes in my belly#{reset}\n"
+          "  Scenario: Lots of cukes              \e[90m# foo.feature:3\e[0m\n")
+        assert_io_include(
+          "    #{passed}Given #{reset}#{passed}I have #{reset}#{passed_arg}999#{reset}#{passed} cukes in my belly#{reset}\n"
         )
       end
 
@@ -105,12 +110,14 @@ module Gherkin
           Gherkin::Formatter::Argument.new(7, '999')
         ], nil))
         @f.result(Model::Result.new('passed', 6, nil))
+        @f.eof()
 
-        assert_io(
+        assert_io_include(
           "\n" +
-          "  Scenario: Lots of cukes              \e[90m# foo.feature:3\e[0m\n" +
-          "    #{executing}Given #{reset}#{executing}I have #{reset}#{executing_arg}999#{reset}#{executing} cukes in my belly#{reset}\n" +
-          "#{up(1)}    #{passed}Given #{reset}#{passed}I have #{reset}#{passed_arg}999#{reset}#{passed} cukes in my belly#{reset}\n"
+          "  Scenario: Lots of cukes              \e[90m# foo.feature:3\e[0m\n"
+        )
+        assert_io_include(
+          "    #{passed}Given #{reset}#{passed}I have #{reset}#{passed_arg}999#{reset}#{passed} cukes in my belly#{reset}\n"
         )
       end
 
