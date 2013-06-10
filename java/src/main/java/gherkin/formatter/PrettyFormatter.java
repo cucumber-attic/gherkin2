@@ -137,9 +137,17 @@ public class PrettyFormatter implements Reporter, Formatter {
         statement = null;
     }
 
+    private int popIndentation() {
+        return indentations.isEmpty() ? 0 : indentations.remove(0);
+    }
+
+    private int getIndentation() {
+        return indentations.isEmpty() ? 0 : indentations.get(0);
+    }
+
     private String indentedLocation(String location, boolean proceed) {
         StringBuilder sb = new StringBuilder();
-        int indentation = proceed ? indentations.remove(0) : indentations.get(0);
+        int indentation = proceed ? popIndentation() : getIndentation();
         if (location == null) {
             return "";
         }
