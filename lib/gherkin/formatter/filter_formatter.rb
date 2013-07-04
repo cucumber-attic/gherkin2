@@ -130,7 +130,7 @@ module Gherkin
         end
 
         @examples_events.clear
-        @examples_tags.clear
+        @examples_tags = []
         @examples_name = nil
         @examples_range = nil
       end
