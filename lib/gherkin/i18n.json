@@ -518,12 +518,12 @@
 	  "but": "*|Men"
 	},
 	"pa": {
-	  "name": "Panjabi(Gurmukhi)",
+	  "name": "Panjabi",
 	  "native": "ਪੰਜਾਬੀ",
 	  "feature": "ਖਾਸੀਅਤ|ਮੁਹਾਂਦਰਾ|ਨਕਸ਼ ਨੁਹਾਰ",
 	  "background": "ਪਿਛੋਕੜ",
-	  "scenario": "ਪਟ-ਕਥਾ",
-	  "scenario_outline": "ਪਟ-ਕਥਾ ਢਾਂਚਾ|ਪਟ-ਕਥਾ ਰੂਪ-ਰੇਖਾ",
+	  "scenario": "ਪਟਕਥਾ",
+	  "scenario_outline": "ਪਟਕਥਾ ਢਾਂਚਾ|ਪਟਕਥਾ ਰੂਪ ਰੇਖਾ",
 	  "examples": "ਉਦਾਹਰਨਾਂ",
 	  "given": "*|ਜੇਕਰ|ਜਿਵੇਂ ਕਿ",
 	  "when": "*|ਜਦੋਂ",
