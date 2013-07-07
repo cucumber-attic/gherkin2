@@ -204,7 +204,7 @@ module Gherkin
       | lv        | Latvian             | latviešu          |
       | nl        | Dutch               | Nederlands        |
       | no        | Norwegian           | norsk             |
-      | pa        | Panjabi             | ਪੰਜਾਬੀ             |
+      | pa        | Panjabi             | ਪੰਜਾਬੀ            |
       | pl        | Polish              | polski            |
       | pt        | Portuguese          | português         |
       | ro        | Romanian            | română            |
