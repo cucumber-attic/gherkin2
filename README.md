@@ -241,7 +241,6 @@ Make sure you have access to all the servers where packages are being uploaded:
 
 * npm registry: `npm login`
 * rubygems.org: `gem push`
-* cukes.info: `ssh cukes.info`
 * sonatype: Check `~/.m2/settings.xml` and that you have gnupg (OS X users: Install [GPGTools](http://www.gpgtools.org/installer/index.html))
   * Make sure you have a key [with no sub-key](https://docs.sonatype.org/display/Repository/How+To+Generate+PGP+Signatures+With+Maven)
 * nuget: See .NET section above

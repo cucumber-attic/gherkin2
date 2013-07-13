@@ -1,5 +1,7 @@
 ## [Git master](https://github.com/cucumber/gherkin/compare/v2.12.0...master)
 
+* [Core] Fix typos in Malay ([#256](https://github.com/cucumber/gherkin/pull/256) glts)
+* [Core] Add plural of Given in German ([#255](https://github.com/cucumber/gherkin/pull/255) glts)
 * [Core] Added Thai (th) ([#253](https://github.com/cucumber/gherkin/pull/253) Twin Panichsombat)
 
 ## [2.12.0](https://github.com/cucumber/gherkin/compare/v2.11.8...v2.12.0)
