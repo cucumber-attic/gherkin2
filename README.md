@@ -126,9 +126,9 @@ Now you can build the jar with:
 
 In order to build and test Gherkin for JavaScript you must install:
 
-* Node.js (0.6.17 or higher with npm)
+* Node.js (0.10.9 or higher with npm)
 * Ragel with JavaScript support: http://github.com/dominicmarks/ragel-js
-  * Make sure you have gcc/g++ 4.6 (4.7 is to strict to build ragel-js)
+  * Make sure you have gcc/g++ 4.6 (4.7 is too strict to build ragel-js)
   * Make sure you have `autoconf` and `automake` (`brew install automake`)
   * Make sure you have the official ragel (`brew install ragel`)
   * Make sure you have kelbt (`brew install kelbt`). If that fails, install manually from http://www.complang.org/kelbt/
