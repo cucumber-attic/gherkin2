@@ -19,7 +19,7 @@ import gherkin.formatter.model.Tag;
 
 import java.io.PrintStream;
 import java.io.StringReader;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -66,37 +66,39 @@ public class JSONFormatterTest {
 
     @SuppressWarnings("rawtypes")
     @Test
-    public void testOrderingOfCalls() {
+    public void testAllStepsFirstOrderingOfCalls() {
         StringBuilder stringBuilder = new StringBuilder();
         JSONFormatter jsonFormatter = new JSONPrettyFormatter(stringBuilder);
+        Feature feature = feature("Test Feature");
+        Scenario scenario = scenario("Test Scenario");
+        Step step1 = step("Given", "Step 1");
+        Step step2 = step("Given", "Step 2");
+        final byte[] data1 = new byte[] {1, 2, 3};
+        String text1 = "text1";
+        String text2 = "text2";
+        final byte[] data2 = new byte[] {4};
+        Result step1Result = result("passed");
+        Result step2Result = result("failed");
 
-        Feature feature = new Feature(new ArrayList<Comment>(), new ArrayList<Tag>(), "", "Test Feature", "", 12, "");
+        jsonFormatter.uri(uri());
         jsonFormatter.feature(feature);
-
-        jsonFormatter.before(new Match(null, null), new Result("passed", 565L, ""));
-        Scenario scenario = new Scenario(new ArrayList<Comment>(), new ArrayList<Tag>(), "", "Test Scenario", "", 13, "");
+        jsonFormatter.before(match(), result("passed"));
         jsonFormatter.scenario(scenario);
 
-        Step step1 = new Step(new ArrayList<Comment>(), "Given", "Step 1", 14, null, new DocString("", "", 52));
         jsonFormatter.step(step1);
-        final byte[] data = new byte[] {1, 2, 3};
-        jsonFormatter.embedding("mime-type", data);
-
-        Step step2 = new Step(new ArrayList<Comment>(), "Given", "Step 2", 15, null, new DocString("", "", 52));
         jsonFormatter.step(step2);
 
-        jsonFormatter.match(new Match(new ArrayList<Argument>(), "xx"));
-
-        Result step1Result = new Result("passed", 565L, "");
+        jsonFormatter.match(match());
+        jsonFormatter.embedding("mime-type", data1);
+        jsonFormatter.write(text1);
         jsonFormatter.result(step1Result);
 
-        jsonFormatter.match(new Match(new ArrayList<Argument>(), "yy"));
-
-        Result step2Result = new Result("failed", 45L, "");
+        jsonFormatter.match(match());
+        jsonFormatter.write(text2);
+        jsonFormatter.embedding("mime-type-2", data2);
         jsonFormatter.result(step2Result);
-        final byte[] data1 = new byte[] {4};
-        jsonFormatter.embedding("mime-type-2", data1);
 
+        jsonFormatter.eof();
         jsonFormatter.done();
         jsonFormatter.close();
 
@@ -110,24 +112,103 @@ public class JSONFormatterTest {
         assertEquals(scenario.getName(), scenarioJson.get("name"));
 
         Map step1Json = (Map) ((List)scenarioJson.get("steps")).get(0);
-        assertEquals(step1.getName(), step1Json.get("name"));
-        List embeddings1 = (List)step1Json.get("embeddings");
-        assertNotNull(embeddings1);
-        assertEquals(embeddings1.size(), 1);
+        assertJsonStepData(step1, step1Result, step1Json);        
 
         Map step2Json = (Map) ((List)scenarioJson.get("steps")).get(1);
-        assertEquals(step2.getName(), step2Json.get("name"));
-        List embeddings2 = (List)step2Json.get("embeddings");
-        assertNotNull(embeddings2);
-        assertEquals(embeddings2.size(), 1);
-
-        Map step1ResultJson = (Map) step1Json.get("result");
-        assertEquals(step1Result.getStatus(), step1ResultJson.get("status"));
-
-        Map step2ResultJson = (Map) step2Json.get("result");
-        assertEquals(step2Result.getStatus(), step2ResultJson.get("status"));
+        assertJsonStepData(step2, step2Result, step2Json);
 
 
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Test
+    public void testOneStepAtTheTimeOrderingOfCalls() {
+        StringBuilder stringBuilder = new StringBuilder();
+        JSONFormatter jsonFormatter = new JSONPrettyFormatter(stringBuilder);
+        Feature feature = feature("Test Feature");
+        Scenario scenario = scenario("Test Scenario");
+        Step step1 = step("Given", "Step 1");
+        Step step2 = step("Given", "Step 2");
+        final byte[] data1 = new byte[] {1, 2, 3};
+        String text1 = "text1";
+        String text2 = "text2";
+        final byte[] data2 = new byte[] {4};
+        Result step1Result = result("passed");
+        Result step2Result = result("failed");
+
+        jsonFormatter.uri(uri());
+        jsonFormatter.feature(feature);
+        jsonFormatter.before(match(), result("passed"));
+        jsonFormatter.scenario(scenario);
+
+        jsonFormatter.step(step1);
+        jsonFormatter.match(match());
+        jsonFormatter.embedding("mime-type", data1);
+        jsonFormatter.write(text1);
+        jsonFormatter.result(step1Result);
+
+        jsonFormatter.step(step2);
+        jsonFormatter.match(match());
+        jsonFormatter.write(text2);
+        jsonFormatter.embedding("mime-type-2", data2);
+        jsonFormatter.result(step2Result);
+
+        jsonFormatter.eof();
+        jsonFormatter.done();
+        jsonFormatter.close();
+
+        Gson gson = new Gson();
+        List result = gson.fromJson(stringBuilder.toString(), List.class);
+
+        Map featureJson = (Map) result.get(0);
+        assertEquals(feature.getName(), featureJson.get("name"));
+
+        Map scenarioJson = (Map) ((List) featureJson.get("elements")).get(0);
+        assertEquals(scenario.getName(), scenarioJson.get("name"));
+
+        Map step1Json = (Map) ((List)scenarioJson.get("steps")).get(0);
+        assertJsonStepData(step1, step1Result, step1Json);        
+
+        Map step2Json = (Map) ((List)scenarioJson.get("steps")).get(1);
+        assertJsonStepData(step2, step2Result, step2Json);
+
+
+    }
+
+	private void assertJsonStepData(Step step, Result stepResult, Map stepJson) {
+		assertEquals(step.getName(), stepJson.get("name"));
+        List embeddings1 = (List)stepJson.get("embeddings");
+        assertNotNull("embeddings", embeddings1);
+        assertEquals("embeddings size", embeddings1.size(), 1);
+        List output1 = (List)stepJson.get("output");
+        assertNotNull("output", output1);
+        assertEquals("output size", output1.size(), 1);
+        Map step1ResultJson = (Map) stepJson.get("result");
+        assertEquals(stepResult.getStatus(), step1ResultJson.get("status"));
+	}
+    
+    private String uri() {
+        return "uri";
+    }
+
+    private Feature feature(String featureName) {
+        return new Feature(Collections.<Comment>emptyList(), Collections.<Tag>emptyList(), "", featureName, "", 12, "");
+    }
+
+    private Scenario scenario(String scenarioName) {
+    	return new Scenario(Collections.<Comment>emptyList(), Collections.<Tag>emptyList(), "", scenarioName, "", 13, "");
+    }
+
+    private Step step(String keyword, String stepName) {
+        return new Step(Collections.<Comment>emptyList(), keyword, stepName, 14, null, new DocString("", "", 52));
+    }
+
+    private Match match() {
+        return new Match(null, null);
+    }
+
+    private Result result(String status) {
+        return new Result(status, 565L, "");
     }
 
 }
