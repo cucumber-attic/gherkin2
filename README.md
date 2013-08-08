@@ -196,44 +196,37 @@ Now, make sure you have openssl installed - it's needed to build the rubies.
 
     brew install openssl
 
-Next, we're going to install Ruby 1.8.7 and Ruby 1.9.3 for MinGW. We need both versions so we can build Windows binaries for both.
-OS X Lion (or later) doesn't ship with an LLVM free gcc, which you will need in order to install ruby 1.8.7. We can install it with:
+Next, we're going to install Ruby 1.9.3 and 2.0.0 for MinGW. We need both versions so we can build Windows binaries for both.
 
-    brew install https://raw.github.com/Homebrew/homebrew-dupes/master/apple-gcc42.rb
     export PATH=/usr/local/mingw/bin:$PATH
     # Test that it's on your PATH
     i686-w64-mingw32-gcc -v
 
-For more info see:
-
-* http://stackoverflow.com/questions/6170813/why-cant-i-install-rails-on-lion-using-rvm
-* https://github.com/mxcl/homebrew/wiki/Custom-GCC-and-cross-compilers
-
-Now we're ready to install the Windows rubies:
+Now we're ready to install the Windows rubies. You should be able to replace `rvm` with `rbenv`
 
     unset GHERKIN_JS
 
     # 1.9.3
-    rvm install 1.9.3-p392
-    rvm use 1.9.3-p392
+    rvm install 1.9.3-p448
+    rvm use 1.9.3-p448
     rvm gemset use cucumber --create
     gem install bundler
     bundle install
-    PATH=/usr/local/mingw/bin:$PATH CC=/usr/local/mingw/bin/i686-w64-mingw32-gcc rake-compiler cross-ruby VERSION=1.9.3-p392
+    PATH=/usr/local/mingw/bin:$PATH CC=/usr/local/mingw/bin/i686-w64-mingw32-gcc rake-compiler cross-ruby VERSION=1.9.3-p448
 
-    # 1.8.7
-    CC=gcc-4.2 rvm install 1.8.7-p371
-    rvm use 1.8.7-p371
+    # 2.0.0
+    rvm install 2.0.0-p247
+    rvm use 2.0.0-p247
     rvm gemset use cucumber --create
     gem install bundler
     bundle install
-    PATH=/usr/local/mingw/bin:$PATH CC=/usr/local/mingw/bin/i686-w64-mingw32-gcc rake-compiler cross-ruby VERSION=1.8.7-p371
+    PATH=/usr/local/mingw/bin:$PATH CC=/usr/local/mingw/bin/i686-w64-mingw32-gcc rake-compiler cross-ruby VERSION=2.0.0-p247
 
 Now you can build Windows gems:
 
     rake compile
     mkdir release
-    rake gems:win
+    PATH=/usr/local/mingw/bin:$PATH CC=/usr/local/mingw/bin/i686-w64-mingw32-gcc rake gems:win
 
 ## Release process
 
