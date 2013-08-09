@@ -36,8 +36,10 @@ namespace :gems do
 
   def rbenv(version)
     old_version = ENV['RBENV_VERSION']
-    yield
     ENV['RBENV_VERSION'] = version
+    yield
+  ensure
+    ENV['RBENV_VERSION'] = old_version
   end
 
 end
