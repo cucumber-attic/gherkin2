@@ -94,7 +94,7 @@ module Gherkin
     end
 
     def lexer(listener, force_ruby=false)
-      if force_ruby
+      if force_ruby || ENV['GHERKIN_RUBY'] =~ /true/i
         rb(listener)
       else
         begin
