@@ -1,5 +1,6 @@
 ## [Git master](https://github.com/cucumber/gherkin/compare/v2.12.0...master)
 
+* [Core] Added support for Panjabi/Punjabi language (Gurmukhi Script) ([#267](https://github.com/cucumber/gherkin/pull/267) Arvinder Singh Kang)
 * [Core] Update i18n.json change Malay translation using suitable words ([#268](https://github.com/cucumber/gherkin/pull/268) CallMeLaNN)
 * [Core] Fix typos in Malay ([#256](https://github.com/cucumber/gherkin/pull/256) glts)
 * [Core] Add plural of Given in German ([#255](https://github.com/cucumber/gherkin/pull/255) glts)
