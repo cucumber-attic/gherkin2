@@ -1,5 +1,6 @@
 ## [Git master](https://github.com/cucumber/gherkin/compare/v2.12.0...master)
 
+* problem with "gherkin_lexer_en" ([#257](https://github.com/cucumber/gherkin/issues/257) Aslak Hellesøy)
 * Fix for dissapearing examples tags ([#187](https://github.com/cucumber/gherkin/issues/187) calebTomlinson)
 * Handle interleaved calls to step, match and result in the java PrettyFormatter ([#261](https://github.com/cucumber/gherkin/pull/261) Björn Rasmusson)
 * Change the java JSONFormatter to handle embedding text in the report correctly ([#269](https://github.com/cucumber/gherkin/pull/269) Björn Rasmusson)
