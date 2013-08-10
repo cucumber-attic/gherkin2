@@ -112,7 +112,6 @@ EOF
 
   task :push => GHERKIN_NUPKG do
     nuget("Push #{GHERKIN_NUPKG}")
-    nuget("Publish gherkin #{GHERKIN_VERSION}")
   end
 
   file IKVMC_EXE do
