@@ -165,17 +165,16 @@ TODO: Make all specs pass with js lexer - replace 'c(listener)' with 'js(listene
 
 ### .NET dll
 
-You must install Mono SDK 2.10.8. The OS X package installer is not recommended as it modifies your system PATH and makes Homebrew unhappy. Install with homebrew instead:
+You must install Mono SDK 3.2.1 (or possibly newer). The OS X package installer is recommended, but make sure you run `brew doctor`
+after installing.
 
-    brew install ikvm/mono.rb
-
-You must also download NuGet.exe from [CodePlex](http://nuget.codeplex.com/releases) and place it in `/usr/local/nuget/NuGet.exe`. When it's installed, update it and register your NuGet API Key:
+Now we must update NuGet.exe and register our NuGet API Key:
 
     # In case we need to update
-    mono /usr/local/nuget/NuGet.exe Update -self
+    mono ikvm/NuGet.exe Update -self
 
     # The key is at https://nuget.org/account
-    mono --runtime=v4.0.30319 /usr/local/nuget/NuGet.exe SetApiKey xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx
+    mono --runtime=v4.0.30319 ikvm/NuGet.exe SetApiKey xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx
     (Note: you may need to run 'mozroots --import --sync' to help mono trusts https setificate, see http://monomvc.wordpress.com/2012/03/06/nuget-on-mono/ for more information)
 
 Now you can build the .NET dll with:

@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 namespace :ikvm do
-  IKVM_VERSION    = '7.1.4532.2'
+  IKVM_VERSION    = '7.2.4630.5'
   IKVM_DIR        = "ikvm/ikvm-#{IKVM_VERSION}"
   IKVM_ZIP        = "ikvm/ikvmbin-#{IKVM_VERSION}.zip"
   CLOBBER.include(IKVM_DIR, IKVM_ZIP)
@@ -34,7 +34,7 @@ namespace :ikvm do
   end
 
   def nuget(args)
-    mono("/usr/local/nuget/NuGet.exe #{args}")
+    mono("ikvm/NuGet.exe #{args}")
   end
 
   file GHERKIN_EXE => [IKVMC_EXE, 'lib/gherkin.jar'] do
