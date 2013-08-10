@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.summary     = "#{s.name}-#{s.version}"
   s.email       = "cukes@googlegroups.com"
   s.homepage    = "http://github.com/cucumber/gherkin"
+  s.license     = 'MIT'
 
   s.files            = `git ls-files`.split("\n")
   s.test_files       = `git ls-files -- {spec,features}/*`.split("\n")
