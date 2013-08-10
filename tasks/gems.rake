@@ -34,6 +34,7 @@ namespace :gems do
     :jruby
   ]
 
+  # https://github.com/sstephenson/rbenv/issues/121
   def rbenv(version)
     old_version = ENV['RBENV_VERSION']
     ENV['RBENV_VERSION'] = version

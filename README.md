@@ -243,6 +243,9 @@ Run tests once with GHERKIN_JS_NATIVE=true:
 
 Now we can release:
 
+* Make sure you have rbenv installed
+  * And that you have merged this patch: https://github.com/sstephenson/rbenv/issues/121
+  * `cd ~/.rbenv && git pull git@github.com:sstephenson/rbenv.git exec-next`
 * Make sure GHERKIN_JS is defined (see JavaScript section above)
 * Bump version in:
   * This file (Installation/Java section)
