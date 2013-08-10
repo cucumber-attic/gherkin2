@@ -54,12 +54,12 @@ namespace :ikvm do
     pkg_dir = File.dirname(GHERKIN_EXE)
     mkdir_p File.dirname(pkg_dir) unless File.directory?(pkg_dir)
     nuget("Pack #{GHERKIN_NUSPEC} -Version #{GHERKIN_VERSION} -OutputDirectory #{pkg_dir}")
-    # Now, fix the path inside the file - see https://github.com/cucumber/gherkin/issues/148
+    # Now, verify that we have a proper dll inside the package
     require 'zip/zipfilesystem'
     Zip::ZipFile.open(GHERKIN_NUPKG) do |zipfile|
-      begin
-        zipfile.file.rename 'lib%2Fgherkin.dll', 'lib/gherkin.dll' 
-      rescue => looks_like_nuget_has_been_fixed
+      dll = zipfile.get_entry('lib/gherkin.dll')
+      if(dll.size < 3_000_000)
+        raise "Looks like the dll is too small."
       end
     end
   end
@@ -80,12 +80,15 @@ namespace :ikvm do
     <iconUrl>https://github.com/cucumber/cukes.info/raw/master/templates/images/gherkin/gherkin_128x128.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A fast lexer and parser for the Gherkin language based on Ragel</description>
-    <copyright>Copyright (c) 2009-2011 Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy</copyright>
+    <copyright>Copyright (c) 2009-2013 Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy</copyright>
     <dependencies>
       <dependency id="IKVM" version="#{IKVM_VERSION}" />
     </dependencies>
     <tags>gherkin cucumber specflow bdd lexer parser</tags>
   </metadata>
+  <files>
+    <file src="lib/gherkin.dll" target="lib/gherkin.dll" />
+  </files>
 </package>
 EOF
     end

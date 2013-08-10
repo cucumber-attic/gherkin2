@@ -1,5 +1,6 @@
 ## [Git master](https://github.com/cucumber/gherkin/compare/v2.12.0...master)
 
+* Problem with Nuget package 2.12.0 ([#254](https://github.com/cucumber/gherkin/issues/254) Aslak Hellesøy)
 * problem with "gherkin_lexer_en" ([#257](https://github.com/cucumber/gherkin/issues/257) Aslak Hellesøy)
 * Fix for dissapearing examples tags ([#187](https://github.com/cucumber/gherkin/issues/187) calebTomlinson)
 * Handle interleaved calls to step, match and result in the java PrettyFormatter ([#261](https://github.com/cucumber/gherkin/pull/261) Björn Rasmusson)
