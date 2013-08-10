@@ -1,5 +1,7 @@
-## [Git master](https://github.com/cucumber/gherkin/compare/v2.12.0...master)
+## [2.12.1](https://github.com/cucumber/gherkin/compare/v2.12.0...v2.12.1)
 
+* Dropped support for ruby 1.8.7 (Aslak Hellesøy)
+* Added support for ruby 2.0.0 (still supporting 1.9.3) (Aslak Hellesøy)
 * Random lexing error; native fallback fails. Switch from C lexer to Ruby lexer with `GHERKIN_RUBY=true` ([#245](https://github.com/cucumber/gherkin/issues/245) Aslak Hellesøy)
 * Problem with Nuget package 2.12.0 ([#254](https://github.com/cucumber/gherkin/issues/254) Aslak Hellesøy)
 * problem with "gherkin_lexer_en" ([#257](https://github.com/cucumber/gherkin/issues/257) Aslak Hellesøy)
