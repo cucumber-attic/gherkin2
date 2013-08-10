@@ -1,5 +1,6 @@
 ## [Git master](https://github.com/cucumber/gherkin/compare/v2.12.0...master)
 
+* Handle interleaved calls to step, match and result in the java PrettyFormatter ([#261](https://github.com/cucumber/gherkin/pull/261) Björn Rasmusson)
 * Change the java JSONFormatter to handle embedding text in the report correctly ([#269](https://github.com/cucumber/gherkin/pull/269) Björn Rasmusson)
 * Updated Hindi language with "pure form", Sanskrit based versions of the words. ([#262](https://github.com/cucumber/gherkin/pull/262) anandpathaksharma)
 * [Core] Added support for Panjabi/Punjabi language (Gurmukhi Script) ([#267](https://github.com/cucumber/gherkin/pull/267) Arvinder Singh Kang)
