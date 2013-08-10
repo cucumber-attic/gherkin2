@@ -6,7 +6,7 @@ unless defined?(Gherkin::VERSION)
   VERSION       = '2.12.0'
   JRUBY         = defined?(JRUBY_VERSION)
 
-  if !JRUBY && !(RUBY_VERSION =~ /^(1\.8\.7|1\.9\.3|2\.0)/)
+  if !JRUBY && !(RUBY_VERSION =~ /^(1\.9\.3|2\.0)/)
     warn("WARNING: Unsupported Ruby version - #{RUBY_VERSION}")
   end
 end
