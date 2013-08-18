@@ -1,3 +1,24 @@
+## [Git master](https://github.com/cucumber/gherkin/compare/v2.12.1...master)
+
+* Java JSONFormatter should record before hooks in next scenario ([#270](https://github.com/cucumber/gherkin/pull/270) Björn Rasmusson)
+
+## [2.12.1](https://github.com/cucumber/gherkin/compare/v2.12.0...v2.12.1)
+
+* Dropped support for ruby 1.8.7 (Aslak Hellesøy)
+* Added support for ruby 2.0.0 (still supporting 1.9.3) (Aslak Hellesøy)
+* Random lexing error; native fallback fails. Switch from C lexer to Ruby lexer with `GHERKIN_RUBY=true` ([#245](https://github.com/cucumber/gherkin/issues/245) Aslak Hellesøy)
+* Problem with Nuget package 2.12.0 ([#254](https://github.com/cucumber/gherkin/issues/254) Aslak Hellesøy)
+* problem with "gherkin_lexer_en" ([#257](https://github.com/cucumber/gherkin/issues/257) Aslak Hellesøy)
+* Fix for dissapearing examples tags ([#187](https://github.com/cucumber/gherkin/issues/187) calebTomlinson)
+* Handle interleaved calls to step, match and result in the java PrettyFormatter ([#261](https://github.com/cucumber/gherkin/pull/261) Björn Rasmusson)
+* Change the java JSONFormatter to handle embedding text in the report correctly ([#269](https://github.com/cucumber/gherkin/pull/269) Björn Rasmusson)
+* Updated Hindi language with "pure form", Sanskrit based versions of the words. ([#262](https://github.com/cucumber/gherkin/pull/262) anandpathaksharma)
+* [Core] Added support for Panjabi/Punjabi language (Gurmukhi Script) ([#267](https://github.com/cucumber/gherkin/pull/267) Arvinder Singh Kang)
+* [Core] Update i18n.json change Malay translation using suitable words ([#268](https://github.com/cucumber/gherkin/pull/268) CallMeLaNN)
+* [Core] Fix typos in Malay ([#256](https://github.com/cucumber/gherkin/pull/256) glts)
+* [Core] Add plural of Given in German ([#255](https://github.com/cucumber/gherkin/pull/255) glts)
+* [Core] Added Thai (th) ([#253](https://github.com/cucumber/gherkin/pull/253) Twin Panichsombat)
+
 ## [2.12.0](https://github.com/cucumber/gherkin/compare/v2.11.8...v2.12.0)
 
 * [Java, Ruby] TagExpression.eval() removed (Oleg Sukhodolsky)

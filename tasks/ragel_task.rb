@@ -27,7 +27,8 @@ class RagelTask
     min_target = target.gsub(/\.js$/, '.min.js')
     file target => deps do
       mkdir_p(File.dirname(target)) unless File.directory?(File.dirname(target))
-      sh "ragel #{flags} #{lang_ragel} -o #{target}"
+      ragel = @lang == 'js' ? 'js/ragel-osx' : 'ragel'
+      sh "#{ragel} #{flags} #{lang_ragel} -o #{target}"
       # Remove absolute paths from ragel-generated sources
       sh %{#{sed} "s|#{Dir.pwd}/tasks/../||" #{target}}
       if(@lang == 'js')

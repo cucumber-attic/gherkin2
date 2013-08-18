@@ -204,6 +204,7 @@ module Gherkin
       | lv        | Latvian             | latviešu          |
       | nl        | Dutch               | Nederlands        |
       | no        | Norwegian           | norsk             |
+      | pa        | Panjabi             | ਪੰਜਾਬੀ            |
       | pl        | Polish              | polski            |
       | pt        | Portuguese          | português         |
       | ro        | Romanian            | română            |
@@ -212,6 +213,7 @@ module Gherkin
       | sr-Cyrl   | Serbian             | Српски            |
       | sr-Latn   | Serbian (Latin)     | Srpski (Latinica) |
       | sv        | Swedish             | Svenska           |
+      | th        | Thai                | ไทย               |
       | tl        | Telugu              | తెలుగు            |
       | tr        | Turkish             | Türkçe            |
       | tt        | Tatar               | Татарча           |

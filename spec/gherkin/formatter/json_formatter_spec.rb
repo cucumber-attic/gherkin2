@@ -21,6 +21,7 @@ module Gherkin
           data = data.to_java_bytes
         end
         f.embedding("mime-type", data)
+        f.write("step output")
 
         f.result(Model::Result.new(:passed, 1, nil))
 
@@ -63,6 +64,9 @@ module Gherkin
                           "mime_type": "mime-type",
                           "data": "YWJj"
                         }
+                      ],
+                      "output": [
+                        "step output"
                       ],
                       "result": {
                         "status": "passed",

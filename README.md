@@ -7,7 +7,7 @@ A fast lexer and parser for the Gherkin language based on Ragel. Gherkin is two 
 
 Supported platforms:
 
-* [Ruby](https://rubygems.org/gems/gherkin) 1.8.7-1.9.3 (MRI, JRuby, REE, Rubinius)
+* [Ruby](https://rubygems.org/gems/gherkin) 1.9.3-2.0.0 (MRI, JRuby, REE, Rubinius)
 * [Pure Java](http://search.maven.org/#search%7Cga%7C1%7Cgherkin) (jar file)
 * [JavaScript](http://search.npmjs.org/#/gherkin) (Tested with V8/node.js/Chrome, but might work on other JavaScript engines)
 * [.NET](http://nuget.org/List/Packages/gherkin) (dll file)
@@ -54,7 +54,7 @@ The jar file is in the central Maven repo.
     <dependency>
         <groupId>info.cukes</groupId>
         <artifactId>gherkin</artifactId>
-        <version>2.12.0</version>
+        <version>2.12.1</version>
     </dependency>
 
 You can get it manually from [Maven Central](http://search.maven.org/#browse%7C-2073395818)
@@ -126,9 +126,9 @@ Now you can build the jar with:
 
 In order to build and test Gherkin for JavaScript you must install:
 
-* Node.js (0.6.17 or higher with npm)
+* Node.js (0.10.9 or higher with npm)
 * Ragel with JavaScript support: http://github.com/dominicmarks/ragel-js
-  * Make sure you have gcc/g++ 4.6 (4.7 is to strict to build ragel-js)
+  * Make sure you have gcc/g++ 4.6 (4.7 is too strict to build ragel-js)
   * Make sure you have `autoconf` and `automake` (`brew install automake`)
   * Make sure you have the official ragel (`brew install ragel`)
   * Make sure you have kelbt (`brew install kelbt`). If that fails, install manually from http://www.complang.org/kelbt/
@@ -165,17 +165,16 @@ TODO: Make all specs pass with js lexer - replace 'c(listener)' with 'js(listene
 
 ### .NET dll
 
-You must install Mono SDK 2.10.8. The OS X package installer is not recommended as it modifies your system PATH and makes Homebrew unhappy. Install with homebrew instead:
+You must install Mono SDK 3.2.1 (or possibly newer). The OS X package installer is recommended, but make sure you run `brew doctor`
+after installing.
 
-    brew install ikvm/mono.rb
-
-You must also download NuGet.exe from [CodePlex](http://nuget.codeplex.com/releases) and place it in `/usr/local/nuget/NuGet.exe`. When it's installed, update it and register your NuGet API Key:
+Now we must update NuGet.exe and register our NuGet API Key:
 
     # In case we need to update
-    mono /usr/local/nuget/NuGet.exe Update -self
+    mono ikvm/NuGet.exe Update -self
 
     # The key is at https://nuget.org/account
-    mono --runtime=v4.0.30319 /usr/local/nuget/NuGet.exe SetApiKey xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx
+    mono --runtime=v4.0.30319 ikvm/NuGet.exe SetApiKey xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxx
     (Note: you may need to run 'mozroots --import --sync' to help mono trusts https setificate, see http://monomvc.wordpress.com/2012/03/06/nuget-on-mono/ for more information)
 
 Now you can build the .NET dll with:
@@ -196,44 +195,37 @@ Now, make sure you have openssl installed - it's needed to build the rubies.
 
     brew install openssl
 
-Next, we're going to install Ruby 1.8.7 and Ruby 1.9.3 for MinGW. We need both versions so we can build Windows binaries for both.
-OS X Lion (or later) doesn't ship with an LLVM free gcc, which you will need in order to install ruby 1.8.7. We can install it with:
+Next, we're going to install Ruby 1.9.3 and 2.0.0 for MinGW. We need both versions so we can build Windows binaries for both.
 
-    brew install https://raw.github.com/Homebrew/homebrew-dupes/master/apple-gcc42.rb
     export PATH=/usr/local/mingw/bin:$PATH
     # Test that it's on your PATH
     i686-w64-mingw32-gcc -v
 
-For more info see:
-
-* http://stackoverflow.com/questions/6170813/why-cant-i-install-rails-on-lion-using-rvm
-* https://github.com/mxcl/homebrew/wiki/Custom-GCC-and-cross-compilers
-
-Now we're ready to install the Windows rubies:
+Now we're ready to install the Windows rubies. You should be able to replace `rvm` with `rbenv`
 
     unset GHERKIN_JS
 
     # 1.9.3
-    rvm install 1.9.3-p392
-    rvm use 1.9.3-p392
+    rvm install 1.9.3-p448
+    rvm use 1.9.3-p448
     rvm gemset use cucumber --create
     gem install bundler
     bundle install
-    PATH=/usr/local/mingw/bin:$PATH CC=/usr/local/mingw/bin/i686-w64-mingw32-gcc rake-compiler cross-ruby VERSION=1.9.3-p392
+    PATH=/usr/local/mingw/bin:$PATH CC=/usr/local/mingw/bin/i686-w64-mingw32-gcc rake-compiler cross-ruby VERSION=1.9.3-p448
 
-    # 1.8.7
-    CC=gcc-4.2 rvm install 1.8.7-p371
-    rvm use 1.8.7-p371
+    # 2.0.0
+    rvm install 2.0.0-p247
+    rvm use 2.0.0-p247
     rvm gemset use cucumber --create
     gem install bundler
     bundle install
-    PATH=/usr/local/mingw/bin:$PATH CC=/usr/local/mingw/bin/i686-w64-mingw32-gcc rake-compiler cross-ruby VERSION=1.8.7-p371
+    PATH=/usr/local/mingw/bin:$PATH CC=/usr/local/mingw/bin/i686-w64-mingw32-gcc rake-compiler cross-ruby VERSION=2.0.0-p247
 
 Now you can build Windows gems:
 
     rake compile
     mkdir release
-    rake gems:win
+    PATH=/usr/local/mingw/bin:$PATH CC=/usr/local/mingw/bin/i686-w64-mingw32-gcc rake gems:win
 
 ## Release process
 
@@ -241,7 +233,6 @@ Make sure you have access to all the servers where packages are being uploaded:
 
 * npm registry: `npm login`
 * rubygems.org: `gem push`
-* cukes.info: `ssh cukes.info`
 * sonatype: Check `~/.m2/settings.xml` and that you have gnupg (OS X users: Install [GPGTools](http://www.gpgtools.org/installer/index.html))
   * Make sure you have a key [with no sub-key](https://docs.sonatype.org/display/Repository/How+To+Generate+PGP+Signatures+With+Maven)
 * nuget: See .NET section above
@@ -252,6 +243,9 @@ Run tests once with GHERKIN_JS_NATIVE=true:
 
 Now we can release:
 
+* Make sure you have rbenv installed
+  * And that you have merged this patch: https://github.com/sstephenson/rbenv/issues/121
+  * `cd ~/.rbenv && git pull git@github.com:sstephenson/rbenv.git exec-next`
 * Make sure GHERKIN_JS is defined (see JavaScript section above)
 * Bump version in:
   * This file (Installation/Java section)

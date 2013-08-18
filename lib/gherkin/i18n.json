@@ -32,14 +32,14 @@
 	  "native": "Bahasa Melayu",
 	  "feature": "Fungsi",
 	  "background": "Latar Belakang",
-	  "scenario": "Senario",
-	  "scenario_outline": "Menggariskan Senario ",
-	  "examples": "Contoh ",
-	  "given": "*|Bagi",
+	  "scenario": "Senario|Situai|Keadaan",
+	  "scenario_outline": "Template Senario|Template Situai|Template Keadaan|Menggariskan Senario",
+	  "examples": "Contoh",
+	  "given": "*|Diberi|Bagi",
 	  "when": "*|Apabila",
-	  "then": "*|Kemudian",
+	  "then": "*|Maka|Kemudian",
 	  "and": "*|Dan",
-	  "but": "*|Tetapi"
+	  "but": "*|Tetapi|Tapi"
 	},
 	"bg": {
 	  "name": "Bulgarian",
@@ -119,7 +119,7 @@
 	  "scenario": "Szenario",
 	  "scenario_outline": "Szenariogrundriss",
 	  "examples": "Beispiele",
-	  "given": "*|Angenommen|Gegeben sei",
+	  "given": "*|Angenommen|Gegeben sei|Gegeben seien",
 	  "when": "*|Wenn",
 	  "then": "*|Dann",
 	  "and": "*|Und",
@@ -133,7 +133,7 @@
         "scenario": "Σενάριο",
         "scenario_outline": "Περιγραφή Σεναρίου",
         "examples": "Παραδείγματα|Σενάρια",
-        "given": "*|Δεδομένου|Δεδομένου ότι",
+        "given": "*|Δεδομένου",
         "when": "*|Όταν",
         "then": "*|Τότε",
         "and": "*|Και",
@@ -344,10 +344,10 @@
 	  "scenario_outline": "परिदृश्य रूपरेखा",
 	  "examples": "उदाहरण",
 	  "given": "*|अगर|यदि|चूंकि",
-	  "when": "*|जब",
-	  "then": "*|तब",
+	  "when": "*|जब|कदा",
+	  "then": "*|तब|तदा",
 	  "and": "*|और|तथा",
-	  "but": "*|पर"
+	  "but": "*|पर|परन्तु|किन्तु"
 	},
 	"hr": {
 	  "name": "Croatian",
@@ -517,6 +517,20 @@
 	  "and": "*|Og",
 	  "but": "*|Men"
 	},
+	"pa": {
+	  "name": "Panjabi",
+	  "native": "ਪੰਜਾਬੀ",
+	  "feature": "ਖਾਸੀਅਤ|ਮੁਹਾਂਦਰਾ|ਨਕਸ਼ ਨੁਹਾਰ",
+	  "background": "ਪਿਛੋਕੜ",
+	  "scenario": "ਪਟਕਥਾ",
+	  "scenario_outline": "ਪਟਕਥਾ ਢਾਂਚਾ|ਪਟਕਥਾ ਰੂਪ ਰੇਖਾ",
+	  "examples": "ਉਦਾਹਰਨਾਂ",
+	  "given": "*|ਜੇਕਰ|ਜਿਵੇਂ ਕਿ",
+	  "when": "*|ਜਦੋਂ",
+	  "then": "*|ਤਦ",
+	  "and": "*|ਅਤੇ",
+	  "but": "*|ਪਰ"
+	},
 	"pl": {
 	  "name": "Polish",
 	  "native": "polski",
@@ -642,6 +656,20 @@
 	  "then": "*|అప్పుడు",
 	  "and": "*|మరియు",
 	  "but": "*|కాని"
+	},
+	"th": {
+	  "name": "Thai",
+	  "native": "ไทย",
+	  "feature": "โครงหลัก|ความต้องการทางธุรกิจ|ความสามารถ",
+	  "background": "แนวคิด",
+	  "scenario": "เหตุการณ์",
+	  "scenario_outline": "สรุปเหตุการณ์|โครงสร้างของเหตุการณ์",
+	  "examples": "ชุดของตัวอย่าง|ชุดของเหตุการณ์",
+	  "given": "*|กำหนดให้",
+	  "when": "*|เมื่อ",
+	  "then": "*|ดังนั้น",
+	  "and": "*|และ",
+	  "but": "*|แต่"
 	},
 	"tr": {
 	  "name": "Turkish",

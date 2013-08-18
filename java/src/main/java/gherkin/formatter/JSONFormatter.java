@@ -25,7 +25,7 @@ public class JSONFormatter implements Reporter, Formatter {
     private String uri;
     private List<Map> beforeHooks = new ArrayList<Map>();
 
-    private enum Phase {step, match, embedding, result, output};
+    private enum Phase {step, match, embedding, output, result};
 
     /**
      * In order to handle steps being added all at once, this method determines allows methods to
@@ -33,27 +33,27 @@ public class JSONFormatter implements Reporter, Formatter {
      *
      * step
      * match
-     * result
      * embedding
      * output
+     * result
      * step
      * match
-     * result
      * embedding
      * output
+     * result
      *
      * or if
      *
      * step
      * step
      * match
-     * result
      * embedding
      * output
+     * result
      * match
-     * result
      * embedding
      * output
+     * result
      *
      * is called
      *
@@ -61,16 +61,10 @@ public class JSONFormatter implements Reporter, Formatter {
      */
     private Map getCurrentStep(Phase phase) {
         String target = phase.ordinal() <= Phase.match.ordinal()?Phase.match.name():Phase.result.name();
-        boolean lastWith = false;
-        lastWith = (phase.ordinal() > Phase.result.ordinal());
         Map lastWithValue = null;
         for (Map stepOrHook : getSteps()) {
             if (stepOrHook.get(target) == null) {
-                if (lastWith) {
-                    return lastWithValue;
-                } else {
-                    return stepOrHook;
-                }
+            	return stepOrHook;
             } else {
                 lastWithValue = stepOrHook;
             }
@@ -149,23 +143,15 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void before(Match match, Result result) {
-        if (getFeatureElement() == null) {
-            beforeHooks.add(buildHookMap(match,result));
-        } else {
-            addHook(match, result, "before");
-        }
+    	beforeHooks.add(buildHookMap(match,result));
     }
 
     @Override
     public void after(Match match, Result result) {
-        addHook(match, result, "after");
-    }
-
-    private void addHook(final Match match, final Result result, final String hook) {
-        List<Map> hooks = getFeatureElement().get(hook);
+        List<Map> hooks = getFeatureElement().get("after");
         if (hooks == null) {
             hooks = new ArrayList<Map>();
-            getFeatureElement().put(hook, hooks);
+            getFeatureElement().put("after", hooks);
         }
         hooks.add(buildHookMap(match,result));
     }

@@ -37,7 +37,6 @@ import static gherkin.util.FixJava.map;
 public class PrettyFormatter implements Reporter, Formatter {
     private final StepPrinter stepPrinter = new StepPrinter();
     private final NiceAppendable out;
-    private boolean monochrome;
     private final boolean executing;
 
     private String uri;
@@ -58,6 +57,7 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     private List<Step> steps = new ArrayList<Step>();
     private List<Integer> indentations = new ArrayList<Integer>();
+    private List<MatchResultPair> matchesAndResults = new ArrayList<MatchResultPair>();
     private DescribedStatement statement;
 
     public PrettyFormatter(Appendable out, boolean monochrome, boolean executing) {
@@ -67,7 +67,6 @@ public class PrettyFormatter implements Reporter, Formatter {
     }
 
     public void setMonochrome(boolean monochrome) {
-        this.monochrome = monochrome;
         if (monochrome) {
             formats = new MonochromeFormats();
         } else {
@@ -107,13 +106,23 @@ public class PrettyFormatter implements Reporter, Formatter {
     }
 
     private void replay() {
+        addAnyOrphanMatch();
         printStatement();
         printSteps();
     }
 
     private void printSteps() {
         while (!steps.isEmpty()) {
-            printStep("skipped", Collections.<Argument>emptyList(), null, true);
+            if (matchesAndResults.isEmpty()) {
+                printStep("skipped", Collections.<Argument>emptyList(), null);
+            } else {
+                MatchResultPair matchAndResult = matchesAndResults.remove(0);
+                printStep(matchAndResult.getResultStatus(), matchAndResult.getMatchArguments(),
+                        matchAndResult.getMatchLocation());
+                if (matchAndResult.hasResultErrorMessage()) {
+                   printError(matchAndResult.result);
+                }
+            }
         }
     }
 
@@ -132,14 +141,14 @@ public class PrettyFormatter implements Reporter, Formatter {
         out.append(": ");
         out.append(statement.getName());
         String location = executing ? uri + ":" + statement.getLine() : null;
-        out.println(indentedLocation(location, true));
+        out.println(indentedLocation(location));
         printDescription(statement.getDescription(), "    ", true);
         statement = null;
     }
 
-    private String indentedLocation(String location, boolean proceed) {
+    private String indentedLocation(String location) {
         StringBuilder sb = new StringBuilder();
-        int indentation = proceed ? indentations.remove(0) : indentations.get(0);
+        int indentation = indentations.isEmpty() ? 0 : indentations.remove(0);
         if (location == null) {
             return "";
         }
@@ -173,10 +182,13 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     @Override
     public void match(Match match) {
+        addAnyOrphanMatch();
         this.match = match;
-        printStatement();
-        if (!monochrome) {
-            printStep("executing", match.getArguments(), match.getLocation(), false);
+    }
+
+    private void addAnyOrphanMatch() {
+        if (this.match != null) {
+            matchesAndResults.add(new MatchResultPair(this.match, null));
         }
     }
 
@@ -192,16 +204,8 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     @Override
     public void result(Result result) {
-        if (!monochrome) {
-            out.append(formats.up(1));
-        }
-        if (match != null) {
-            printStep(result.getStatus(), match.getArguments(), match.getLocation(), true);
-        }
-        //Match should only be null if there's an error in something that's not a step, so this should be safe
-        if (result.getErrorMessage() != null) {
-            printError(result);
-        }
+        matchesAndResults.add(new MatchResultPair(match, result));
+        match = null;
     }
 
     @Override
@@ -216,10 +220,6 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     private void printHookFailure(Match match, Result result, boolean isBefore) {
         if (result.getStatus().equals(Result.FAILED)) {
-            if (!monochrome) {
-                out.append(formats.up(1));
-            }
-
             Format format = getFormat(result.getStatus());
 
             StringBuffer context = new StringBuffer("Failure in ");
@@ -243,8 +243,8 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     }
 
-    private void printStep(String status, List<Argument> arguments, String location, boolean proceed) {
-        Step step = proceed ? steps.remove(0) : steps.get(0);
+    private void printStep(String status, List<Argument> arguments, String location) {
+        Step step = steps.remove(0);
         Format textFormat = getFormat(status);
         Format argFormat = getArgFormat(status);
 
@@ -252,7 +252,7 @@ public class PrettyFormatter implements Reporter, Formatter {
         out.append("    ");
         out.append(textFormat.text(step.getKeyword()));
         stepPrinter.writeStep(out, textFormat, argFormat, step.getName(), arguments);
-        out.append(indentedLocation(location, proceed));
+        out.append(indentedLocation(location));
 
         out.println();
         if (step.getRows() != null) {
@@ -469,5 +469,40 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     private static String escapeTripleQuotes(String s) {
         return TRIPLE_QUOTES.matcher(s).replaceAll(ESCAPED_TRIPLE_QUOTES);
+    }
+}
+
+class MatchResultPair {
+    public final Match match;
+    public final Result result;
+
+    public MatchResultPair(Match match, Result result) {
+        this.match = match;
+        this.result = result;
+    }
+
+    public List<Argument> getMatchArguments() {
+        if (match != null) {
+            return match.getArguments();
+        }
+        return Collections.<Argument>emptyList();
+    }
+
+    public String getMatchLocation() {
+        if (match != null) {
+            return match.getLocation();
+        }
+        return null;
+    }
+
+    public String getResultStatus() {
+        if (result != null) {
+            return result.getStatus();
+        }
+        return "skipped";
+    }
+
+    public boolean hasResultErrorMessage() {
+        return result != null && result.getErrorMessage() != null;
     }
 }
