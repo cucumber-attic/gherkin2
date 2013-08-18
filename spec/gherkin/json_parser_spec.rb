@@ -98,28 +98,6 @@ module Gherkin
                       {
                           "id":"one/a-scenario",
                           "type":"scenario",
-                          "before": [
-                              {
-                                  "match":{
-                                      "location":"features/step_definitions/hooks.rb:1"
-                                  },
-                                  "result":{
-                                      "status":"passed",
-                                      "error_message":"Passed hook",
-                                      "duration": 3
-                                  }
-                              },
-                              {
-                                  "match":{
-                                      "location":"features/step_definitions/hooks.rb:2"
-                                  },
-                                  "result":{
-                                      "status":"failed",
-                                      "error_message":"Failed hook",
-                                      "duration": 22
-                                  }
-                              }
-                          ],
                           "steps":[
                               {
                                   "keyword":"Given ",
@@ -152,6 +130,16 @@ module Gherkin
                               }
                           ],
                           "after": [
+                              {
+                                  "match":{
+                                      "location":"features/step_definitions/hooks.rb:1"
+                                  },
+                                  "result":{
+                                      "status":"passed",
+                                      "error_message":"Passed after",
+                                      "duration": 3
+                                  }
+                              },
                               {
                                   "match":{
                                       "location":"features/step_definitions/hooks.rb:3"
