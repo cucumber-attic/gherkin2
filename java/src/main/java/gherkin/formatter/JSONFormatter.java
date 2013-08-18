@@ -143,23 +143,15 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void before(Match match, Result result) {
-        if (getFeatureElement() == null) {
-            beforeHooks.add(buildHookMap(match,result));
-        } else {
-            addHook(match, result, "before");
-        }
+    	beforeHooks.add(buildHookMap(match,result));
     }
 
     @Override
     public void after(Match match, Result result) {
-        addHook(match, result, "after");
-    }
-
-    private void addHook(final Match match, final Result result, final String hook) {
-        List<Map> hooks = getFeatureElement().get(hook);
+        List<Map> hooks = getFeatureElement().get("after");
         if (hooks == null) {
             hooks = new ArrayList<Map>();
-            getFeatureElement().put(hook, hooks);
+            getFeatureElement().put("after", hooks);
         }
         hooks.add(buildHookMap(match,result));
     }
