@@ -112,7 +112,7 @@ public class JSONFormatterTest {
         assertEquals(scenario.getName(), scenarioJson.get("name"));
 
         Map step1Json = (Map) ((List)scenarioJson.get("steps")).get(0);
-        assertJsonStepData(step1, step1Result, step1Json);        
+        assertJsonStepData(step1, step1Result, step1Json);
 
         Map step2Json = (Map) ((List)scenarioJson.get("steps")).get(1);
         assertJsonStepData(step2, step2Result, step2Json);
@@ -167,12 +167,53 @@ public class JSONFormatterTest {
         assertEquals(scenario.getName(), scenarioJson.get("name"));
 
         Map step1Json = (Map) ((List)scenarioJson.get("steps")).get(0);
-        assertJsonStepData(step1, step1Result, step1Json);        
+        assertJsonStepData(step1, step1Result, step1Json);
 
         Map step2Json = (Map) ((List)scenarioJson.get("steps")).get(1);
         assertJsonStepData(step2, step2Result, step2Json);
 
 
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Test
+    public void testBeforeHooks() {
+        StringBuilder stringBuilder = new StringBuilder();
+        JSONFormatter jsonFormatter = new JSONPrettyFormatter(stringBuilder);
+        Feature feature = feature("Test Feature");
+        Scenario scenario1 = scenario("Test Scenario 1");
+        Scenario scenario2 = scenario("Test Scenario 2");
+
+        jsonFormatter.uri(uri());
+        jsonFormatter.feature(feature);
+
+        jsonFormatter.before(match(), result("passed"));
+        jsonFormatter.scenario(scenario1);
+
+        jsonFormatter.before(match(), result("passed"));
+        jsonFormatter.scenario(scenario2);
+
+        jsonFormatter.eof();
+        jsonFormatter.done();
+        jsonFormatter.close();
+
+        Gson gson = new Gson();
+        List result = gson.fromJson(stringBuilder.toString(), List.class);
+
+        Map featureJson = (Map) result.get(0);
+        assertEquals(feature.getName(), featureJson.get("name"));
+
+        Map scenarioJson = (Map) ((List) featureJson.get("elements")).get(0);
+        assertEquals(scenario1.getName(), scenarioJson.get("name"));
+
+        List beforeHooks = (List) scenarioJson.get("before");
+        assertEquals(1, beforeHooks.size());
+
+        scenarioJson = (Map) ((List) featureJson.get("elements")).get(1);
+        assertEquals(scenario2.getName(), scenarioJson.get("name"));
+
+        beforeHooks = (List) scenarioJson.get("before");
+        assertEquals(1, beforeHooks.size());
     }
 
 	private void assertJsonStepData(Step step, Result stepResult, Map stepJson) {
@@ -186,7 +227,7 @@ public class JSONFormatterTest {
         Map step1ResultJson = (Map) stepJson.get("result");
         assertEquals(stepResult.getStatus(), step1ResultJson.get("status"));
 	}
-    
+
     private String uri() {
         return "uri";
     }
