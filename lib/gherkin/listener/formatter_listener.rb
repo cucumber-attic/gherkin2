@@ -120,7 +120,8 @@ module Gherkin
         
         def basic_statement
           @row_index += 1
-          yield @comments, "#{@examples_id};#{@row_index}"
+          examples_id = defined?(@examples_id) ? @examples_id : nil
+          yield @comments, "#{examples_id};#{@row_index}"
           @comments = []
         end
         
