@@ -130,8 +130,6 @@
 %% variable data data;
 %% getkey signedCharValue(data[p]);
 
-
-
 var Lexer = function(listener) {
   // Check that listener has the required functions
   var events = ['comment', 'tag', 'feature', 'background', 'scenario', 'scenario_outline', 'examples', 'step', 'doc_string', 'row', 'eof'];
@@ -161,6 +159,7 @@ Lexer.prototype.scan = function(data) {
   this.line_number = 1;
   this.last_newline = 0;
   var signedCharValue=function(v){return v > 127 ? v-256 : v; };
+
   %% write init;
   %% write exec;
 };
@@ -169,93 +168,93 @@ Lexer.prototype.bytesToString = function(bytes) {
   if(typeof bytes.write == 'function') {
     // Node.js
     return bytes.toString('utf-8');
-  } 
-//console.log("DEBUG: using mirabilos");
+  }
 
-	var result = "";
-	var i = 0;
-	var wc;
-	var c;
+  var result = "";
+  var i = 0;
+  var wc;
+  var c;
 
-	while (i < bytes.length) {
-		/* parse as UTF-8 lead byte */
-		wc = bytes[i++];
-		if (wc < 0x80) {
-			count = 0;
-		} else if (wc < 0xC2 || wc >= 0xF8) {
-			throw "input is not a valid UTF-8 lead octet";
-		} else if (wc < 0xE0) {
-			count = 1;
-			wc = (wc & 0x1F) << 6;
-		} else if (wc < 0xF0) {
-			count = 2;
-			wc = (wc & 0x0F) << 12;
-		} else /* wc < 0xF8 */ {
-			count = 3;
-			wc = (wc & 0x07) << 18;
-		}
+  while (i < bytes.length) {
+    /* parse as UTF-8 lead byte */
+    wc = bytes[i++];
+    if (wc < 0x80) {
+      count = 0;
+    } else if (wc < 0xC2 || wc >= 0xF8) {
+      throw "input is not a valid UTF-8 lead octet";
+    } else if (wc < 0xE0) {
+      count = 1;
+      wc = (wc & 0x1F) << 6;
+    } else if (wc < 0xF0) {
+      count = 2;
+      wc = (wc & 0x0F) << 12;
+    } else /* wc < 0xF8 */ {
+      count = 3;
+      wc = (wc & 0x07) << 18;
+    }
 
-		/* parse trail bytes, if any */
-		while (count) {
-			if (!(i < bytes.length)) {
-				throw "short read";
-			}
-			if ((c = bytes[i++] ^ 0x80) > 0x3F) {
-				throw "input is not a valid UTF-8 trail octet";
-			}
-			wc |= c << (6 * --count);
-			if (wc < (1 << (5 * count + 6))) {
-				throw "invalid non-minimal encoded input";
-			}
-		}
+    /* parse trail bytes, if any */
+    while (count) {
+      if (!(i < bytes.length)) {
+        throw "short read";
+      }
+      if ((c = bytes[i++] ^ 0x80) > 0x3F) {
+        throw "input is not a valid UTF-8 trail octet";
+      }
+      wc |= c << (6 * --count);
+      if (wc < (1 << (5 * count + 6))) {
+        throw "invalid non-minimal encoded input";
+      }
+    }
 
-		/* handle conversion to UTF-16 if needed */
-		if (wc > 0xFFFF) {
-			wc -= 0x10000;
-			result += String.fromCharCode(0xD800 + (wc >> 10));
-			wc = 0xDC00 + (wc & 0x3FF);
-		}
-		result += String.fromCharCode(wc);
-	}
+    /* handle conversion to UTF-16 if needed */
+    if (wc > 0xFFFF) {
+      wc -= 0x10000;
+      result += String.fromCharCode(0xD800 + (wc >> 10));
+      wc = 0xDC00 + (wc & 0x3FF);
+    }
+    result += String.fromCharCode(wc);
+  }
 
-	return result;
- 
+  return result;
 };
 
 Lexer.prototype.stringToBytes = function(string) {
-	var bytes = [];
-	var i = 0;
-	var j = 0;
-	var wc;
-	while (i < string.length) {
-		wc = string.charCodeAt(i++);
-		if (wc >= 0xD800 && wc <= 0xDBFF &&
-		    i < string.length &&
-		    string.charCodeAt(i) >= 0xDC00 &&
-		    string.charCodeAt(i) <= 0xDFFF) {
-			/* decode UTF-16 */
-			wc = 0x10000 + ((wc & 0x3FF) << 10) +
-			    (string.charCodeAt(i++) & 0x3FF);
-		}
-		if (wc < 0x80) {
-			bytes[j++] = wc;
-			count = 0;
-		} else if (wc < 0x800) {
-			bytes[j++] = 0xC0 | (wc >> 6);
-			count = 1;
-		} else if (wc < 0x10000) {
-			bytes[j++] = 0xE0 | (wc >> 12);
-			count = 2;
-		} else {
-			/* SMP: 21-bit Unicode */
-			bytes[j++] = 0xF0 | (wc >> 18);
-			count = 3;
-		}
-		while (count) {
-			bytes[j++] = 0x80 | ((wc >> (6 * --count)) & 0x3F);
-		}
-	}
-	return bytes;
+  var bytes = [];
+  var i = 0;
+  var j = 0;
+  var wc;
+
+  while (i < string.length) {
+    wc = string.charCodeAt(i++);
+    if (wc >= 0xD800 && wc <= 0xDBFF && i < string.length && string.charCodeAt(i) >= 0xDC00 && string.charCodeAt(i) <= 0xDFFF) {
+      /* decode UTF-16 */
+      wc = 0x10000 + ((wc & 0x3FF) << 10) + (string.charCodeAt(i++) & 0x3FF);
+    }
+
+    /* emit lead byte */
+    if (wc < 0x80) {
+      bytes[j++] = wc;
+      count = 0;
+    } else if (wc < 0x800) {
+      bytes[j++] = 0xC0 | (wc >> 6);
+      count = 1;
+    } else if (wc < 0x10000) {
+      bytes[j++] = 0xE0 | (wc >> 12);
+      count = 2;
+    } else {
+      /* SMP: 21-bit Unicode */
+      bytes[j++] = 0xF0 | (wc >> 18);
+      count = 3;
+    }
+
+    /* emit trail bytes, if any */
+    while (count) {
+      bytes[j++] = 0x80 | ((wc >> (6 * --count)) & 0x3F);
+    }
+  }
+
+  return bytes;
 };
 
 Lexer.prototype.unindent = function(startcol, text) {
@@ -278,7 +277,6 @@ Lexer.prototype.store_keyword_content = function(event, data, p, eof) {
 
 Lexer.prototype.current_line_content = function(data, p) {
   var rest = Array.prototype.slice.call(data,this.last_newline, -1);
-  
   var end = rest.indexOf(10) || -1;
   return this.bytesToString(rest.slice(0, end)).trim();
 };
