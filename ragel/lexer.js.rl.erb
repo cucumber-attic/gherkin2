@@ -115,7 +115,7 @@
   action end_feature {
     if(this.cs < lexer_first_final) {
       var content = this.current_line_content(data, p);
-      throw "Lexing error on line " + this.line_number + ": '" + content + "'. See http://wiki.github.com/cucumber/gherkin/lexingerror for more information.";
+      throw new Error("Lexing error on line " + this.line_number + ": '" + content + "'. See http://wiki.github.com/cucumber/gherkin/lexingerror for more information.");
     } else {
       this.listener.eof();
     }
@@ -136,7 +136,7 @@ var Lexer = function(listener) {
   for(var i=0, len=events.length; i<len; i++) {
     var event = events[i];
     if(typeof listener[event] != 'function') {
-      throw "Error. No " + event + " function exists on " + JSON.stringify(listener);
+      throw new Error("Error. No " + event + " function exists on " + JSON.stringify(listener));
     }
   }
   this.listener = listener;
@@ -181,7 +181,7 @@ Lexer.prototype.bytesToString = function(bytes) {
     if (wc < 0x80) {
       count = 0;
     } else if (wc < 0xC2 || wc >= 0xF8) {
-      throw "input is not a valid UTF-8 lead octet";
+      throw new Error("input is not a valid UTF-8 lead octet");
     } else if (wc < 0xE0) {
       count = 1;
       wc = (wc & 0x1F) << 6;
@@ -196,14 +196,14 @@ Lexer.prototype.bytesToString = function(bytes) {
     /* parse trail bytes, if any */
     while (count) {
       if (!(i < bytes.length)) {
-        throw "short read";
+        throw new Error("short read");
       }
       if ((c = bytes[i++] ^ 0x80) > 0x3F) {
-        throw "input is not a valid UTF-8 trail octet";
+        throw new Error("input is not a valid UTF-8 trail octet");
       }
       wc |= c << (6 * --count);
       if (wc < (1 << (5 * count + 6))) {
-        throw "invalid non-minimal encoded input";
+        throw new Error("invalid non-minimal encoded input");
       }
     }
 
