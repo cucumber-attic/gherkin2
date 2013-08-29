@@ -165,10 +165,10 @@ Lexer.prototype.scan = function(data) {
 };
 
 
-/* 
+/*
  * Decode utf-8 byte sequence to string.
  */
-var decodeUtf8 = function(bytes){
+var decodeUtf8 = function(bytes) {
   var result = "";
   var i = 0;
   var wc;
@@ -220,14 +220,14 @@ var decodeUtf8 = function(bytes){
 
 /*
  * Encode string to an array of bytes using utf8 encoding.
- * 
+ *
  * Javascript internally stores character data as utf16 (like java).
  * String.charCodeAt() does *not* produce unicode points, but simply
  * reflects this internal representation. Thus, it is necessary
  * to first decode the utf-16 representation before encoding to
  * utf-8.
  */
-var encodeUtf8 = function(string){
+var encodeUtf8 = function(string) {
   var bytes = [];
   var i = 0;
   var j = 0;
@@ -273,8 +273,6 @@ Lexer.prototype.bytesToString = function(bytes) {
   }
   return decodeUtf8(bytes);
 };
-
-
 
 Lexer.prototype.stringToBytes = function(string) {
   return encodeUtf8(string);

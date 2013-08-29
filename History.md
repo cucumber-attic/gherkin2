@@ -1,6 +1,7 @@
 ## [Git master](https://github.com/cucumber/gherkin/compare/v2.12.1...master)
 
 * Java JSONFormatter should record before hooks in next scenario ([#270](https://github.com/cucumber/gherkin/pull/270) Björn Rasmusson)
+* [JavaScript] Fix encoding issues ([#272](https://github.com/cucumber/gherkin/pull/272) Lukas Degener, Thorsten Glaser)
 
 ## [2.12.1](https://github.com/cucumber/gherkin/compare/v2.12.0...v2.12.1)
 
