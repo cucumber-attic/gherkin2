@@ -195,6 +195,16 @@ public class JSONFormatter implements Reporter, Formatter {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public void startOfScenarioLifeCycle(Scenario scenario) {
+        // NoOp
+    }
+
+    @Override
+    public void endOfScenarioLifeCycle(Scenario scenario) {
+        // NoOp
+    }
+
     private List<Map<String, Object>> getFeatureElements() {
         List<Map<String, Object>> featureElements = (List) featureMap.get("elements");
         if (featureElements == null) {
