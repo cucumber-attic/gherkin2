@@ -212,7 +212,7 @@ public class JSONParser {
         return getString(r, "status");
     }
 
-    private long duration(Map r) {
+    private Long duration(Map r) {
         return getLong(r, "duration");
     }
 
