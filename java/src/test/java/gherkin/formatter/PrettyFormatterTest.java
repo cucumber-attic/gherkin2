@@ -153,6 +153,7 @@ public class PrettyFormatterTest {
         PrettyFormatter formatter = createMonochromePrettyFormatter(baos);
         formatter.uri("test/resources/cucumber/examples/java/helloworld/helloworld.feature");
         callFeature(formatter, "Hello World", 1);
+        callStartOfScenarioLifecycle(formatter, "Say hello", 3);
         callScenario(formatter, "Say hello", 3);
         callStep(formatter, "Given ", "I have a hello app with \"Howdy\"", 4);
         callStep(formatter, "When ", "I ask it to say hi", 5);
@@ -163,6 +164,7 @@ public class PrettyFormatterTest {
         callResult(formatter, "passed");
         callMatch(formatter, "HelloStepdefs.it_should_answer_with(String)", "Howdy World", 23);
         callResult(formatter, "passed");
+        callEndOfScenarioLifecycle(formatter, "Say hello", 3);
         formatter.eof();
         formatter.done();
         formatter.close();
@@ -184,6 +186,7 @@ public class PrettyFormatterTest {
         PrettyFormatter formatter = createMonochromePrettyFormatter(baos);
         formatter.uri("test/resources/cucumber/examples/java/helloworld/helloworld.feature");
         callFeature(formatter, "Hello World", 1);
+        callStartOfScenarioLifecycle(formatter, "Say hello", 3);
         callScenario(formatter, "Say hello", 3);
         callStep(formatter, "Given ", "I have a hello app with \"Howdy\"", 4);
         callMatch(formatter, "HelloStepdefs.I_have_a_hello_app_with(String)", "Howdy", 25);
@@ -194,6 +197,7 @@ public class PrettyFormatterTest {
         callStep(formatter, "Then ", "it should answer with \"Howdy World\"", 6);
         callMatch(formatter, "HelloStepdefs.it_should_answer_with(String)", "Howdy World", 23);
         callResult(formatter, "passed");
+        callEndOfScenarioLifecycle(formatter, "Say hello", 3);
         formatter.eof();
         formatter.done();
         formatter.close();
@@ -215,11 +219,13 @@ public class PrettyFormatterTest {
         PrettyFormatter formatter = createColorPrettyFormatter(baos);
         formatter.uri("path/name.feature");
         callFeature(formatter, "A Feature", 1);
+        callStartOfScenarioLifecycle(formatter, "A Scenario", 3);
         callScenario(formatter, "A Scenario", 3);
         callStep(formatter, "* ", "First step", 4);
         callMatch(formatter, "Stepdefs.First_step()");
         callStep(formatter, "* ", "Second step", 5);
         callMatch(formatter, "Stepdefs.Second_step()");
+        callEndOfScenarioLifecycle(formatter, "A Scenario", 3);
         formatter.eof();
         formatter.done();
         formatter.close();
@@ -240,11 +246,13 @@ public class PrettyFormatterTest {
         PrettyFormatter formatter = createColorPrettyFormatter(baos);
         formatter.uri("path/name.feature");
         callFeature(formatter, "A Feature", 1);
+        callStartOfScenarioLifecycle(formatter, "A Scenario", 3);
         callScenario(formatter, "A Scenario", 3);
         callStep(formatter, "* ", "First step", 4);
         callResult(formatter, "undefined");
         callStep(formatter, "* ", "Second step", 5);
         callResult(formatter, "skipped");
+        callEndOfScenarioLifecycle(formatter, "A Scenario", 3);
         formatter.eof();
         formatter.done();
         formatter.close();
@@ -337,6 +345,10 @@ public class PrettyFormatterTest {
         formatter.feature(new Feature(Collections.<Comment>emptyList(), Collections.<Tag>emptyList(), "Feature", name, "", line, ""));
     }
 
+    private void callStartOfScenarioLifecycle(PrettyFormatter formatter, String name, int line) {
+        formatter.startOfScenarioLifeCycle(new Scenario(Collections.<Comment>emptyList(), Collections.<Tag>emptyList(), "Scenario", name, "", line, ""));
+    }
+
     private void callScenario(PrettyFormatter formatter, String name, int line) {
         formatter.scenario(new Scenario(Collections.<Comment>emptyList(), Collections.<Tag>emptyList(), "Scenario", name, "", line, ""));
     }
@@ -362,6 +374,10 @@ public class PrettyFormatterTest {
 
     private void callResult(PrettyFormatter formatter, String status, String errorMessage) {
         formatter.result(new Result(status, 0l, errorMessage));
+    }
+
+    private void callEndOfScenarioLifecycle(PrettyFormatter formatter, String name, int line) {
+        formatter.startOfScenarioLifeCycle(new Scenario(Collections.<Comment>emptyList(), Collections.<Tag>emptyList(), "Scenario", name, "", line, ""));
     }
 
     private void assertLineHasStatus(String line, String status) {
