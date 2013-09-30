@@ -167,7 +167,7 @@ public class PrettyFormatter implements Reporter, Formatter {
         out.println();
         printComments(examples.getComments(), "    ");
         printTags(examples.getTags(), "    ");
-        out.println("        " + examples.getKeyword() + ": " + examples.getName());
+        out.println("    " + examples.getKeyword() + ": " + examples.getName());
         printDescription(examples.getDescription(), "      ", true);
         table(examples.getRows());
     }
