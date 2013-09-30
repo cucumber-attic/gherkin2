@@ -136,12 +136,13 @@ public class PrettyFormatter implements Reporter, Formatter {
         if (statement instanceof TagStatement) {
             printTags(((TagStatement) statement).getTags(), "  ");
         }
-        out.append("  ");
-        out.append(statement.getKeyword());
-        out.append(": ");
-        out.append(statement.getName());
+        StringBuilder buffer = new StringBuilder("  ");
+        buffer.append(statement.getKeyword());
+        buffer.append(": ");
+        buffer.append(statement.getName());
         String location = executing ? uri + ":" + statement.getLine() : null;
-        out.println(indentedLocation(location));
+        buffer.append(indentedLocation(location));
+        out.println(buffer);
         printDescription(statement.getDescription(), "    ", true);
         statement = null;
     }
@@ -166,11 +167,7 @@ public class PrettyFormatter implements Reporter, Formatter {
         out.println();
         printComments(examples.getComments(), "    ");
         printTags(examples.getTags(), "    ");
-        out.append("    ");
-        out.append(examples.getKeyword());
-        out.append(": ");
-        out.append(examples.getName());
-        out.println();
+        out.println("        " + examples.getKeyword() + ": " + examples.getName());
         printDescription(examples.getDescription(), "      ", true);
         table(examples.getRows());
     }
@@ -230,11 +227,8 @@ public class PrettyFormatter implements Reporter, Formatter {
             }
             context.append(" hook:");
 
-            out.append(format.text(context.toString()));
-            out.append(format.text(match.getLocation()));
-            out.println();
-            out.append(format.text("Message: "));
-            out.append(format.text(result.getErrorMessage()));
+            out.println(format.text(context.toString()) + format.text(match.getLocation()));
+            out.println(format.text("Message: ") + format.text(result.getErrorMessage()));
 
             if (result.getError() != null) {
                 printError(result);
@@ -249,12 +243,13 @@ public class PrettyFormatter implements Reporter, Formatter {
         Format argFormat = getArgFormat(status);
 
         printComments(step.getComments(), "    ");
-        out.append("    ");
-        out.append(textFormat.text(step.getKeyword()));
-        stepPrinter.writeStep(out, textFormat, argFormat, step.getName(), arguments);
-        out.append(indentedLocation(location));
 
-        out.println();
+        StringBuilder buffer = new StringBuilder("    ");
+        buffer.append(textFormat.text(step.getKeyword()));
+        stepPrinter.writeStep(new NiceAppendable(buffer), textFormat, argFormat, step.getName(), arguments);
+        buffer.append(indentedLocation(location));
+
+        out.println(buffer);
         if (step.getRows() != null) {
             table(step.getRows());
         } else if (step.getDocString() != null) {
@@ -311,28 +306,30 @@ public class PrettyFormatter implements Reporter, Formatter {
     }
 
     public void row(List<CellResult> cellResults) {
+        StringBuilder buffer = new StringBuilder();
         Row row = rows.get(rowIndex);
         if (rowsAbove) {
-            out.append(formats.up(rowHeight));
+            buffer.append(formats.up(rowHeight));
         } else {
             rowsAbove = true;
         }
         rowHeight = 1;
 
         for (Comment comment : row.getComments()) {
-            out.append("      ");
-            out.println(comment.getValue());
+            buffer.append("      ");
+            buffer.append(comment.getValue());
+            buffer.append("\n");
             rowHeight++;
         }
         switch (row.getDiffType()) {
             case NONE:
-                out.append("      | ");
+                buffer.append("      | ");
                 break;
             case DELETE:
-                out.append("    ").append(formats.get("skipped").text("-")).append(" | ");
+                buffer.append("    ").append(formats.get("skipped").text("-")).append(" | ");
                 break;
             case INSERT:
-                out.append("    ").append(formats.get("comment").text("+")).append(" | ");
+                buffer.append("    ").append(formats.get("comment").text("+")).append(" | ");
                 break;
         }
         for (int colIndex = 0; colIndex < maxLengths.length; colIndex++) {
@@ -350,16 +347,16 @@ public class PrettyFormatter implements Reporter, Formatter {
                     break;
             }
             Format format = formats.get(status);
-            out.append(format.text(cellText));
+            buffer.append(format.text(cellText));
             int padding = maxLengths[colIndex] - cellLengths[rowIndex][colIndex];
-            padSpace(padding);
+            padSpace(buffer, padding);
             if (colIndex < maxLengths.length - 1) {
-                out.append(" | ");
+                buffer.append(" | ");
             } else {
-                out.append(" |");
+                buffer.append(" |");
             }
         }
-        out.println();
+        out.println(buffer);
         rowHeight++;
         Set<Result> seenResults = new HashSet<Result>();
         for (CellResult cellResult : cellResults) {
@@ -406,8 +403,8 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     public void docString(DocString docString) {
         out.println("      \"\"\"");
-        out.append(escapeTripleQuotes(indent(docString.getValue(), "      ")));
-        out.println("\n      \"\"\"");
+        out.println(escapeTripleQuotes(indent(docString.getValue(), "      ")));
+        out.println("      \"\"\"");
     }
 
     public void eof() {
@@ -432,23 +429,21 @@ public class PrettyFormatter implements Reporter, Formatter {
         }
     }
 
-    private void padSpace(int indent) {
+    private void padSpace(StringBuilder buffer, int indent) {
         for (int i = 0; i < indent; i++) {
-            out.append(" ");
+            buffer.append(" ");
         }
     }
 
     private void printComments(List<Comment> comments, String indent) {
         for (Comment comment : comments) {
-            out.append(indent);
-            out.println(comment.getValue());
+            out.println(indent + comment.getValue());
         }
     }
 
     private void printTags(List<Tag> tags, String indent) {
         if (tags.isEmpty()) return;
-        out.append(indent);
-        out.println(join(map(tags, tagNameMapper), " "));
+        out.println(indent + join(map(tags, tagNameMapper), " "));
     }
 
     private void printDescription(String description, String indentation, boolean newline) {

@@ -18,6 +18,7 @@ public class NiceAppendable {
     public NiceAppendable append(CharSequence csq) {
         try {
             out.append(csq);
+            tryFlush();
             return this;
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -27,6 +28,7 @@ public class NiceAppendable {
     public NiceAppendable append(CharSequence csq, int start, int end) {
         try {
             out.append(csq, start, end);
+            tryFlush();
             return this;
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -36,6 +38,7 @@ public class NiceAppendable {
     public NiceAppendable append(char c) {
         try {
             out.append(c);
+            tryFlush();
             return this;
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -47,17 +50,34 @@ public class NiceAppendable {
     }
 
     public NiceAppendable println(CharSequence csq) {
-        return append(csq).println();
+        try {
+            StringBuilder buffer = new StringBuilder();
+            buffer.append(csq);
+            buffer.append(NL);
+            out.append(buffer.toString());
+            tryFlush();
+            return this;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void close() {
         try {
-            if (out instanceof Flushable) {
-                ((Flushable) out).flush();
-            }
+            tryFlush();
             if (out instanceof Closeable) {
                 ((Closeable) out).close();
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void tryFlush()  {
+        if (!(out instanceof Flushable))
+            return;
+        try {
+            ((Flushable) out).flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
