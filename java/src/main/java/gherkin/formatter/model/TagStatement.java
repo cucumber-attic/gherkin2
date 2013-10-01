@@ -18,6 +18,10 @@ public abstract class TagStatement extends DescribedStatement {
         return tags;
     }
 
+    public String getId() {
+        return id;
+    }
+
     @Override
     protected Integer getFirstNonCommentLine() {
         if (getTags().isEmpty()) {
