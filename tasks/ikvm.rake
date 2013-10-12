@@ -55,8 +55,8 @@ namespace :ikvm do
     mkdir_p File.dirname(pkg_dir) unless File.directory?(pkg_dir)
     nuget("Pack #{GHERKIN_NUSPEC} -Version #{GHERKIN_VERSION} -OutputDirectory #{pkg_dir}")
     # Now, verify that we have a proper dll inside the package
-    require 'zip/zipfilesystem'
-    Zip::ZipFile.open(GHERKIN_NUPKG) do |zipfile|
+    require 'zip'
+    Zip::File.open(GHERKIN_NUPKG) do |zipfile|
       dll = zipfile.get_entry('lib/gherkin.dll')
       if(dll.size < 3_000_000)
         raise "Looks like the dll is too small."
