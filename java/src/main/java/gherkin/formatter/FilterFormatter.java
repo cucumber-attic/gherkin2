@@ -172,6 +172,16 @@ public class FilterFormatter implements Formatter {
         formatter.close();
     }
 
+    @Override
+    public void startOfScenarioLifeCycle(Scenario scenario) {
+        // NoOp
+    }
+
+    @Override
+    public void endOfScenarioLifeCycle(Scenario scenario) {
+        // NoOp
+    }
+
     private void replay() {
         List<Tag> feTags = new ArrayList<Tag>(featureTags);
         feTags.addAll(featureElementTags);
