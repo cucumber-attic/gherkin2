@@ -1,6 +1,16 @@
+def silence_warnings(&block)
+  warn_level = $VERBOSE
+  $VERBOSE = nil
+  result = block.call
+  $VERBOSE = warn_level
+  result
+end
+
 if RUBY_VERSION =~ /1\.9|2\.0/
-  Encoding.default_external = Encoding::UTF_8
-  Encoding.default_internal = Encoding::UTF_8
+  silence_warnings do
+    Encoding.default_external = Encoding::UTF_8
+    Encoding.default_internal = Encoding::UTF_8
+  end
 end
 if defined?(JRUBY_VERSION)
   java_import java.util.ArrayList
@@ -30,7 +40,7 @@ module GherkinSpecHelper
 
   def fixture(file)
     encoding = Gherkin::Lexer::Encoding.new
-    source = encoding.read_file(File.dirname(__FILE__) + "/gherkin/fixtures/" + file)
+    encoding.read_file(File.dirname(__FILE__) + "/gherkin/fixtures/" + file)
   end
 
   def rubify_hash(hash)
@@ -51,8 +61,10 @@ end
 # Allows comparison of Java List with Ruby Array (rows)
 RSpec::Matchers.define :r do |expected|
   match do |row|
-    def row.inspect
-      "r " + self.map{|cell| cell}.inspect
+    silence_warnings do
+      def row.inspect
+        "r " + self.map{|cell| cell}.inspect
+      end
     end
     row.map{|cell| cell}.should == expected
   end
@@ -60,8 +72,10 @@ end
 
 RSpec::Matchers.define :a do |expected|
   match do |array|
-    def array.inspect
-      "a " + self.map{|e| e.to_sym}.inspect
+    silence_warnings do
+      def array.inspect
+        "a " + self.map{|e| e.to_sym}.inspect
+      end
     end
     array.map{|e| e.to_sym}.should == expected
   end

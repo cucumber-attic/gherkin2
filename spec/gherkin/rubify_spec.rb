@@ -7,7 +7,7 @@ if defined?(JRUBY_VERSION)
     module Rubify
       describe "rubify" do
         before do
-          @java_collection = [mock("Java.java.util.ArrayList")]
+          @java_collection = [double("Java.java.util.ArrayList")]
           @java_collection.stub(:===).and_return(Java.java.util.Collection)
           @java_collection.stub(:line).and_return(15)
           @rubified_array = rubify(@java_collection)

@@ -17,11 +17,15 @@ module Gherkin
         @feature_tags           = []
         @feature_element_tags   = []
         @examples_tags          = []
-
+        @examples_range         = []
         @feature_events         = []
         @background_events      = []
         @feature_element_events = []
         @examples_events        = []
+
+        @examples_name          = nil
+        @feature_element_name   = nil
+        @feature_element_range  = nil
       end
 
       def uri(uri)

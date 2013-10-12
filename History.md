@@ -1,5 +1,6 @@
 ## [Git master](https://github.com/cucumber/gherkin/compare/v2.12.1...master)
 
+* [Core] Fix Ruby 2.0 warnings ([#265](https://github.com/cucumber/gherkin/issues/265) Aslak Hellesøy)
 * [Java] Expose ID so that tools can differentiate between runs of scenario examples ([#279](https://github.com/cucumber/gherkin/pull/278) jtnord)
 * [Java] Ensure PrettyFormatter outputs whole lines and flushed in between ([#277](https://github.com/cucumber/gherkin/pull/277) Ramon Nogueira)
 * [Java] Durations are Longs not longs as they are optional ([#276](https://github.com/cucumber/gherkin/pull/276) jtnord)

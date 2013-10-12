@@ -11,9 +11,13 @@ module Gherkin
 
         it "should store the i18n language of the last scanned feature" do
           @lexer.scan("# language: fr\n")
-          @lexer.i18n_language.iso_code.should == "fr"
-          @lexer.scan("# language: no\n")
-          @lexer.i18n_language.iso_code.should == "no"
+          # This if is kind of dumb - it's just to avoid warnings from ruby
+          if(@lexer.i18n_language.iso_code.should == "fr")
+            @lexer.scan("# language: no\n")
+            @lexer.i18n_language.iso_code.should == "no"
+          else
+            fail
+          end
         end
 
         it "should detect language when there are spaces and CRLF" do

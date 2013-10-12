@@ -1,6 +1,4 @@
 # encoding: utf-8
-require 'spec_helper'
-
 module Gherkin
   module Lexer
     shared_examples_for "a Gherkin lexer lexing rows" do

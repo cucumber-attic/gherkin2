@@ -39,6 +39,14 @@ class RagelTask
         # Minify
         sh %{node #{UGLIFYJS} #{target} > #{min_target}}
       end
+
+      if(@lang == 'rb')
+        # Prettify the code so we don't get indentation warnings
+        sh %{rbeautify #{target} > tmp.rb}
+        sh %{mv tmp.rb #{target}}
+        # rbeautify has a bug with class << self ... end alignment. Fix it.
+        sh %{perl -i -0pe 's/            end\n        self._/        end\n        self._/g' #{target}}
+      end
     end
 
     if(@lang != 'java')

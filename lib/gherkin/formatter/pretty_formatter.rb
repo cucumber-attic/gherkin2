@@ -19,9 +19,10 @@ module Gherkin
         @step_printer = StepPrinter.new
         @monochrome = monochrome
         @executing = executing
-        @background = nil
-        @tag_statement = nil
         @steps = []
+
+        # Prevent warnings, initialize fields
+        @background = @tag_statement = @formats = @statement = nil
       end
 
       def uri(uri)

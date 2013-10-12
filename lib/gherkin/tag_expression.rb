@@ -21,6 +21,7 @@ module Gherkin
     def evaluate(tags)
       return true if @ands.flatten.empty?
       vars = Hash[*tags.map{|tag| [tag.name, true]}.flatten]
+      raise "No vars" if vars.nil? # Useless statement to prevent ruby warnings about unused var
       !!Kernel.eval(ruby_expression)
     end
 

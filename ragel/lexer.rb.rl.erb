@@ -126,6 +126,9 @@ module Gherkin
  
       def initialize(listener)
         @listener = listener
+
+        # Initialize ivars to avoid warnings
+        @keyword = nil
         %% write data;
       end
  
