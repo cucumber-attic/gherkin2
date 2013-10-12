@@ -1,5 +1,6 @@
 ## [Git master](https://github.com/cucumber/gherkin/compare/v2.12.1...master)
 
+* [Java] Ensure PrettyFormatter outputs whole lines and flushed in between ([#277](https://github.com/cucumber/gherkin/pull/277) Ramon Nogueira)
 * [Java] Durations are Longs not longs as they are optional ([#276](https://github.com/cucumber/gherkin/pull/276) jtnord)
 * [Core] Added ಕನ್ನಡ kannaḍa language ([#282](https://github.com/cucumber/gherkin/pull/282) Nikhil Lingutla)
 * [Java] extension of the Formatter interface for more precise lifecycle handling ([#275](https://github.com/cucumber/gherkin/pull/275) Sebastian Gröbler)
