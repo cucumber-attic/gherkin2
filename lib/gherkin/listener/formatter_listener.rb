@@ -12,6 +12,7 @@ module Gherkin
       def initialize(formatter)
         @formatter = formatter
         @stash = Stash.new
+        @current_builder = nil
       end
 
       def comment(value, line)
@@ -57,13 +58,13 @@ module Gherkin
 
       def step(keyword, name, line)
         replay_step_or_examples
-        @stash.basic_statement do |comments, id|
+        @stash.step do |comments|
           @current_builder = Formatter::Model::Step::Builder.new(comments, keyword, name, line)
         end
       end
 
       def row(cells, line)
-        @stash.basic_statement do |comments, id|
+        @stash.row do |comments, id|
           @current_builder.row(comments, cells, line, id)
         end
       end
@@ -117,13 +118,19 @@ module Gherkin
           yield @comments, @tags, @examples_id
           @comments, @tags = [], []
         end
-        
-        def basic_statement
+
+        def step
           @row_index += 1
-          yield @comments, "#{@examples_id};#{@row_index}"
+          yield @comments
           @comments = []
         end
-        
+
+        def row
+          @row_index += 1
+          yield @comments, defined?(@examples_id) ? "#{@examples_id};#{@row_index}" : :undefined_examples_id
+          @comments = []
+        end
+
         def tag(tag)
           @tags << tag
         end
