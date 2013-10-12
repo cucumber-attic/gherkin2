@@ -7,6 +7,7 @@ import static gherkin.formatter.LocationMatcher.hasLocation;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -16,13 +17,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import gherkin.parser.Parser;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -102,6 +97,58 @@ public class PrettyFormatterTest {
         assertEquals("      | a    | b     |", lines.get(5));
         assertEquals("    Then should formatt beautifully.", lines.get(6));
 
+    }
+
+    @Test
+    public void shouldAppendOnlyCompleteLinesAndFlushBetween() throws IOException {
+
+        StringBuilder featureBuilder = new StringBuilder();
+        featureBuilder.append("Feature: PrettyFormatter\n");
+        featureBuilder.append("Scenario: Formmat beautifully\n");
+        featureBuilder.append("When I have this table:\n");
+        featureBuilder.append("\t|name|value|\n");
+        featureBuilder.append("\t|a|b|\n");
+        featureBuilder.append("Then should formatt beautifully.\n");
+        String feature = featureBuilder.toString();
+
+        Formatter formatter = new PrettyFormatter(new CheckingAppendable(), false, false);
+        new Parser(formatter).parse(feature, "", 0);
+        formatter.close();
+    }
+
+    class CheckingAppendable implements Appendable, Flushable {
+        boolean flushed = true;
+
+        void checkAppend(CharSequence csq) {
+            if (!flushed) {
+                fail("No flush before append: " + csq);
+            }
+            assertThat("Must only append complete lines", csq.toString(), endsWith("\n"));
+            flushed = false;
+        }
+
+        @Override
+        public Appendable append(CharSequence csq) throws IOException {
+            checkAppend(csq);
+            return this;
+        }
+
+        @Override
+        public Appendable append(CharSequence csq, int start, int end) throws IOException {
+            checkAppend(csq.subSequence(start, end));
+            return this;
+        }
+
+        @Override
+        public Appendable append(char c) throws IOException {
+            checkAppend(String.valueOf(c));
+            return this;
+        }
+
+        @Override
+        public void flush() throws IOException {
+            flushed = true;
+        }
     }
 
     @Test
