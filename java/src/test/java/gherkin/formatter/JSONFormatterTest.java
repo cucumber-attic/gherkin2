@@ -82,6 +82,7 @@ public class JSONFormatterTest {
 
         jsonFormatter.uri(uri());
         jsonFormatter.feature(feature);
+        jsonFormatter.startOfScenarioLifeCycle(scenario);
         jsonFormatter.before(match(), result("passed"));
         jsonFormatter.scenario(scenario);
 
@@ -97,6 +98,7 @@ public class JSONFormatterTest {
         jsonFormatter.write(text2);
         jsonFormatter.embedding("mime-type-2", data2);
         jsonFormatter.result(step2Result);
+        jsonFormatter.endOfScenarioLifeCycle(scenario);
 
         jsonFormatter.eof();
         jsonFormatter.done();
@@ -138,6 +140,7 @@ public class JSONFormatterTest {
 
         jsonFormatter.uri(uri());
         jsonFormatter.feature(feature);
+        jsonFormatter.startOfScenarioLifeCycle(scenario);
         jsonFormatter.before(match(), result("passed"));
         jsonFormatter.scenario(scenario);
 
@@ -152,6 +155,7 @@ public class JSONFormatterTest {
         jsonFormatter.write(text2);
         jsonFormatter.embedding("mime-type-2", data2);
         jsonFormatter.result(step2Result);
+        jsonFormatter.endOfScenarioLifeCycle(scenario);
 
         jsonFormatter.eof();
         jsonFormatter.done();
@@ -187,11 +191,15 @@ public class JSONFormatterTest {
         jsonFormatter.uri(uri());
         jsonFormatter.feature(feature);
 
+        jsonFormatter.startOfScenarioLifeCycle(scenario1);
         jsonFormatter.before(match(), result("passed"));
         jsonFormatter.scenario(scenario1);
+        jsonFormatter.endOfScenarioLifeCycle(scenario1);
 
+        jsonFormatter.startOfScenarioLifeCycle(scenario2);
         jsonFormatter.before(match(), result("passed"));
         jsonFormatter.scenario(scenario2);
+        jsonFormatter.endOfScenarioLifeCycle(scenario2);
 
         jsonFormatter.eof();
         jsonFormatter.done();
