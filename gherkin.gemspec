@@ -61,20 +61,19 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency('multi_json', '~> 1.3')
 
-  s.add_development_dependency('cucumber', '>= 1.3.4')
+  s.add_development_dependency('cucumber', '>= 1.3.8')
   s.add_development_dependency('rake', '>= 10.1.0')
   s.add_development_dependency('bundler', '>= 1.3.5') # Make sure it's in sync with /.travis.yml
   s.add_development_dependency('rspec', '~> 2.14.1')
-  s.add_development_dependency('rubyzip', '>= 0.9.9')
+  s.add_development_dependency('rubyzip', '>= 1.0.0')
 
   unless ENV['RUBY_CC_VERSION'] || Gherkin::JRUBY
-    s.add_development_dependency('therubyracer', '>= 0.11.4') if ENV['GHERKIN_JS']
+    s.add_development_dependency('therubyracer', '>= 0.12.0') if ENV['GHERKIN_JS']
     # For Documentation:
-    s.add_development_dependency('yard', '>= 0.8.6.2')
+    s.add_development_dependency('yard', '>= 0.8.7.2')
     s.add_development_dependency('rdiscount', '>= 2.1.6')
   end
 
   # Only needed by Cucumber. Remove when Cucumber no longer needs those.
-  s.add_development_dependency('term-ansicolor', '>= 1.2.2')
   s.add_development_dependency('builder', '>= 3.2.2')
 end
