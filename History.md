@@ -1,4 +1,4 @@
-## [Git master](https://github.com/cucumber/gherkin/compare/v2.12.1...master)
+## [2.12.2](https://github.com/cucumber/gherkin/compare/v2.12.1...v2.12.2)
 
 * [Core] Fix Ruby 2.0 warnings ([#265](https://github.com/cucumber/gherkin/issues/265) Aslak Hellesøy)
 * [Java] Expose ID so that tools can differentiate between runs of scenario examples ([#279](https://github.com/cucumber/gherkin/pull/278) jtnord)
