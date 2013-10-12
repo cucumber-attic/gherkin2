@@ -4,6 +4,7 @@
 * [Core] Added ಕನ್ನಡ kannaḍa language ([#282](https://github.com/cucumber/gherkin/pull/282) Nikhil Lingutla)
 * [Java] extension of the Formatter interface for more precise lifecycle handling ([#275](https://github.com/cucumber/gherkin/pull/275) Sebastian Gröbler)
 * Java JSONFormatter should record before hooks in next scenario ([#270](https://github.com/cucumber/gherkin/pull/270) Björn Rasmusson)
+* [JavaScript] Fix encoding issues ([#272](https://github.com/cucumber/gherkin/pull/272) Lukas Degener, Thorsten Glaser)
 
 ## [2.12.1](https://github.com/cucumber/gherkin/compare/v2.12.0...v2.12.1)
 
