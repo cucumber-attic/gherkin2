@@ -206,7 +206,6 @@ public class FilterFormatter implements Formatter {
             }
         }
         examplesEvents.clear();
-        examplesTags.clear();
         examplesName = null;
         examplesRange = null;
     }
