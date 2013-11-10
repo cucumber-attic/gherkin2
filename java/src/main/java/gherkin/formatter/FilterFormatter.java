@@ -115,7 +115,7 @@ public class FilterFormatter implements Formatter {
     @Override
     public void examples(Examples examples) {
         replay();
-        examplesTags = examples.getTags();
+        examplesTags.addAll(examples.getTags());
         examplesName = examples.getName();
 
         Range tableBodyRange;
@@ -206,6 +206,7 @@ public class FilterFormatter implements Formatter {
             }
         }
         examplesEvents.clear();
+        examplesTags.clear();
         examplesName = null;
         examplesRange = null;
     }
