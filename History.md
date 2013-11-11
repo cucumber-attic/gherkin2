@@ -1,3 +1,8 @@
+## [master](https://github.com/cucumber/gherkin/compare/v2.12.2...master)
+
+* [Java] Fixed corruption of internal Examples tags on FilterFormatter replay
+  ([#286](https://github.com/cucumber/gherkin/issues/286) Riccardo Sirchia)
+
 ## [2.12.2](https://github.com/cucumber/gherkin/compare/v2.12.1...v2.12.2)
 
 * [Core] Fix Ruby 2.0 warnings ([#265](https://github.com/cucumber/gherkin/issues/265) Aslak Hellesøy)
