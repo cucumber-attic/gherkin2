@@ -21,7 +21,7 @@ public class I18nTest {
                 return i18n.getIsoCode();
             }
         });
-        assertEquals(asList("ar,bg,bm,ca,cs,cy-GB,da,de,el,en,en-Scouse,en-au,en-lol,en-old,en-pirate,en-tx,eo,es,et,fa,fi,fr,gl,he,hi,hr,hu,id,is,it,ja,kn,ko,lt,lu,lv,nl,no,pa,pl,pt,ro,ru,sk,sr-Cyrl,sr-Latn,sv,th,tl,tr,tt,uk,uz,vi,zh-CN,zh-TW".split(",")), isoCodes);
+        assertEquals(asList("ar,bg,bm,ca,cs,cy-GB,da,de,el,en,en-Scouse,en-au,en-lol,en-old,en-pirate,en-tx,eo,es,et,fa,fi,fr,gl,he,hi,hr,hu,id,is,it,ja,kn,ko,lt,lu,lv,nl,no,pa,pl,pt,ro,ru,sk,sr-Cyrl,sr-Latn,sv,th,tl,tlh,tr,tt,uk,uz,vi,zh-CN,zh-TW".split(",")), isoCodes);
     }
 
     @Test
@@ -57,5 +57,12 @@ public class I18nTest {
         I18n enScouse = new I18n("en-Scouse");
         assertEquals(Arrays.asList("* ", "Givun ", "Youse know when youse got "), enScouse.keywords("given"));
         assertEquals("en", enScouse.getLocale().getLanguage());
+    }
+
+    @Test
+    public void shouldProvideKeywordsForKlingon() throws IOException {
+        I18n tlh = new I18n("tlh");
+        assertEquals(Arrays.asList("* ", "ghu' noblu' ", "DaH ghu' bejlu' "), tlh.keywords("given"));
+        assertEquals("tlh", tlh.getLocale().getLanguage());
     }
 }

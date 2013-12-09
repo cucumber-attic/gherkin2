@@ -150,6 +150,25 @@ module Gherkin
         ]
       end
 
+      it "should recognize keywords in Klingon" do
+        lexer = Gherkin::Lexer::I18nLexer.new(@listener, false)
+        scan_file(lexer, "i18n_tlh.feature")
+        @listener.to_sexp.should == [
+          [:comment, "#language:tlh", 1],
+          [:feature, "poQbogh malja'", "tlhIngan Hol", "tlhIngan Hol ghItlhmeH\nghunbogh qaD lo'wI'.", 2],
+          [:scenario_outline, "lut chovnatlh", "SuvwI'", "", 6],
+          [:step, "DaH ghu' bejlu' ", "<jagh mI'> jaghmey Datu'.", 7],
+          [:step, "qaSDI' ", "reH jaghvetlh DaqaD.", 8],
+          [:step, "'ej ", "<Qaw'bogh mI'> jaghmey DaQaw'chugh,", 9],
+          [:step, "vaj ", "SuvwI' SoH.", 10],
+          [:examples, "ghantoH", "", "", 12],
+          [:row, ["jagh mI'", "Qaw'bogh mI'"], 13],
+          [:row, ["3", "2"], 14],
+          [:row, ["5", "3"], 15],
+          [:eof]
+        ]
+      end
+
       describe 'keywords' do
         it "should have code keywords without space, comma, exclamation or apostrophe" do
           ['Avast', 'Akkor', 'Etantdonné', 'Lorsque', '假設'].each do |code_keyword|
@@ -216,6 +235,7 @@ module Gherkin
       | sv        | Swedish             | Svenska           |
       | th        | Thai                | ไทย               |
       | tl        | Telugu              | తెలుగు            |
+      | tlh       | Klingon             | tlhIngan          |
       | tr        | Turkish             | Türkçe            |
       | tt        | Tatar               | Татарча           |
       | uk        | Ukrainian           | Українська        |
@@ -245,6 +265,27 @@ module Gherkin
       | but (code)       | "Mais"                                                                                                                                                |
 }
         end
+
+        it "should print keywords in Klingon" do
+          ("\n" + Gherkin::I18n.get('tlh').keyword_table).should == %{
+      | feature          | "Qap", "Qu'meH 'ut", "perbogh", "poQbogh malja'", "laH" |
+      | background       | "mo'"                                                   |
+      | scenario         | "lut"                                                   |
+      | scenario_outline | "lut chovnatlh"                                         |
+      | examples         | "ghantoH", "lutmey"                                     |
+      | given            | "* ", "ghu' noblu' ", "DaH ghu' bejlu' "                |
+      | when             | "* ", "qaSDI' "                                         |
+      | then             | "* ", "vaj "                                            |
+      | and              | "* ", "'ej ", "latlh "                                  |
+      | but              | "* ", "'ach ", "'a "                                    |
+      | given (code)     | "ghunoblu", "DaHghubejlu"                               |
+      | when (code)      | "qaSDI"                                                 |
+      | then (code)      | "vaj"                                                   |
+      | and (code)       | "ej", "latlh"                                           |
+      | but (code)       | "ach", "a"                                              |
+}
+        end
+
 
         it "should not list keywords that start with a number" do
           Gherkin::I18n.get('en-old').code_keywords.should include("Ðaðe")

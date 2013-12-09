@@ -685,6 +685,20 @@
 	  "and": "*|และ",
 	  "but": "*|แต่"
 	},
+	"tlh": {
+	  "name": "Klingon",
+	  "native": "tlhIngan",
+	  "feature": "Qap|Qu'meH 'ut|perbogh|poQbogh malja'|laH",
+	  "background": "mo'",
+	  "scenario": "lut",
+	  "scenario_outline": "lut chovnatlh",
+	  "examples": "ghantoH|lutmey",
+	  "given": "*|ghu' noblu'|DaH ghu' bejlu'",
+	  "when": "*|qaSDI'",
+	  "then": "*|vaj",
+	  "and": "*|'ej|latlh",
+	  "but": "*|'ach|'a"
+	},
 	"tr": {
 	  "name": "Turkish",
 	  "native": "Türkçe",
