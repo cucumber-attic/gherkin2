@@ -43,10 +43,11 @@ public class JSONParser {
             formatter.uri(getString(o, "uri"));
             new Feature(comments(o), tags(o), keyword(o), name(o), description(o), line(o), id(o)).replay(formatter);
             for (Map featureElement : (List<Map>) getList(o, "elements")) {
-                featureElement(featureElement).replay(formatter);
+                BasicStatement element = featureElement(featureElement);
                 for (Map hook : (List<Map>) getList(featureElement, "before")) {
                     before(hook);
                 }
+                element.replay(formatter);
                 for (Map step : (List<Map>) getList(featureElement, "steps")) {
                     step(step);
                 }
@@ -75,6 +76,8 @@ public class JSONParser {
     }
 
     private void before(Map o) {
+        handleEmbeddings(o);
+        handleOutput(o);
         Map m = (Map) o.get("match");
         Match match = new Match(arguments(m), location(m));
         Map r = (Map) o.get("result");
@@ -83,6 +86,8 @@ public class JSONParser {
     }
 
     private void after(Map o) {
+        handleEmbeddings(o);
+        handleOutput(o);
         Map m = (Map) o.get("match");
         Match match = new Match(arguments(m), location(m));
         Map r = (Map) o.get("result");
@@ -110,11 +115,17 @@ public class JSONParser {
             new Match(arguments(m), location(m)).replay(reporter);
         }
 
+        handleEmbeddings(o);
+
+        handleOutput(o);
+
         if (o.containsKey("result")) {
             Map r = (Map) o.get("result");
             new Result(status(r), duration(r), errorMessage(r)).replay(reporter);
         }
+    }
 
+    private void handleEmbeddings(Map o) {
         if (o.containsKey("embeddings")) {
             List<Map> embeddings = (List<Map>) o.get("embeddings");
             for (Map embedding : embeddings) {
@@ -125,7 +136,9 @@ public class JSONParser {
                 }
             }
         }
+    }
 
+    private void handleOutput(Map o) {
         if (o.containsKey("output")) {
             List<String> output = (List<String>) o.get("output");
             for (String text : output) {

@@ -16,6 +16,38 @@
             {
                 "id":"one/a-scenario",
                 "type":"scenario",
+                "before":[
+                    {
+                        "embeddings":[
+                            {
+                                "mime_type":"text/plain",
+                                "data":"Tm8sIEknbSBub3QgaW50ZXJlc3RlZCBpbiBkZXZlbG9waW5nIGEgcG93ZXJmdWwgYnJhaW4uIEFsbCBJJ20gYWZ0ZXIgaXMganVzdCBhIG1lZGlvY3JlIGJyYWluLCBzb21ldGhpbmcgbGlrZSB0aGUgUHJlc2lkZW50IG9mIHRoZSBBbWVyaWNhbiBUZWxlcGhvbmUgYW5kIFRlbGVncmFwaCBDb21wYW55Lg=="
+                            }
+                        ],
+                        "output":[
+                            "Hello",
+                            "World"
+                        ],
+                        "match":{
+                            "location":"features/step_definitions/hooks.rb:1"
+                        },
+                        "result":{
+                            "status":"passed",
+                            "error_message":"Passed hook",
+                            "duration":3
+                        }
+                    },
+                    {
+                        "match":{
+                            "location":"features/step_definitions/hooks.rb:2"
+                        },
+                        "result":{
+                            "status":"failed",
+                            "error_message":"Failed hook",
+                            "duration":22
+                        }
+                    }
+                ],
                 "steps":[
                     {
                         "keyword":"Given ",
@@ -30,11 +62,6 @@
                             ],
                             "location":"features/step_definitions/steps.rb:1"
                         },
-                        "result":{
-                            "status":"failed",
-                            "error_message":"You suck",
-                            "duration":-1
-                        },
                         "embeddings":[
                             {
                                 "mime_type":"text/plain",
@@ -44,21 +71,26 @@
                         "output":[
                             "Hello",
                             "World"
-                        ]
+                        ],
+                        "result":{
+                            "status":"failed",
+                            "error_message":"You suck",
+                            "duration":-1
+                        }
                     }
                 ],
                 "after":[
                     {
-                        "match":{
-                            "location":"features/step_definitions/hooks.rb:1"
-                        },
-                        "result":{
-                            "status":"passed",
-                            "error_message":"Passed hook",
-                            "duration":3
-                        }
-                    },
-                    {
+                        "embeddings":[
+                            {
+                                "mime_type":"text/plain",
+                                "data":"Tm8sIEknbSBub3QgaW50ZXJlc3RlZCBpbiBkZXZlbG9waW5nIGEgcG93ZXJmdWwgYnJhaW4uIEFsbCBJJ20gYWZ0ZXIgaXMganVzdCBhIG1lZGlvY3JlIGJyYWluLCBzb21ldGhpbmcgbGlrZSB0aGUgUHJlc2lkZW50IG9mIHRoZSBBbWVyaWNhbiBUZWxlcGhvbmUgYW5kIFRlbGVncmFwaCBDb21wYW55Lg=="
+                            }
+                        ],
+                        "output":[
+                            "Hello",
+                            "World"
+                        ],
                         "match":{
                             "location":"features/step_definitions/hooks.rb:3"
                         },

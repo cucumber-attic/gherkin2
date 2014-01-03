@@ -23,7 +23,8 @@ public class JSONFormatter implements Reporter, Formatter {
 
     private Map<String, Object> featureMap;
     private String uri;
-    private List<Map> beforeHooks = new ArrayList<Map>();
+    private Map<Object, List<Map>> beforeHookScenario = new HashMap<Object, List<Map>>();
+    private Map<String, Object> currentHook = new HashMap<String, Object>();
 
     private enum Phase {step, match, embedding, output, result};
 
@@ -61,15 +62,18 @@ public class JSONFormatter implements Reporter, Formatter {
      */
     private Map getCurrentStep(Phase phase) {
         String target = phase.ordinal() <= Phase.match.ordinal()?Phase.match.name():Phase.result.name();
-        Map lastWithValue = null;
-        for (Map stepOrHook : getSteps()) {
-            if (stepOrHook.get(target) == null) {
-            	return stepOrHook;
-            } else {
-                lastWithValue = stepOrHook;
+        Map<Object, List<Map>> currentScenario = getFeatureElement();
+        if (currentScenario != null) {
+            List<Map> steps = currentScenario.get("steps");
+            if (steps != null) {
+                for (Map step : steps) {
+                    if (step.get(target) == null) {
+                        return step;
+                    }
+                }
             }
         }
-        return lastWithValue;
+        return null;
     }
 
 
@@ -97,9 +101,9 @@ public class JSONFormatter implements Reporter, Formatter {
     @Override
     public void scenario(Scenario scenario) {
         getFeatureElements().add(scenario.toMap());
-        if (beforeHooks.size() > 0) {
-            getFeatureElement().put("before", beforeHooks);
-            beforeHooks = new ArrayList<Map>();
+        if (beforeHookScenario.get("before") != null) {
+            getFeatureElement().put("before", beforeHookScenario.get("before"));
+            beforeHookScenario.remove("before");
         }
     }
 
@@ -128,12 +132,22 @@ public class JSONFormatter implements Reporter, Formatter {
         final Map<String, String> embedding = new HashMap<String, String>();
         embedding.put("mime_type", mimeType);
         embedding.put("data", Base64.encodeBytes(data));
-        getEmbeddings().add(embedding);
+        Map currentStep = getCurrentStep(Phase.embedding);
+        if (currentStep != null) {
+            getEmbeddings(currentStep).add(embedding);
+        } else {
+            getEmbeddings(currentHook).add(embedding);
+        }
     }
 
     @Override
     public void write(String text) {
-        getOutput().add(text);
+        Map currentStep = getCurrentStep(Phase.output);
+        if (currentStep != null) {
+            getOutput(currentStep).add(text);
+        } else {
+            getOutput(currentHook).add(text);
+        }
     }
 
     @Override
@@ -143,23 +157,28 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void before(Match match, Result result) {
-    	beforeHooks.add(buildHookMap(match,result));
+        addHook(beforeHookScenario, match, result, "before");
     }
 
     @Override
     public void after(Match match, Result result) {
-        List<Map> hooks = getFeatureElement().get("after");
+        addHook(getFeatureElement(), match, result, "after");
+    }
+
+    private void addHook(final Map<Object, List<Map>> currentScenario, final Match match, final Result result, final String hook) {
+        List<Map> hooks = currentScenario.get(hook);
         if (hooks == null) {
             hooks = new ArrayList<Map>();
-            getFeatureElement().put("after", hooks);
+            currentScenario.put(hook, hooks);
         }
         hooks.add(buildHookMap(match,result));
     }
 
     private Map buildHookMap(final Match match, final Result result) {
-        final Map hookMap = new HashMap();
-        hookMap.put("match", match.toMap());
-        hookMap.put("result", result.toMap());
+        currentHook.put("match", match.toMap());
+        currentHook.put("result", result.toMap());
+        final Map hookMap = currentHook;
+        currentHook = new HashMap<String, Object>();
         return hookMap;
     }
 
@@ -240,20 +259,20 @@ public class JSONFormatter implements Reporter, Formatter {
         return steps;
     }
 
-    private List<Map<String, String>> getEmbeddings() {
-        List<Map<String, String>> embeddings = (List<Map<String, String>>) getCurrentStep(Phase.embedding).get("embeddings");
+    private List<Map<String, String>> getEmbeddings(final Map currentStep) {
+        List<Map<String, String>> embeddings = (List<Map<String, String>>) currentStep.get("embeddings");
         if (embeddings == null) {
             embeddings = new ArrayList<Map<String, String>>();
-            getCurrentStep(Phase.embedding).put("embeddings", embeddings);
+            currentStep.put("embeddings", embeddings);
         }
         return embeddings;
     }
 
-    private List<String> getOutput() {
-        List<String> output = (List<String>) getCurrentStep(Phase.output).get("output");
+    private List<String> getOutput(final Map currentStep) {
+        List<String> output = (List<String>) currentStep.get("output");
         if (output == null) {
             output = new ArrayList<String>();
-            getCurrentStep(Phase.output).put("output", output);
+            currentStep.put("output", output);
         }
         return output;
     }
