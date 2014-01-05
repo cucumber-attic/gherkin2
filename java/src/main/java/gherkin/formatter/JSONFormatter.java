@@ -183,7 +183,15 @@ public class JSONFormatter implements Reporter, Formatter {
     }
 
     public void appendDuration(final int timestamp) {
-        final Map result = (Map) getCurrentStep(Phase.result).get("result");
+        Map result = null;
+        for (Map step : getFeatureElement().get("steps")) {
+            if (step.get("result") == null) {
+                break;
+            } else {
+                result = (Map) step.get("result");
+            }
+        }
+
         // check to make sure result exists (scenario outlines do not have results yet)
         if (result != null) {
             //convert to nanoseconds

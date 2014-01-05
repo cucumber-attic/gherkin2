@@ -115,10 +115,10 @@ public class JSONFormatterTest {
         assertEquals(scenario.getName(), scenarioJson.get("name"));
 
         Map step1Json = (Map) ((List)scenarioJson.get("steps")).get(0);
-        assertJsonStepData(step1, step1Result, step1Json);
+        assertJsonStepData(step1, step1Result, embeddingsCount(1), outputCount(1), step1Json);
 
         Map step2Json = (Map) ((List)scenarioJson.get("steps")).get(1);
-        assertJsonStepData(step2, step2Result, step2Json);
+        assertJsonStepData(step2, step2Result, embeddingsCount(1), outputCount(1), step2Json);
 
 
     }
@@ -172,10 +172,10 @@ public class JSONFormatterTest {
         assertEquals(scenario.getName(), scenarioJson.get("name"));
 
         Map step1Json = (Map) ((List)scenarioJson.get("steps")).get(0);
-        assertJsonStepData(step1, step1Result, step1Json);
+        assertJsonStepData(step1, step1Result, embeddingsCount(1), outputCount(1), step1Json);
 
         Map step2Json = (Map) ((List)scenarioJson.get("steps")).get(1);
-        assertJsonStepData(step2, step2Result, step2Json);
+        assertJsonStepData(step2, step2Result, embeddingsCount(1), outputCount(1), step2Json);
 
 
     }
@@ -296,10 +296,47 @@ public class JSONFormatterTest {
         assertJsonHookData(hookResult, embeddingsCount(2), outputCount(2), (Map) afterrHooks.get(0));
     }
 
-    private void assertJsonStepData(Step step, Result stepResult, Map stepJson) {
+    @SuppressWarnings("rawtypes")
+    @Test
+    public void testCompatibilityWithTheRspecSpecs() {
+        StringBuilder stringBuilder = new StringBuilder();
+        JSONFormatter jsonFormatter = new JSONPrettyFormatter(stringBuilder);
+        Feature feature = feature("Test Feature");
+        Scenario scenario = scenario("Test Scenario");
+        Step step1 = step("Given", "Step 1");
+        Result step1Result = result("passed");
+
+        jsonFormatter.uri(uri());
+        jsonFormatter.feature(feature);
+        // StartOfScenarioLifeCycle() is not called when executing the Rspec specs
+        jsonFormatter.scenario(scenario);
+
+        jsonFormatter.step(step1);
+        jsonFormatter.match(match());
+        jsonFormatter.result(step1Result);
+        jsonFormatter.appendDuration(1); // appendDuration is used in the Rspec specs
+
+        jsonFormatter.eof();
+        jsonFormatter.done();
+        jsonFormatter.close();
+
+        Gson gson = new Gson();
+        List result = gson.fromJson(stringBuilder.toString(), List.class);
+
+        Map featureJson = (Map) result.get(0);
+        assertEquals(feature.getName(), featureJson.get("name"));
+
+        Map scenarioJson = (Map) ((List) featureJson.get("elements")).get(0);
+        assertEquals(scenario.getName(), scenarioJson.get("name"));
+
+        Map step1Json = (Map) ((List)scenarioJson.get("steps")).get(0);
+        assertJsonStepData(step1, step1Result, embeddingsCount(0), outputCount(0), step1Json);
+    }
+
+    private void assertJsonStepData(Step step, Result stepResult, int embeddingsCount, int outputCount, Map stepJson) {
         assertEquals(step.getName(), stepJson.get("name"));
-        assertJsonEmbeddings(stepJson, embeddingsCount(1));
-        assertJsonOutput(stepJson, outputCount(1));
+        assertJsonEmbeddings(stepJson, embeddingsCount);
+        assertJsonOutput(stepJson, outputCount);
         assertJsonResult(stepResult, stepJson);
     }
 
