@@ -4,7 +4,7 @@ module Gherkin
   module CLexer
     def self.[](i18n_underscored_iso_code)
       begin
-        prefix = RbConfig::CONFIG['arch'] =~ /mswin|mingw/ ? "#{RbConfig::CONFIG['MAJOR']}.#{RbConfig::CONFIG['MINOR']}/" : ''
+        prefix = (RbConfig::CONFIG['arch'] =~ /mswin|mingw/ && RbConfig::CONFIG['target_vendor'] != 'w64') ? "#{RbConfig::CONFIG['MAJOR']}.#{RbConfig::CONFIG['MINOR']}/" : ''
         lib = "#{prefix}gherkin_lexer_#{i18n_underscored_iso_code}"
         require lib
         const_get(i18n_underscored_iso_code.capitalize)
