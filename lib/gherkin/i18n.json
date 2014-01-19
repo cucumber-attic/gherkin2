@@ -363,6 +363,21 @@
 	  "and": "*|I",
 	  "but": "*|Ali"
 	},
+	"ht": {
+		"name": "Creole",
+		"native": "Haiti",
+		"feature": "karakteristik|mak",
+		"background": "istorik",
+		"scenario": "senaryo",
+		"scenario_outline": "senaryo deskripsyon",
+		"examples": "egzanp",
+		"given": "sipoze",
+		"when": "lè",
+		"then": "Lè sa a",
+		"and": "ak|epi|e",
+		"but": "men" 
+
+	},
 	"hu": {
 	  "name": "Hungarian",
 	  "native": "magyar",
