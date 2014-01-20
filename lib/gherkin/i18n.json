@@ -371,12 +371,11 @@
 		"scenario": "senaryo",
 		"scenario_outline": "senaryo deskripsyon",
 		"examples": "egzanp",
-		"given": "sipoze",
-		"when": "lè",
-		"then": "Lè sa a",
+		"given": "sipoze|sipoze ke",
+		"when": "lè|Le",
+		"then": "Lè sa a|Le sa a",
 		"and": "ak|epi|e",
-		"but": "men" 
-
+		"but": "men"
 	},
 	"hu": {
 	  "name": "Hungarian",
