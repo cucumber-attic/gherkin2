@@ -365,17 +365,17 @@
 	},
 	"ht": {
 		"name": "Creole",
-		"native": "Haiti",
-		"feature": "karakteristik|mak",
-		"background": "istorik",
-		"scenario": "senaryo",
-		"scenario_outline": "senaryo deskripsyon",
-		"examples": "egzanp",
-		"given": "sipoze|sipoze ke",
-		"when": "lè|Le",
+		"native": "haitian",
+		"feature": "Karakteristik|Mak|Fonksyonalite",
+		"background": "Istorik",
+		"scenario": "Senaryo",
+		"scenario_outline": "Senaryo deskripsyon|Senaryo Deskripsyon",
+		"examples": "Egzanp",
+		"given": "Sipoze|Sipoze ke|Sipoze Ke",
+		"when": "Lè|Le",
 		"then": "Lè sa a|Le sa a",
-		"and": "ak|epi|e",
-		"but": "men"
+		"and": "Ak|Epi|E",
+		"but": "Men"
 	},
 	"hu": {
 	  "name": "Hungarian",
