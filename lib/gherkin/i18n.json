@@ -364,8 +364,8 @@
 	  "but": "*|Ali"
 	},
 	"ht": {
-		"name": "Creole",
-		"native": "haitian",
+		"name": "Creole|Haitian Creole",
+		"native": "kreyòl|kreyòl ayisyen",
 		"feature": "Karakteristik|Mak|Fonksyonalite",
 		"background": "Istorik",
 		"scenario": "Senaryo",
