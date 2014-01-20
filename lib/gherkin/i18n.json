@@ -364,18 +364,18 @@
 	  "but": "*|Ali"
 	},
 	"ht": {
-		"name": "Creole|Haitian Creole",
-		"native": "kreyòl|kreyòl ayisyen",
+		"name": "Creole",
+		"native": "kreyòl",
 		"feature": "Karakteristik|Mak|Fonksyonalite",
-		"background": "Istorik",
+		"background": "Kontèks|Istorik",
 		"scenario": "Senaryo",
-		"scenario_outline": "Senaryo deskripsyon|Senaryo Deskripsyon",
+		"scenario_outline": "Plan senaryo|Plan Senaryo|Senaryo deskripsyon|Senaryo Deskripsyon|Dyagram senaryo|Dyagram Senaryo",
 		"examples": "Egzanp",
-		"given": "Sipoze|Sipoze ke|Sipoze Ke",
-		"when": "Lè|Le",
-		"then": "Lè sa a|Le sa a",
-		"and": "Ak|Epi|E",
-		"but": "Men"
+		"given": "*|Sipoze|Sipoze ke|Sipoze Ke",
+		"when": "*|Lè|Le",
+		"then": "*|Lè sa a|Le sa a",
+		"and": "*|Ak|Epi|E",
+		"but": "*|Men"
 	},
 	"hu": {
 	  "name": "Hungarian",
