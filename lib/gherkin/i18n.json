@@ -13,6 +13,20 @@
 	  "and": "*|And",
 	  "but": "*|But"
 	},
+	"af": {
+	  "name": "Afrikaans",
+	  "native": "Afrikaans",
+	  "feature": "Funksie|Besigheid Behoefte|Vermoë",
+	  "background": "Agtergrond",
+	  "scenario": "Omtrek",
+	  "scenario_outline": "Omtrek Uiteensetting",
+	  "examples": "Voorbeelde",
+	  "given": "*|Gegewe",
+	  "when": "*|Wanneer",
+	  "then": "*|Dan",
+	  "and": "*|En",
+	  "but": "*|Maar"
+	},
 	"ar": {
 	  "name": "Arabic",
 	  "native": "العربية",
