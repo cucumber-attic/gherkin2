@@ -21,7 +21,7 @@ public class I18nTest {
                 return i18n.getIsoCode();
             }
         });
-        assertEquals(asList("ar,bg,bm,ca,cs,cy-GB,da,de,el,en,en-Scouse,en-au,en-lol,en-old,en-pirate,en-tx,eo,es,et,fa,fi,fr,gl,he,hi,hr,hu,id,is,it,ja,kn,ko,lt,lu,lv,nl,no,pa,pl,pt,ro,ru,sk,sr-Cyrl,sr-Latn,sv,th,tl,tr,tt,uk,uz,vi,zh-CN,zh-TW".split(",")), isoCodes);
+        assertEquals(asList("af,ar,bg,bm,ca,cs,cy-GB,da,de,el,en,en-Scouse,en-au,en-lol,en-old,en-pirate,en-tx,eo,es,et,fa,fi,fr,gl,he,hi,hr,hu,id,is,it,ja,kn,ko,lt,lu,lv,nl,no,pa,pl,pt,ro,ru,sk,sr-Cyrl,sr-Latn,sv,th,tl,tr,tt,uk,uz,vi,zh-CN,zh-TW".split(",")), isoCodes);
     }
 
     @Test
