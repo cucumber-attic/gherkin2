@@ -641,7 +641,7 @@
 	    "when" : "Ko|Ce|Če|Kadar",
 	    "then" : "Nato|Potem|Takrat",
 	    "and" : "In|Ter",
-	    "but" : "Toda|Ampak|Vendar",
+	    "but" : "Toda|Ampak|Vendar"
 	},
 	"sr-Latn": {
 	  "name": "Serbian (Latin)",
