@@ -629,6 +629,20 @@
 	  "and": "*|A|A tiež|A taktiež|A zároveň",
 	  "but": "*|Ale"
 	},
+	"sl": {
+	  "name": "Slovenian",
+	  "native": "Slovenski",
+	  "feature": "Funkcionalnost|Funkcija|Možnosti|Moznosti|Lastnost|Značilnost",
+	  "background": "Kontekst|Osnova|Ozadje",
+	  "scenario": "Scenarij|Primer",
+	  "scenario_outline": "Struktura scenarija|Skica|Koncept|Oris scenarija|Osnutek",
+	  "examples": "Primeri|Scenariji",
+	  "given": "Dano|Podano|Zaradi|Privzeto",
+	  "when": "Ko|Ce|Če|Kadar",
+	  "then": "Nato|Potem|Takrat",
+	  "and": "In|Ter",
+	  "but": "Toda|Ampak|Vendar"
+	},
 	"sr-Latn": {
 	  "name": "Serbian (Latin)",
 	  "native": "Srpski (Latinica)",
