@@ -231,6 +231,7 @@ module Gherkin
       | ro        | Romanian            | română            |
       | ru        | Russian             | русский           |
       | sk        | Slovak              | Slovensky         |
+      | sl        | Slovenian           | Slovenski         |
       | sr-Cyrl   | Serbian             | Српски            |
       | sr-Latn   | Serbian (Latin)     | Srpski (Latinica) |
       | sv        | Swedish             | Svenska           |
