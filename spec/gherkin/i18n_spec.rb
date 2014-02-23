@@ -186,6 +186,7 @@ module Gherkin
 
         it "should print available languages" do
           ("\n" + Gherkin::I18n.language_table).should == %{
+      | af        | Afrikaans           | Afrikaans         |
       | ar        | Arabic              | العربية           |
       | bg        | Bulgarian           | български         |
       | bm        | Malay               | Bahasa Melayu     |
