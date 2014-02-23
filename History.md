@@ -4,6 +4,7 @@
   ([#286](https://github.com/cucumber/gherkin/issues/286) Riccardo Sirchia)
 * [Core] Added Klingon language ([#288](https://github.com/cucumber/gherkin/pull/288) naghbIQtIqHom)
 * [Core] Added Afrikaans language ([#295](https://github.com/cucumber/gherkin/pull/295) liquidstateltd)
+* [Core] Added Slovenian language ([#296](https://github.com/cucumber/gherkin/pull/296) Uros Majeric)
 
 ## [2.12.2](https://github.com/cucumber/gherkin/compare/v2.12.1...v2.12.2)
 
