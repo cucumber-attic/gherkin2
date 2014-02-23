@@ -447,6 +447,20 @@
 	  "and": "*|かつ<",
 	  "but": "*|しかし<|但し<|ただし<"
 	},
+	"jv": {
+		"name": "Javanese",
+		"native": "Basa Jawa",
+		"feature": "Fitur",
+		"background": "Dasar",
+		"scenario": "Skenario",
+		"scenario_outline": "Konsep skenario",
+		"examples": "Conto|Contone",
+		"given": "*|Nalika|Nalikaning",
+		"when": "*|Manawa|Menawa",
+		"then": "*|Njuk|Banjur",
+		"and": "*|Lan",
+		"but": "*|Tapi|Nanging|Ananging"
+	},
 	"kn": {
 	  "name": "Kannada",
 	  "native": "ಕನ್ನಡ",
