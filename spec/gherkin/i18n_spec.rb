@@ -213,6 +213,7 @@ module Gherkin
       | he        | Hebrew              | עברית             |
       | hi        | Hindi               | हिंदी             |
       | hr        | Croatian            | hrvatski          |
+      | ht        | Creole              | kreyòl            |
       | hu        | Hungarian           | magyar            |
       | id        | Indonesian          | Bahasa Indonesia  |
       | is        | Icelandic           | Íslenska          |
