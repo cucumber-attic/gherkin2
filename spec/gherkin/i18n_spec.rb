@@ -218,6 +218,7 @@ module Gherkin
       | is        | Icelandic           | Íslenska          |
       | it        | Italian             | italiano          |
       | ja        | Japanese            | 日本語               |
+      | jv        | Javanese            | Basa Jawa         |
       | kn        | Kannada             | ಕನ್ನಡ             |
       | ko        | Korean              | 한국어               |
       | lt        | Lithuanian          | lietuvių kalba    |
