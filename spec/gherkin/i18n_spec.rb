@@ -1,5 +1,6 @@
 #encoding: utf-8
 require 'spec_helper'
+require 'multi_json'
 
 module Gherkin
   module Lexer
@@ -184,70 +185,26 @@ module Gherkin
           Gherkin::I18n.keyword_regexp(:step).should =~ /\|Quando \|Quand \|Quan \|Pryd \|/
         end
 
-        it "should print available languages" do
-          ("\n" + Gherkin::I18n.language_table).should == %{
-      | af        | Afrikaans           | Afrikaans         |
+        it "should include Arabic, English and Chinese traditional in the language table" do 
+          language_table = "\n" + Gherkin::I18n.language_table
+          language_table.should include(%{
       | ar        | Arabic              | العربية           |
-      | bg        | Bulgarian           | български         |
-      | bm        | Malay               | Bahasa Melayu     |
-      | ca        | Catalan             | català            |
-      | cs        | Czech               | Česky             |
-      | cy-GB     | Welsh               | Cymraeg           |
-      | da        | Danish              | dansk             |
-      | de        | German              | Deutsch           |
-      | el        | Greek               | Ελληνικά          |
+})
+          language_table.should include(%{
       | en        | English             | English           |
-      | en-Scouse | Scouse              | Scouse            |
-      | en-au     | Australian          | Australian        |
-      | en-lol    | LOLCAT              | LOLCAT            |
-      | en-old    | Old English         | Englisc           |
-      | en-pirate | Pirate              | Pirate            |
-      | en-tx     | Texan               | Texan             |
-      | eo        | Esperanto           | Esperanto         |
-      | es        | Spanish             | español           |
-      | et        | Estonian            | eesti keel        |
-      | fa        | Persian             | فارسی             |
-      | fi        | Finnish             | suomi             |
-      | fr        | French              | français          |
-      | gl        | Galician            | galego            |
-      | he        | Hebrew              | עברית             |
-      | hi        | Hindi               | हिंदी             |
-      | hr        | Croatian            | hrvatski          |
-      | ht        | Creole              | kreyòl            |
-      | hu        | Hungarian           | magyar            |
-      | id        | Indonesian          | Bahasa Indonesia  |
-      | is        | Icelandic           | Íslenska          |
-      | it        | Italian             | italiano          |
-      | ja        | Japanese            | 日本語               |
-      | jv        | Javanese            | Basa Jawa         |
-      | kn        | Kannada             | ಕನ್ನಡ             |
-      | ko        | Korean              | 한국어               |
-      | lt        | Lithuanian          | lietuvių kalba    |
-      | lu        | Luxemburgish        | Lëtzebuergesch    |
-      | lv        | Latvian             | latviešu          |
-      | nl        | Dutch               | Nederlands        |
-      | no        | Norwegian           | norsk             |
-      | pa        | Panjabi             | ਪੰਜਾਬੀ            |
-      | pl        | Polish              | polski            |
-      | pt        | Portuguese          | português         |
-      | ro        | Romanian            | română            |
-      | ru        | Russian             | русский           |
-      | sk        | Slovak              | Slovensky         |
-      | sl        | Slovenian           | Slovenski         |
-      | sr-Cyrl   | Serbian             | Српски            |
-      | sr-Latn   | Serbian (Latin)     | Srpski (Latinica) |
-      | sv        | Swedish             | Svenska           |
-      | th        | Thai                | ไทย               |
-      | tl        | Telugu              | తెలుగు            |
-      | tlh       | Klingon             | tlhIngan          |
-      | tr        | Turkish             | Türkçe            |
-      | tt        | Tatar               | Татарча           |
-      | uk        | Ukrainian           | Українська        |
-      | uz        | Uzbek               | Узбекча           |
-      | vi        | Vietnamese          | Tiếng Việt        |
-      | zh-CN     | Chinese simplified  | 简体中文              |
+})
+          language_table.should include(%{
       | zh-TW     | Chinese traditional | 繁體中文              |
-}
+})
+        end
+
+        it "should print available languages" do
+          languages = MultiJson.load(File.open(File.dirname(__FILE__) + '/../../lib/gherkin/i18n.json', 'r:utf-8').read).keys
+          language_table = Gherkin::I18n.language_table
+          language_table.lines.count.should == languages.count
+          for language in languages do
+            ("\n" + language_table).should include("\n      | " + language + " ")
+          end
         end
 
         it "should print keywords for a given language" do
