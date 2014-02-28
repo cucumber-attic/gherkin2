@@ -1,15 +1,22 @@
 package gherkin;
 
+import gherkin.deps.com.google.gson.reflect.TypeToken;
+import gherkin.deps.com.google.gson.Gson;
 import gherkin.util.Mapper;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static gherkin.util.FixJava.map;
 import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class I18nTest {
     @Test
@@ -21,7 +28,14 @@ public class I18nTest {
                 return i18n.getIsoCode();
             }
         });
-        assertEquals(asList("af,ar,bg,bm,ca,cs,cy-GB,da,de,el,en,en-Scouse,en-au,en-lol,en-old,en-pirate,en-tx,eo,es,et,fa,fi,fr,gl,he,hi,hr,ht,hu,id,is,it,ja,jv,kn,ko,lt,lu,lv,nl,no,pa,pl,pt,ro,ru,sk,sl,sr-Cyrl,sr-Latn,sv,th,tl,tlh,tr,tt,uk,uz,vi,zh-CN,zh-TW".split(",")), isoCodes);
+        Map<String, Map<String, String>> i18nContent =
+                new Gson().fromJson(new InputStreamReader(I18n.class.getResourceAsStream("/gherkin/i18n.json"), "UTF-8"), new TypeToken<Map<String, Map<String, String>>>() {}.getType());
+        List<String> i18nContentKeys = extractSortedListOfMapKeys(i18nContent);
+
+        assertEquals(i18nContentKeys, isoCodes);
+        assertThat(isoCodes, hasItem("ar"));
+        assertThat(isoCodes, hasItem("en"));
+        assertThat(isoCodes, hasItem("zh-TW"));
     }
 
     @Test
@@ -64,5 +78,12 @@ public class I18nTest {
         I18n tlh = new I18n("tlh");
         assertEquals(Arrays.asList("* ", "ghu' noblu' ", "DaH ghu' bejlu' "), tlh.keywords("given"));
         assertEquals("tlh", tlh.getLocale().getLanguage());
+    }
+
+    private List<String> extractSortedListOfMapKeys(Map<String, ?> map) {
+        String[] emptyStringArray = {};
+        List<String> keys = asList(map.keySet().toArray(emptyStringArray));
+        Collections.sort(keys);
+        return keys;
     }
 }
