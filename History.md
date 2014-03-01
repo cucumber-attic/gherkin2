@@ -7,6 +7,7 @@
 * [Core] Added Slovenian language ([#296](https://github.com/cucumber/gherkin/pull/296) Uros Majeric)
 * [Core] Added Javanese language ([#294](https://github.com/cucumber/gherkin/pull/294) Didiet)
 * [Core] Added Haitian Creole language ([#292](https://github.com/cucumber/gherkin/pull/292) DuCalixte)
+* [Core} Added Urdu language ([#290](https://github.com/cucumber/gherkin/pull/290) rasheedbutt)
 
 ## [2.12.2](https://github.com/cucumber/gherkin/compare/v2.12.1...v2.12.2)
 
