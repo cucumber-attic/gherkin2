@@ -145,9 +145,14 @@ var Lexer = function(listener) {
 Lexer.prototype.scan = function(data) {
   var ending = "\n%_FEATURE_END_%";
   if(typeof data == 'string') {
+    data = data.replace(/^\uFEFF/, '');
     data = this.stringToBytes(data + ending);
   } else if(typeof Buffer != 'undefined' && Buffer.isBuffer(data)) {
     // Node.js
+    // Check for Byte Order Mark
+    if (data[0] === 239 && data[1] === 187 && data[2] === 191) {
+        data = data.slice(3, data.length);
+    }
     var buf = new Buffer(data.length + ending.length);
     data.copy(buf, 0, 0);
     new Buffer(ending).copy(buf, data.length, 0);
