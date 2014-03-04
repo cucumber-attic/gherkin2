@@ -151,8 +151,8 @@ Lexer.prototype.scan = function(data) {
   } else if(typeof Buffer != 'undefined' && Buffer.isBuffer(data)) {
     // Node.js
     // Check for Byte Order Mark
-    if (data[0] === 239 && data[1] === 187 && data[2] === 191) {
-        data = data.slice(3, data.length);
+    if (data[0] === 0xEF && data[1] === 0xBE && data[2] === 0xBB) {
+        data = data.slice(3);
     }
     var buf = new Buffer(data.length + ending.length);
     data.copy(buf, 0, 0);
