@@ -6,7 +6,7 @@ def silence_warnings(&block)
   result
 end
 
-if RUBY_VERSION =~ /1\.9|2\.0/
+if RUBY_VERSION =~ /^(1\.9|2\.)/
   silence_warnings do
     Encoding.default_external = Encoding::UTF_8
     Encoding.default_internal = Encoding::UTF_8

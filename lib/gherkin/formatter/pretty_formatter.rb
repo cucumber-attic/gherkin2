@@ -199,7 +199,7 @@ module Gherkin
         end
       end
 
-      if(RUBY_VERSION =~ /^1\.9|2\.0/)
+      if(RUBY_VERSION =~ /^(1\.9|2\.)/)
         START = /#{'^'.encode('UTF-8')}/
         TRIPLE_QUOTES = /#{'"""'.encode('UTF-8')}/
       else
