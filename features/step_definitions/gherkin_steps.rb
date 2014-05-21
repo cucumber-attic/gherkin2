@@ -7,7 +7,7 @@ Given "the following text is parsed:" do |text|
 end
 
 Then "there should be no parse errors" do
-  @formatter.errors.should == []
+  expect(@formatter.errors).to eq []
 end
 
 Then /^there should be a parse error on (line \d+)$/ do |line|

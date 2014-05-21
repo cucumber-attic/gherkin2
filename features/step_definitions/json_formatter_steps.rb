@@ -23,8 +23,5 @@ Then /^the outputted JSON should be:$/ do |expected_json|
   puts MultiJson.dump(MultiJson.load(actual_json), :pretty => true)
   expected = MultiJson.load(expected_json)
   actual   = MultiJson.load(actual_json)
-  actual.should == expected
+  expect(actual).to eq expected
 end
-
-
-
