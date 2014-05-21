@@ -8,14 +8,14 @@ if defined?(JRUBY_VERSION)
       describe "rubify" do
         before do
           @java_collection = [double("Java.java.util.ArrayList")]
-          @java_collection.stub(:===).and_return(Java.java.util.Collection)
-          @java_collection.stub(:line).and_return(15)
+          allow(@java_collection).to receive(:===).and_return(Java.java.util.Collection)
+          allow(@java_collection).to receive(:line).and_return(15)
           @rubified_array = rubify(@java_collection)
         end
 
-        it "should keep the line number attribute from Java object" do
-          @rubified_array.should respond_to(:line)
-          @rubified_array.line.should == 15
+        it "keeps the line number attribute from Java object" do
+          expect(@rubified_array).to respond_to(:line)
+          expect(@rubified_array.line).to eq(15)
         end
       end
     end

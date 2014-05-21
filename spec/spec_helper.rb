@@ -66,7 +66,7 @@ RSpec::Matchers.define :r do |expected|
         "r " + self.map{|cell| cell}.inspect
       end
     end
-    row.map{|cell| cell}.should == expected
+    expect(row.map{|cell| cell}).to eq(expected)
   end
 end
 
