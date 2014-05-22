@@ -4,7 +4,7 @@ require 'gherkin/formatter/model'
 module Gherkin
   class SexpRecorder
     include Rubify
-    
+
     def initialize
       @sexps = []
     end
@@ -36,7 +36,7 @@ module Gherkin
     end
 
     def sexpify(o)
-      array = (defined?(JRUBY_VERSION) && Java.java.util.Collection === o) || 
+      array = (defined?(JRUBY_VERSION) && Java.java.util.Collection === o) ||
               (defined?(V8) && V8::Array === o) ||
               Array === o
       if array

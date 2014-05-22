@@ -15,9 +15,9 @@ module Gherkin
       def assert_io_include(s)
         actual = @io.string
         actual.gsub!(/\e\[m/, "\e[0m") # JANSI resets without the 0.
-        actual.should include(s)
+        expect(actual).to include(s)
       end
-      
+
       def assert_pretty(input, expected_output=input)
         [true, false].each do |force_ruby|
           io = StringIO.new
@@ -25,7 +25,7 @@ module Gherkin
           parser = Gherkin::Parser::Parser.new(pf, true, "root", force_ruby)
           parser.parse(input, "test.feature", 0)
           output = io.string
-          output.should == expected_output
+          expect(output).to eq(expected_output)
         end
       end
 
@@ -34,7 +34,7 @@ module Gherkin
         @f = Gherkin::Formatter::PrettyFormatter.new(@io, false, true)
       end
 
-      it "should print comments when scenario is longer" do
+      it "prints comments when scenario is longer" do
         @f.uri("features/foo.feature")
         @f.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1, "hello"))
 
@@ -61,7 +61,7 @@ module Gherkin
 })
       end
 
-      it "should print comments when step is longer" do
+      it "prints comments when step is longer" do
         @f.uri("features/foo.feature")
         @f.feature(Model::Feature.new([], [], "Feature", "Hello", "World", 1, "hello"))
         step = Model::Step.new([], "Given ", "some stuff that is longer", 5, nil, nil)
@@ -84,7 +84,7 @@ module Gherkin
 })
       end
 
-      it "should highlight arguments for regular steps" do
+      it "highlights arguments for regular steps" do
         @f.uri("foo.feature")
         @f.scenario(Model::Scenario.new([], [], "Scenario", "Lots of cukes", "", 3, "lots-of-cukes"))
         @f.step(Model::Step.new([], "Given ", "I have 999 cukes in my belly", 3, nil, nil))
@@ -101,7 +101,7 @@ module Gherkin
       end
 
       # See https://github.com/cucumber/gherkin/pull/171
-      it "should highlight arguments when there are optional arguments" do
+      it "highlights arguments when there are optional arguments" do
         @f.uri("foo.feature")
         @f.scenario(Model::Scenario.new([], [], "Scenario", "Lots of cukes", "", 3, "lots-of-cukes"))
         @f.step(Model::Step.new([], "Given ", "I have 999 cukes in my belly", 3, nil, nil))
@@ -121,7 +121,7 @@ module Gherkin
         )
       end
 
-      it "should prettify scenario" do
+      it "prettifies scenario" do
         assert_pretty(%{Feature: Feature Description
   Some preamble
 
@@ -141,7 +141,7 @@ module Gherkin
       end
 
 
-      it "should prettify scenario outline with table" do
+      it "prettifies scenario outline with table" do
         assert_pretty(%{# A feature comment
 @foo
 Feature: Feature Description
@@ -169,15 +169,15 @@ Feature: Feature Description
 })
       end
 
-      it "should preserve tabs" do
+      it "preserves tabs" do
         assert_pretty(IO.read(File.dirname(__FILE__) + '/tabs.feature'), IO.read(File.dirname(__FILE__) + '/spaces.feature'))
       end
 
-      it "should escape backslashes and pipes" do
+      it "escapes backslashes and pipes" do
         io = StringIO.new
         f = Gherkin::Formatter::PrettyFormatter.new(io, true, false)
         f.__send__(:table, [Gherkin::Formatter::Model::DataTableRow.new([], ['|', '\\'], 1)])
-        io.string.should == '      | \\| | \\\\ |' + "\n"
+        expect(io.string).to eq('      | \\| | \\\\ |' + "\n")
       end
     end
   end

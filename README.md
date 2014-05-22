@@ -1,4 +1,7 @@
 [![Build Status](https://secure.travis-ci.org/cucumber/gherkin.png)](http://travis-ci.org/cucumber/gherkin)
+[![Gem Version](https://badge.fury.io/rb/gherkin.svg)](http://badge.fury.io/rb/gherkin)
+[![Dependency Status](https://gemnasium.com/cucumber/gherkin.png)](https://gemnasium.com/cucumber/gherkin)
+[![Code Climate](https://codeclimate.com/github/cucumber/gherkin.png)](https://codeclimate.com/github/cucumber/gherkin)
 
 A fast lexer and parser for the Gherkin language based on Ragel. Gherkin is two things:
 
@@ -7,7 +10,7 @@ A fast lexer and parser for the Gherkin language based on Ragel. Gherkin is two 
 
 Supported platforms:
 
-* [Ruby](https://rubygems.org/gems/gherkin) 1.9.3-2.0.0 (MRI, JRuby, REE, Rubinius)
+* [Ruby](https://rubygems.org/gems/gherkin) 1.9.3, 2.0.0, 2.1.0 (MRI, JRuby, REE, Rubinius)
 * [Pure Java](http://search.maven.org/#search%7Cga%7C1%7Cgherkin) (jar file)
 * [JavaScript](http://search.npmjs.org/#/gherkin) (Tested with V8/node.js/Chrome, but might work on other JavaScript engines)
 * [.NET](http://nuget.org/List/Packages/gherkin) (dll file)

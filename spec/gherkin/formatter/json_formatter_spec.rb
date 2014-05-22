@@ -102,7 +102,7 @@ module Gherkin
             }
           ]
         }
-        MultiJson.load(io.string).should == MultiJson.load(expected)
+        expect(MultiJson.load(io.string)).to eq(MultiJson.load(expected))
       end
 
       it "renders results as pretty json" do
@@ -121,7 +121,7 @@ module Gherkin
             }
           ]
         }
-        io.string.should == MultiJson.dump(MultiJson.load(expected), :pretty => true)
+        expect(io.string).to eq(MultiJson.dump(MultiJson.load(expected), :pretty => true))
       end
 
       it 'supports append_duration' do
@@ -172,7 +172,7 @@ module Gherkin
             }
           ]
         }
-        MultiJson.load(io.string).should == MultiJson.load(expected)
+        expect(MultiJson.load(io.string)).to eq(MultiJson.load(expected))
       end
     end
   end

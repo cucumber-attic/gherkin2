@@ -18,7 +18,7 @@ module Gherkin
       actual   = MultiJson.load(io.string)
 
       begin
-        actual.should == expected
+        expect(actual).to eq(expected)
       rescue
         puts "EXPECTED"
         puts json
@@ -30,7 +30,7 @@ module Gherkin
       end
     end
 
-    it "should parse a barely empty feature" do
+    it "parses a barely empty feature" do
       check_json(%{[
         {
           "id": "one",
@@ -43,7 +43,7 @@ module Gherkin
       ]})
     end
 
-    it "should parse feature with tags and one scenario" do
+    it "parses feature with tags and one scenario" do
       check_json(%{[
         {
           "id": "one",
@@ -78,7 +78,7 @@ module Gherkin
       ]})
     end
 
-    it "should parse feature with match, result and embedding" do
+    it "parses feature with match, result and embedding" do
       check_json(%{
           [
               {
@@ -158,7 +158,7 @@ module Gherkin
       })
     end
 
-    it "shoud parse a complex feature" do
+    it "parses a complex feature" do
       check_json('[' + fixture("complex.json") + ']')
     end
   end

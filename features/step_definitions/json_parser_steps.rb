@@ -17,5 +17,5 @@ Given /^the following JSON is parsed:$/ do |text|
 end
 
 Then /^the outputted text should be:$/ do |expected_text|
-  @io.string.strip.should == expected_text
+  expect(@io.string.strip).to eq expected_text
 end

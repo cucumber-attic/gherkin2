@@ -6,7 +6,7 @@ require 'gherkin/formatter/json_formatter'
 require 'gherkin/json_parser'
 
 module PrettyPlease
-  
+
   def pretty_machinery(gherkin, feature_path)
     io        = StringIO.new
     formatter = Gherkin::Formatter::PrettyFormatter.new(io, true, false)
@@ -26,10 +26,10 @@ module PrettyPlease
     pretty_formatter    = Gherkin::Formatter::PrettyFormatter.new(io, true, false)
     json_parser         = Gherkin::JSONParser.new(pretty_formatter, pretty_formatter)
     json_parser.parse(json.string)
-    
+
     io.string
   end
-  
+
   def parse(parser, gherkin, feature_path)
     begin
       parser.parse(gherkin, feature_path, 0)
@@ -63,7 +63,7 @@ When /^I send each prettified original through the "([^"]*)" machinery$/ do |mac
       next if feature_path =~ /iso-8859-1\.feature/
       original = pretty_machinery(IO.read(feature_path), feature_path)
       via_machinery = self.__send__("#{machinery}_machinery", original, feature_path)
-      via_machinery.should == original
+      expect(via_machinery).to eq original
     rescue RSpec::Expectations::ExpectationNotMetError => e
       announce "=========="
       announce feature_path

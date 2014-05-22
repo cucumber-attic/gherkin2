@@ -13,16 +13,16 @@ module Gherkin
         @e = Gherkin::TagExpression.new([])
       end
 
-      it 'should be empty' do
-        @e.should be_empty
+      it 'is empty' do
+        expect(@e).to be_empty
       end
 
-      it "should match @foo" do
-        @e.evaluate([tag('@foo')]).should == true
+      it "matchs @foo" do
+        expect(@e.evaluate([tag('@foo')])).to be_true
       end
 
-      it "should match empty tags" do
-        @e.evaluate([]).should == true
+      it "matchs empty tags" do
+        expect(@e.evaluate([])).to be_true
       end
     end
 
@@ -31,16 +31,16 @@ module Gherkin
         @e = Gherkin::TagExpression.new(['@foo'])
       end
 
-      it "should match @foo" do
-        @e.evaluate([tag('@foo')]).should == true
+      it "matchs @foo" do
+        expect(@e.evaluate([tag('@foo')])).to be_true
       end
 
-      it "should not match @bar" do
-        @e.evaluate([tag('@bar')]).should == false
+      it "does not match @bar" do
+        expect(@e.evaluate([tag('@bar')])).to be_false
       end
 
-      it "should not match no tags" do
-        @e.evaluate([]).should == false
+      it "does not match no tags" do
+        expect(@e.evaluate([])).to be_false
       end
     end
 
@@ -49,12 +49,12 @@ module Gherkin
         @e = Gherkin::TagExpression.new(['~@foo'])
       end
 
-      it "should match @bar" do
-        @e.evaluate([tag('@bar')]).should == true
+      it "matchs @bar" do
+        expect(@e.evaluate([tag('@bar')])).to be_true
       end
 
-      it "should not match @foo" do
-        @e.evaluate([tag('@foo')]).should == false
+      it "does not match @foo" do
+        expect(@e.evaluate([tag('@foo')])).to be_false
       end
     end
 
@@ -63,16 +63,16 @@ module Gherkin
         @e = Gherkin::TagExpression.new(['@foo,@bar'])
       end
 
-      it "should match @foo" do
-        @e.evaluate([tag('@foo')]).should == true
+      it "matchs @foo" do
+        expect(@e.evaluate([tag('@foo')])).to be_true
       end
 
-      it "should match @bar" do
-        @e.evaluate([tag('@bar')]).should == true
+      it "matchs @bar" do
+        expect(@e.evaluate([tag('@bar')])).to be_true
       end
 
-      it "should not match @zap" do
-        @e.evaluate([tag('@zap')]).should == false
+      it "does not match @zap" do
+        expect(@e.evaluate([tag('@zap')])).to be_false
       end
     end
 
@@ -81,12 +81,12 @@ module Gherkin
         @e = Gherkin::TagExpression.new(['@foo,@bar', '~@zap'])
       end
 
-      it "should match @foo" do
-        @e.evaluate([tag('@foo')]).should == true
+      it "matchs @foo" do
+        expect(@e.evaluate([tag('@foo')])).to be_true
       end
 
-      it "should not match @foo @zap" do
-        @e.evaluate([tag('@foo'), tag('@zap')]).should == false
+      it "does not match @foo @zap" do
+        expect(@e.evaluate([tag('@foo'), tag('@zap')])).to be_false
       end
     end
 
@@ -95,12 +95,12 @@ module Gherkin
         @e = Gherkin::TagExpression.new(['@foo:3,~@bar','@zap:5'])
       end
 
-      it "should count tags for positive tags" do
-        rubify_hash(@e.limits).should == {'@foo' => 3, '@zap' => 5}
+      it "counts tags for positive tags" do
+        expect(rubify_hash(@e.limits)).to eq({ '@foo' => 3, '@zap' => 5 })
       end
 
-      it "should match @foo @zap" do
-        @e.evaluate([tag('@foo'), tag('@zap')]).should == true
+      it "matchs @foo @zap" do
+        expect(@e.evaluate([tag('@foo'), tag('@zap')])).to be_true
       end
     end
 
@@ -110,36 +110,36 @@ module Gherkin
       end
 
       unless defined?(JRUBY_VERSION)
-        it "should split and trim (ruby implementation detail)" do
-          @e.__send__(:ruby_expression).should == "(!vars['@bar']||vars['@foo'])&&(vars['@zap'])"
+        it "splits and trim (ruby implementation detail)" do
+          expect(@e.__send__(:ruby_expression)).to eq("(!vars['@bar']||vars['@foo'])&&(vars['@zap'])")
         end
       end
 
-      it "should have limits" do
-        rubify_hash(@e.limits).should == {"@zap"=>5, "@foo"=>3}
+      it "has limits" do
+        expect(rubify_hash(@e.limits)).to eq({ "@zap" => 5, "@foo" => 3 })
       end
     end
 
     context "Tag limits" do
-      it "should be counted for negative tags" do
+      it "is counted for negative tags" do
         @e = Gherkin::TagExpression.new(['~@todo:3'])
-        rubify_hash(@e.limits).should == {"@todo"=>3}
+        expect(rubify_hash(@e.limits)).to eq({ "@todo" => 3 })
       end
 
-      it "should be counted for positive tags" do
+      it "is counted for positive tags" do
         @e = Gherkin::TagExpression.new(['@todo:3'])
-        rubify_hash(@e.limits).should == {"@todo"=>3}
+        expect(rubify_hash(@e.limits)).to eq({ "@todo" => 3 })
       end
 
-      it "should raise an error for inconsistent limits" do
-        lambda do
+      it "raises an error for inconsistent limits" do
+        expect do
           @e = Gherkin::TagExpression.new(['@todo:3', '~@todo:4'])
-        end.should raise_error(/Inconsistent tag limits for @todo: 3 and 4/)
+        end.to raise_error(/Inconsistent tag limits for @todo: 3 and 4/)
       end
 
-      it "should allow duplicate consistent limits" do
+      it "allows duplicate consistent limits" do
         @e = Gherkin::TagExpression.new(['@todo:3', '~@todo:3'])
-        rubify_hash(@e.limits).should == {"@todo"=>3}
+        expect(rubify_hash(@e.limits)).to eq({ "@todo" => 3 })
       end
     end
   end
