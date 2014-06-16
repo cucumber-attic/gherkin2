@@ -89,7 +89,7 @@ module Gherkin
     def initialize(iso_code)
       @iso_code = iso_code
       @keywords = LANGUAGES[iso_code]
-      raise "Language not supported: #{iso_code.inspect}" if @iso_code.nil?
+      raise "Language not supported: #{iso_code.inspect}" if @keywords.nil?
       @keywords['grammar_name'] = @keywords['name'].gsub(/\s/, '')
     end
 
