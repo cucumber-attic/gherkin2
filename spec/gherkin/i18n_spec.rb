@@ -201,7 +201,7 @@ module Gherkin
         it "should print available languages" do
           languages = MultiJson.load(File.open(File.dirname(__FILE__) + '/../../lib/gherkin/i18n.json', 'r:utf-8').read).keys
           language_table = Gherkin::I18n.language_table
-          language_table.lines.count.should == languages.count
+          language_table.lines.count.should be == languages.count
           for language in languages do
             ("\n" + language_table).should include("\n      | " + language + " ")
           end
