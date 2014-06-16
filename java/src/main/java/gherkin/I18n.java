@@ -87,6 +87,11 @@ public class I18n {
         this.keywords = new HashMap<String, List<String>>();
 
         Map<String, String> keywordMap = I18N.get(isoCode);
+
+        if (keywordMap == null) {
+            throw new RuntimeException("Language not supported: \"" + isoCode + "\"");
+        }
+
         for (Map.Entry<String, String> entry : keywordMap.entrySet()) {
             List<String> keywordList = Arrays.asList(entry.getValue().split("\\|"));
             if (STEP_KEYWORD_KEYS.contains(entry.getKey())) {
