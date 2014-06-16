@@ -170,6 +170,10 @@ module Gherkin
         ]
       end
 
+      it "should not raise error if iso_code is valid" do
+        expect { Gherkin::I18n.get('pt') }.to_not raise_error
+      end
+
       describe 'keywords' do
         it "should have code keywords without space, comma, exclamation or apostrophe" do
           ['Avast', 'Akkor', 'Etantdonné', 'Lorsque', '假設'].each do |code_keyword|
