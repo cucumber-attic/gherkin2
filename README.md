@@ -9,7 +9,7 @@ Supported platforms:
 
 * [Ruby](https://rubygems.org/gems/gherkin) 1.9.3-2.0.0 (MRI, JRuby, REE, Rubinius)
 * [Pure Java](http://search.maven.org/#search%7Cga%7C1%7Cgherkin) (jar file)
-* [JavaScript](http://search.npmjs.org/#/gherkin) (Tested with V8/node.js/Chrome, but might work on other JavaScript engines)
+* [JavaScript](https://www.npmjs.org/package/gherkin) (Tested with V8/node.js/Chrome, but might work on other JavaScript engines)
 * [.NET](http://nuget.org/List/Packages/gherkin) (dll file)
 
 ## Installation
