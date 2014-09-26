@@ -1,0 +1,51 @@
+h1. Some terse yet descriptive text of what is desired
+{info} This section is tagged as *_very_important_*, *_crazy_stuff_*{info}
+Textual description of the business value of this feature Business rules that govern the scope of the feature Any additional information that will make the feature easier to understand
+h2. Some prerequisites..
+
+|{color:#666666}*Given*{color} |somebody is there |
+|{color:#666666}*And*{color} |they do their thing |
+h2. Some determinable business situation
+
+|{color:#666666}*Given*{color} |some precondition |
+|{color:#666666}*And*{color} |some other precondition |
+|{color:#666666}*When*{color} |some action by the actor |
+|{color:#666666}*And*{color} |some other action |
+|{color:#666666}*And*{color} |yet another action |
+|{color:#666666}*Then*{color} |some testable outcome is achieved |
+|{color:#666666}*And*{color} |something else we can check happens too |
+h2. {color:red}_Undefined section_{color}
+{info} This section is tagged as *_lame_*{info}
+
+|{color:#666666}*Given*{color} |some precondition |
+|{color:#666666}*And*{color} |some other precondition |
+|{color:#666666}*When*{color} |some action by the actor |
+|{color:#666666}*And*{color} |some other action |
+|{color:#666666}*And*{color} |yet another action |
+|{color:#666666}*Then*{color} |some testable outcome is achieved |
+|{color:#666666}*And*{color} |something else we can check happens too |
+h2. scenario with a table!
+
+|{color:#666666}*Given*{color} |all these people: |
+| |{panel}||name||email||phone||
+|Aslak |aslak@email.com |123 |
+|Matt |matt@email.com |234 |
+|Joe |joe@email.org |456 |
+{panel} |
+|{color:#666666}*And*{color} |some other precondition |
+|{color:#666666}*When*{color} |some action by the actor |
+|{color:#666666}*And*{color} |some other action |
+|{color:#666666}*And*{color} |yet another action |
+|{color:#666666}*Then*{color} |some testable outcome is achieved |
+|{color:#666666}*And*{color} |something else we can check happens too |
+h2. eating
+
+|{color:#666666}*Given*{color} |there are <start> cucumbers |
+|{color:#666666}*When*{color} |I eat <eat> cucumbers |
+|{color:#666666}*Then*{color} |I should have <left> cucumbers |
+
+||Examples: ||
+|{panel}||start||eat||left||
+|12 |5 |7 |
+|20 |5 |15 |
+{panel} |
