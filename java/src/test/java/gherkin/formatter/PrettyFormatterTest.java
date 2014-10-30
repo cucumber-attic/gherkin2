@@ -99,6 +99,63 @@ public class PrettyFormatterTest {
 
     }
 
+    /**
+     * CJK and other character sets often contain 'fullwidth' characters.
+     * <p>
+     * Fullwidth characters are only counted as a single character but occupy twice
+     * the space of a typical ASCII character when using a fixed-width font.
+     * <p>
+     * For example, in Japanese this text is 2 characters, padded with 5 spaces to match the longer column below:
+     * <ul>
+     * <li>{@code 新機     |}
+     * <li>{@code 123456 |}
+     * </ul>
+     *
+     * <p>
+     * The net result is that '|' and '#' characters will be misaligned when
+     * printing {@code --i18n ja} or a feature containing a mix of normal and fullwidth characters.
+     *
+     * The only way to resolve this is to keep a running tally of half- and full-width characters,
+     * then padding the output with a mix of trailing half- (u+0020) and full-width (u+3000) spaces.
+     * <p>
+     * Repeating the above example, we now have:
+     * <ul>
+     * <li>{@code 新機      |} (2 full-width chars + 6 half-width spaces)
+     * <li>{@code 123456　　|} (6 half-width chars + 2 full-width spaces)
+     * </ul>
+     *
+     * @see "http://en.wikipedia.org/wiki/Halfwidth_and_fullwidth_forms"
+     *
+     * @throws IOException
+     */
+    @Test
+    public void shouldFormatAsDesignedWithFullWidthCharacters() throws IOException {
+
+        StringBuilder featureBuilder = new StringBuilder();
+        featureBuilder.append("# language: ja\n");
+        featureBuilder.append("機能: PrettyFormatter with Japanese\n");
+        featureBuilder.append("シナリオ: Formmat beautifully\n");
+        featureBuilder.append("もしI have this table:\n");
+        featureBuilder.append("\t|名前|?の値1|\n");
+        featureBuilder.append("\t|ab12ａｂ１２|ﾊﾝｶｸ|\n");
+        featureBuilder.append("ならばshould formatt beautifully.\n");
+        String feature = featureBuilder.toString();
+
+        List<String> lines = doFormatter(feature);
+
+        assertEquals("Formatter produces unexpected quantity of lines. ", 8, lines.size());
+
+        assertEquals("# language: ja", lines.get(0));
+        assertEquals("機能: PrettyFormatter with Japanese", lines.get(1));
+        assertEquals("", lines.get(2));
+        assertEquals("  シナリオ: Formmat beautifully", lines.get(3));
+        assertEquals("    もしI have this table:", lines.get(4));
+        assertEquals("      | 名前　　     | ?の値1   |", lines.get(5));
+        assertEquals("      | ab12ａｂ１２ | ﾊﾝｶｸ　　 |", lines.get(6));
+        assertEquals("    ならばshould formatt beautifully.", lines.get(7));
+
+    }
+
     @Test
     public void shouldAppendOnlyCompleteLinesAndFlushBetween() throws IOException {
 
