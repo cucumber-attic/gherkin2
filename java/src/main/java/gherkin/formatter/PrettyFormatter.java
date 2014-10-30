@@ -423,8 +423,8 @@ public class PrettyFormatter implements Reporter, Formatter {
             }
             Format format = formats.get(status);
             buffer.append(format.text(cellText));
-            int padding = Math.max(maxLengths[colIndex][0] - cellLengths[rowIndex][colIndex][0], 0);
-            int fullWidthPadding = Math.max(maxLengths[colIndex][1] - cellLengths[rowIndex][colIndex][1], 0);
+            int padding = maxLengths[colIndex][0] - cellLengths[rowIndex][colIndex][0];
+            int fullWidthPadding = maxLengths[colIndex][1] - cellLengths[rowIndex][colIndex][1];
             // rpad with full-width spaces first, then normal spaces.
             // the order is not significant but this way prevents padding of single spaces, followed by full-width, then followed with the space and pipe
             padSpace(buffer, fullWidthPadding, true);
