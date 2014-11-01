@@ -316,10 +316,10 @@ public class PrettyFormatter implements Reporter, Formatter {
                     }
 
                 }
-                cellLengths[rowIndex][colIndex][0] = numNormalChars;
-                cellLengths[rowIndex][colIndex][1] = numFullWidthChars;
-                maxLengths[colIndex][0] = Math.max(maxLengths[colIndex][0], numNormalChars);
-                maxLengths[colIndex][1] = Math.max(maxLengths[colIndex][1], numFullWidthChars);
+                setNumberOfNormalWidthCharsInCell(cellLengths[rowIndex][colIndex], numNormalChars);
+                setNumberOfFullWidthCharsInCell(cellLengths[rowIndex][colIndex], numFullWidthChars);
+                updateMaxLengthOfNormalWidthCharsForColumn(maxLengths[colIndex], numNormalChars);
+                updateMaxLengthOfFullWidthCharsForColumn(maxLengths[colIndex], numFullWidthChars);
             }
         }
         rowIndex = 0;
@@ -327,6 +327,38 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     private String getCellSafely(final List<String> cells, final int colIndex) {
         return (colIndex < cells.size()) ? cells.get(colIndex) : "";
+    }
+
+    private int getNumberOfNormalWidthCharsInCell(int[] cellLength) {
+        return cellLength[0];
+    }
+
+    private void setNumberOfNormalWidthCharsInCell(int[] cellLength, int numNormalChars) {
+        cellLength[0] = numNormalChars;
+    }
+
+    private int getNumberOfFullWidthCharsInCell(int[] cellLength) {
+        return cellLength[1];
+    }
+
+    private void setNumberOfFullWidthCharsInCell(int[] cellLength, int numFullWidthChars) {
+        cellLength[1] = numFullWidthChars;
+    }
+
+    private int getMaxLengthOfNormalWidthCharsForColumn(int[] maxLength) {
+        return maxLength[0];
+    }
+
+    private void updateMaxLengthOfNormalWidthCharsForColumn(int[] maxLength, int numNormalChars) {
+        maxLength[0] = Math.max(maxLength[0], numNormalChars);
+    }
+
+    private int getMaxLengthOfFullWidthCharsForColumn(int[] maxLength) {
+        return maxLength[1];
+    }
+
+    private void updateMaxLengthOfFullWidthCharsForColumn(int[] maxLength, int numFullWidthChars) {
+        maxLength[1] = Math.max(maxLength[1], numFullWidthChars);
     }
 
     private static final List<UnicodeBlock> LATIN = Arrays.asList(
@@ -423,10 +455,11 @@ public class PrettyFormatter implements Reporter, Formatter {
             }
             Format format = formats.get(status);
             buffer.append(format.text(cellText));
-            int padding = maxLengths[colIndex][0] - cellLengths[rowIndex][colIndex][0];
-            int fullWidthPadding = maxLengths[colIndex][1] - cellLengths[rowIndex][colIndex][1];
+            int padding = getMaxLengthOfNormalWidthCharsForColumn(maxLengths[colIndex]) - getNumberOfNormalWidthCharsInCell(cellLengths[rowIndex][colIndex]);
+            int fullWidthPadding = getMaxLengthOfFullWidthCharsForColumn(maxLengths[colIndex]) - getNumberOfFullWidthCharsInCell(cellLengths[rowIndex][colIndex]);
             // rpad with full-width spaces first, then normal spaces.
-            // the order is not significant but this way prevents padding of single spaces, followed by full-width, then followed with the space and pipe
+            // the order is not significant but this way prevents inconsistend padding
+            // such as: single spaces, followed by full-width spaces, then followed with a final single space and pipe delimiter
             padSpace(buffer, fullWidthPadding, true);
             padSpace(buffer, padding);
             if (colIndex < maxLengths.length - 1) {
