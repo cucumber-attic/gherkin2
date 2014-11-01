@@ -399,17 +399,17 @@ public class PrettyFormatter implements Reporter, Formatter {
                '\uFFDC' >= c;
     }
 
+    /**
+     * The majority of characters passed in will be in the LATIN collection.
+     * Therefore we check there first, short-circuit and return as soon as possible.
+     *
+     * @param c The char to evaluate
+     * @return True if it is a Full-Width character, false otherwise
+     */
     private boolean isFullWidthChar(char c) {
         final UnicodeBlock block = UnicodeBlock.of(c);
-
-        if(LATIN.contains(block)) {
-            return false;
-        }
-        if(CJK.contains(block) && !isHalfWidthKatakana(c)) {
-            return true;
-        }
-
-        return false;
+        return(!LATIN.contains(block) &&
+              (CJK.contains(block) && !isHalfWidthKatakana(c)));
     }
 
     public void row(List<CellResult> cellResults) {
