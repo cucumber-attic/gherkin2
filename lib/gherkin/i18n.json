@@ -13,6 +13,20 @@
 	  "and": "*|And",
 	  "but": "*|But"
 	},
+	"en-simple": {
+	  "name": "English Simplified",
+	  "native": "English Simplified",
+	  "feature": "Feature|Business Need|Ability",
+	  "background": "Background",
+	  "scenario": "Scenario",
+	  "scenario_outline": "Scenario Outline|Scenario Template",
+	  "examples": "Examples|Scenarios",
+	  "given": "*|Given",
+	  "when": "*|Step",
+	  "then": "*|Step",
+	  "and": "*|Step",
+	  "but": "*|Step"
+	},
 	"af": {
 	  "name": "Afrikaans",
 	  "native": "Afrikaans",
