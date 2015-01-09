@@ -13,19 +13,19 @@
 	  "and": "*|And",
 	  "but": "*|But"
 	},
-	  "en-qa": {
-	"name": "QA",
-	"native": "English",
-	"feature": "TestSuite",
-	"background": "Setup",
-	"scenario": "TestCase",
-	"scenario_outline": "Data Template",
-	"examples": "Data",
-	"given": "*|Context",
-	"when": "*|Action|Do|Wait|Step|When",
-	"then": "*|Verify|Confirm|Expect",
-	"and": "*|Continue|Next|And",
-	"but": "*|Except|Excluding"
+	"en-qa": {
+	  "name": "QA",
+	  "native": "English",
+	  "feature": "TestSuite",
+	  "background": "Setup",
+	  "scenario": "TestCase",
+	  "scenario_outline": "Data Template",
+	  "examples": "Data",
+	  "given": "*|Context",
+	  "when": "*|Action|Do|Wait|Step|When",
+	  "then": "*|Verify|Confirm|Expect",
+	  "and": "*|Continue|Next|And",
+	  "but": "*|Except|Excluding"
   	},
 	"af": {
 	  "name": "Afrikaans",
