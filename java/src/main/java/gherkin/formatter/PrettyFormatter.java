@@ -63,17 +63,24 @@ public class PrettyFormatter implements Reporter, Formatter {
     private DescribedStatement statement;
 
 	private boolean rightAlignNumeric;
+	private boolean centerSteps;
+	private int centerSteps_maxKeywordLength;
 
     public PrettyFormatter(Appendable out, boolean monochrome, boolean executing) {
-        this(out, monochrome, executing, false);
+        this(out, monochrome, executing, false, false);
     }
 
-    public PrettyFormatter(Appendable out, boolean monochrome, boolean executing, boolean rightAlignNumeric) {
+    public PrettyFormatter(Appendable out, boolean monochrome, boolean executing, boolean rightAlignNumeric, boolean centerSteps) {
         this.out = new NiceAppendable(out);
         this.executing = executing;
         setMonochrome(monochrome);
         setRightAlignNumericValues(rightAlignNumeric);
+        setCenterSteps(centerSteps);
     }
+
+    public void setCenterSteps(boolean centerSteps) {
+		this.centerSteps = centerSteps;
+	}
 
 	public void setRightAlignNumericValues(boolean rightAlignNumeric) {
 		this.rightAlignNumeric = rightAlignNumeric;
@@ -135,6 +142,15 @@ public class PrettyFormatter implements Reporter, Formatter {
     }
 
     private void printSteps() {
+    	if (centerSteps) {
+    		centerSteps_maxKeywordLength = 0;
+    		for (Step step : steps) {
+				int length = step.getKeyword().length();
+				if (length > centerSteps_maxKeywordLength) {
+					centerSteps_maxKeywordLength = length;
+				}
+			}
+    	}
         while (!steps.isEmpty()) {
             if (matchesAndResults.isEmpty()) {
                 printStep("skipped", Collections.<Argument>emptyList(), null);
@@ -268,7 +284,14 @@ public class PrettyFormatter implements Reporter, Formatter {
         printComments(step.getComments(), "    ");
 
         StringBuilder buffer = new StringBuilder("    ");
-        buffer.append(textFormat.text(step.getKeyword()));
+        String keyword = step.getKeyword();
+        if (centerSteps) {
+        	int padLeft = centerSteps_maxKeywordLength - keyword.length();
+        	for (int i = 0; i < padLeft; i++) {
+        		buffer.append(" ");
+			}
+        }
+		buffer.append(textFormat.text(keyword));
         stepPrinter.writeStep(new NiceAppendable(buffer), textFormat, argFormat, step.getName(), arguments);
         buffer.append(indentedLocation(location));
 
