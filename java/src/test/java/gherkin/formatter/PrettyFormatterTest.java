@@ -98,6 +98,37 @@ public class PrettyFormatterTest {
         assertEquals("    Then should formatt beautifully.", lines.get(6));
 
     }
+    
+    @Test
+    public void shouldFormatAsDesignedWithRightAlignedNumbers() throws IOException {
+
+        StringBuilder featureBuilder = new StringBuilder();
+        featureBuilder.append("Feature: PrettyFormatter\n");
+        featureBuilder.append("Scenario: Format beautifully right-aligned numbers in a data table\n");
+        featureBuilder.append("When I have this table:\n");
+        featureBuilder.append("\t|name|value|\n");
+        featureBuilder.append("\t|barel of extra long cucumbers|129.95|\n");
+        featureBuilder.append("\t|extra long cucumber|10.95|\n");
+        featureBuilder.append("\t|tiny cucumber|2.95|\n");
+        featureBuilder.append("Then should formatt beautifully.\n");
+        String feature = featureBuilder.toString();
+
+        boolean rightAlignNumeric = true;
+		List<String> lines = doFormatter(feature, rightAlignNumeric);
+
+        assertEquals("Formatter produces unexpected quantity of lines. ", 9, lines.size());
+        
+        assertEquals("Feature: PrettyFormatter", lines.get(0));
+        assertEquals("", lines.get(1));
+        assertEquals("  Scenario: Format beautifully right-aligned numbers in a data table", lines.get(2));
+        assertEquals("    When I have this table:", lines.get(3));
+        assertEquals("      | name                          | value  |", lines.get(4));
+        assertEquals("      | barel of extra long cucumbers | 129.95 |", lines.get(5));
+        assertEquals("      | extra long cucumber           |  10.95 |", lines.get(6));
+        assertEquals("      | tiny cucumber                 |   2.95 |", lines.get(7));
+        assertEquals("    Then should formatt beautifully.", lines.get(8));
+
+    }
 
     @Test
     public void shouldAppendOnlyCompleteLinesAndFlushBetween() throws IOException {
@@ -349,11 +380,14 @@ public class PrettyFormatterTest {
      * @throws IOException
      */
     private List<String> doFormatter(String feature) throws IOException {
+    	return doFormatter(feature, false);
+    }
+    private List<String> doFormatter(String feature, boolean rightAlignNumeric) throws IOException {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(baos);
 
-        Formatter formatter = new PrettyFormatter(out, true, false);
+		Formatter formatter = new PrettyFormatter(out, true, false, rightAlignNumeric);
         new Parser(formatter).parse(feature, "", 0);
         formatter.close();
 
