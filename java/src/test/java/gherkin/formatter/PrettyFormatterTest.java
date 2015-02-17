@@ -114,8 +114,8 @@ public class PrettyFormatterTest {
         String feature = featureBuilder.toString();
 
         boolean rightAlignNumeric = true;
-		boolean centerSteps = false;
-		List<String> lines = doFormatter(feature, rightAlignNumeric, centerSteps);
+        boolean centerSteps = false;
+        List<String> lines = doFormatter(feature, rightAlignNumeric, centerSteps);
 
         assertEquals("Formatter produces unexpected quantity of lines. ", 9, lines.size());
         
@@ -144,8 +144,8 @@ public class PrettyFormatterTest {
         String feature = featureBuilder.toString();
 
         boolean rightAlignNumeric = false;
-		boolean centerSteps = true;
-		List<String> lines = doFormatter(feature, rightAlignNumeric, centerSteps);
+        boolean centerSteps = true;
+        List<String> lines = doFormatter(feature, rightAlignNumeric, centerSteps);
 
         assertEquals("Formatter produces unexpected quantity of lines. ", 7, lines.size());
         
@@ -409,14 +409,14 @@ public class PrettyFormatterTest {
      * @throws IOException
      */
     private List<String> doFormatter(String feature) throws IOException {
-    	return doFormatter(feature, false, false);
+        return doFormatter(feature, false, false);
     }
     private List<String> doFormatter(String feature, boolean rightAlignNumeric, boolean centerSteps) throws IOException {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(baos);
 
-		Formatter formatter = new PrettyFormatter(out, true, false, rightAlignNumeric, centerSteps);
+        Formatter formatter = new PrettyFormatter(out, true, false, rightAlignNumeric, centerSteps);
         new Parser(formatter).parse(feature, "", 0);
         formatter.close();
 

@@ -62,9 +62,9 @@ public class PrettyFormatter implements Reporter, Formatter {
     private List<MatchResultPair> matchesAndResults = new ArrayList<MatchResultPair>();
     private DescribedStatement statement;
 
-	private boolean rightAlignNumeric;
-	private boolean centerSteps;
-	private int centerSteps_maxKeywordLength;
+    private boolean rightAlignNumeric;
+    private boolean centerSteps;
+    private int centerSteps_maxKeywordLength;
 
     public PrettyFormatter(Appendable out, boolean monochrome, boolean executing) {
         this(out, monochrome, executing, false, false);
@@ -79,12 +79,12 @@ public class PrettyFormatter implements Reporter, Formatter {
     }
 
     public void setCenterSteps(boolean centerSteps) {
-		this.centerSteps = centerSteps;
-	}
+        this.centerSteps = centerSteps;
+    }
 
-	public void setRightAlignNumericValues(boolean rightAlignNumeric) {
-		this.rightAlignNumeric = rightAlignNumeric;
-	}
+    public void setRightAlignNumericValues(boolean rightAlignNumeric) {
+        this.rightAlignNumeric = rightAlignNumeric;
+    }
 
     public void setMonochrome(boolean monochrome) {
         if (monochrome) {
@@ -142,15 +142,15 @@ public class PrettyFormatter implements Reporter, Formatter {
     }
 
     private void printSteps() {
-    	if (centerSteps) {
-    		centerSteps_maxKeywordLength = 0;
-    		for (Step step : steps) {
-				int length = step.getKeyword().length();
-				if (length > centerSteps_maxKeywordLength) {
-					centerSteps_maxKeywordLength = length;
-				}
-			}
-    	}
+        if (centerSteps) {
+            centerSteps_maxKeywordLength = 0;
+            for (Step step : steps) {
+                int length = step.getKeyword().length();
+                if (length > centerSteps_maxKeywordLength) {
+                    centerSteps_maxKeywordLength = length;
+                }
+            }
+        }
         while (!steps.isEmpty()) {
             if (matchesAndResults.isEmpty()) {
                 printStep("skipped", Collections.<Argument>emptyList(), null);
@@ -286,12 +286,12 @@ public class PrettyFormatter implements Reporter, Formatter {
         StringBuilder buffer = new StringBuilder("    ");
         String keyword = step.getKeyword();
         if (centerSteps) {
-        	int padLeft = centerSteps_maxKeywordLength - keyword.length();
-        	for (int i = 0; i < padLeft; i++) {
-        		buffer.append(" ");
-			}
+            int padLeft = centerSteps_maxKeywordLength - keyword.length();
+            for (int i = 0; i < padLeft; i++) {
+                buffer.append(" ");
+            }
         }
-		buffer.append(textFormat.text(keyword));
+        buffer.append(textFormat.text(keyword));
         stepPrinter.writeStep(new NiceAppendable(buffer), textFormat, argFormat, step.getName(), arguments);
         buffer.append(indentedLocation(location));
 
@@ -395,7 +395,7 @@ public class PrettyFormatter implements Reporter, Formatter {
             Format format = formats.get(status);
             int padding = maxLengths[colIndex] - cellLengths[rowIndex][colIndex];
             boolean rightAligned = rightAlignNumeric && isNumeric(cellText);
-			if (rightAligned) {
+            if (rightAligned) {
                 padSpace(buffer, padding);
             }
             buffer.append(format.text(cellText));
