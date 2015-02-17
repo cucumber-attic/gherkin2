@@ -18,6 +18,8 @@ import gherkin.formatter.model.Tag;
 import gherkin.formatter.model.TagStatement;
 import gherkin.util.Mapper;
 
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -60,11 +62,22 @@ public class PrettyFormatter implements Reporter, Formatter {
     private List<MatchResultPair> matchesAndResults = new ArrayList<MatchResultPair>();
     private DescribedStatement statement;
 
+	private boolean rightAlignNumeric;
+
     public PrettyFormatter(Appendable out, boolean monochrome, boolean executing) {
+        this(out, monochrome, executing, false);
+    }
+
+    public PrettyFormatter(Appendable out, boolean monochrome, boolean executing, boolean rightAlignNumeric) {
         this.out = new NiceAppendable(out);
         this.executing = executing;
         setMonochrome(monochrome);
+        setRightAlignNumericValues(rightAlignNumeric);
     }
+
+	public void setRightAlignNumericValues(boolean rightAlignNumeric) {
+		this.rightAlignNumeric = rightAlignNumeric;
+	}
 
     public void setMonochrome(boolean monochrome) {
         if (monochrome) {
@@ -357,9 +370,15 @@ public class PrettyFormatter implements Reporter, Formatter {
                     break;
             }
             Format format = formats.get(status);
-            buffer.append(format.text(cellText));
             int padding = maxLengths[colIndex] - cellLengths[rowIndex][colIndex];
-            padSpace(buffer, padding);
+            boolean rightAligned = rightAlignNumeric && isNumeric(cellText);
+			if (rightAligned) {
+                padSpace(buffer, padding);
+            }
+            buffer.append(format.text(cellText));
+            if (!rightAligned) {
+                padSpace(buffer, padding);
+            }
             if (colIndex < maxLengths.length - 1) {
                 buffer.append(" | ");
             } else {
@@ -378,6 +397,14 @@ public class PrettyFormatter implements Reporter, Formatter {
                 }
             }
         }
+    }
+
+    public static boolean isNumeric(String str)
+    {
+      NumberFormat formatter = NumberFormat.getInstance();
+      ParsePosition pos = new ParsePosition(0);
+      formatter.parse(str, pos);
+      return str.length() == pos.getIndex();
     }
 
     private void printError(Result result) {
