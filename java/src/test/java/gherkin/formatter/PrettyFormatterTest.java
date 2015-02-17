@@ -114,7 +114,8 @@ public class PrettyFormatterTest {
         String feature = featureBuilder.toString();
 
         boolean rightAlignNumeric = true;
-		List<String> lines = doFormatter(feature, rightAlignNumeric);
+		boolean centerSteps = false;
+		List<String> lines = doFormatter(feature, rightAlignNumeric, centerSteps);
 
         assertEquals("Formatter produces unexpected quantity of lines. ", 9, lines.size());
         
@@ -127,6 +128,34 @@ public class PrettyFormatterTest {
         assertEquals("      | extra long cucumber           |  10.95 |", lines.get(6));
         assertEquals("      | tiny cucumber                 |   2.95 |", lines.get(7));
         assertEquals("    Then should formatt beautifully.", lines.get(8));
+
+    }
+
+    @Test
+    public void shouldFormatAsDesignedWithCenterAlignedSteps() throws IOException {
+
+        StringBuilder featureBuilder = new StringBuilder();
+        featureBuilder.append("Feature: PrettyFormatter\n");
+        featureBuilder.append("Scenario: Format beautifully center-aligned steps\n");
+        featureBuilder.append("Given there are 12 cucumbers\n");
+        featureBuilder.append("When I eat 3 cucumbers\n");
+        featureBuilder.append("And I throw 2 cucumbers into the trash can\n");
+        featureBuilder.append("Then I should have 7 cucumbers\n");
+        String feature = featureBuilder.toString();
+
+        boolean rightAlignNumeric = false;
+		boolean centerSteps = true;
+		List<String> lines = doFormatter(feature, rightAlignNumeric, centerSteps);
+
+        assertEquals("Formatter produces unexpected quantity of lines. ", 7, lines.size());
+        
+        assertEquals("Feature: PrettyFormatter", lines.get(0));
+        assertEquals("", lines.get(1));
+        assertEquals("  Scenario: Format beautifully center-aligned steps", lines.get(2));
+        assertEquals("    Given there are 12 cucumbers", lines.get(3));
+        assertEquals("     When I eat 3 cucumbers", lines.get(4));
+        assertEquals("      And I throw 2 cucumbers into the trash can", lines.get(5));
+        assertEquals("     Then I should have 7 cucumbers", lines.get(6));
 
     }
 
@@ -380,14 +409,14 @@ public class PrettyFormatterTest {
      * @throws IOException
      */
     private List<String> doFormatter(String feature) throws IOException {
-    	return doFormatter(feature, false);
+    	return doFormatter(feature, false, false);
     }
-    private List<String> doFormatter(String feature, boolean rightAlignNumeric) throws IOException {
+    private List<String> doFormatter(String feature, boolean rightAlignNumeric, boolean centerSteps) throws IOException {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(baos);
 
-		Formatter formatter = new PrettyFormatter(out, true, false, rightAlignNumeric);
+		Formatter formatter = new PrettyFormatter(out, true, false, rightAlignNumeric, centerSteps);
         new Parser(formatter).parse(feature, "", 0);
         formatter.close();
 
