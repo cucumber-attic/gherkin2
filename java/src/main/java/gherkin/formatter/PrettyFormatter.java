@@ -65,17 +65,28 @@ public class PrettyFormatter implements Reporter, Formatter {
     private boolean rightAlignNumeric;
     private boolean centerSteps;
     private int centerSteps_maxKeywordLength;
+    private boolean preserveBlankLineBetweenSteps;
+    private int expectedNextStepLine;
 
     public PrettyFormatter(Appendable out, boolean monochrome, boolean executing) {
-        this(out, monochrome, executing, false, false);
+        this(out, monochrome, executing, false, false, false);
+    }
+
+    public PrettyFormatter(Appendable out, boolean monochrome, boolean executing, boolean rightAlignNumeric) {
+        this(out, monochrome, executing, rightAlignNumeric, false, false);
     }
 
     public PrettyFormatter(Appendable out, boolean monochrome, boolean executing, boolean rightAlignNumeric, boolean centerSteps) {
+        this(out, monochrome, executing, rightAlignNumeric, centerSteps, false);
+    }
+    
+    public PrettyFormatter(Appendable out, boolean monochrome, boolean executing, boolean rightAlignNumeric, boolean centerSteps, boolean preserveBlankLineBetweenSteps) {
         this.out = new NiceAppendable(out);
         this.executing = executing;
         setMonochrome(monochrome);
         setRightAlignNumericValues(rightAlignNumeric);
         setCenterSteps(centerSteps);
+        setPreserveBlankLineBetweenSteps(preserveBlankLineBetweenSteps);
     }
 
     public void setCenterSteps(boolean centerSteps) {
@@ -86,6 +97,11 @@ public class PrettyFormatter implements Reporter, Formatter {
         this.rightAlignNumeric = rightAlignNumeric;
     }
 
+    public void setPreserveBlankLineBetweenSteps(boolean preserveBlankLineBetweenSteps)
+    {
+        this.preserveBlankLineBetweenSteps = preserveBlankLineBetweenSteps;
+    }
+    
     public void setMonochrome(boolean monochrome) {
         if (monochrome) {
             formats = new MonochromeFormats();
@@ -150,6 +166,9 @@ public class PrettyFormatter implements Reporter, Formatter {
                     centerSteps_maxKeywordLength = length;
                 }
             }
+        }
+        if (preserveBlankLineBetweenSteps) {
+            expectedNextStepLine = 0;
         }
         while (!steps.isEmpty()) {
             if (matchesAndResults.isEmpty()) {
@@ -280,8 +299,25 @@ public class PrettyFormatter implements Reporter, Formatter {
         Step step = steps.remove(0);
         Format textFormat = getFormat(status);
         Format argFormat = getArgFormat(status);
-
-        printComments(step.getComments(), "    ");
+        List<Comment> comments = step.getComments();
+        
+        if (preserveBlankLineBetweenSteps) {
+            int line = step.getLine().intValue();
+            if (expectedNextStepLine > 0) {
+                int expectedStepLine = expectedNextStepLine + comments.size();
+                if (line > expectedStepLine) {
+                    out.println(); // single blank line
+                }
+            }
+            expectedNextStepLine = line + 1;
+            if (step.getRows() != null) {
+                expectedNextStepLine += step.getRows().size();
+            } else if (step.getDocString() != null) {
+                expectedNextStepLine = step.getDocString().getLineRange().getLast().intValue() + 1;
+            }
+        }
+        
+        printComments(comments, "    ");
 
         StringBuilder buffer = new StringBuilder("    ");
         String keyword = step.getKeyword();
