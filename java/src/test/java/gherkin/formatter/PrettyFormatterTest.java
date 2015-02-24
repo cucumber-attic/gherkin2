@@ -115,7 +115,8 @@ public class PrettyFormatterTest {
 
         boolean rightAlignNumeric = true;
         boolean centerSteps = false;
-        List<String> lines = doFormatter(feature, rightAlignNumeric, centerSteps);
+        boolean preserveBlankLineBetweenSteps = false;
+        List<String> lines = doFormatter(feature, rightAlignNumeric, centerSteps, preserveBlankLineBetweenSteps);
 
         assertEquals("Formatter produces unexpected quantity of lines. ", 9, lines.size());
         
@@ -145,7 +146,8 @@ public class PrettyFormatterTest {
 
         boolean rightAlignNumeric = false;
         boolean centerSteps = true;
-        List<String> lines = doFormatter(feature, rightAlignNumeric, centerSteps);
+        boolean preserveBlankLineBetweenSteps = false;
+		List<String> lines = doFormatter(feature, rightAlignNumeric, centerSteps, preserveBlankLineBetweenSteps);
 
         assertEquals("Formatter produces unexpected quantity of lines. ", 7, lines.size());
         
@@ -156,6 +158,64 @@ public class PrettyFormatterTest {
         assertEquals("     When I eat 3 cucumbers", lines.get(4));
         assertEquals("      And I throw 2 cucumbers into the trash can", lines.get(5));
         assertEquals("     Then I should have 7 cucumbers", lines.get(6));
+
+    }
+
+    @Test
+    public void shouldFormatAsDesignedWithBlankLinesPreserved() throws IOException {
+
+        StringBuilder featureBuilder = new StringBuilder();
+        featureBuilder.append("Feature: PrettyFormatter\n");
+        featureBuilder.append("Scenario: Format preserving single blank line between steps\n");
+        featureBuilder.append("Given there are 12 cucumbers\n");
+        featureBuilder.append("When I eat 3 cucumbers\n");
+        featureBuilder.append("Then I should have 9 cucumbers\n");
+        featureBuilder.append("\n\n"); // 2 or more line breaks should be condensed to 1
+        featureBuilder.append("When I throw 2 cucumbers into the trash can\n");
+        featureBuilder.append("Then I should have 7 cucumbers\n");
+        featureBuilder.append("\n");
+        featureBuilder.append("When I have this table:\n");
+        featureBuilder.append("\t|name|value|\n");
+        featureBuilder.append("\t|tiny cucumber|2.95|\n");
+        featureBuilder.append("Then I should see no blank line above this one\n");
+        featureBuilder.append("\n");
+        featureBuilder.append("When I have this multiline string:\n");
+        featureBuilder.append("\t\"\"\"\n");
+        featureBuilder.append("\tHello\n");
+        featureBuilder.append("\t  World\n");
+        featureBuilder.append("\t\"\"\"\n");
+        featureBuilder.append("Then I should also see no blank line above this one\n");
+        String feature = featureBuilder.toString();
+
+        boolean rightAlignNumeric = false;
+        boolean centerSteps = false;
+        boolean preserveBlankLineBetweenSteps = true;
+        List<String> lines = doFormatter(feature, rightAlignNumeric, centerSteps, preserveBlankLineBetweenSteps);
+        
+        //assertEquals("Formatter produces unexpected quantity of lines. ", 21, lines.size());
+        
+        int i = 0;
+        assertEquals("Feature: PrettyFormatter", lines.get(i++));
+        assertEquals("", lines.get(i++));
+        assertEquals("  Scenario: Format preserving single blank line between steps", lines.get(i++));
+        assertEquals("    Given there are 12 cucumbers", lines.get(i++));
+        assertEquals("    When I eat 3 cucumbers", lines.get(i++));
+        assertEquals("    Then I should have 9 cucumbers", lines.get(i++));
+        assertEquals("", lines.get(i++));
+        assertEquals("    When I throw 2 cucumbers into the trash can", lines.get(i++));
+        assertEquals("    Then I should have 7 cucumbers", lines.get(i++));
+        assertEquals("", lines.get(i++));
+        assertEquals("    When I have this table:", lines.get(i++));
+        assertEquals("      | name          | value |", lines.get(i++));
+        assertEquals("      | tiny cucumber | 2.95  |", lines.get(i++));
+        assertEquals("    Then I should see no blank line above this one", lines.get(i++));
+        assertEquals("", lines.get(i++));
+        assertEquals("    When I have this multiline string:", lines.get(i++));
+        assertEquals("      \"\"\"", lines.get(i++));
+        assertEquals("      Hello", lines.get(i++));
+        assertEquals("        World", lines.get(i++));
+        assertEquals("      \"\"\"", lines.get(i++));
+        assertEquals("    Then I should also see no blank line above this one", lines.get(i++));
 
     }
 
@@ -409,14 +469,17 @@ public class PrettyFormatterTest {
      * @throws IOException
      */
     private List<String> doFormatter(String feature) throws IOException {
-        return doFormatter(feature, false, false);
+        return doFormatter(feature, false, false, false);
     }
-    private List<String> doFormatter(String feature, boolean rightAlignNumeric, boolean centerSteps) throws IOException {
+    private List<String> doFormatter(String feature, boolean rightAlignNumeric, boolean centerSteps, boolean preserveBlankLineBetweenSteps) throws IOException {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(baos);
 
-        Formatter formatter = new PrettyFormatter(out, true, false, rightAlignNumeric, centerSteps);
+        PrettyFormatter formatter = new PrettyFormatter(out, true, false);
+        formatter.setRightAlignNumericValues(rightAlignNumeric);
+        formatter.setCenterSteps(centerSteps);
+        formatter.setPreserveBlankLineBetweenSteps(preserveBlankLineBetweenSteps);
         new Parser(formatter).parse(feature, "", 0);
         formatter.close();
 
