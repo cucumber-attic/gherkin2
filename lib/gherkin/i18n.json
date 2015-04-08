@@ -659,7 +659,7 @@
   },
   "es": {
     "but": "*|Pero",
-    "and": "*|Y",
+    "and": "*|Y|E",
     "then": "*|Entonces",
     "when": "*|Cuando",
     "name": "Spanish",
