@@ -559,6 +559,20 @@
     "examples": "Voorbeelde",
     "given": "*|Gegewe"
   },
+  "am": {
+    "name": "Armenian",
+    "native": "հայերեն",
+    "feature": "Ֆունկցիոնալություն|Հատկություն",
+    "background": "Կոնտեքստ",
+    "scenario": "Սցենար",
+    "scenario_outline": "Սցենարի կառուցվացքը",
+    "examples": "Օրինակներ",
+    "given": "*|Դիցուք",
+    "when": "*|Եթե|Երբ",
+    "then": "*|Ապա",
+    "and": "*|Եվ",
+    "but": "*|Բայց"
+  },
   "ar": {
     "but": "*|لكن",
     "and": "*|و",
