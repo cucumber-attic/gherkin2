@@ -880,5 +880,19 @@
     "scenario_outline": "Schema dello scenario",
     "examples": "Esempi",
     "given": "*|Dato|Data|Dati|Date"
-  }
+  },
+  "gj": {
+	  "name": "Gujarati",
+	  "native": "ગુજરાતી",
+	  "feature": "લક્ષણ|વ્યાપાર જરૂર|ક્ષમતા",
+	  "background": "બેકગ્રાઉન્ડ",
+	  "scenario": "સ્થિતિ",
+	  "scenario_outline": "પરિદ્દશ્ય રૂપરેખા|પરિદ્દશ્ય ઢાંચો",
+	  "examples": "ઉદાહરણો",
+	  "given": "*|આપેલ છે",
+	  "when": "*|ક્યારે",
+	  "then": "*|પછી",
+	  "and": "*|અને",
+	  "but": "*|પણ"
+	}
 }
