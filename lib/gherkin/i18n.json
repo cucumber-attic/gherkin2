@@ -755,6 +755,20 @@
     "examples": "Exemples",
     "given": "*|Soit|Etant donné|Etant donnée|Etant donnés|Etant données|Étant donné|Étant donnée|Étant donnés|Étant données"
   },
+  "ga": {
+    "but": "*|Ach",
+    "and": "*|Agus",
+    "then": "*|Ansin",
+    "when": "*|Nuair a|Nuair nach|Nuair ba|Nuair nár",
+    "name": "Irish",
+    "native": "Gaeilge",
+    "feature": "Gné",
+    "background": "Cúlra",
+    "scenario": "Cás",
+    "scenario_outline": "Cás Achomair",
+    "examples": "Samplaí",
+    "given": "*|Cuir i gcás go|Cuir i gcás nach|Cuir i gcás gur|Cuir i gcás nár"
+  },
   "gl": {
     "but": "*|Mais|Pero",
     "and": "*|E",
