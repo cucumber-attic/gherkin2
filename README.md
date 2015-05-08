@@ -1,3 +1,6 @@
+THIS PROJECT IS NO LONGER MAINTAINED.
+PLEASE SEE [Gherkin3](https://github.com/cucumber/gherkin3) FOR A REPLACEMENT.
+
 [![Build Status](https://secure.travis-ci.org/cucumber/gherkin.png)](http://travis-ci.org/cucumber/gherkin)
 
 A fast lexer and parser for the Gherkin language based on Ragel. Gherkin is two things:
