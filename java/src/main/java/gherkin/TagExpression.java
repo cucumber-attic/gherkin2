@@ -35,11 +35,9 @@ public class TagExpression {
         for (String tag : tags) {
             boolean negation;
             tag = tag.trim();
-            if (tag.startsWith("~")) {
+            negation = tag.startsWith("~");
+            if (negation) {
                 tag = tag.substring(1);
-                negation = true;
-            } else {
-                negation = false;
             }
             String[] tagAndLimit = tag.split(":");
             if (tagAndLimit.length == 2) {
@@ -125,12 +123,12 @@ public class TagExpression {
         }
 
         public boolean eval(Collection<Tag> tags) {
+            boolean result = false;
             for (Tag tag : tags) {
-                if (tagName.equals(tag.getName())) {
-                    return true;
-                }
+                result = tagName.equals(tag.getName());
+                if (result) break;
             }
-            return false;
+            return result;
         }
     }
 
