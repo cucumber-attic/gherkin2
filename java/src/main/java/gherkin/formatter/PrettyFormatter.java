@@ -18,6 +18,8 @@ import gherkin.formatter.model.Tag;
 import gherkin.formatter.model.TagStatement;
 import gherkin.util.Mapper;
 
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -60,12 +62,46 @@ public class PrettyFormatter implements Reporter, Formatter {
     private List<MatchResultPair> matchesAndResults = new ArrayList<MatchResultPair>();
     private DescribedStatement statement;
 
+    private boolean rightAlignNumeric;
+    private boolean centerSteps;
+    private int centerSteps_maxKeywordLength;
+    private boolean preserveBlankLineBetweenSteps;
+    private int expectedNextStepLine;
+
     public PrettyFormatter(Appendable out, boolean monochrome, boolean executing) {
+        this(out, monochrome, executing, false, false, false);
+    }
+
+    public PrettyFormatter(Appendable out, boolean monochrome, boolean executing, boolean rightAlignNumeric) {
+        this(out, monochrome, executing, rightAlignNumeric, false, false);
+    }
+
+    public PrettyFormatter(Appendable out, boolean monochrome, boolean executing, boolean rightAlignNumeric, boolean centerSteps) {
+        this(out, monochrome, executing, rightAlignNumeric, centerSteps, false);
+    }
+    
+    public PrettyFormatter(Appendable out, boolean monochrome, boolean executing, boolean rightAlignNumeric, boolean centerSteps, boolean preserveBlankLineBetweenSteps) {
         this.out = new NiceAppendable(out);
         this.executing = executing;
         setMonochrome(monochrome);
+        setRightAlignNumericValues(rightAlignNumeric);
+        setCenterSteps(centerSteps);
+        setPreserveBlankLineBetweenSteps(preserveBlankLineBetweenSteps);
     }
 
+    public void setCenterSteps(boolean centerSteps) {
+        this.centerSteps = centerSteps;
+    }
+
+    public void setRightAlignNumericValues(boolean rightAlignNumeric) {
+        this.rightAlignNumeric = rightAlignNumeric;
+    }
+
+    public void setPreserveBlankLineBetweenSteps(boolean preserveBlankLineBetweenSteps)
+    {
+        this.preserveBlankLineBetweenSteps = preserveBlankLineBetweenSteps;
+    }
+    
     public void setMonochrome(boolean monochrome) {
         if (monochrome) {
             formats = new MonochromeFormats();
@@ -122,6 +158,18 @@ public class PrettyFormatter implements Reporter, Formatter {
     }
 
     private void printSteps() {
+        if (centerSteps) {
+            centerSteps_maxKeywordLength = 0;
+            for (Step step : steps) {
+                int length = step.getKeyword().length();
+                if (length > centerSteps_maxKeywordLength) {
+                    centerSteps_maxKeywordLength = length;
+                }
+            }
+        }
+        if (preserveBlankLineBetweenSteps) {
+            expectedNextStepLine = 0;
+        }
         while (!steps.isEmpty()) {
             if (matchesAndResults.isEmpty()) {
                 printStep("skipped", Collections.<Argument>emptyList(), null);
@@ -251,11 +299,35 @@ public class PrettyFormatter implements Reporter, Formatter {
         Step step = steps.remove(0);
         Format textFormat = getFormat(status);
         Format argFormat = getArgFormat(status);
-
-        printComments(step.getComments(), "    ");
+        List<Comment> comments = step.getComments();
+        
+        if (preserveBlankLineBetweenSteps) {
+            int line = step.getLine().intValue();
+            if (expectedNextStepLine > 0) {
+                int expectedStepLine = expectedNextStepLine + comments.size();
+                if (line > expectedStepLine) {
+                    out.println(); // single blank line
+                }
+            }
+            expectedNextStepLine = line + 1;
+            if (step.getRows() != null) {
+                expectedNextStepLine += step.getRows().size();
+            } else if (step.getDocString() != null) {
+                expectedNextStepLine = step.getDocString().getLineRange().getLast().intValue() + 1;
+            }
+        }
+        
+        printComments(comments, "    ");
 
         StringBuilder buffer = new StringBuilder("    ");
-        buffer.append(textFormat.text(step.getKeyword()));
+        String keyword = step.getKeyword();
+        if (centerSteps) {
+            int padLeft = centerSteps_maxKeywordLength - keyword.length();
+            for (int i = 0; i < padLeft; i++) {
+                buffer.append(" ");
+            }
+        }
+        buffer.append(textFormat.text(keyword));
         stepPrinter.writeStep(new NiceAppendable(buffer), textFormat, argFormat, step.getName(), arguments);
         buffer.append(indentedLocation(location));
 
@@ -357,9 +429,15 @@ public class PrettyFormatter implements Reporter, Formatter {
                     break;
             }
             Format format = formats.get(status);
-            buffer.append(format.text(cellText));
             int padding = maxLengths[colIndex] - cellLengths[rowIndex][colIndex];
-            padSpace(buffer, padding);
+            boolean rightAligned = rightAlignNumeric && isNumeric(cellText);
+            if (rightAligned) {
+                padSpace(buffer, padding);
+            }
+            buffer.append(format.text(cellText));
+            if (!rightAligned) {
+                padSpace(buffer, padding);
+            }
             if (colIndex < maxLengths.length - 1) {
                 buffer.append(" | ");
             } else {
@@ -378,6 +456,14 @@ public class PrettyFormatter implements Reporter, Formatter {
                 }
             }
         }
+    }
+
+    public static boolean isNumeric(String str)
+    {
+      NumberFormat formatter = NumberFormat.getInstance();
+      ParsePosition pos = new ParsePosition(0);
+      formatter.parse(str, pos);
+      return str.length() == pos.getIndex();
     }
 
     private void printError(Result result) {
