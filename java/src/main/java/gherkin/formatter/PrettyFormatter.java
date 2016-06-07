@@ -19,6 +19,7 @@ import gherkin.formatter.model.TagStatement;
 import gherkin.util.Mapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.regex.Pattern;
 
 import static gherkin.util.FixJava.join;
 import static gherkin.util.FixJava.map;
+import static java.lang.Character.UnicodeBlock;
 
 /**
  * This class pretty prints feature files like they were in the source, only
@@ -48,8 +50,8 @@ public class PrettyFormatter implements Reporter, Formatter {
     };
     private Formats formats;
     private Match match;
-    private int[][] cellLengths;
-    private int[] maxLengths;
+    private int[][][] cellLengths;
+    private int[][] maxLengths;
     private int rowIndex;
     private List<? extends Row> rows;
     private Integer rowHeight = null;
@@ -296,16 +298,28 @@ public class PrettyFormatter implements Reporter, Formatter {
             }
         }
 
-        cellLengths = new int[rows.size()][columnCount];
-        maxLengths = new int[columnCount];
+        cellLengths = new int[rows.size()][columnCount][2];
+        maxLengths = new int[columnCount][2];
         for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
             Row row = rows.get(rowIndex);
             final List<String> cells = row.getCells();
             for (int colIndex = 0; colIndex < columnCount; colIndex++) {
                 final String cell = getCellSafely(cells, colIndex);
-                final int length = escapeCell(cell).length();
-                cellLengths[rowIndex][colIndex] = length;
-                maxLengths[colIndex] = Math.max(maxLengths[colIndex], length);
+                final char[] chars = escapeCell(cell).toCharArray();
+                int numNormalChars = 0;
+                int numFullWidthChars = 0;
+                for(char ch : chars) {
+                    if(isFullWidthChar(ch)) {
+                        numFullWidthChars++;
+                    } else {
+                        numNormalChars++;
+                    }
+
+                }
+                setNumberOfNormalWidthCharsInCell(cellLengths[rowIndex][colIndex], numNormalChars);
+                setNumberOfFullWidthCharsInCell(cellLengths[rowIndex][colIndex], numFullWidthChars);
+                updateMaxLengthOfNormalWidthCharsForColumn(maxLengths[colIndex], numNormalChars);
+                updateMaxLengthOfFullWidthCharsForColumn(maxLengths[colIndex], numFullWidthChars);
             }
         }
         rowIndex = 0;
@@ -313,6 +327,89 @@ public class PrettyFormatter implements Reporter, Formatter {
 
     private String getCellSafely(final List<String> cells, final int colIndex) {
         return (colIndex < cells.size()) ? cells.get(colIndex) : "";
+    }
+
+    private int getNumberOfNormalWidthCharsInCell(int[] cellLength) {
+        return cellLength[0];
+    }
+
+    private void setNumberOfNormalWidthCharsInCell(int[] cellLength, int numNormalChars) {
+        cellLength[0] = numNormalChars;
+    }
+
+    private int getNumberOfFullWidthCharsInCell(int[] cellLength) {
+        return cellLength[1];
+    }
+
+    private void setNumberOfFullWidthCharsInCell(int[] cellLength, int numFullWidthChars) {
+        cellLength[1] = numFullWidthChars;
+    }
+
+    private int getMaxLengthOfNormalWidthCharsForColumn(int[] maxLength) {
+        return maxLength[0];
+    }
+
+    private void updateMaxLengthOfNormalWidthCharsForColumn(int[] maxLength, int numNormalChars) {
+        maxLength[0] = Math.max(maxLength[0], numNormalChars);
+    }
+
+    private int getMaxLengthOfFullWidthCharsForColumn(int[] maxLength) {
+        return maxLength[1];
+    }
+
+    private void updateMaxLengthOfFullWidthCharsForColumn(int[] maxLength, int numFullWidthChars) {
+        maxLength[1] = Math.max(maxLength[1], numFullWidthChars);
+    }
+
+    private static final List<UnicodeBlock> LATIN = Arrays.asList(
+            UnicodeBlock.BASIC_LATIN,
+            UnicodeBlock.LATIN_1_SUPPLEMENT,
+            UnicodeBlock.LATIN_EXTENDED_A,
+            UnicodeBlock.LATIN_EXTENDED_B,
+            UnicodeBlock.LATIN_EXTENDED_ADDITIONAL
+    );
+
+    private static final List<UnicodeBlock> CJK = Arrays.asList(
+            UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS,
+            UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A,
+            UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_B,
+            UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION,
+            UnicodeBlock.CJK_RADICALS_SUPPLEMENT,
+            UnicodeBlock.CJK_COMPATIBILITY,
+            UnicodeBlock.CJK_COMPATIBILITY_FORMS,
+            UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS,
+            UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS_SUPPLEMENT,
+            UnicodeBlock.HANGUL_SYLLABLES,
+            UnicodeBlock.HANGUL_JAMO,
+            UnicodeBlock.HANGUL_COMPATIBILITY_JAMO,
+            UnicodeBlock.KATAKANA,
+            UnicodeBlock.KATAKANA_PHONETIC_EXTENSIONS,
+            UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS,
+            UnicodeBlock.HIRAGANA
+    );
+
+    /**
+     * The range U+FF61~U+FFDC is a special case; do not count these as full-width
+     *
+     * @param c a character
+     * @return True if half-width katakana (ｱｶｻﾀ等), false otherwise
+     */
+    private boolean isHalfWidthKatakana(char c) {
+        return '\uFF61' <= c &&
+               '\uFFDC' >= c;
+    }
+
+    /**
+     * The majority of characters passed in will be in the LATIN collection.
+     * Therefore we check there first, short-circuit and return as soon as possible.
+     *
+     * @param c The char to evaluate
+     * @return True if it is a Full-Width character, false otherwise
+     */
+    private boolean isFullWidthChar(char c) {
+        final UnicodeBlock block = UnicodeBlock.of(c);
+        return(!LATIN.contains(block) &&
+              (CJK.contains(block) && !isHalfWidthKatakana(c)));
     }
 
     public void row(List<CellResult> cellResults) {
@@ -358,7 +455,12 @@ public class PrettyFormatter implements Reporter, Formatter {
             }
             Format format = formats.get(status);
             buffer.append(format.text(cellText));
-            int padding = maxLengths[colIndex] - cellLengths[rowIndex][colIndex];
+            int padding = getMaxLengthOfNormalWidthCharsForColumn(maxLengths[colIndex]) - getNumberOfNormalWidthCharsInCell(cellLengths[rowIndex][colIndex]);
+            int fullWidthPadding = getMaxLengthOfFullWidthCharsForColumn(maxLengths[colIndex]) - getNumberOfFullWidthCharsInCell(cellLengths[rowIndex][colIndex]);
+            // rpad with full-width spaces first, then normal spaces.
+            // the order is not significant but this way prevents inconsistend padding
+            // such as: single spaces, followed by full-width spaces, then followed with a final single space and pipe delimiter
+            padSpace(buffer, fullWidthPadding, true);
             padSpace(buffer, padding);
             if (colIndex < maxLengths.length - 1) {
                 buffer.append(" | ");
@@ -440,8 +542,13 @@ public class PrettyFormatter implements Reporter, Formatter {
     }
 
     private void padSpace(StringBuilder buffer, int indent) {
+        padSpace(buffer, indent, false);
+    }
+
+    private void padSpace(StringBuilder buffer, int indent, boolean useFullWidth) {
+        char whitespace = useFullWidth ? '\u3000' : ' ';
         for (int i = 0; i < indent; i++) {
-            buffer.append(" ");
+            buffer.append(whitespace);
         }
     }
 
