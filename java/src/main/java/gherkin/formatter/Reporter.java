@@ -15,6 +15,8 @@ public interface Reporter {
 
     void after(Match match, Result result);
 
+    void afterStep(Match match, Result result);
+
     void match(Match match);
 
     void embedding(String mimeType, byte[] data);

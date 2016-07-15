@@ -25,7 +25,7 @@ public class JSONFormatter implements Reporter, Formatter {
     private String uri;
     private List<Map> beforeHooks = new ArrayList<Map>();
 
-    private enum Phase {step, match, embedding, output, result};
+    private enum Phase {step, match, embedding, output, result, afterStep}
 
     /**
      * In order to handle steps being added all at once, this method determines allows methods to
@@ -148,12 +148,23 @@ public class JSONFormatter implements Reporter, Formatter {
 
     @Override
     public void after(Match match, Result result) {
-        List<Map> hooks = getFeatureElement().get("after");
+        Map<Object, List<Map>> featureElement = getFeatureElement();
+        addPostHook(featureElement, "after", match, result);
+    }
+
+    @Override
+    public void afterStep(Match match, Result result) {
+        Map<Object, List<Map>> currentStep = getCurrentStep(Phase.afterStep);
+        addPostHook(currentStep, "afterStep", match, result);
+    }
+
+    private void addPostHook(Map<Object, List<Map>> parent, String hookType, Match match, Result result) {
+        List<Map> hooks = parent.get(hookType);
         if (hooks == null) {
             hooks = new ArrayList<Map>();
-            getFeatureElement().put("after", hooks);
+            parent.put(hookType, hooks);
         }
-        hooks.add(buildHookMap(match,result));
+        hooks.add(buildHookMap(match, result));
     }
 
     private Map buildHookMap(final Match match, final Result result) {

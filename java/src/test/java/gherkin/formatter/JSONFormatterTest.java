@@ -224,6 +224,52 @@ public class JSONFormatterTest {
         assertEquals(1, beforeHooks.size());
     }
 
+    @SuppressWarnings("rawtypes")
+    @Test
+    public void testAfterStepHooks() {
+        StringBuilder stringBuilder = new StringBuilder();
+        JSONFormatter jsonFormatter = new JSONPrettyFormatter(stringBuilder);
+        Feature feature = feature("Test Feature");
+        Scenario scenario = scenario("Test Scenario 1");
+
+        jsonFormatter.uri(uri());
+        jsonFormatter.feature(feature);
+
+        jsonFormatter.startOfScenarioLifeCycle(scenario);
+        jsonFormatter.before(match(), result("passed"));
+        jsonFormatter.scenario(scenario);
+        jsonFormatter.step(step("Given", "I have an afterStep hook"));
+        jsonFormatter.match(match());
+        jsonFormatter.result(result("passed"));
+
+        Match afterStepMatch = new Match(null, "afterStep location");
+        Result afterStepResult = result("passed");
+        jsonFormatter.afterStep(afterStepMatch, afterStepResult);
+
+        jsonFormatter.endOfScenarioLifeCycle(scenario);
+
+        jsonFormatter.eof();
+        jsonFormatter.done();
+        jsonFormatter.close();
+
+        Gson gson = new Gson();
+        List result = gson.fromJson(stringBuilder.toString(), List.class);
+        Map featureJson = (Map) result.get(0);
+        Map scenarioJson = (Map) ((List) featureJson.get("elements")).get(0);
+
+        Map step = (Map) ((List) scenarioJson.get("steps")).get(0);
+        List afterStepSection = (List) step.get("afterStep");
+        assertEquals(1, afterStepSection.size());
+
+        Map afterStep = (Map) afterStepSection.get(0);
+
+        Map afterStepMatchJson = (Map) afterStep.get("match");
+        assertEquals(afterStepMatch.getLocation(), afterStepMatchJson.get("location"));
+
+        Map afterStepResultJson = (Map) afterStep.get("result");
+        assertEquals(afterStepResult.getStatus(), afterStepResultJson.get("status"));
+    }
+
 	private void assertJsonStepData(Step step, Result stepResult, Map stepJson) {
 		assertEquals(step.getName(), stepJson.get("name"));
         List embeddings1 = (List)stepJson.get("embeddings");
