@@ -5,14 +5,14 @@ PLEASE SEE [Gherkin3](https://github.com/cucumber/gherkin3) FOR A REPLACEMENT.
 
 A fast lexer and parser for the Gherkin language based on Ragel. Gherkin is two things:
 
-* The language that has evolved out of the Cucumber project.
-* This library.
+* The language that has evolved out of the Cucumber project
+* This library
 
 Supported platforms:
 
 * [Ruby](https://rubygems.org/gems/gherkin) 1.9.3-2.0.0 (MRI, JRuby, REE, Rubinius)
 * [Pure Java](http://search.maven.org/#search%7Cga%7C1%7Cgherkin) (jar file)
-* [JavaScript](https://www.npmjs.org/package/gherkin) (Tested with V8/node.js/Chrome, but might work on other JavaScript engines)
+* [JavaScript](https://www.npmjs.org/package/gherkin) (Tested with V8/Node.js/Chrome, but might work on other JavaScript engines)
 * [.NET](http://nuget.org/List/Packages/gherkin) (dll file)
 
 ## Installation
@@ -83,9 +83,9 @@ the C code.
 
 These are the minimal tools you need to install:
 
-* Ragel (brew install ragel or apt-get install ragel)
-* Ruby (any version should do).
-* A clone of the cucumber git repo to a "cucumber" sibling folder of your gherkin folder. (Only needed to run cucumber tests)
+* Ragel (`brew install ragel` or `apt-get install ragel`)
+* Ruby (any version should do)
+* A clone of the cucumber git repo to a `cucumber/` sibling folder of your `gherkin/` folder. (Only needed to run cucumber tests)
 * RVM (you may not need this if you are only building for a single platform)
 
 With this minimal tool chain installed, install Ruby gems needed by the build:
@@ -97,8 +97,8 @@ Running RSpec and Cucumber tests
 
     rake clean spec cucumber
 
-If the RL_LANGS environment variable is set, only the parsers for the languages specified there will be built.
-E.g. in Bash, export RL_LANGS="en,fr,no". This can be quite helpful when modifying the Ragel grammar.
+If the `RL_LANGS` environment variable is set, only the parsers for the languages it specifies will be built.
+E.g. in Bash, `export RL_LANGS="en,fr,no"`. This can be quite helpful when modifying the Ragel grammar.
 
 See subsections for building for a specific platform.
 
@@ -129,7 +129,7 @@ Now you can build the jar with:
 
 In order to build and test Gherkin for JavaScript you must install:
 
-* Node.js (0.10.9 or higher with npm)
+* Node.js (0.10.9 or higher, with `npm`)
 * Ragel with JavaScript support: http://github.com/dominicmarks/ragel-js
   * Make sure you have gcc/g++ 4.6 (4.7 is too strict to build ragel-js)
   * Make sure you have `autoconf` and `automake` (`brew install automake`)
@@ -137,9 +137,9 @@ In order to build and test Gherkin for JavaScript you must install:
   * Make sure you have kelbt (`brew install kelbt`). If that fails, install manually from http://www.complang.org/kelbt/
   * `cd ragel-js/ragel-svn && ./autogen.sh && ./configure --disable-manual`
   * `make && make install`
-* Define the GHERKIN_JS environment variable in your shell (any value will do)
+* Define the `GHERKIN_JS` environment variable in your shell (any value will do)
 
-Update gems (to install gems which are needed only for js support):
+Update gems (to install gems; only needed only for JS support):
 
     bundle update
 
@@ -147,11 +147,11 @@ Now you can build the JavaScript with:
 
     bundle exec rake js
 
-And you can try it out with node.js:
+And you can try it out with Node.js:
 
     node js/example/print.js spec/gherkin/fixtures/1.feature
 
-Or the json formatter:
+Or the JSON formatter:
 
     node js/example/json_formatter_example.js
 
@@ -164,14 +164,14 @@ variable. It's recommended you don't do this permanently, as it will disable tes
 
     GHERKIN_JS_NATIVE=true GHERKIN_JS=true bundle exec rake
 
-TODO: Make all specs pass with js lexer - replace 'c(listener)' with 'js(listener)' in i18n.rb
+**TODO:** Make all specs pass with JS lexer; replace `'c(listener)'` with `'js(listener)'` in `i18n.rb`
 
 ### .NET dll
 
 You must install Mono SDK 3.2.1 (or possibly newer). The OS X package installer is recommended, but make sure you run `brew doctor`
 after installing.
 
-Now we must update NuGet.exe and register our NuGet API Key:
+Now we must update `NuGet.exe` and register our NuGet API Key:
 
     # In case we need to update
     mono ikvm/NuGet.exe Update -self
@@ -194,7 +194,7 @@ In order to build Windows binaries (so we can release Windows gems from OS X/Lin
 
     ./install_mingw_os_x.sh
 
-Now, make sure you have openssl installed - it's needed to build the rubies.
+Now, make sure you have OpenSSL installed. It's needed to build the rubies.
 
     brew install openssl
 
@@ -236,27 +236,27 @@ Make sure you have access to all the servers where packages are being uploaded:
 
 * npm registry: `npm login`
 * rubygems.org: `gem push`
-* sonatype: Check `~/.m2/settings.xml` and that you have gnupg (OS X users: Install [GPGTools](http://www.gpgtools.org/installer/index.html))
+* sonatype: Check `~/.m2/settings.xml` and that you have `gnupg` (OS X users: Install [GPGTools](http://www.gpgtools.org/installer/index.html))
   * Make sure you have a key [with no sub-key](https://docs.sonatype.org/display/Repository/How+To+Generate+PGP+Signatures+With+Maven)
 * nuget: See .NET section above
 
-Run tests once with GHERKIN_JS_NATIVE=true:
+Run tests once with `GHERKIN_JS_NATIVE=true`:
 
     GHERKIN_JS_NATIVE=true GHERKIN_JS=true bundle exec rake
 
 Now we can release:
 
-* Make sure you have rbenv installed
+* Make sure you have `rbenv` installed
   * And that you have merged this patch: https://github.com/sstephenson/rbenv/issues/121
   * `cd ~/.rbenv && git pull git@github.com:sstephenson/rbenv.git exec-next`
-* Make sure GHERKIN_JS is defined (see JavaScript section above)
+* Make sure `GHERKIN_JS` is defined (see “JavaScript”, above)
 * Bump version in:
   * This file (Installation/Java section)
-  * lib/gherkin/platform.rb
-  * java/pom.xml
-  * js/package.json
-  * History.md
-* Run `bundle update`, so Gemfile.lock gets updated with the changes.
+  * `lib/gherkin/platform.rb`
+  * `java/pom.xml`
+  * `js/package.json`
+  * `History.md`
+* Run `bundle update`, so `Gemfile.lock` gets updated with the changes.
 * Commit changes, otherwise you will get an error at the end when a tag is made.
 * Run `i686-w64-mingw32-gcc -v && bundle exec rake gems:prepare && ./build_native_gems.sh && bundle exec rake release:ALL`
 
@@ -267,9 +267,9 @@ Now we can release:
 * Run `rake` to make sure all the tests are passing.
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a future version unintentionally.
-* Commit, do not mess with History.md.
+* Commit. Do not mess with `History.md`.
 * Send me a pull request. Bonus points for topic branches.
 
 ## Copyright
 
-Copyright (c) 2009-2013 Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy. See LICENSE for details.
+Copyright (c) 2009–2013 Mike Sassak, Gregory Hnatiuk, Aslak Hellesøy. See LICENSE for details.
